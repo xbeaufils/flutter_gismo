@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -346,7 +345,7 @@ class _FicheBetePageState extends State<FicheBetePage> with SingleTickerProvider
   }
 
   void _bouclage(LambModel lamb, String dateAgnelage) {
-    var navigationResult = Navigator.push(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => BouclagePage(lamb, dateAgnelage),

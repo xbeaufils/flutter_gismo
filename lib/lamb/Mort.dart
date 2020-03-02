@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/main.dart';
-import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:intl/intl.dart';
 
 class MortPage extends StatefulWidget {
-  LambModel _currentLamb ;
+  final LambModel _currentLamb ;
   MortPage( this._currentLamb, {Key key}) : super(key: key);
 
   @override
@@ -168,6 +167,7 @@ class _MortPageState extends State<MortPage> {
 
   @override
   void initState() {
+    super.initState();
     _dateMortCtl.text = _df.format(DateTime.now());
   }
 

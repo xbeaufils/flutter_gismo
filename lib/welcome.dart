@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/main.dart';
 
 
@@ -89,7 +88,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       ))),
                   Container( child:
                     FlatButton(
-                      onPressed: NecPressed,
+                      onPressed: necPressed,
                       //color: Theme.of(context).accentColor,
                       child: new Column(
                         children: <Widget>[
@@ -194,10 +193,10 @@ class _WelcomePageState extends State<WelcomePage> {
     Navigator.pushNamed(context, '/sanitaire');
   }
   void lambPressed() {
-    var result = Navigator.pushNamed(context, '/lamb');
+    Navigator.pushNamed(context, '/lamb');
   }
 
-  void NecPressed() {
+  void necPressed() {
     Navigator.pushNamed(context, '/nec');
   }
 }

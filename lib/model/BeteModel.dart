@@ -1,16 +1,7 @@
-import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:dio/dio.dart';
-
-
 enum Sex { male, femelle }
 //enum Motif_Entree {bouclage, achat}
 
 class Bete  {
-  DateTime _selectedDate = DateTime.now();
-  final _df = new DateFormat('dd/MM/yyyy');
-
   int _idBd;
   String _numBoucle;
   String _numMarquage;

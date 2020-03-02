@@ -250,6 +250,7 @@ class _SanitairePageState extends State<SanitairePage> {
 
   @override
   void initState() {
+    super.initState();
     if (this.widget._currentTraitement != null) {
       _dateDebutCtl.text = this.widget._currentTraitement.debut ;
       _doseCtl.text = this.widget._currentTraitement.dose  ;

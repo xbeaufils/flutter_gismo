@@ -36,8 +36,8 @@ class _LambPageState extends State<LambPage> {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  _LambPageState() {
-  }
+  _LambPageState();
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(

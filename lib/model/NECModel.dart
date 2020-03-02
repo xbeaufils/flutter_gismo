@@ -61,7 +61,7 @@ class NoteModel {
   int _note;
   int _idBete;
 
-  NoteModel() {}
+  NoteModel();
 
   NoteModel.fromResult(result) {
     _idBd= result["idBd"] ;

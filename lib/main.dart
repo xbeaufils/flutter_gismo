@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/Bete.dart';
 import 'package:flutter_gismo/ConfigPage.dart';
 import 'package:flutter_gismo/Mouvement/EntreePage.dart';
 import 'package:flutter_gismo/SearchPage.dart';

@@ -77,7 +77,7 @@ class LambsPageState extends State<LambsPage> {
   }
 
   void _openBoucle(LambModel lamb, String dateNaissance) {
-    var navigationResult = Navigator.push(
+    Navigator.push(
         context,
         MaterialPageRoute(
         builder: (context) => BouclagePage(lamb, dateNaissance)),

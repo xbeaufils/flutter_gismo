@@ -80,13 +80,6 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-   void _viewMessage(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
-  }
-
   Widget _buildList() {
     if (!(_searchText.isEmpty)) {
       List<Bete> tempList = new List();
