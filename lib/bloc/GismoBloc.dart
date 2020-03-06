@@ -5,6 +5,7 @@ import 'package:flutter_gismo/bloc/GismoRepository.dart';
 import 'package:flutter_gismo/bloc/WebDataProvider.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/model/User.dart';
@@ -21,8 +22,7 @@ class GismoBloc {
   User _currentUser;
   GismoRepository _repository;
 
-  GismoBloc() {
-  }
+  GismoBloc();
 
   Future<Null> init() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -66,23 +66,7 @@ class GismoBloc {
     WebDataProvider aProvider = new WebDataProvider();
     this._currentUser = user;
     return aProvider.auth(user);
-    /*
-    try {
-      final response = await dio.post(urlTarget + '/user/auth', data: user.toMap());
-      debug.log("Send authentication", name: "GismoBloc::auth");
-      if (response.data['error']) {
-        throw (response.data['message']);
-      }
-      else {
-        user.setCheptel(response.data['result']["cheptel"]);
-      }
-    } on DioError catch (e) {
-      throw ("Erreur de connection à " + urlTarget);
-    }
-    debug.log("User is $user.cheptel", name: "GismoBloc::auth");
-    return user;
-     */
-  }
+   }
 
   Future<String> saveLambing(LambingModel lambing ) async {
     return this._repository.dataProvider.saveLambing(lambing);
@@ -203,6 +187,18 @@ class GismoBloc {
     catch(e) {
       return "Une erreur est survenue";
     }
+  }
+
+  Future<List<LotModel>> getLots() {
+    return this._repository.dataProvider.getLots(_currentUser.cheptel);
+  }
+
+  Future<List<Bete>> getBrebis(int idLot) {
+    return this._repository.dataProvider.getBrebis(idLot);
+  }
+
+  Future<List<Bete>> getBeliers(int idLot) {
+    return this._repository.dataProvider.getBeliers(idLot);
   }
 }
 

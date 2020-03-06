@@ -1,5 +1,6 @@
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 
@@ -20,4 +21,9 @@ abstract class DataProvider {
   Future<void> mort(LambModel lamb, String motif, String date);
   Future<String> saveNec(NoteModel node);
   Future<List<NoteModel>> getNec(Bete bete);
+  Future<List<LotModel>> getLots(String cheptel) ;
+  Future<List<Bete>>getBrebis(int idLot);
+  Future<List<Bete>>getBeliers(int idLot);
+  Future<void> affect(LotModel lot, Bete bete);
+  Future<void> remove(LotModel lot, Bete bete);
 }

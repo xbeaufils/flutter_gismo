@@ -41,8 +41,18 @@ class _WelcomePageState extends State<WelcomePage> {
                   ),
                   */
                   Container( child:
-                    new FlatButton(
+                  new FlatButton(
                       onPressed:iconButtonPressed,
+                      child: new Column(
+                        children: <Widget>[
+                          new Image.asset('assets/Lot.png'),
+                          new Text("Parcelles")
+                        ],
+                      )
+                  )),
+                  Container( child:
+                    new FlatButton(
+                      onPressed: _lotPressed,
                       child: new Column(
                         children: <Widget>[
                           new Image.asset('assets/Lot.png'),
@@ -59,7 +69,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   */
                   Container( child:
                     new FlatButton(
-                      onPressed: individuPressed,
+                      onPressed: _individuPressed,
                       child: new Column(
                         children: <Widget>[
                           new Image.asset('assets/brebis.png'),
@@ -79,7 +89,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 children: <Widget>[
                   Container( child:
                     new FlatButton(
-                      onPressed: lambPressed,
+                      onPressed: _lambPressed,
                       child: new Column(
                         children: <Widget>[
                           new Image.asset('assets/lamb.png'),
@@ -88,7 +98,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       ))),
                   Container( child:
                     FlatButton(
-                      onPressed: necPressed,
+                      onPressed: _necPressed,
                       //color: Theme.of(context).accentColor,
                       child: new Column(
                         children: <Widget>[
@@ -98,7 +108,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       ))),
                   Container( child:
                     new FlatButton(
-                      onPressed: traitementPressed,
+                      onPressed: _traitementPressed,
                       child: new Column(
                         children: <Widget>[
                           new Image.asset('assets/syringe.png'),
@@ -143,7 +153,7 @@ class _WelcomePageState extends State<WelcomePage> {
               children: <Widget>[
                 Container( child:
                   new FlatButton(
-                      onPressed: settingPressed,
+                      onPressed: _settingPressed,
                       child: new Column(
                         children: <Widget>[
                           new Image.asset('assets/Control-Panel-icon.png'),
@@ -156,15 +166,18 @@ class _WelcomePageState extends State<WelcomePage> {
             )
           )]));
   }
-  void iconButtonPressed(){}
+  void iconButtonPressed(){
+    Navigator.pushNamed(context, '/parcelle');
 
-  void settingPressed() {
+  }
+
+  void _settingPressed() {
     var message = Navigator.pushNamed(context, '/config');
     message.then( (message) {showMessage(message);})
         .catchError( (message) {showMessage(message);});
   }
 
-  void individuPressed() {
+  void _individuPressed() {
     Navigator.pushNamed(context, '/search');
   }
 
@@ -189,14 +202,19 @@ class _WelcomePageState extends State<WelcomePage> {
     _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
-  void traitementPressed() {
+  void _traitementPressed() {
     Navigator.pushNamed(context, '/sanitaire');
   }
-  void lambPressed() {
+  void _lambPressed() {
     Navigator.pushNamed(context, '/lamb');
   }
 
-  void necPressed() {
+  void _necPressed() {
     Navigator.pushNamed(context, '/nec');
   }
+
+  void _lotPressed() {
+    Navigator.pushNamed(context, '/lot');
+  }
+
 }

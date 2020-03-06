@@ -7,13 +7,13 @@ import 'package:flutter_gismo/config.dart';
 import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/model/User.dart';
 
 import 'dart:developer' as debug;
 
-import 'package:shared_preferences/shared_preferences.dart';
 
 class WebDataProvider extends DataProvider {
   static BaseOptions options = new BaseOptions(
@@ -267,7 +267,6 @@ class WebDataProvider extends DataProvider {
     } on DioError catch ( e) {
       throw ("Erreur de connection à " + urlTarget);
     }
-
   }
 
   @override
@@ -284,7 +283,6 @@ class WebDataProvider extends DataProvider {
     } on DioError catch ( e) {
       throw ("Erreur de connection à " + urlTarget);
     }
-
   }
 
   @override
@@ -296,6 +294,63 @@ class WebDataProvider extends DataProvider {
       tempList.add(new NoteModel.fromResult(response.data[i]));
     }
     return tempList;
+  }
+
+  @override
+  Future<List<LotModel>> getLots(String cheptel) async {
+    final response = await _dio.get(
+        '/lot/getAll?/' + cheptel);
+    List<LotModel> tempList = new List();
+    for (int i = 0; i < response.data.length; i++) {
+      tempList.add(new LotModel.fromResult(response.data[i]));
+    }
+    return tempList;
+  }
+
+  @override
+  Future<List<Bete>> getBeliers(int idLot) async {
+    final response = await _dio.get(
+        '/lot/getBeliers/' + idLot.toString());
+    List<Bete> tempList = new List();
+    for (int i = 0; i < response.data.length; i++) {
+      tempList.add(new Bete.fromResult(response.data[i]));
+    }
+    return tempList;
+  }
+
+  @override
+  Future<List<Bete>> getBrebis(int idLot) async {
+    final response = await _dio.get(
+        '/lot/getBrebis/' + idLot.toString());
+    List<Bete> tempList = new List();
+    for (int i = 0; i < response.data.length; i++) {
+      tempList.add(new Bete.fromResult(response.data[i]));
+    }
+    return tempList;
+  }
+
+  @override
+  Future<Function> remove(LotModel lot, Bete bete) async {
+      final Map<String, dynamic> data = new Map<String, dynamic>();
+      data["lamb"] = lot.idb;
+      data["bete"] = bete.idBd;
+      try {
+        final response = await _dio.post(
+            '/lot/del', data: data);
+        if (response.data['error']) {
+          throw (response.data['error']);
+        }
+        else {
+          return response.data['message'];
+        }
+      } on DioError catch ( e) {
+        throw ("Erreur de connection à " + urlTarget);
+      }
+  }
+
+  @override
+  Future<Function> affect(LotModel lot, Bete bete) {
+
   }
 
 

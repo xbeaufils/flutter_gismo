@@ -4,16 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
 import 'package:flutter_gismo/Sanitaire.dart';
-import 'package:flutter_gismo/lamb/Bouclage.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
 import 'package:flutter_gismo/main.dart';
-import 'package:flutter_gismo/model/AdoptionQualite.dart';
-import 'package:flutter_gismo/model/AgnelageQualite.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
-import 'package:intl/intl.dart';
 
 
 class TimeLinePage extends StatefulWidget {
@@ -24,17 +20,11 @@ class TimeLinePage extends StatefulWidget {
 }
 
 class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderStateMixin {
-  TabController _tabController;
+
   final _formKeyIdentity = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Bete _bete;
-  String _numBoucle ;
-  String _numMarquage;
-  String _dateEntree;
-  Sex _sex;
-  String _motif;
-
   int _indexExpandedTraitement = -1;
 
   _TimeLinePageState(this._bete);

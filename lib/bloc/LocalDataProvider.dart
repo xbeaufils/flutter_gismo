@@ -1,8 +1,9 @@
 import 'dart:async';
-import 'dart:io';
+
 import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/model/User.dart';
@@ -90,9 +91,6 @@ class LocalDataProvider extends DataProvider{
         version:1,
     );
   }
-
-  @override
-  Future<User> login(User user) async {}
 
   @override
   Future<List<Bete>> getBetes(String cheptel) async {
@@ -260,7 +258,7 @@ class LocalDataProvider extends DataProvider{
   Future<String> saveTraitement(TraitementModel traitement) async{
     try {
       Database db = await this.database;
-      int res = await db.insert("traitement", traitement.toJson(),
+      await db.insert("traitement", traitement.toJson(),
           conflictAlgorithm: ConflictAlgorithm.replace);
       return " Enregistrement effectué";
     }
@@ -319,6 +317,31 @@ class LocalDataProvider extends DataProvider{
       tempList.add(NoteModel.fromResult(futureMaps[i]));
     }
     return tempList;
+  }
+
+  @override
+  Future<List<LotModel>> getLots(String cheptel) {
+    return null;
+  }
+
+  @override
+  Future<List<Bete>> getBeliers(int idLot) {
+
+  }
+
+  @override
+  Future<List<Bete>> getBrebis(int idLot) {
+
+  }
+
+  @override
+  Future<Function> remove(LotModel lot, Bete bete) {
+
+  }
+
+  @override
+  Future<Function> affect(LotModel lot, Bete bete) {
+
   }
 
 }

@@ -32,7 +32,8 @@ dependencies:
   sqflite:
   path:
   path_provider: ^1.6.1
-
+  webview_flutter: ^0.3.19+8
+  location: ^2.5.0
 
 dev_dependencies:
   flutter_test:
