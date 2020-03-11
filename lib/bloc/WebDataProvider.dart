@@ -299,7 +299,7 @@ class WebDataProvider extends DataProvider {
   @override
   Future<List<LotModel>> getLots(String cheptel) async {
     final response = await _dio.get(
-        '/lot/getAll?/' + cheptel);
+        '/lot/getAll/' + cheptel);
     List<LotModel> tempList = new List();
     for (int i = 0; i < response.data.length; i++) {
       tempList.add(new LotModel.fromResult(response.data[i]));
@@ -308,7 +308,7 @@ class WebDataProvider extends DataProvider {
   }
 
   @override
-  Future<List<Bete>> getBeliers(int idLot) async {
+  Future<List<Bete>> getBeliersForLot(int idLot) async {
     final response = await _dio.get(
         '/lot/getBeliers/' + idLot.toString());
     List<Bete> tempList = new List();
@@ -319,7 +319,7 @@ class WebDataProvider extends DataProvider {
   }
 
   @override
-  Future<List<Bete>> getBrebis(int idLot) async {
+  Future<List<Bete>> getBrebisForLot(int idLot) async {
     final response = await _dio.get(
         '/lot/getBrebis/' + idLot.toString());
     List<Bete> tempList = new List();
@@ -332,8 +332,8 @@ class WebDataProvider extends DataProvider {
   @override
   Future<Function> remove(LotModel lot, Bete bete) async {
       final Map<String, dynamic> data = new Map<String, dynamic>();
-      data["lamb"] = lot.idb;
-      data["bete"] = bete.idBd;
+      data["lotId"] = lot.idb;
+      data["brebisId"] = bete.idBd;
       try {
         final response = await _dio.post(
             '/lot/del', data: data);
@@ -349,8 +349,87 @@ class WebDataProvider extends DataProvider {
   }
 
   @override
-  Future<Function> affect(LotModel lot, Bete bete) {
+  Future<Function> affect(LotModel lot, Bete bete) async {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data["lotId"] = lot.idb;
+    data["brebisId"] = bete.idBd;
+    try {
+      final response = await _dio.post(
+          '/lot/add', data: data);
+      if (response.data['error']) {
+        throw (response.data['error']);
+      }
+      else {
+        return response.data['message'];
+      }
+    } on DioError catch ( e) {
+      throw ("Erreur de connection à " + urlTarget);
+    }
+  }
 
+  @override
+  Future<String> addBete(LotModel lot, Bete bete, String dateEntree) async {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data["lotId"] = lot.idb;
+    data["brebisId"] = bete.idBd;
+    data["dateEntree"] = dateEntree;
+    try {
+      final response = await _dio.post(
+          '/lot/add', data: data);
+      if (response.data['error']) {
+        throw (response.data['error']);
+      }
+      else {
+        return response.data['message'];
+      }
+    } on DioError catch ( e) {
+      throw ("Erreur de connection à " + urlTarget);
+    }
+
+  }
+
+  @override
+  Future<LotModel> saveLot(LotModel lot) async{
+    try {
+      final response = await _dio.post(
+          '/lot/create', data: lot.toJson());
+      if (response.data['error']) {
+        throw (response.data['error']);
+      }
+      else {
+        return LotModel.fromResult(response.data['result']);
+      }
+    } on DioError catch ( e) {
+      throw ("Erreur de connection à " + urlTarget);
+    }
+  }
+
+  @override
+  Future<List<Bete>> getBeliers() async {
+    try {
+      final response = await _dio.get(
+          '/bete/getBeliers/');
+      List<Bete> tempList = new List();
+      for (int i = 0; i < response.data.length; i++) {
+        tempList.add(new Bete.fromResult(response.data[i]));
+      }
+      return tempList;
+    }
+    catch (e) {
+      throw ("Erreur de connection à " + urlTarget);
+    }
+
+  }
+
+  @override
+  Future<List<Bete>> getBrebis() async {
+    final response = await _dio.get(
+        '/bete/getBrebis/');
+    List<Bete> tempList = new List();
+    for (int i = 0; i < response.data.length; i++) {
+      tempList.add(new Bete.fromResult(response.data[i]));
+    }
+    return tempList;
   }
 
 

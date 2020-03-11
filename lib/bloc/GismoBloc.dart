@@ -189,16 +189,35 @@ class GismoBloc {
     }
   }
 
+  Future<LotModel> saveLot(LotModel lot) async {
+    lot.cheptel = this._currentUser.cheptel;
+    LotModel newLot  = await this._repository.dataProvider.saveLot(lot);
+    return newLot;
+  }
+
   Future<List<LotModel>> getLots() {
     return this._repository.dataProvider.getLots(_currentUser.cheptel);
   }
 
-  Future<List<Bete>> getBrebis(int idLot) {
-    return this._repository.dataProvider.getBrebis(idLot);
+  Future<List<Bete>> getBrebisForLot(int idLot) {
+    return this._repository.dataProvider.getBrebisForLot(idLot);
   }
 
-  Future<List<Bete>> getBeliers(int idLot) {
-    return this._repository.dataProvider.getBeliers(idLot);
+  Future<List<Bete>> getBeliersForLot(int idLot) {
+    return this._repository.dataProvider.getBeliersForLot(idLot);
   }
+
+  Future<String> addBete(LotModel lot, Bete bete, String dateEntree) {
+    return this._repository.dataProvider.addBete(lot, bete, dateEntree);
+  }
+
+  Future<List<Bete>> getBrebis() {
+    return this._repository.dataProvider.getBrebis();
+  }
+
+  Future<List<Bete>> getBeliers() {
+    return this._repository.dataProvider.getBeliers();
+  }
+
 }
 

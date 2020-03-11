@@ -72,7 +72,5 @@ class Bete  {
   set cheptel(String value) {
     _cheptel = value;
   }
-
-
 }
 

@@ -22,8 +22,12 @@ abstract class DataProvider {
   Future<String> saveNec(NoteModel node);
   Future<List<NoteModel>> getNec(Bete bete);
   Future<List<LotModel>> getLots(String cheptel) ;
-  Future<List<Bete>>getBrebis(int idLot);
-  Future<List<Bete>>getBeliers(int idLot);
+  Future<List<Bete>>getBrebisForLot(int idLot);
+  Future<List<Bete>>getBeliersForLot(int idLot);
+  Future<List<Bete>>getBrebis();
+  Future<List<Bete>>getBeliers();
   Future<void> affect(LotModel lot, Bete bete);
   Future<void> remove(LotModel lot, Bete bete);
+  Future<LotModel> saveLot(LotModel lot);
+  Future<String> addBete(LotModel lot, Bete bete, String dateEntree);
 }

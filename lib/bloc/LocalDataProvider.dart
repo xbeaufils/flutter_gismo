@@ -325,12 +325,12 @@ class LocalDataProvider extends DataProvider{
   }
 
   @override
-  Future<List<Bete>> getBeliers(int idLot) {
+  Future<List<Bete>> getBeliersForLot(int idLot) {
 
   }
 
   @override
-  Future<List<Bete>> getBrebis(int idLot) {
+  Future<List<Bete>> getBrebisForLot(int idLot) {
 
   }
 
@@ -341,6 +341,26 @@ class LocalDataProvider extends DataProvider{
 
   @override
   Future<Function> affect(LotModel lot, Bete bete) {
+
+  }
+
+  @override
+  Future<LotModel> saveLot(LotModel lot) {
+
+  }
+
+  @override
+  Future<String> addBete(LotModel lot, Bete bete, String dateEntree) {
+
+  }
+
+  @override
+  Future<List<Bete>> getBeliers() {
+
+  }
+
+  @override
+  Future<List<Bete>> getBrebis() {
 
   }
 
