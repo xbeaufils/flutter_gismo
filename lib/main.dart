@@ -25,7 +25,7 @@ void main() async {
   runApp(gismoApp);
 }
 
-enum Page {lamb, sanitaire, etat_corporel, individu, sortie  }
+enum Page {lamb, sanitaire, etat_corporel, individu, sortie, lot  }
 
 class GismoApp extends StatelessWidget {
   final String initialRoute;

@@ -11,7 +11,7 @@ import 'package:flutter_gismo/model/BeteModel.dart';
 class SearchPage extends StatefulWidget {
   GismoBloc _bloc;
   Page _nextPage;
-
+  Sex searchSex;
   get bloc => _bloc;
   get nextPage => _nextPage;
   SearchPage(this._bloc, this._nextPage, { Key key }) : super(key: key);
@@ -50,7 +50,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void initState() {
-    this._getNames();
+    this._getBetes();
     super.initState();
   }
 
@@ -120,7 +120,9 @@ class _SearchPageState extends State<SearchPage> {
         page = NECPage(bete);
         break;
       case Page.sortie:
+      case Page.lot:
         page = null;
+        break;
     }
 
     if (page  == null) {
@@ -173,8 +175,18 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
-  void _getNames() async {
-    List<Bete> lstBetes = await this.widget._bloc.getBetes();
+  void _getBetes() async {
+    List<Bete> lstBetes = null;
+    switch (this.widget.searchSex ) {
+      case Sex.femelle:
+        lstBetes = await gismoBloc.getBrebis();
+        break;
+      case Sex.male :
+        lstBetes = await gismoBloc.getBeliers();
+        break;
+      default :
+        lstBetes = await gismoBloc.getBetes();
+    }
     fillList(lstBetes);
    }
 

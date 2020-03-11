@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
-import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:intl/intl.dart';
@@ -18,7 +17,7 @@ class _EntreePageState extends State<EntreePage> {
   final _df = new DateFormat('dd/MM/yyyy');
   List<Bete> _sheeps;
   String _currentMotif;
-  List<DropdownMenuItem<String>> _MotifEntreeItems;
+  List<DropdownMenuItem<String>> _motifEntreeItems;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   List<DropdownMenuItem<String>> _getMotifEntreeItems() {
@@ -91,7 +90,7 @@ class _EntreePageState extends State<EntreePage> {
                       }),
                   new DropdownButton<String>(
                     value: _currentMotif,
-                    items: _MotifEntreeItems,
+                    items: _motifEntreeItems,
                     hint: Text("Selectionnez une cause d'entree",style: TextStyle(color: Colors.lightGreen,)),
                     onChanged: _changedMotifEntreeItem,
                   )
@@ -171,7 +170,7 @@ class _EntreePageState extends State<EntreePage> {
   void initState() {
     super.initState();
     _sheeps = new List();
-    _MotifEntreeItems = _getMotifEntreeItems();
+    _motifEntreeItems = _getMotifEntreeItems();
     _dateEntreeCtl.text = _df.format(DateTime.now());
   }
 
