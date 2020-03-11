@@ -69,6 +69,12 @@ flutter:
     - assets/Control-Panel-icon.png
     - assets/home.png
     - assets/tomb.png
+    - assets/ram.png
+    - assets/ewe.png
+    - assets/ram_actif.png
+    - assets/ewe_actif.png
+    - assets/ram_inactif.png
+    - assets/ewe_inactif.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
