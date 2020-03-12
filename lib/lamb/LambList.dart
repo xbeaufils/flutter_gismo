@@ -42,18 +42,11 @@ class LambsPageState extends State<LambsPage> {
       );
 
     if (lamb.dateDeces != null)
-
       return Column(children: <Widget>[
         Text(CauseMortExtension.getValue(lamb.motifDeces).name),
         Text(lamb.dateDeces),
       ],);
-      /*
-      return ListTile(
-        leading: Image.asset('assets/tomb.png'),
-        title: Text(CauseMortExtension.getValue(lamb.motifDeces).name) ,
-        subtitle: Text(lamb.dateDeces),
-        );
-    */
+
     return Flex(
       mainAxisSize: MainAxisSize.min,
       direction: Axis.horizontal,

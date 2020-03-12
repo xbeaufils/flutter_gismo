@@ -1,3 +1,4 @@
+import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
@@ -22,8 +23,8 @@ abstract class DataProvider {
   Future<String> saveNec(NoteModel node);
   Future<List<NoteModel>> getNec(Bete bete);
   Future<List<LotModel>> getLots(String cheptel) ;
-  Future<List<Bete>>getBrebisForLot(int idLot);
-  Future<List<Bete>>getBeliersForLot(int idLot);
+  Future<List<Affectation>>getBrebisForLot(int idLot);
+  Future<List<Affectation>>getBeliersForLot(int idLot);
   Future<List<Bete>>getBrebis();
   Future<List<Bete>>getBeliers();
   Future<void> affect(LotModel lot, Bete bete);

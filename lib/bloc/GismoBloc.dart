@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter_gismo/bloc/GismoRepository.dart';
 import 'package:flutter_gismo/bloc/WebDataProvider.dart';
+import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
@@ -199,16 +200,20 @@ class GismoBloc {
     return this._repository.dataProvider.getLots(_currentUser.cheptel);
   }
 
-  Future<List<Bete>> getBrebisForLot(int idLot) {
+  Future<List<Affectation>> getBrebisForLot(int idLot) {
     return this._repository.dataProvider.getBrebisForLot(idLot);
   }
 
-  Future<List<Bete>> getBeliersForLot(int idLot) {
+  Future<List<Affectation>> getBeliersForLot(int idLot) {
     return this._repository.dataProvider.getBeliersForLot(idLot);
   }
 
   Future<String> addBete(LotModel lot, Bete bete, String dateEntree) {
     return this._repository.dataProvider.addBete(lot, bete, dateEntree);
+  }
+
+  Future<String> removeFromLot(Affectation bete, String dateSortie) {
+
   }
 
   Future<List<Bete>> getBrebis() {

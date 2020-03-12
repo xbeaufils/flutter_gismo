@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
 import 'package:flutter_gismo/config.dart';
 import 'package:flutter_gismo/main.dart';
+import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
@@ -308,23 +309,23 @@ class WebDataProvider extends DataProvider {
   }
 
   @override
-  Future<List<Bete>> getBeliersForLot(int idLot) async {
+  Future<List<Affectation>> getBeliersForLot(int idLot) async {
     final response = await _dio.get(
         '/lot/getBeliers/' + idLot.toString());
-    List<Bete> tempList = new List();
+    List<Affectation> tempList = new List();
     for (int i = 0; i < response.data.length; i++) {
-      tempList.add(new Bete.fromResult(response.data[i]));
+      tempList.add(new Affectation.fromResult(response.data[i]));
     }
     return tempList;
   }
 
   @override
-  Future<List<Bete>> getBrebisForLot(int idLot) async {
+  Future<List<Affectation>> getBrebisForLot(int idLot) async {
     final response = await _dio.get(
         '/lot/getBrebis/' + idLot.toString());
-    List<Bete> tempList = new List();
+    List<Affectation> tempList = new List();
     for (int i = 0; i < response.data.length; i++) {
-      tempList.add(new Bete.fromResult(response.data[i]));
+      tempList.add(new Affectation.fromResult(response.data[i]));
     }
     return tempList;
   }

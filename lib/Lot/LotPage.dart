@@ -27,18 +27,22 @@ class _LotPageState extends State<LotPage> {
         title: new Text('Lot'),
       ),
       body:
-      new Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            _listLotWidget(),
-           ]
+          SingleChildScrollView(
 
-      ),
+            child:
+              new Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    _listLotWidget(),
+                   ]
+
+              ),
+          ),
       floatingActionButton:
         FloatingActionButton(
-          onPressed: null,
+          onPressed: _createLot,
           backgroundColor: Colors.lightGreen[700],
           child: Icon(Icons.add),),
     );
@@ -61,12 +65,12 @@ class _LotPageState extends State<LotPage> {
               children: <Widget>[
                 Card(child:
                     ListTile(
-                      title: Text(lot.codeLotLutte),
+                      title: Text(lot.campagne),
                       subtitle: Text(lot.dateDebutLutte),
                       trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () => _viewDetails(lot), )
                     )
                 )
-              ],
+                ],
             );
           },
         );
@@ -89,6 +93,15 @@ class _LotPageState extends State<LotPage> {
     return gismoBloc.getLots();
   }
 
-  void buttonPressed(){}
+  void _createLot(){
+    var navigationResult = Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LotAffectationViewPage(new LotModel()),
+      ),
+    );
+    navigationResult.then( (message) {if (message != null) debug.log(message);} );
+
+  }
 
 }

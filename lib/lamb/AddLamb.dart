@@ -23,7 +23,6 @@ class AddingLambingState extends State<AddingLambDialog> {
         new Column(
             children: <Widget>[
               new TextField(
-
                 decoration: InputDecoration(labelText: 'Marquage provisoire'),
                 controller: _marquageCtrl,
               ),

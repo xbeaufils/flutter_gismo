@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
+import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
@@ -325,12 +326,12 @@ class LocalDataProvider extends DataProvider{
   }
 
   @override
-  Future<List<Bete>> getBeliersForLot(int idLot) {
+  Future<List<Affectation>> getBeliersForLot(int idLot) {
 
   }
 
   @override
-  Future<List<Bete>> getBrebisForLot(int idLot) {
+  Future<List<Affectation>> getBrebisForLot(int idLot) {
 
   }
 
