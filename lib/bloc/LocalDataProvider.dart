@@ -1,12 +1,15 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
+import 'package:flutter_gismo/config.dart';
 import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
+import 'package:flutter_gismo/model/ReportModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:path/path.dart';
 //import 'package:path_provider/path_provider.dart';
@@ -18,6 +21,12 @@ class LocalDataProvider extends DataProvider{
 
   // only have a single app-wide reference to the database
   static Database _database;
+  static BaseOptions options = new BaseOptions(
+    baseUrl: urlWebTarget,
+    connectTimeout: 5000,
+    receiveTimeout: 3000,
+  );
+  final Dio _dio = new Dio(options);
 
   Future<Database> get database async {
     if (_database != null) return _database;
@@ -26,12 +35,12 @@ class LocalDataProvider extends DataProvider{
     return _database;
   }
 
-  _init() async{
+  Future<Database> _init() async{
     // Open the database and store the reference.
     //await deleteDatabase(join(await getDatabasesPath(), 'gismo_database.db'));
     Sqflite.setDebugModeOn(true);
 //    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    return await openDatabase(
+    Database database =  await openDatabase(
       // Set the path to the database.
 
         join(await getDatabasesPath() /*documentsDirectory.path*/, 'gismo_database.db'),
@@ -110,6 +119,25 @@ class LocalDataProvider extends DataProvider{
         // path to perform database upgrades and downgrades.
         version:2,
     );
+    Report report = new Report();
+    report.cheptel = gismoBloc.user.cheptel;
+    List<Map<String, dynamic>> maps = await database.rawQuery("select count(*) as nb from bete");
+    report.betes = maps[0]['nb'];
+    maps = await database.rawQuery("select count(*) as nb from lot");
+    report.lots = maps[0]['nb'];
+    maps = await database.rawQuery("select count(*) as nb from affectation");
+    report.affectations = maps[0]['nb'];
+    maps = await database.rawQuery("select count(*) as nb from traitement");
+    report.traitements = maps[0]['nb'];
+    maps = await database.rawQuery("select count(*) as nb from agneaux");
+    report.agneaux = maps[0]['nb'];
+    maps = await database.rawQuery("select count(*) as nb from agnelage");
+    report.agnelages = maps[0]['nb'];
+    maps = await database.rawQuery("select count(*) as nb from NEC");
+    report.nec = maps[0]['nb'];
+    final response = await _dio.post(
+        '/send', data: report.toJson());
+    return database;
   }
 
   @override
