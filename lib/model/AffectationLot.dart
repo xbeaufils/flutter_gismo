@@ -17,8 +17,13 @@ class Affectation {
     data["numMarquage"] = numMarquage;
     data["brebisId"] = brebisId;
     data["lotId"] = lotId;
+    //if (dateEntree != null)
+    //  if (dateEntree.isNotEmpty)
     data["dateEntree"] = dateEntree;
+    //  if (dateSortie != null)
+    //    if (dateSortie.isNotEmpty)
     data["dateSortie"] = dateSortie;
+    return data;
   }
 
   Affectation.fromResult(result) {

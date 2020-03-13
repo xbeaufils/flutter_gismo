@@ -278,8 +278,8 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
         //  _dateEntreeCtl.text = this.widget._currentLot.dateDebutLutte;
         String dateEntree = await _showDateDialog(this.context,
             "Date d'entrée",
-            "Date d'entrée",
-            "Saisir une date d'entrée si différente de la date de début de lot");
+            "Saisir une date d'entrée si différente de la date de début de lot",
+            "Date d'entrée");
         if (dateEntree.isEmpty)
           dateEntree = null;
         String message = await gismoBloc.addBete(currentLot, selectedBete, dateEntree);

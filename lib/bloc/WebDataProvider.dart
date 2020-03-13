@@ -331,13 +331,10 @@ class WebDataProvider extends DataProvider {
   }
 
   @override
-  Future<Function> remove(LotModel lot, Bete bete) async {
-      final Map<String, dynamic> data = new Map<String, dynamic>();
-      data["lotId"] = lot.idb;
-      data["brebisId"] = bete.idBd;
+  Future<Function> remove(Affectation affect) async {
       try {
         final response = await _dio.post(
-            '/lot/del', data: data);
+            '/lot/del', data: affect.toJson());
         if (response.data['error']) {
           throw (response.data['error']);
         }
@@ -348,7 +345,7 @@ class WebDataProvider extends DataProvider {
         throw ("Erreur de connection à " + urlTarget);
       }
   }
-
+/*
   @override
   Future<Function> affect(LotModel lot, Bete bete) async {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -367,7 +364,7 @@ class WebDataProvider extends DataProvider {
       throw ("Erreur de connection à " + urlTarget);
     }
   }
-
+*/
   @override
   Future<String> addBete(LotModel lot, Bete bete, String dateEntree) async {
     final Map<String, dynamic> data = new Map<String, dynamic>();

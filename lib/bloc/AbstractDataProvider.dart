@@ -27,8 +27,7 @@ abstract class DataProvider {
   Future<List<Affectation>>getBeliersForLot(int idLot);
   Future<List<Bete>>getBrebis();
   Future<List<Bete>>getBeliers();
-  Future<void> affect(LotModel lot, Bete bete);
-  Future<void> remove(LotModel lot, Bete bete);
+  Future<void> remove(Affectation affect);
   Future<LotModel> saveLot(LotModel lot);
   Future<String> addBete(LotModel lot, Bete bete, String dateEntree);
 }

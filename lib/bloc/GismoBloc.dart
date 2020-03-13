@@ -212,8 +212,9 @@ class GismoBloc {
     return this._repository.dataProvider.addBete(lot, bete, dateEntree);
   }
 
-  Future<String> removeFromLot(Affectation bete, String dateSortie) {
-
+  Future<String> removeFromLot(Affectation affect, String dateSortie) {
+    affect.dateSortie = dateSortie;
+    return this._repository.dataProvider.remove(affect);
   }
 
   Future<List<Bete>> getBrebis() {

@@ -87,22 +87,24 @@ class LocalDataProvider extends DataProvider{
             "`ordonnance` TEXT)",);
 
           },
+      onDowngrade: (db, oldVersion, newVersion) {
+          db.execute("DROP TABLE `lot`");
+          db.execute("DROP TABLE `affectation`");
+      },
         onUpgrade:(db, oldVersion, newVersion) {
           db.execute("CREATE TABLE `affectation` ("
-          "`id` INTEGER PRIMARY KEY NOT NULL,"
-          "`entree` TEXT NULL DEFAULT NULL,"
-          "`sortie` TEXT NULL DEFAULT NULL,"
-          "`bete_id` INTEGER NULL DEFAULT NULL,"
-          "`lot_id` INTEGER NULL DEFAULT NULL)");
+          "`idBd` INTEGER PRIMARY KEY NOT NULL,"
+          "`dateEntree` TEXT NULL DEFAULT NULL,"
+          "`dateSortie` TEXT NULL DEFAULT NULL,"
+          "`brebisId` INTEGER NULL DEFAULT NULL,"
+          "`lotId` INTEGER NULL DEFAULT NULL)");
           db.execute("CREATE TABLE `lot` ("
-          "`id` INTEGER PRIMARY KEY NOT NULL,"
+          "`idBd` INTEGER PRIMARY KEY NOT NULL,"
           "`cheptel` TEXT NULL DEFAULT NULL,"
           "`codeLotLutte` TEXT NULL DEFAULT NULL,"
-          "`codeLutteMain` INTEGER NOT NULL,"
           "`dateDebutLutte` TEXT NULL DEFAULT NULL,"
           "`dateFinLutte` TEXT NULL DEFAULT NULL,"
           "`campagne` TEXT NULL DEFAULT NULL)");
-
         },
         // Set the version. This executes the onCreate function and provides a
         // path to perform database upgrades and downgrades.
@@ -351,9 +353,9 @@ class LocalDataProvider extends DataProvider{
   Future<List<Affectation>> getBeliersForLot(int idLot) async {
     Database db = await this.database;
     List<Map<String, dynamic>> maps = await db.rawQuery(
-        'Select affectation.id, bete.numBoucle, bete.numMarquage, affectation.dateEntree, affecattion.dateSortie '
-        'from affectation INNER JOIN bete ON affectation.bete_id = bete.id '
-        'where lot_id = ' + idLot.toString()
+        'Select affectation.idBd, bete.numBoucle, bete.numMarquage, affectation.dateEntree, affectation.dateSortie '
+        'from affectation INNER JOIN bete ON affectation.brebisId = bete.id '
+        'where lotId = ' + idLot.toString()
         + " AND bete.sex = 'male' ");
     List<Affectation> tempList = new List();
     for (int i = 0; i < maps.length; i++) {
@@ -366,9 +368,9 @@ class LocalDataProvider extends DataProvider{
   Future<List<Affectation>> getBrebisForLot(int idLot) async {
     Database db = await this.database;
     List<Map<String, dynamic>> maps = await db.rawQuery(
-        'Select affectation.id, bete.numBoucle, bete.numMarquage, affectation.dateEntree, affectation.dateSortie '
-            'from affectation INNER JOIN bete ON affectation.bete_id = bete.id '
-            'where lot_id = ' + idLot.toString()
+        'Select affectation.idBd, bete.numBoucle, bete.numMarquage, affectation.dateEntree, affectation.dateSortie '
+            'from affectation INNER JOIN bete ON affectation.brebisId = bete.id '
+            'where lotId = ' + idLot.toString()
             + " AND bete.sex = 'femelle' ");
     List<Affectation> tempList = new List();
     for (int i = 0; i < maps.length; i++) {
@@ -378,19 +380,9 @@ class LocalDataProvider extends DataProvider{
   }
 
   @override
-  Future<Function> remove(LotModel lot, Bete bete) {
-
-  }
-
-  @override
-  Future<Function> affect(LotModel lot, Bete bete) async{
-    Affectation affect = new Affectation();
-    affect.lotId = lot.idb;
-    affect.brebisId = bete.idBd;
+  Future<void> remove(Affectation affect) async{
     Database db = await this.database;
-    await db.insert("affectation", affect.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
-
+    db.update("affectation", affect.toJson(), where: "id = ?", whereArgs: <int>[affect.idAffectation]);
   }
 
   @override
@@ -409,16 +401,25 @@ class LocalDataProvider extends DataProvider{
   }
 
   @override
-  Future<String> addBete(LotModel lot, Bete bete, String dateEntree) async{
-    Affectation affect = new Affectation();
-    affect.lotId = lot.idb;
-    affect.brebisId = bete.idBd;
-    if (dateEntree.isNotEmpty)
-      affect.dateEntree = dateEntree;
-    Database db = await this.database;
-    await db.insert("affectation", affect.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
-
+  Future<String> addBete(LotModel lot, Bete bete, String dateEntree) async {
+    try {
+      Affectation affect = new Affectation();
+      affect.lotId = lot.idb;
+      affect.brebisId = bete.idBd;
+      if (dateEntree != null)
+        if (dateEntree.isNotEmpty)
+          affect.dateEntree = dateEntree;
+      Map<String, dynamic> dataDb = new Map.from(affect.toJson());
+      dataDb.remove("numBoucle");
+      dataDb.remove("numMarquage");
+      Database db = await this.database;
+      await db.insert("affectation", dataDb,
+          conflictAlgorithm: ConflictAlgorithm.replace);
+    }
+    catch (e) {
+      return "Une erreur est survenue :" + e.toString();
+    }
+    return "Enregistrement efectué";
   }
 
   @override
