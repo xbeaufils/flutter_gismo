@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
+import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
-import 'package:flutter_gismo/model/User.dart';
 import 'package:path/path.dart';
 //import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -87,9 +87,26 @@ class LocalDataProvider extends DataProvider{
             "`ordonnance` TEXT)",);
 
           },
+        onUpgrade:(db, oldVersion, newVersion) {
+          db.execute("CREATE TABLE `affectation` ("
+          "`id` INTEGER PRIMARY KEY NOT NULL,"
+          "`entree` TEXT NULL DEFAULT NULL,"
+          "`sortie` TEXT NULL DEFAULT NULL,"
+          "`bete_id` INTEGER NULL DEFAULT NULL,"
+          "`lot_id` INTEGER NULL DEFAULT NULL)");
+          db.execute("CREATE TABLE `lot` ("
+          "`id` INTEGER PRIMARY KEY NOT NULL,"
+          "`cheptel` TEXT NULL DEFAULT NULL,"
+          "`codeLotLutte` TEXT NULL DEFAULT NULL,"
+          "`codeLutteMain` INTEGER NOT NULL,"
+          "`dateDebutLutte` TEXT NULL DEFAULT NULL,"
+          "`dateFinLutte` TEXT NULL DEFAULT NULL,"
+          "`campagne` TEXT NULL DEFAULT NULL)");
+
+        },
         // Set the version. This executes the onCreate function and provides a
         // path to perform database upgrades and downgrades.
-        version:1,
+        version:2,
     );
   }
 
@@ -266,7 +283,6 @@ class LocalDataProvider extends DataProvider{
     catch(e) {
       debug.log("Error", error: e);
     }
-
   }
 
   @override
@@ -321,18 +337,44 @@ class LocalDataProvider extends DataProvider{
   }
 
   @override
-  Future<List<LotModel>> getLots(String cheptel) {
-    return null;
+  Future<List<LotModel>> getLots(String cheptel) async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> maps = await db.query('lot' ,where: 'cheptel = ?', whereArgs: [cheptel]);
+    List<LotModel> tempList = new List();
+    for (int i = 0; i < maps.length; i++) {
+      tempList.add(new LotModel.fromResult(maps[i]));
+    }
+    return tempList;
   }
 
   @override
-  Future<List<Affectation>> getBeliersForLot(int idLot) {
-
+  Future<List<Affectation>> getBeliersForLot(int idLot) async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> maps = await db.rawQuery(
+        'Select affectation.id, bete.numBoucle, bete.numMarquage, affectation.dateEntree, affecattion.dateSortie '
+        'from affectation INNER JOIN bete ON affectation.bete_id = bete.id '
+        'where lot_id = ' + idLot.toString()
+        + " AND bete.sex = 'male' ");
+    List<Affectation> tempList = new List();
+    for (int i = 0; i < maps.length; i++) {
+      tempList.add(new Affectation.fromResult(maps[i]));
+    }
+    return tempList;
   }
 
   @override
-  Future<List<Affectation>> getBrebisForLot(int idLot) {
-
+  Future<List<Affectation>> getBrebisForLot(int idLot) async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> maps = await db.rawQuery(
+        'Select affectation.id, bete.numBoucle, bete.numMarquage, affectation.dateEntree, affectation.dateSortie '
+            'from affectation INNER JOIN bete ON affectation.bete_id = bete.id '
+            'where lot_id = ' + idLot.toString()
+            + " AND bete.sex = 'femelle' ");
+    List<Affectation> tempList = new List();
+    for (int i = 0; i < maps.length; i++) {
+      tempList.add(new Affectation.fromResult(maps[i]));
+    }
+    return tempList;
   }
 
   @override
@@ -341,28 +383,70 @@ class LocalDataProvider extends DataProvider{
   }
 
   @override
-  Future<Function> affect(LotModel lot, Bete bete) {
+  Future<Function> affect(LotModel lot, Bete bete) async{
+    Affectation affect = new Affectation();
+    affect.lotId = lot.idb;
+    affect.brebisId = bete.idBd;
+    Database db = await this.database;
+    await db.insert("affectation", affect.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
 
   }
 
   @override
-  Future<LotModel> saveLot(LotModel lot) {
+  Future<LotModel> saveLot(LotModel lot) async {
+    try {
+      Database db = await this.database;
+      int id = await db.insert("lot", lot.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+      lot.idb = id;
+      return lot;
+    }
+    catch(e) {
+      debug.log("Error", error: e);
+    }
 
   }
 
   @override
-  Future<String> addBete(LotModel lot, Bete bete, String dateEntree) {
+  Future<String> addBete(LotModel lot, Bete bete, String dateEntree) async{
+    Affectation affect = new Affectation();
+    affect.lotId = lot.idb;
+    affect.brebisId = bete.idBd;
+    if (dateEntree.isNotEmpty)
+      affect.dateEntree = dateEntree;
+    Database db = await this.database;
+    await db.insert("affectation", affect.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
 
   }
 
   @override
-  Future<List<Bete>> getBeliers() {
-
+  Future<List<Bete>> getBeliers() async{
+    Database db = await this.database;
+    List<Map<String, dynamic>> maps = await db.rawQuery(
+        'Select * from bete '
+            + "WHERE bete.sex = 'male' "
+            "AND cheptel = '" + gismoBloc.user.cheptel + "'");
+    List<Bete> tempList = new List();
+    for (int i = 0; i < maps.length; i++) {
+      tempList.add(new Bete.fromResult(maps[i]));
+    }
+    return tempList;
   }
 
   @override
-  Future<List<Bete>> getBrebis() {
-
+  Future<List<Bete>> getBrebis() async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> maps = await db.rawQuery(
+        'Select * from bete '
+            + "WHERE bete.sex = 'femelle' "
+    "AND cheptel = '" + gismoBloc.user.cheptel + "'");
+    List<Bete> tempList = new List();
+    for (int i = 0; i < maps.length; i++) {
+      tempList.add(new Bete.fromResult(maps[i]));
+    }
+     return tempList;
   }
 
 }
