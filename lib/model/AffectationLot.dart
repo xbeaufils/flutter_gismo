@@ -7,6 +7,8 @@ class Affectation {
   String dateEntree;
   String dateSortie;
 
+  Affectation();
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (idAffectation != null)
