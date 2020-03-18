@@ -57,6 +57,8 @@ flutter:
   #  - images/a_dot_ham.jpeg
   assets:
     - assets/Lot.png
+    - assets/Lot_entree.png
+    - assets/Lot_sortie.png
     - assets/brebis.png
     - assets/brebis2.png
     - assets/lamb.png

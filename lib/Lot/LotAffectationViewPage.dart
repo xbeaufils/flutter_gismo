@@ -347,6 +347,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
      }
      currentLot.campagne = _campagneCtrl.text;
     this.widget._currentLot = await gismoBloc.saveLot(currentLot);
+
   }
 
   Future<List<Affectation>> _getBeliers(int idLot)  {

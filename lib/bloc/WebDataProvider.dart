@@ -403,6 +403,23 @@ class WebDataProvider extends DataProvider {
   }
 
   @override
+  Future<List<Affectation>> getAffectationForBete(int idBete) async {
+    try {
+      final response = await _dio.get(
+          '/lot/bete/' + idBete.toString());
+      List<Affectation> tempList = new List();
+      for (int i = 0; i < response.data.length; i++) {
+        tempList.add(new Affectation.fromResult(response.data[i]));
+      }
+      return tempList;
+    }
+    catch (e) {
+      throw ("Erreur de connection à " + urlTarget);
+    }
+
+  }
+
+  @override
   Future<List<Bete>> getBeliers() async {
     try {
       final response = await _dio.get(

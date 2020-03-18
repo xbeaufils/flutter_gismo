@@ -4,6 +4,7 @@ class Affectation {
   String numMarquage;
   int brebisId;
   int lotId;
+  String lotName;
   String dateEntree;
   String dateSortie;
 
@@ -26,14 +27,23 @@ class Affectation {
     return data;
   }
 
-  Affectation.fromResult(result) {
+  Affectation.fromResult(Map result) {
+    //result.containsKey("dateFinLutte")
     idAffectation = result["idBd"];
     numBoucle = result["numBoucle"];
     numMarquage = result["numMarquage"];
     brebisId = result["brebisId"];
     lotId = result["lotId"];
+    lotName = result["lotName"];
     dateEntree = result["dateEntree"];
+    if (dateEntree == null)
+      dateEntree = result["dateDebutLutte"];
+    else if (dateEntree.isEmpty)
+      dateEntree = result["dateDebutLutte"];
     dateSortie = result["dateSortie"];
-
+    if (dateSortie == null)
+      dateSortie = result["dateFinLutte"];
+    else if (dateSortie.isEmpty)
+      dateSortie = result["dateFinLutte"];
   }
 }

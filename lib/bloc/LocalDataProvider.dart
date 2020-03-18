@@ -135,9 +135,16 @@ class LocalDataProvider extends DataProvider{
     report.agnelages = maps[0]['nb'];
     maps = await database.rawQuery("select count(*) as nb from NEC");
     report.nec = maps[0]['nb'];
-    final response = await _dio.post(
-        '/send', data: report.toJson());
-    return database;
+    try {
+      final response = await _dio.post(
+          '/send', data: report.toJson());
+    }
+    catch(e) {
+      debug.log("message" + e , name: "LocalDataProvider::_init");
+    }
+    finally {
+      return database;
+    }
   }
 
   @override
@@ -448,6 +455,25 @@ class LocalDataProvider extends DataProvider{
       return "Une erreur est survenue :" + e.toString();
     }
     return "Enregistrement efectué";
+  }
+
+  @override
+  Future<List<Affectation>> getAffectationForBete(int idBete) async {
+    try {
+      Database db = await this.database;
+      List<Map<String, dynamic>> maps = await db.rawQuery(
+          "SELECT affec.*, lot.codeLotLutte as lotName, lot.dateDebutLutte, lot.dateFinLutte FROM affectation affec "
+              "LEFT outer JOIN lot lot ON affec.lotId = lot.idBd "
+              "WHERE brebisId= " + idBete.toString());
+      List<Affectation> tempList = new List();
+      for (int i = 0; i < maps.length; i++) {
+        tempList.add(new Affectation.fromResult(maps[i]));
+      }
+      return tempList;
+    }
+    on DatabaseException catch (e) {
+      debug.log("message " + e.toString());
+    }
   }
 
   @override

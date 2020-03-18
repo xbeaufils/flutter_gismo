@@ -39,7 +39,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       title: const Text('Lot'),
                       onTap: iconButtonPressed
                   ),
-                  */
+                  *//*
                   Container( child:
                   new FlatButton(
                       onPressed:iconButtonPressed,
@@ -49,7 +49,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           new Text("Parcelles")
                         ],
                       )
-                  )),
+                  )),*/
                   Container( child:
                     new FlatButton(
                       onPressed: _lotPressed,

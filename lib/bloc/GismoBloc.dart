@@ -115,14 +115,32 @@ class GismoBloc {
   }
 
   Future<List<Event>> getEvents(Bete bete) async {
+    try {
     List<Event> lstEvents = new List();
+    debug.log("get lambs", name: "GismoBloc::getEvents");
     List<LambingModel> lstLambs = await this._repository.dataProvider.getLambs(bete.idBd);
+    debug.log("get traitements", name: "GismoBloc::getEvents");
     List<TraitementModel> lstTraitement = await this._repository.dataProvider.getTraitements(bete);
+    debug.log("get lots", name: "GismoBloc::getEvents");
+    List<Affectation> lstAffect = await this._repository.dataProvider.getAffectationForBete(bete.idBd);
+    debug.log("get nec", name: "GismoBloc::getEvents");
     List<NoteModel> lstNotes = await this._repository.dataProvider.getNec(bete);
     lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd, EventType.agnelage, lambing.dateAgnelage, lambing.lambs.length.toString()))});
     lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd, EventType.traitement, traitement.debut, traitement.medicament))});
     lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd, EventType.NEC, note.date, note.note.toString()))});
+    lstAffect.forEach( (affect) => {lstEvents.addAll ( _makeEventforAffectation(affect) )});
     lstEvents.sort((a, b) =>  _compareDate(a, b));
+    return lstEvents;
+    }
+    catch(e) {
+      print(e);
+    }
+  }
+
+  List<Event> _makeEventforAffectation(Affectation affect) {
+    List<Event> lstEvents = new List();
+    lstEvents.add(new Event.name(affect.idAffectation, EventType.entreeLot, affect.dateEntree, affect.lotName));
+    lstEvents.add(new Event.name(affect.idAffectation, EventType.sortieLot, affect.dateSortie, affect.lotName));
     return lstEvents;
   }
 
@@ -215,6 +233,10 @@ class GismoBloc {
   Future<String> removeFromLot(Affectation affect, String dateSortie) {
     affect.dateSortie = dateSortie;
     return this._repository.dataProvider.remove(affect);
+  }
+
+  Future<List<Affectation>> getAffectations(int idBete) {
+    return this._repository.dataProvider.getAffectationForBete(idBete);
   }
 
   Future<List<Bete>> getBrebis() {
