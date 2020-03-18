@@ -102,7 +102,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       case EventType.traitement:
         gismoBloc.searchTraitement(event.idBd).then( (traitement) => { _editTraitement(traitement)});
         break;
-      default:
+       default:
     }
   }
 
@@ -138,9 +138,15 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       case EventType.NEC:
         return new Image.asset("assets/etat_corporel.png");
         break;
+      case EventType.entreeLot:
+        return new Image.asset("assets/Lot_entree.png");
+        break;
+      case EventType.sortieLot:
+        return new Image.asset("assets/Lot_sortie.png");
+        break;
       case EventType.entree:
       case EventType.sortie:
-    }
+     }
     return null;
   }
 
