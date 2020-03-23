@@ -75,6 +75,7 @@ class _FicheBetePageState extends State<FicheBetePage> with SingleTickerProvider
 
     );
   }
+
   @override
   void initState() {
     _tabController = new TabController(length: 3, vsync: this);
@@ -184,32 +185,7 @@ class _FicheBetePageState extends State<FicheBetePage> with SingleTickerProvider
                       }
                     }
                 ),
-                /*
-                new Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      new Flexible(child:
-                      RadioListTile<Motif_Entree>(
-                        title: const Text('Bouclage'),
-                        value: Motif_Entree.bouclage,
-                        groupValue: _motif,
-                        onChanged: (Motif_Entree value) { setState(() { _motif = value; }); },
-                      ),
-                      ),
-                      new Flexible( child:
-                      RadioListTile<Motif_Entree>(
-                        title: const Text('Achat'),
-                        value: Motif_Entree.achat,
-                        groupValue: _motif,
-
-                        onChanged: (Motif_Entree value) { setState(() { _motif = value; }); },
-                      ),
-                      ),]
-                ),
-                */
-                new RaisedButton(
+                 new RaisedButton(
                   child: new Text(
                     'Enregistrer',
                     style: new TextStyle(color: Colors.white),
@@ -356,6 +332,7 @@ class _FicheBetePageState extends State<FicheBetePage> with SingleTickerProvider
 
   void _saveIdentity() {
     _formKeyIdentity.currentState.save();
+    if (_numBoucle == null)
     this._bete.numBoucle = _numBoucle;
     this._bete.numMarquage = _numMarquage ;
     this._bete.dateEntree = _dateEntree ;

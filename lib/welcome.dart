@@ -33,23 +33,13 @@ class _WelcomePageState extends State<WelcomePage> {
                 crossAxisSpacing: 4.0,
                 shrinkWrap: true,
                 children: <Widget>[
-                  /*
+
                   ListTile(
                       leading: Image.asset('assets/Lot.png'),
-                      title: const Text('Lot'),
+                      title: const Text('Parcelles'),
                       onTap: iconButtonPressed
                   ),
-                  *//*
-                  Container( child:
-                  new FlatButton(
-                      onPressed:iconButtonPressed,
-                      child: new Column(
-                        children: <Widget>[
-                          new Image.asset('assets/Lot.png'),
-                          new Text("Parcelles")
-                        ],
-                      )
-                  )),*/
+
                   Container( child:
                     new FlatButton(
                       onPressed: _lotPressed,

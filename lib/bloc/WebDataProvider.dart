@@ -38,6 +38,7 @@ class WebDataProvider extends DataProvider {
     options.headers.addAll({"Token": gismoBloc.user.token});
     return options;
   }
+
   FutureOr<dynamic> onError(DioError dioError) {
     debug.log("dioError " + dioError.toString(), name: "WebDataProvider::onError");
     return dioError;
@@ -74,22 +75,8 @@ class WebDataProvider extends DataProvider {
       debug.log("Error " + e.message);
     }
   }
-  /*
-  Future<String> saveLamb(List<LambModel> lambs ) async {
-    List jsonList = List();
-    lambs.map((item)=>
-        jsonList.add(item.toMap())
-    ).toList();
-    final response = await dio.post( '/lamb/add', data: jsonList);
-    if (response.data['error']) {
-      throw (response.data['message']);
-    }
-    else {
-      return response.data['message'];
-    }
-  }
-  */
-  Future<List<Bete>> getBetes(String cheptel) async {
+
+   Future<List<Bete>> getBetes(String cheptel) async {
     final response = await _dio.get(
         '/bete/searchAll?cheptel=' + cheptel);
     List<Bete> tempList = new List();
@@ -345,26 +332,7 @@ class WebDataProvider extends DataProvider {
         throw ("Erreur de connection à " + urlTarget);
       }
   }
-/*
-  @override
-  Future<Function> affect(LotModel lot, Bete bete) async {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["lotId"] = lot.idb;
-    data["brebisId"] = bete.idBd;
-    try {
-      final response = await _dio.post(
-          '/lot/add', data: data);
-      if (response.data['error']) {
-        throw (response.data['error']);
-      }
-      else {
-        return response.data['message'];
-      }
-    } on DioError catch ( e) {
-      throw ("Erreur de connection à " + urlTarget);
-    }
-  }
-*/
+
   @override
   Future<String> addBete(LotModel lot, Bete bete, String dateEntree) async {
     final Map<String, dynamic> data = new Map<String, dynamic>();

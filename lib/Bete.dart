@@ -61,7 +61,7 @@ class _BetePageState extends State<BetePage> {
                       }
                   ),
                   new TextFormField(
-                      keyboardType: TextInputType.number,
+                      //keyboardType: TextInputType.number,
                       initialValue: _numMarquage,
                       decoration: InputDecoration(labelText: 'Numero marquage', hintText: 'Marquage'),
                       validator: (value) {
@@ -113,6 +113,26 @@ class _BetePageState extends State<BetePage> {
 
   void _save() async {
     _formKey.currentState.save();
+    if (_numBoucle == null) {
+      this.badSaving("Numéro de boucle absent");
+      return;
+    }
+    if (_numBoucle.isEmpty){
+      this.badSaving("Numéro de boucle absent");
+      return;
+    }
+    if (_numMarquage == null){
+      this.badSaving("Numéro de marquage absent");
+      return;
+    }
+    if (_numMarquage.isEmpty){
+      this.badSaving("Numéro de marquage absent");
+      return;
+    }
+    if (_sex == null){
+      this.badSaving("Sexe absent");
+      return;
+    }
     if (_bete == null)
       _bete = new Bete(null, _numBoucle, _numMarquage, _dateEntreCtrl.text, _sex, _motif);
     else {
