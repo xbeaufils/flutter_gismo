@@ -18,7 +18,8 @@ class Bete  {
     _numBoucle = result["numBoucle"];
     _numMarquage = result["numMarquage"];
     _dateEntree = result["dateEntree"];
-    _sex= Sex.values.firstWhere((e) => e.toString() == 'Sex.' + result["sex"]);
+    if (result['sex'] != null)
+      _sex= Sex.values.firstWhere((e) => e.toString() == 'Sex.' + result["sex"], orElse: () => null);
     _motifEntree = result["motifEntree"]; //Motif_Entree.values.firstWhere((e) => e.toString() == 'Motif_Entree.' + result["motifEntree"]);
     _cheptel = result["cheptel"];
   }

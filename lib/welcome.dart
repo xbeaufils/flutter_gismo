@@ -33,12 +33,23 @@ class _WelcomePageState extends State<WelcomePage> {
                 crossAxisSpacing: 4.0,
                 shrinkWrap: true,
                 children: <Widget>[
-
+/*
                   ListTile(
                       leading: Image.asset('assets/Lot.png'),
                       title: const Text('Parcelles'),
                       onTap: iconButtonPressed
                   ),
+  */
+                  Container( child:
+                    new FlatButton(
+                      onPressed: _parcellePressed,
+                      child: new Column(
+                        children: <Widget>[
+                          new Image.asset('assets/parcelles.png'),
+                          new Text("Parcelles")
+                        ],
+                      )
+                  )),
 
                   Container( child:
                     new FlatButton(
@@ -50,14 +61,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         ],
                       )
                   )),
-                  /*
-                  ListTile(
-                      leading: Image.asset('assets/brebis.png'),
-                      title: const Text('Individu'),
-                      onTap: individuPressed
-                  ),
-                  */
-                  Container( child:
+                   Container( child:
                     new FlatButton(
                       onPressed: _individuPressed,
                       child: new Column(
@@ -156,7 +160,7 @@ class _WelcomePageState extends State<WelcomePage> {
             )
           )]));
   }
-  void iconButtonPressed(){
+  void _parcellePressed(){
     Navigator.pushNamed(context, '/parcelle');
 
   }
