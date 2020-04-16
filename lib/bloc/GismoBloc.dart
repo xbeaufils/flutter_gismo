@@ -8,9 +8,12 @@ import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
+import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/model/User.dart';
 import 'package:intl/intl.dart';
+import 'package:location/location.dart';
+import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/BeteModel.dart';
@@ -71,8 +74,8 @@ class GismoBloc {
 
   Future<String> saveLambing(LambingModel lambing ) async {
     return this._repository.dataProvider.saveLambing(lambing);
-
   }
+
   Future<List<LambingModel>> getLambs(int idBete) {
     return this._repository.dataProvider.getLambs(idBete);
   }
@@ -116,21 +119,21 @@ class GismoBloc {
 
   Future<List<Event>> getEvents(Bete bete) async {
     try {
-    List<Event> lstEvents = new List();
-    debug.log("get lambs", name: "GismoBloc::getEvents");
-    List<LambingModel> lstLambs = await this._repository.dataProvider.getLambs(bete.idBd);
-    debug.log("get traitements", name: "GismoBloc::getEvents");
-    List<TraitementModel> lstTraitement = await this._repository.dataProvider.getTraitements(bete);
-    debug.log("get lots", name: "GismoBloc::getEvents");
-    List<Affectation> lstAffect = await this._repository.dataProvider.getAffectationForBete(bete.idBd);
-    debug.log("get nec", name: "GismoBloc::getEvents");
-    List<NoteModel> lstNotes = await this._repository.dataProvider.getNec(bete);
-    lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd, EventType.agnelage, lambing.dateAgnelage, lambing.lambs.length.toString()))});
-    lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd, EventType.traitement, traitement.debut, traitement.medicament))});
-    lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd, EventType.NEC, note.date, note.note.toString()))});
-    lstAffect.forEach( (affect) => {lstEvents.addAll ( _makeEventforAffectation(affect) )});
-    lstEvents.sort((a, b) =>  _compareDate(a, b));
-    return lstEvents;
+      List<Event> lstEvents = new List();
+      debug.log("get lambs", name: "GismoBloc::getEvents");
+      List<LambingModel> lstLambs = await this._repository.dataProvider.getLambs(bete.idBd);
+      debug.log("get traitements", name: "GismoBloc::getEvents");
+      List<TraitementModel> lstTraitement = await this._repository.dataProvider.getTraitements(bete);
+      debug.log("get lots", name: "GismoBloc::getEvents");
+      List<Affectation> lstAffect = await this._repository.dataProvider.getAffectationForBete(bete.idBd);
+      debug.log("get nec", name: "GismoBloc::getEvents");
+      List<NoteModel> lstNotes = await this._repository.dataProvider.getNec(bete);
+      lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd, EventType.agnelage, lambing.dateAgnelage, lambing.lambs.length.toString()))});
+      lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd, EventType.traitement, traitement.debut, traitement.medicament))});
+      lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd, EventType.NEC, note.date, note.note.toString()))});
+      lstAffect.forEach( (affect) => {lstEvents.addAll ( _makeEventforAffectation(affect) )});
+      lstEvents.sort((a, b) =>  _compareDate(a, b));
+      return lstEvents;
     }
     catch(e) {
       print(e);
@@ -183,6 +186,7 @@ class GismoBloc {
     _repository = new GismoRepository(RepositoryType.web);
     return "Enregistrement effectué";
   }
+
   Future<bool> saveLocalConfig(String cheptel) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     _repository = new GismoRepository(RepositoryType.local);
@@ -246,6 +250,46 @@ class GismoBloc {
   Future<List<Bete>> getBeliers() {
     return this._repository.dataProvider.getBeliers();
   }
+
+  Future<String> getCadastre(LocationData myPosition) async {
+    if (this._repository.dataProvider is WebDataProvider) {
+       String cadastre = await (this._repository.dataProvider as WebDataProvider).getCadastre(myPosition);
+       return cadastre;
+    }
+    throw ("Uniquement web");
+  }
+
+  Future<String> getParcelle(LatLng touchPosition) async {
+    if (this._repository.dataProvider is WebDataProvider) {
+      String cadastre = await (this._repository.dataProvider as WebDataProvider).getParcelle(touchPosition);
+      return cadastre;
+    }
+    throw ("Uniquement web");
+  }
+
+  Future<List<Parcelle>> getParcelles()  async{
+    if (this._repository.dataProvider is WebDataProvider) {
+      List<Parcelle> parcelles = await (this._repository.dataProvider as WebDataProvider).getParcelles();
+      return parcelles;
+    }
+    throw ("Uniquement web");
+  }
+
+  Future<Pature> getPature(String idu) async {
+    if (this._repository.dataProvider is WebDataProvider) {
+      Pature pature = await (this._repository.dataProvider as WebDataProvider).getPature(idu);
+      return pature;
+    }
+    throw ("Uniquement web");
+  }
+
+  Future<String> savePature(Pature pature) async {
+    if (this._repository.dataProvider is WebDataProvider) {
+      String message = await (this._repository.dataProvider as WebDataProvider).savePature(pature);
+      return message;
+    }
+    throw ("Uniquement web");
+   }
 
 }
 

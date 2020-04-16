@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as debug;
+import 'dart:math';
+//import 'dart:html';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/main.dart';
+import 'package:flutter_gismo/model/ParcelleModel.dart';
+import 'package:flutter_gismo/parcelle/PaturagePage.dart';
 
 //import 'package:flutter_map/flutter_map.dart';
 //import 'package:latlong/latlong.dart';
@@ -59,13 +63,13 @@ class _ParcellePageState extends State<ParcellePage> {
   //Completer<WebViewController> _controller = Completer<WebViewController>();
   //LocationData _locationData;
   //InAppWebViewController webView;
-  String url = "https://cadastre.data.gouv.fr/map?style=ortho#14.87/45.26433/5.7097";
-  double progress = 0;
+  //String url = "https://cadastre.data.gouv.fr/map?style=ortho#14.87/45.26433/5.7097";
+  //double progress = 0;
 
-  String ignKey="mv1g555wk9ot6na1nux9u7go";
+  //String ignKey="mv1g555wk9ot6na1nux9u7go";
 
   Line _selectedLine;
-
+  List<Parcelle> _myParcelles;
   /*
   MapBox
    */
@@ -74,13 +78,7 @@ class _ParcellePageState extends State<ParcellePage> {
 
   void _onMapCreated(MapboxMapController controller) {
     _mapController = controller;
-    var myParcelle = json.decode('{"type":"Feature","id":"383280000C0439","geometry":{"type":"Polygon","coordinates":[[[5.7352156,45.2621557],[5.7353748,45.2620889],[5.735556,45.2624896],[5.7353009,45.2624862],[5.735291,45.262439],[5.7352804,45.2623352],[5.7352703,45.2622814],[5.7352156,45.2621557]]]},"properties":{"id":"383280000C0439","commune":"38328","prefixe":"000","section":"C","numero":"439","contenance":619,"arpente":false,"created":"2003-11-26","updated":"2019-04-26"}}');
-    LineOptions options = new LineOptions(lineColor: "#FAD042",
-        lineWidth: 4.0,
-        lineOpacity: 0.5,
-        geometry: _buildList(myParcelle['geometry']['coordinates']));
-    debug.log("bounds " + _mapBox.cameraTargetBounds.bounds.toString(), name:"_ParcellePageState::_onMapCreated" );
-    //mapController.addLine(options);
+     //mapController.addLine(options);
     _getLocation().then( (location) => { _drawParcelles(location) })
         .catchError((error, stackTrace) {
         // error is SecondError
@@ -219,6 +217,7 @@ class _ParcellePageState extends State<ParcellePage> {
     //MapboxMap map = new MapboxMap(initialCameraPosition: null);
     _mapBox =  MapboxMap(
       onMapCreated: _onMapCreated,
+      onMapClick: _onMapClick,
       //cameraTargetBounds: ,
       myLocationEnabled: true,
         styleString: MapboxStyles.SATELLITE,
@@ -234,27 +233,58 @@ class _ParcellePageState extends State<ParcellePage> {
         target: LatLng(location.latitude, location.longitude),
         zoom: 14.0,
       ),));
-    //https://api-adresse.data.gouv.fr/reverse/?lon=5.7354067&lat=45.2627
+    _myParcelles =  await gismoBloc.getParcelles();
+    //Map<String, dynamic> parcellesJson =  jsonDecode(parcelles);
     String cadastreStr = await gismoBloc.getCadastre(location);
     Map<String, dynamic> cadastreJson =  jsonDecode(cadastreStr);
     List<dynamic> featuresJson = cadastreJson['features'];
-    debug.log("Coucou " + cadastreStr);
    featuresJson.forEach((feature) => _drawParcelle(feature));
    _mapController.onLineTapped.add(_onLineTapped);
+    OnMapClickCallback getParcelle = _onMapClick;
+
+  }
+
+  void _onMapClick(Point<double> pt, LatLng coord) async {
+    debug.log("coord " + coord.latitude.toString() + " " + coord.longitude.toString(), name:"_ParcellePageState::_onMapClick");
+    String cadastreStr = await gismoBloc.getParcelle(coord);
+    Map<String, dynamic> parcelleJson =  jsonDecode(cadastreStr);
+    if (parcelleJson['features'].length == 0)
+      return;
+    Map<String, dynamic> feature = parcelleJson['features'][0];
+    Parcelle myParcelle = this._myParcelles.firstWhere((parcelle) => parcelle.idu == feature['properties']['IDU'], orElse: () => null);
+    if (myParcelle == null)
+      return;
+
+    debug.log("parcelle " + myParcelle.toString(), name:"_ParcellePageState::_onMapClick");
+    Pature pature = await gismoBloc.getPature(myParcelle.idu);
+    var navigationResult = Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PaturagePage(pature),)
+    );
+
   }
 
   void _drawParcelle(feature) {
+    String lineColor = "#ffffff";
+    double lineWidth = 1.0;
+    Parcelle foundParcelle = _myParcelles.firstWhere((parcelle) => parcelle.idu == feature['properties']['IDU'], orElse: () => null);
+    if (foundParcelle != null) {
+      lineWidth = 6.0;
+        lineColor = '#58db72';
+    }
     Map<String, dynamic>  geometry = feature['geometry'];
     List coordinates = geometry['coordinates'][0][0];
     List<LatLng> lstLatLng = new List();
     coordinates.forEach( (anArray) => lstLatLng.add(LatLng(anArray[1], anArray[0])));
     _mapController.addLine(LineOptions(
       geometry: lstLatLng,
-      lineColor: "#ffffff",
-      lineWidth: 1.0,
+      lineColor: lineColor,
+      lineWidth: lineWidth,
       lineOpacity: 0.5,
     ));
   }
+
   void _onLineTapped(Line line) {
     if (_selectedLine != null) {
       _updateSelectedLine(

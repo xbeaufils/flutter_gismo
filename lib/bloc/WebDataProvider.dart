@@ -10,10 +10,14 @@ import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
+import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/model/User.dart';
 
 import 'dart:developer' as debug;
+
+import 'package:location/location.dart';
+import 'package:mapbox_gl/mapbox_gl.dart';
 
 
 class WebDataProvider extends DataProvider {
@@ -415,5 +419,74 @@ class WebDataProvider extends DataProvider {
     return tempList;
   }
 
+  Future<String> getCadastre(LocationData myPosition) async {
+    try {
+      final response = await _dio.post(
+          '/map/cadastre', data: {
+            'lattitude': myPosition.latitude,
+            'longitude': myPosition.longitude
+      });
+        String cadastre =  response.data;
+        return cadastre;
+    } on DioError catch ( e) {
+      throw ("Erreur de connection à " + urlTarget);
+    }
+  }
 
+  Future<String> getParcelle(LatLng touchPosition) async {
+    try {
+      final response = await _dio.post(
+          '/map/parcelle', data: {
+        'lattitude': touchPosition.latitude,
+        'longitude': touchPosition.longitude
+      });
+      String cadastre =  response.data;
+      return cadastre;
+    } on DioError catch ( e) {
+      throw ("Erreur de connection à " + urlTarget);
+    }
+  }
+
+  Future<List<Parcelle>> getParcelles() async {
+    try {
+      final response = await _dio.get(
+          '/map/parcelles/');
+      List<Parcelle> parcelles = new List();
+      for (int i = 0; i < response.data.length; i++) {
+        parcelles.add(Parcelle.fromResult(response.data[i]));
+      }
+      return parcelles;
+    } on DioError catch ( e) {
+      throw ("Erreur de connection à " + urlTarget);
+    }
+  }
+  Future<Pature> getPature(String idu) async {
+    try {
+      final response = await _dio.get(
+          '/paturage/' + idu);
+      List<Parcelle> parcelles = new List();
+      if( response.data.length>0) {
+        Pature pature = Pature.fromResult(response.data);
+        return pature;
+      }
+      throw ("Pature non trouvée");
+    } on DioError catch ( e) {
+      throw ("Erreur de connection à " + urlTarget);
+    }
+  }
+  Future<String> savePature(Pature pature) async {
+    try {
+      final response = await _dio.post(
+          '/paturage/save', data: pature.toJson());
+      if (response.data['error']) {
+        throw (response.data['error']);
+      }
+      else {
+        return response.data['message'];
+      }
+    } on DioError catch ( e) {
+      throw ("Erreur de connection à " + urlTarget);
+    }
+
+  }
 }
