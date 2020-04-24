@@ -27,8 +27,9 @@ class User {
   setEmail(String value) {
     _email = value;
   }
-  //User(this._email, this._password);
-  User(this._cheptel);
+
+  User(this._email, this._password);
+  //User(this._cheptel);
 
   toMap() {
     return {

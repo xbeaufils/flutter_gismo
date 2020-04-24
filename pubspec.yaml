@@ -32,6 +32,7 @@ dependencies:
   sqflite:
   path:
   path_provider: ^1.6.1
+  flutter_secure_storage: ^3.3.3
   #webview_flutter: ^0.3.19+8
   location: ^2.5.0
   #flutter_map:
@@ -81,6 +82,7 @@ flutter:
     - assets/ram_inactif.png
     - assets/ewe_inactif.png
     - assets/parcelles.png
+    - assets/gismo-64.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

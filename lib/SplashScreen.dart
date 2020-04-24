@@ -24,7 +24,7 @@ class SplashScreenState extends State<SplashScreen> {
   void initState()  {
     debug.log("initState" , name: "SplashScreenState:initState");
     super.initState();
-    _bloc.init().then(route)
+    _bloc.init().then( (message) => route(message))
         .catchError( (e)  {_initError(e);});
     //route(null);
   }
@@ -37,14 +37,16 @@ class SplashScreenState extends State<SplashScreen> {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) =>  ConfigPage(_bloc),
+          builder: (context) =>  WelcomePage(e),
         ));
 
   }
-  void route(Null toto) {
+
+  void route(String message) {
     bool _isLogged = _bloc.isLogged();
     debug.log("Is logged " + _isLogged.toString(), name: "SplashScreenState::route");
-    Widget homePage = _isLogged ? WelcomePage():  ConfigPage(_bloc);
+    Widget homePage = _isLogged ? WelcomePage(message):  ConfigPage(_bloc);
+    homePage = WelcomePage(message);
     Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -52,6 +54,7 @@ class SplashScreenState extends State<SplashScreen> {
           ));
 
   }
+  
   @override
   Widget build(BuildContext context) {
     debug.log("build" , name: "SplashScreenState::build");

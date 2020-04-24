@@ -3,8 +3,8 @@ import 'package:flutter_gismo/main.dart';
 
 
 class WelcomePage extends StatefulWidget {
-
-  WelcomePage( {Key key}) : super(key: key);
+  String _message;
+  WelcomePage( this._message, {Key key}) : super(key: key);
   @override
   _WelcomePageState createState() => new _WelcomePageState();
 }
@@ -12,16 +12,59 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  Widget _getStatus(String message) {
+    if (message == null)
+      message = "";
+    Icon iconConnexion = Icon(Icons.person);
+    Text userName = new Text("utilisateur local");
+    if (gismoBloc.user.subscribe) {
+       iconConnexion = Icon(Icons.verified_user);
+       userName = new Text(gismoBloc.user.email);
+    }
+    return Card(child:
+        Row(children: <Widget>[
+          iconConnexion,
+          userName,
+          new Padding(
+            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+          ),
+          Icon(Icons.notifications ),
+          Text(message),
+        ],)
+      ,
+    );
+  }
+
+  Widget _getActionButton() {
+    if (gismoBloc.user.subscribe) {
+      return IconButton(
+        icon: Icon(Icons.cloud_off),
+        onPressed: _logoutPressed ,
+      );
+    }
+    return IconButton(
+      icon: Icon(Icons.account_box),
+      onPressed: _loginPressed ,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.lightGreen,
+        persistentFooterButtons: <Widget>[
+          _getStatus(this.widget._message ) ,
+        ],
       appBar: new AppBar(
         title: new Text('Gismo ' + gismoBloc.user.cheptel),
         // N'affiche pas la touche back (qui revient à la SplashScreen
         automaticallyImplyLeading: false,
-      ),
+        actions: <Widget>[
+          // action button
+          _getActionButton(),
+        ]
+    ),
       body:
           Column(
               children: <Widget>[
@@ -33,13 +76,6 @@ class _WelcomePageState extends State<WelcomePage> {
                 crossAxisSpacing: 4.0,
                 shrinkWrap: true,
                 children: <Widget>[
-/*
-                  ListTile(
-                      leading: Image.asset('assets/Lot.png'),
-                      title: const Text('Parcelles'),
-                      onTap: iconButtonPressed
-                  ),
-  */
                   Container( child:
                     new FlatButton(
                       onPressed: _parcellePressed,
@@ -137,6 +173,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         ],
                       ))),
               ])),
+            /*
             Card(child:
               GridView.count(
               padding: EdgeInsets.all(8.0),
@@ -154,15 +191,31 @@ class _WelcomePageState extends State<WelcomePage> {
                           new Text("Parametres")
                         ],
                       ))),
-
-          //Container( child: Image.network("https://placeimg.com/640/480/any", fit: BoxFit.cover)),
+                Container( child:
+                  new FlatButton(
+                    onPressed: _settingPressed,
+                    child: new Column(
+                      children: <Widget>[
+                        new Image.asset('assets/gismo-64.png', height: 50, width: 50,fit: BoxFit.fitWidth,),
+                        new Text("Connexion")
+                    ])
+                  )
+                )
               ],
             )
-          )]));
+          ),*/
+              ]));
   }
-  void _parcellePressed(){
-    Navigator.pushNamed(context, '/parcelle');
 
+  @override
+  void initState() {
+   }
+
+  void _parcellePressed(){
+    if (gismoBloc.user.subscribe)
+      Navigator.pushNamed(context, '/parcelle');
+    else
+      this.showMessage("Les parcelles ne sont pas visibles en mode autonome");
   }
 
   void _settingPressed() {
@@ -173,6 +226,22 @@ class _WelcomePageState extends State<WelcomePage> {
 
   void _individuPressed() {
     Navigator.pushNamed(context, '/search');
+  }
+
+  void _loginPressed() {
+    var navigationResult = Navigator.pushNamed(context, '/login');
+    navigationResult.then((message) {
+      setState(() {
+        this.widget._message = message;
+      });
+    });
+  }
+
+  void _logoutPressed() {
+    String message = gismoBloc.logout();
+    setState(() {
+      this.widget._message = message;
+    });
   }
 
   void _sortiePressed() {
@@ -199,6 +268,7 @@ class _WelcomePageState extends State<WelcomePage> {
   void _traitementPressed() {
     Navigator.pushNamed(context, '/sanitaire');
   }
+
   void _lambPressed() {
     Navigator.pushNamed(context, '/lamb');
   }
@@ -210,5 +280,6 @@ class _WelcomePageState extends State<WelcomePage> {
   void _lotPressed() {
     Navigator.pushNamed(context, '/lot');
   }
+
 
 }

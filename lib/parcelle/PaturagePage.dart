@@ -123,14 +123,14 @@ class _PaturagePageState extends State<PaturagePage> {
         ]));
   }
 
-  void _save() {
+  void _save() async {
     debug.log("Message", name: "_PaturagePageState::_save");
     this.widget._pature.lotId = _currentLot;
     this.widget._pature.debut = _dateDebutCtl.text;
     if ( ! _dateFinCtl.text.isEmpty)
       this.widget._pature.fin = _dateFinCtl.text;
-    gismoBloc.savePature(this.widget._pature);
-
+    String message = await gismoBloc.savePature(this.widget._pature);
+    Navigator.pop(context, message);
   }
 
   Future<List<LotModel>> _getLots()  {

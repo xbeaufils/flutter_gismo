@@ -11,6 +11,7 @@ import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/model/User.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
@@ -22,13 +23,32 @@ import 'dart:developer' as debug;
 
 class GismoBloc {
 
-  //AuthService service = new AuthService();
   User _currentUser;
   GismoRepository _repository;
 
   GismoBloc();
 
-  Future<Null> init() async {
+  Future<String> init() async {
+    // Read value
+    FlutterSecureStorage storage = new FlutterSecureStorage();
+    String email = await storage.read(key: "email");
+    if (email == null ) {
+      this._currentUser = new User(null, null);
+      _currentUser.setCheptel("00000000");
+      _currentUser.subscribe = false;
+      _repository = new GismoRepository(RepositoryType.local);
+      debug.log("Mode autonome", name: "GismoBloc::init");
+      return "Mode autonome";
+    }
+    String password = await storage.read(key: "password");
+    this._currentUser = new User(email, password);
+    this._currentUser.setCheptel("");
+    this._currentUser.setToken("Nothing");
+    _repository = new GismoRepository(RepositoryType.web);
+    this._currentUser = await (_repository.dataProvider as WebDataProvider).login(this._currentUser);
+    debug.log('Mode connecté email : $email - cheptel: $this._currentUser.cheptel', name: "GismoBloc::init");
+    return "Mode connecté";
+    /*
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String cheptel = prefs.getString('cheptel');
     bool subscribe = prefs.getBool('subscribe');
@@ -49,14 +69,14 @@ class GismoBloc {
         _repository = new GismoRepository(RepositoryType.local);
       }
     }
-
+    */
   }
 
   bool isLogged() {
      if (_currentUser == null)
       return false;
      debug.log("Cheptel is " + _currentUser.cheptel, name:"GismoBloc::isLogged");
-     return (_currentUser.cheptel != null);
+     return _currentUser.subscribe ;
   }
 
    final dio = new Dio();
@@ -70,7 +90,22 @@ class GismoBloc {
     WebDataProvider aProvider = new WebDataProvider();
     this._currentUser = user;
     return aProvider.auth(user);
-   }
+  }
+
+  Future<User> login(User user) async {
+    WebDataProvider aProvider = new WebDataProvider();
+    this._currentUser = user;
+    return aProvider.login(user);
+  }
+
+  String logout() {
+    this._currentUser = new User(null, null);
+    _currentUser.setCheptel("00000000");
+    _currentUser.subscribe = false;
+    _repository = new GismoRepository(RepositoryType.local);
+    debug.log("Mode autonome", name: "GismoBloc::init");
+    return "Mode autonome";
+  }
 
   Future<String> saveLambing(LambingModel lambing ) async {
     return this._repository.dataProvider.saveLambing(lambing);
@@ -172,7 +207,24 @@ class GismoBloc {
     return this._repository.dataProvider.getBetes(_currentUser.cheptel);
   }
 
+  Future<String> saveLogin(String email, String password) async {
+    try {
+      final storage = new FlutterSecureStorage();
+      User user = User(email, password);
+      this._currentUser = await this.login(user);
+      this._repository = new GismoRepository(RepositoryType.web);
+      storage.write(key: "email", value: email);
+      storage.write(key: "password", value: password);
+      return "Connexion réussie";
+    }
+    catch (e) {
+      throw e;
+    }
+  }
+
   Future<String> saveWebConfig(String cheptel, String email, String token) async {
+    throw ("Deprecated");
+    /*
     User anUser = new User(cheptel);
     anUser.setEmail(email);
     anUser.setToken(token);
@@ -185,9 +237,12 @@ class GismoBloc {
     this._currentUser = anUser;
     _repository = new GismoRepository(RepositoryType.web);
     return "Enregistrement effectué";
+     */
   }
 
   Future<bool> saveLocalConfig(String cheptel) async {
+    throw ("Deprecated");
+    /*
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     _repository = new GismoRepository(RepositoryType.local);
     this._currentUser = new User(cheptel);
@@ -195,6 +250,8 @@ class GismoBloc {
     prefs.remove("email");
     prefs.remove("token");
     return prefs.setString("cheptel", cheptel);
+
+     */
   }
 
   Future<String> saveNec(Bete bete, NEC nec, String date) async{

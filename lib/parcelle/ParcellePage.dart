@@ -60,16 +60,9 @@ class ParcellePage extends StatefulWidget {
 }
 
 class _ParcellePageState extends State<ParcellePage> {
-  //Completer<WebViewController> _controller = Completer<WebViewController>();
-  //LocationData _locationData;
-  //InAppWebViewController webView;
-  //String url = "https://cadastre.data.gouv.fr/map?style=ortho#14.87/45.26433/5.7097";
-  //double progress = 0;
-
-  //String ignKey="mv1g555wk9ot6na1nux9u7go";
-
   Line _selectedLine;
   List<Parcelle> _myParcelles;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   /*
   MapBox
    */
@@ -90,6 +83,7 @@ class _ParcellePageState extends State<ParcellePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: const Text('Parcelles'),
         // This drop down menu demonstrates that Flutter widgets can be shown over the web view.
@@ -239,7 +233,7 @@ class _ParcellePageState extends State<ParcellePage> {
     Map<String, dynamic> cadastreJson =  jsonDecode(cadastreStr);
     List<dynamic> featuresJson = cadastreJson['features'];
    featuresJson.forEach((feature) => _drawParcelle(feature));
-   _mapController.onLineTapped.add(_onLineTapped);
+   //_mapController.onLineTapped.add(_onLineTapped);
     OnMapClickCallback getParcelle = _onMapClick;
 
   }
@@ -262,7 +256,18 @@ class _ParcellePageState extends State<ParcellePage> {
         MaterialPageRoute(
           builder: (context) => PaturagePage(pature),)
     );
+    navigationResult.then((message) {
+      if (message != null)
+        _showMessage(message);
+    });
 
+  }
+
+  void _showMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+    );
+    _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
   void _drawParcelle(feature) {
@@ -271,7 +276,7 @@ class _ParcellePageState extends State<ParcellePage> {
     Parcelle foundParcelle = _myParcelles.firstWhere((parcelle) => parcelle.idu == feature['properties']['IDU'], orElse: () => null);
     if (foundParcelle != null) {
       lineWidth = 6.0;
-        lineColor = '#58db72';
+      lineColor = '#58db72';
     }
     Map<String, dynamic>  geometry = feature['geometry'];
     List coordinates = geometry['coordinates'][0][0];

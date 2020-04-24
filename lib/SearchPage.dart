@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_gismo/Sanitaire.dart';
 import 'package:flutter_gismo/individu/NECPage.dart';
 import 'package:flutter_gismo/individu/TimeLine.dart';
@@ -24,7 +23,6 @@ class _SearchPageState extends State<SearchPage> {
   // final formKey = new GlobalKey<FormState>();
   // final key = new GlobalKey<ScaffoldState>();
   final TextEditingController _filter = new TextEditingController();
-  final dio = new Dio();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   String _searchText = "";

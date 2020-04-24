@@ -121,9 +121,9 @@ class WebDataProvider extends DataProvider {
       if (response.data['error']) {
         throw (response.data['message']);
       }
-      else {
-        user.setCheptel (response.data['result']["cheptel"]);
-      }
+      user.setCheptel (response.data['result']["cheptel"]);
+      user.setToken(response.data['result']["token"]);
+      user.subscribe = true;
     } on DioError catch ( e) {
       throw ("Erreur de connection à " + urlTarget);
     }

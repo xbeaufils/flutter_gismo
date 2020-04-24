@@ -8,8 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthService {
 
   final dio = new Dio();
-  // Login
-  Future<User> isLogged() async {
+  // Login+
+ /* Future<User> isLogged() async {
+
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String cheptel = prefs.getString('cheptel');
     if (cheptel != null) {
@@ -18,6 +19,7 @@ class AuthService {
     }
     return null;
   }
+  */
 
   Future<bool> saveWebConfig(String cheptel, String email, String token) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

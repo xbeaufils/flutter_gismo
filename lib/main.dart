@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/ConfigPage.dart';
 import 'package:flutter_gismo/Lot/LotPage.dart';
 import 'package:flutter_gismo/Mouvement/EntreePage.dart';
+import 'package:flutter_gismo/loginPage.dart';
 import 'package:flutter_gismo/parcelle/ParcellePage.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/Mouvement/SortiePage.dart';
@@ -65,7 +66,8 @@ class GismoApp extends StatelessWidget {
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/config':(context) => ConfigPage(this._bloc),
-        '/welcome': (context) => WelcomePage(),
+        '/welcome': (context) => WelcomePage(null),
+        '/login': (context) => LoginPage(),
         '/nec': (context) => SearchPage(this._bloc, Page.etat_corporel),
         '/search': (context) => SearchPage(this._bloc, Page.individu),
         '/sanitaire' : (context) => SearchPage(this._bloc, Page.sanitaire),

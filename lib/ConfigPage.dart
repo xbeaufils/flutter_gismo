@@ -139,7 +139,7 @@ class _ConfigPageState extends State<ConfigPage> {
       Navigator.pop(context, message);
     else
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (BuildContext context) => WelcomePage()));
+          context, MaterialPageRoute(builder: (BuildContext context) => WelcomePage(null)));
   }
 
   void _onError(e) {
@@ -243,12 +243,14 @@ class _ConfigPageState extends State<ConfigPage> {
   }
 
   void _testConfigPressed() {
+    /*
     User user = User(_cheptelCtrl.text);
     user.setEmail(_emailCtrl.text);
     user.setToken(_tokenCtrl.text);
     gismoBloc.auth(user)
         .then( (user) => {_testConfigOk(user)})
         .catchError((e) => {_testConfigBad()});
+     */
   }
 
   void _testConfigOk(User user) {
