@@ -9,7 +9,7 @@ import 'package:flutter_gismo/model/BeteModel.dart';
 
 class SearchPage extends StatefulWidget {
   GismoBloc _bloc;
-  Page _nextPage;
+  GismoPage _nextPage;
   Sex searchSex;
   get bloc => _bloc;
   get nextPage => _nextPage;
@@ -104,21 +104,21 @@ class _SearchPageState extends State<SearchPage> {
   void selectBete(Bete bete) {
     var page;
     switch (this.widget.nextPage) {
-      case Page.lamb:
+      case GismoPage.lamb:
         page = LambPage(bete);
         break;
-      case Page.sanitaire:
+      case GismoPage.sanitaire:
         page = SanitairePage(bete);
         break;
-      case Page.individu:
+      case GismoPage.individu:
         //page = FicheBetePage(bete);
         page = TimeLinePage(bete);
         break;
-      case Page.etat_corporel:
+      case GismoPage.etat_corporel:
         page = NECPage(bete);
         break;
-      case Page.sortie:
-      case Page.lot:
+      case GismoPage.sortie:
+      case GismoPage.lot:
         page = null;
         break;
     }

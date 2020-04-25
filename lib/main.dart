@@ -26,7 +26,7 @@ void main() async {
   runApp(gismoApp);
 }
 
-enum Page {lamb, sanitaire, etat_corporel, individu, sortie, lot  }
+enum GismoPage {lamb, sanitaire, etat_corporel, individu, sortie, lot  }
 
 class GismoApp extends StatelessWidget {
   final String initialRoute;
@@ -68,11 +68,11 @@ class GismoApp extends StatelessWidget {
         '/config':(context) => ConfigPage(this._bloc),
         '/welcome': (context) => WelcomePage(null),
         '/login': (context) => LoginPage(),
-        '/nec': (context) => SearchPage(this._bloc, Page.etat_corporel),
-        '/search': (context) => SearchPage(this._bloc, Page.individu),
-        '/sanitaire' : (context) => SearchPage(this._bloc, Page.sanitaire),
+        '/nec': (context) => SearchPage(this._bloc, GismoPage.etat_corporel),
+        '/search': (context) => SearchPage(this._bloc, GismoPage.individu),
+        '/sanitaire' : (context) => SearchPage(this._bloc, GismoPage.sanitaire),
         //'/bete' : (context) => BetePage(this._bloc),
-        '/lamb' : (context) => SearchPage(this._bloc, Page.lamb),
+        '/lamb' : (context) => SearchPage(this._bloc, GismoPage.lamb),
         '/sortie': (context) => SortiePage(),
         '/entree': (context) => EntreePage(),
         '/splash' : (context) => SplashScreen(this._bloc),
