@@ -154,7 +154,7 @@ class _SortiePageState extends State<SortiePage> {
   Future _openAddEntryDialog() async {
       Bete selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
           builder: (BuildContext context) {
-            return new SearchPage(gismoBloc, Page.sortie);
+            return new SearchPage(gismoBloc, GismoPage.sortie);
           },
           fullscreenDialog: true
       ));
