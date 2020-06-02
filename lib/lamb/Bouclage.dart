@@ -86,7 +86,7 @@ class _BouclagePageState extends State<BouclagePage> {
     _formKey.currentState.save();
     this.widget._currentLamb.numMarquage = _numMarquage;
     this.widget._currentLamb.numBoucle = _numBoucle;
-    Bete bete = new Bete(null, _numBoucle, _numMarquage, this.widget._dateNaissance, this.widget._currentLamb.sex, 'NAISSANCE');
+    Bete bete = new Bete(null, _numBoucle, _numMarquage, null, this.widget._dateNaissance, this.widget._currentLamb.sex, 'NAISSANCE');
     gismoBloc.boucler(this.widget._currentLamb,bete);
     Navigator
         .of(context)

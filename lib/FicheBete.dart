@@ -24,6 +24,7 @@ class _FicheBetePageState extends State<FicheBetePage> with SingleTickerProvider
   Bete _bete;
   String _numBoucle ;
   String _numMarquage;
+  String _nom;
   String _dateEntree;
   Sex _sex;
   String _motif;
@@ -88,6 +89,7 @@ class _FicheBetePageState extends State<FicheBetePage> with SingleTickerProvider
     _numBoucle = this._bete.numBoucle;
     _numMarquage = this._bete.numMarquage;
     _dateEntree = this._bete.dateEntree;
+    _nom = this._bete.nom;
     _sex = this._bete.sex;
     _motif = this._bete.motifEntree;
 
@@ -129,6 +131,16 @@ class _FicheBetePageState extends State<FicheBetePage> with SingleTickerProvider
                     onSaved: (value) {
                       setState(() {
                         _numMarquage = value;
+                      });
+                    }
+                ),
+                new TextFormField(
+                  //keyboardType: TextInputType.number,
+                    initialValue: _nom,
+                    decoration: InputDecoration(labelText: 'Petit nom', hintText: 'Nom'),
+                    onSaved: (value) {
+                      setState(() {
+                        _nom = value;
                       });
                     }
                 ),
@@ -335,6 +347,7 @@ class _FicheBetePageState extends State<FicheBetePage> with SingleTickerProvider
     if (_numBoucle == null)
     this._bete.numBoucle = _numBoucle;
     this._bete.numMarquage = _numMarquage ;
+    this._bete.nom = _nom;
     this._bete.dateEntree = _dateEntree ;
     this._bete.sex = _sex ;
     this._bete.motifEntree = _motif;

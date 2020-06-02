@@ -38,6 +38,8 @@ dependencies:
   #flutter_map:
   #flutter_inappwebview:
   mapbox_gl: ^0.0.5
+  rts500plugin:
+    path: ../rts500_plugin/
 
 dev_dependencies:
   flutter_test:
@@ -83,6 +85,7 @@ flutter:
     - assets/ewe_inactif.png
     - assets/parcelles.png
     - assets/gismo-64.png
+    - assets/peseur.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

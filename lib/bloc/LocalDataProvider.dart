@@ -72,6 +72,7 @@ class LocalDataProvider extends DataProvider{
             "`motifSortie` TEXT,"
             "`numBoucle` TEXT,"
             "`numMarquage` TEXT,"
+            "`nom` TEXT,"
             "`sex` INTEGER)");
 
             db.execute("CREATE TABLE `NEC` ( "
@@ -101,23 +102,29 @@ class LocalDataProvider extends DataProvider{
           db.execute("DROP TABLE `affectation`");
       },
         onUpgrade:(db, oldVersion, newVersion) {
-          db.execute("CREATE TABLE `affectation` ("
-          "`idBd` INTEGER PRIMARY KEY NOT NULL,"
-          "`dateEntree` TEXT NULL DEFAULT NULL,"
-          "`dateSortie` TEXT NULL DEFAULT NULL,"
-          "`brebisId` INTEGER NULL DEFAULT NULL,"
-          "`lotId` INTEGER NULL DEFAULT NULL)");
-          db.execute("CREATE TABLE `lot` ("
-          "`idBd` INTEGER PRIMARY KEY NOT NULL,"
-          "`cheptel` TEXT NULL DEFAULT NULL,"
-          "`codeLotLutte` TEXT NULL DEFAULT NULL,"
-          "`dateDebutLutte` TEXT NULL DEFAULT NULL,"
-          "`dateFinLutte` TEXT NULL DEFAULT NULL,"
-          "`campagne` TEXT NULL DEFAULT NULL)");
+          if (oldVersion == 1) {
+            db.execute("CREATE TABLE `affectation` ("
+                "`idBd` INTEGER PRIMARY KEY NOT NULL,"
+                "`dateEntree` TEXT NULL DEFAULT NULL,"
+                "`dateSortie` TEXT NULL DEFAULT NULL,"
+                "`brebisId` INTEGER NULL DEFAULT NULL,"
+                "`lotId` INTEGER NULL DEFAULT NULL)");
+            db.execute("CREATE TABLE `lot` ("
+                "`idBd` INTEGER PRIMARY KEY NOT NULL,"
+                "`cheptel` TEXT NULL DEFAULT NULL,"
+                "`codeLotLutte` TEXT NULL DEFAULT NULL,"
+                "`dateDebutLutte` TEXT NULL DEFAULT NULL,"
+                "`dateFinLutte` TEXT NULL DEFAULT NULL,"
+                "`campagne` TEXT NULL DEFAULT NULL)");
+            db.execute("alter table 'bete' add COLUMN 'nom' TEXT;");
+          }
+          if (oldVersion == 2) {
+            db.execute("alter table 'bete' add COLUMN 'nom' TEXT;");
+          }
         },
         // Set the version. This executes the onCreate function and provides a
         // path to perform database upgrades and downgrades.
-        version:2,
+        version:3,
     );
     Report report = new Report();
     report.cheptel = gismoBloc.user.cheptel;

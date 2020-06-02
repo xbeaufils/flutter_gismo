@@ -5,18 +5,20 @@ class Bete  {
   int _idBd;
   String _numBoucle;
   String _numMarquage;
+  String _nom;
   String _dateEntree;
   Sex _sex = Sex.male;
   //Motif_Entree _motifEntree = Motif_Entree.achat;
   String _motifEntree ;
   String _cheptel;
 
-  Bete( this._idBd, this._numBoucle, this._numMarquage, this._dateEntree, this._sex, this._motifEntree);
+  Bete( this._idBd, this._numBoucle, this._numMarquage, this._nom, this._dateEntree, this._sex, this._motifEntree);
 
   Bete.fromResult (result){
     _idBd = result["id"];
     _numBoucle = result["numBoucle"];
     _numMarquage = result["numMarquage"];
+    _nom = result["nom"];
     _dateEntree = result["dateEntree"];
     if (result['sex'] != null)
       _sex= Sex.values.firstWhere((e) => e.toString() == 'Sex.' + result["sex"], orElse: () => null);
@@ -30,6 +32,7 @@ class Bete  {
       data["id"] = _idBd ;
     data["numBoucle"] = _numBoucle;
     data["numMarquage"] = _numMarquage;
+    data["nom"] = _nom;
     data["dateEntree"] = _dateEntree;
     data["sex"]= _sex.toString().split('.').last;
     data["motifEntree"] = _motifEntree.toString().split('.').last;
@@ -40,6 +43,7 @@ class Bete  {
   int get idBd => _idBd;
   String get numBoucle =>_numBoucle;
   String get numMarquage =>_numMarquage;
+  String get nom =>_nom;
   String get dateEntree => _dateEntree ;
   Sex get sex => _sex;
   String get motifEntree =>_motifEntree;
@@ -62,6 +66,10 @@ class Bete  {
 
   set numMarquage(String value) {
     _numMarquage = value;
+  }
+
+  set nom(String value) {
+    _nom = value;
   }
 
   set idBd(int value) {

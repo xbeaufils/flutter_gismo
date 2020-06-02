@@ -21,6 +21,7 @@ class _BetePageState extends State<BetePage> {
   Bete _bete;
   String _numBoucle;
   String _numMarquage;
+  String _nom;
   //String _dateEntree;
   Sex _sex ;
   //Motif_Entree _motif = Motif_Entree.achat;
@@ -50,7 +51,7 @@ class _BetePageState extends State<BetePage> {
                       decoration: InputDecoration(labelText: 'Numero boucle', hintText: 'Boucle'),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter a name';
+                          return 'Entrez un numero de boucle';
                         }
                         return "";
                       },
@@ -66,13 +67,23 @@ class _BetePageState extends State<BetePage> {
                       decoration: InputDecoration(labelText: 'Numero marquage', hintText: 'Marquage'),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter a name';
+                          return 'Entrez un numero de marquage';
                         }
                         return "";
                         },
                       onSaved: (value) {
                         setState(() {
                         _numMarquage = value;
+                        });
+                      }
+                  ),
+                  new TextFormField(
+                    //keyboardType: TextInputType.number,
+                      initialValue: _nom,
+                      decoration: InputDecoration(labelText: 'Petit nom', hintText: 'Nom'),
+                      onSaved: (value) {
+                        setState(() {
+                          _nom = value;
                         });
                       }
                   ),
@@ -134,10 +145,11 @@ class _BetePageState extends State<BetePage> {
       return;
     }
     if (_bete == null)
-      _bete = new Bete(null, _numBoucle, _numMarquage, _dateEntreCtrl.text, _sex, _motif);
+      _bete = new Bete(null, _numBoucle, _numMarquage,_nom,  _dateEntreCtrl.text, _sex, _motif);
     else {
       _bete.numBoucle = _numBoucle;
       _bete.numMarquage = _numMarquage;
+      _bete.nom = _nom;
       _bete.dateEntree =  _dateEntreCtrl.text;
       _bete.sex = _sex;
       _bete.motifEntree = _motif;
@@ -170,6 +182,7 @@ class _BetePageState extends State<BetePage> {
       _dateEntreCtrl.text = _bete.dateEntree;
       _numBoucle = _bete.numBoucle;
       _numMarquage = _bete.numMarquage;
+      _nom = _bete.nom;
       _sex = _bete.sex;
       _motif = _bete.motifEntree;
     }
