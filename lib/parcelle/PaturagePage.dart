@@ -127,7 +127,7 @@ class _PaturagePageState extends State<PaturagePage> {
     debug.log("Message", name: "_PaturagePageState::_save");
     this.widget._pature.lotId = _currentLot;
     this.widget._pature.debut = _dateDebutCtl.text;
-    if ( ! _dateFinCtl.text.isEmpty)
+    if ( _dateFinCtl.text.isNotEmpty)
       this.widget._pature.fin = _dateFinCtl.text;
     String message = await gismoBloc.savePature(this.widget._pature);
     Navigator.pop(context, message);

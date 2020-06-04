@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/bloc/GismoBloc.dart';
 
 import 'package:flutter_gismo/lamb/AddLamb.dart';
 import 'package:flutter_gismo/lamb/Adoption.dart';
 import 'package:flutter_gismo/lamb/AgnelageQualityPage.dart';
 import 'package:flutter_gismo/lamb/LambList.dart';
-import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/AdoptionQualite.dart';
 import 'package:flutter_gismo/model/AgnelageQualite.dart';
@@ -13,17 +13,20 @@ import 'package:intl/intl.dart';
 import 'dart:developer' as debug;
 
 class LambPage extends StatefulWidget {
+  final GismoBloc _bloc;
+
   Bete _mere;
   LambingModel _currentLambing;
-  LambPage(this._mere, {Key key}) : super(key: key);
-  LambPage.edit(this._currentLambing);
+  LambPage(this._bloc, this._mere, {Key key}) : super(key: key);
+  LambPage.edit(this._bloc, this._currentLambing);
 
   @override
-  _LambPageState createState() => new _LambPageState();
+  _LambPageState createState() => new _LambPageState(_bloc);
 }
 
 class _LambPageState extends State<LambPage> {
   //List<LambModel> _lambs = new List();
+  final GismoBloc _bloc;
   LambingModel _lambing;
 
   DateTime selectedDate = DateTime.now();
@@ -36,7 +39,7 @@ class _LambPageState extends State<LambPage> {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  _LambPageState();
+  _LambPageState(this._bloc);
 
   @override
   Widget build(BuildContext context) {
@@ -185,7 +188,7 @@ class _LambPageState extends State<LambPage> {
     _lambing.adoption = _adoption.key;
     _lambing.qualite = _agnelage.key;
 
-    var message  = gismoBloc.saveLambing(this._lambing);
+    var message  = this._bloc.saveLambing(this._lambing);
     message
         .then( (message) {goodSaving(message);})
         .catchError( (message) {  _handleError(message); /*badSaving(message);*/});

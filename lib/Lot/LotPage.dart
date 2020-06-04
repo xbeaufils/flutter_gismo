@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
@@ -50,17 +49,17 @@ class _LotPageState extends State<LotPage> {
 
   Widget _listLotWidget() {
     return FutureBuilder(
-      builder: (context, LotSnap) {
-        if (LotSnap.connectionState == ConnectionState.none && LotSnap.hasData == null) {
+      builder: (context, lotSnap) {
+        if (lotSnap.connectionState == ConnectionState.none && lotSnap.hasData == null) {
           return Container();
         }
-        if (LotSnap.connectionState == ConnectionState.waiting)
+        if (lotSnap.connectionState == ConnectionState.waiting)
           return CircularProgressIndicator();
         return ListView.builder(
           shrinkWrap: true,
-          itemCount: LotSnap.data.length,
+          itemCount: lotSnap.data.length,
           itemBuilder: (context, index) {
-            LotModel lot = LotSnap.data[index];
+            LotModel lot = lotSnap.data[index];
             return Column(
               children: <Widget>[
                 Card(child:

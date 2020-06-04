@@ -3,6 +3,7 @@ import 'package:flutter_gismo/ConfigPage.dart';
 import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+//import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/welcome.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -24,7 +25,7 @@ class SplashScreenState extends State<SplashScreen> {
   void initState()  {
     debug.log("initState" , name: "SplashScreenState:initState");
     super.initState();
-    _bloc.init().then( (message) => route(message))
+    this._bloc.init().then( (message) => route(message))
         .catchError( (e)  {_initError(e);});
     //route(null);
   }
@@ -37,16 +38,16 @@ class SplashScreenState extends State<SplashScreen> {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) =>  WelcomePage(e),
+          builder: (context) =>  WelcomePage(_bloc, e),
         ));
 
   }
 
   void route(String message) {
-    bool _isLogged = _bloc.isLogged();
+    bool _isLogged = this._bloc.isLogged();
     debug.log("Is logged " + _isLogged.toString(), name: "SplashScreenState::route");
-    Widget homePage = _isLogged ? WelcomePage(message):  ConfigPage(_bloc);
-    homePage = WelcomePage(message);
+    Widget homePage = _isLogged ? WelcomePage(_bloc, message):  ConfigPage(_bloc);
+    homePage = WelcomePage(_bloc, message);
     Navigator.pushReplacement(
           context,
           MaterialPageRoute(

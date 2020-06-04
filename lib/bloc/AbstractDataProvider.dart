@@ -1,3 +1,4 @@
+import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
@@ -6,6 +7,10 @@ import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 
 abstract class DataProvider {
+  GismoBloc _bloc;
+  DataProvider(this._bloc);
+  String get cheptel => this._bloc.user.cheptel;
+  String get token => this._bloc.user.token;
 
   //Future<String> saveLamb(List<LambModel> lambs );
   Future<String> saveLambing(LambingModel lambing );

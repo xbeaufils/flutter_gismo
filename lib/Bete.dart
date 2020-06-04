@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/main.dart';
+import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:intl/intl.dart';
 
 
 class BetePage extends StatefulWidget {
+  final GismoBloc _bloc;
   Bete _bete;
-  BetePage(this._bete, {Key key}) : super(key: key);
+  BetePage(this._bloc, this._bete, {Key key}) : super(key: key);
 
   @override
-  _BetePageState createState() => new _BetePageState(_bete);
+  _BetePageState createState() => new _BetePageState(_bloc, _bete);
 }
 
 class _BetePageState extends State<BetePage> {
+  final GismoBloc _bloc;
   DateTime selectedDate = DateTime.now();
   final df = new DateFormat('dd/MM/yyyy');
   final _formKey = GlobalKey<FormState>();
@@ -27,7 +29,7 @@ class _BetePageState extends State<BetePage> {
   //Motif_Entree _motif = Motif_Entree.achat;
   String _motif;
 
-  _BetePageState(this._bete);
+  _BetePageState(this._bloc, this._bete);
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +155,7 @@ class _BetePageState extends State<BetePage> {
       _bete.dateEntree =  _dateEntreCtrl.text;
       _bete.sex = _sex;
       _bete.motifEntree = _motif;
-      gismoBloc.saveBete(_bete);
+      _bloc.saveBete(_bete);
     }
 
     Navigator

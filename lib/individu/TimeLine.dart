@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
 import 'package:flutter_gismo/Sanitaire.dart';
+import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
-import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
@@ -14,20 +14,22 @@ import 'package:flutter_gismo/model/TraitementModel.dart';
 
 class TimeLinePage extends StatefulWidget {
   final Bete _bete;
-  TimeLinePage(this._bete, {Key key}) : super(key: key);
+  final GismoBloc _bloc;
+  TimeLinePage(this._bloc, this._bete, {Key key}) : super(key: key);
   @override
-  _TimeLinePageState createState() => new _TimeLinePageState(_bete);
+  _TimeLinePageState createState() => new _TimeLinePageState(this._bloc, _bete);
 }
 
 class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderStateMixin {
 
   final _formKeyIdentity = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GismoBloc _bloc;
 
   Bete _bete;
   int _indexExpandedTraitement = -1;
 
-  _TimeLinePageState(this._bete);
+  _TimeLinePageState(this._bloc, this._bete);
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   Future _openIdentityDialog() async {
     Bete selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
         builder: (BuildContext context) {
-          return new BetePage(_bete);
+          return new BetePage(this._bloc, _bete);
         },
         fullscreenDialog: true
     ));
@@ -90,17 +92,17 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
           },
         );
       },
-      future: gismoBloc.getEvents(_bete),
+      future: this._bloc.getEvents(_bete),
     );
   }
 
   void _searchEvent(Event event) {
     switch (event.type) {
       case EventType.agnelage :
-        gismoBloc.searchLambing(event.idBd).then( (lambing) => {_editLambing(lambing)} );
+        _bloc.searchLambing(event.idBd).then( (lambing) => {_editLambing(lambing)} );
         break;
       case EventType.traitement:
-        gismoBloc.searchTraitement(event.idBd).then( (traitement) => { _editTraitement(traitement)});
+        _bloc.searchTraitement(event.idBd).then( (traitement) => { _editTraitement(traitement)});
         break;
        default:
     }
@@ -110,7 +112,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
     var navigationResult = Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => LambPage.edit(lambing),
+        builder: (context) => LambPage.edit(_bloc, lambing),
       ),
     );
     navigationResult.then( (message) {if (message != null) _showMessage(message);} );
@@ -121,7 +123,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
     var navigationResult = Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SanitairePage.edit(traitement),
+        builder: (context) => SanitairePage.edit(_bloc, traitement),
       ),
     );
     navigationResult.then( (message) { if (message != null) _showMessage(message);} );

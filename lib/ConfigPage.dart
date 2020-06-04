@@ -10,14 +10,17 @@ import 'package:flutter_gismo/welcome.dart';
 enum TestConfig{NOT, WRONG, RIGHT}
 
 class ConfigPage extends StatefulWidget {
-  GismoBloc _bloc;
+  final GismoBloc _bloc;
   ConfigPage(this._bloc, {Key key}) : super(key: key);
   @override
-  _ConfigPageState createState() => new _ConfigPageState();
+  _ConfigPageState createState() => new _ConfigPageState(_bloc);
 }
 
 class _ConfigPageState extends State<ConfigPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GismoBloc _bloc;
+
+  _ConfigPageState(this._bloc);
 
   int _currentStep = 0;
   bool _isSubscribed = false;
@@ -139,7 +142,7 @@ class _ConfigPageState extends State<ConfigPage> {
       Navigator.pop(context, message);
     else
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (BuildContext context) => WelcomePage(null)));
+          context, MaterialPageRoute(builder: (BuildContext context) => WelcomePage(this._bloc, null)));
   }
 
   void _onError(e) {
@@ -253,17 +256,6 @@ class _ConfigPageState extends State<ConfigPage> {
      */
   }
 
-  void _testConfigOk(User user) {
-    setState(() {
-      _isTested = TestConfig.RIGHT;
-    });
-  }
-
-  void _testConfigBad() {
-    setState(() {
-      _isTested = TestConfig.WRONG;
-    });
-  }
   _onStepContinue () {
     setState(() {
       if (_currentStep < _steps.length - 1) {
@@ -287,12 +279,12 @@ class _ConfigPageState extends State<ConfigPage> {
   void initState() {
     debug.log("initState", name: "_ConfigPageState:initState");
     super.initState();
-    if (this.widget._bloc.user != null) {
-      _cheptelCtrl.text = this.widget._bloc.user.cheptel;
-      _emailCtrl.text = this.widget._bloc.user.email;
-      _tokenCtrl.text = this.widget._bloc.user.token;
-      if (this.widget._bloc.user.subscribe != null)
-        _isSubscribed = this.widget._bloc.user.subscribe;
+    if (gismoBloc.user != null) {
+      _cheptelCtrl.text = gismoBloc.user.cheptel;
+      _emailCtrl.text = gismoBloc.user.email;
+      _tokenCtrl.text = gismoBloc.user.token;
+      if (gismoBloc.user.subscribe != null)
+        _isSubscribed = gismoBloc.user.subscribe;
 
     }
   }

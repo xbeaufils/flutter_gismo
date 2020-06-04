@@ -1,17 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
-import 'package:flutter_gismo/main.dart';
+import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:intl/intl.dart';
 
 class EntreePage extends StatefulWidget {
-  EntreePage({Key key}) : super(key: key);
+  final GismoBloc _bloc;
+  EntreePage(this._bloc, {Key key}) : super(key: key);
   @override
-  _EntreePageState createState() => new _EntreePageState();
+  _EntreePageState createState() => new _EntreePageState(_bloc);
 }
 
 class _EntreePageState extends State<EntreePage> {
+  final GismoBloc _bloc;
+  _EntreePageState(this._bloc);
 
   TextEditingController _dateEntreeCtl = TextEditingController();
   final _df = new DateFormat('dd/MM/yyyy');
@@ -134,7 +137,7 @@ class _EntreePageState extends State<EntreePage> {
       return;
     }
 
-    var message  = gismoBloc.saveEntree(_dateEntreeCtl.text, _currentMotif, this._sheeps);
+    var message  = this._bloc.saveEntree(_dateEntreeCtl.text, _currentMotif, this._sheeps);
     message
       .then( (message) {goodSaving(message);})
       .catchError( (message) {showError(message);});
@@ -155,7 +158,7 @@ class _EntreePageState extends State<EntreePage> {
   Future _openAddEntryDialog() async {
       Bete selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
           builder: (BuildContext context) {
-            return new BetePage(null);
+            return new BetePage(this._bloc, null);
           },
           fullscreenDialog: true
       ));

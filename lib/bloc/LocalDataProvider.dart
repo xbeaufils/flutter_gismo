@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_gismo/Environnement.dart';
 import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
-import 'package:flutter_gismo/config.dart';
-import 'package:flutter_gismo/main.dart';
+import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
@@ -12,7 +12,6 @@ import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/model/ReportModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:path/path.dart';
-//import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'dart:developer' as debug;
@@ -22,11 +21,13 @@ class LocalDataProvider extends DataProvider{
   // only have a single app-wide reference to the database
   static Database _database;
   static BaseOptions options = new BaseOptions(
-    baseUrl: urlWebTarget,
+    baseUrl: Environnement.getUrlWebTarget(),
     connectTimeout: 5000,
     receiveTimeout: 3000,
   );
   final Dio _dio = new Dio(options);
+
+  LocalDataProvider(GismoBloc bloc) : super(bloc);
 
   Future<Database> get database async {
     if (_database != null) return _database;
@@ -127,7 +128,7 @@ class LocalDataProvider extends DataProvider{
         version:3,
     );
     Report report = new Report();
-    report.cheptel = gismoBloc.user.cheptel;
+    report.cheptel = super.cheptel;
     List<Map<String, dynamic>> maps = await database.rawQuery("select count(*) as nb from bete");
     report.betes = maps[0]['nb'];
     maps = await database.rawQuery("select count(*) as nb from lot");
@@ -489,7 +490,7 @@ class LocalDataProvider extends DataProvider{
     List<Map<String, dynamic>> maps = await db.rawQuery(
         'Select * from bete '
             + "WHERE bete.sex = 'male' "
-            "AND cheptel = '" + gismoBloc.user.cheptel + "'");
+            "AND cheptel = '" + super.cheptel + "'");
     List<Bete> tempList = new List();
     for (int i = 0; i < maps.length; i++) {
       tempList.add(new Bete.fromResult(maps[i]));
@@ -503,7 +504,7 @@ class LocalDataProvider extends DataProvider{
     List<Map<String, dynamic>> maps = await db.rawQuery(
         'Select * from bete '
             + "WHERE bete.sex = 'femelle' "
-    "AND cheptel = '" + gismoBloc.user.cheptel + "'");
+    "AND cheptel = '" + super.cheptel + "'");
     List<Bete> tempList = new List();
     for (int i = 0; i < maps.length; i++) {
       tempList.add(new Bete.fromResult(maps[i]));

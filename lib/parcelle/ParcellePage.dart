@@ -7,7 +7,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/main.dart';
+import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/parcelle/PaturagePage.dart';
 
@@ -19,7 +19,9 @@ import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 class ParcellePage extends StatefulWidget {
-  ParcellePage(/* this.initialCameraPosition,
+  final GismoBloc _bloc;
+  ParcellePage( this._bloc,
+      /* this.initialCameraPosition,
       this.onMapCreated,
       this.onStyleLoadedCallback,
       this.gestureRecognizers,
@@ -29,7 +31,7 @@ class ParcellePage extends StatefulWidget {
       //this.onMapIdle,*/
       {Key key}) : super(key: key);
   @override
-  _ParcellePageState createState() => new _ParcellePageState();
+  _ParcellePageState createState() => new _ParcellePageState(_bloc);
 /*
   /// The initial position of the map's camera.
   final CameraPosition initialCameraPosition;
@@ -60,6 +62,8 @@ class ParcellePage extends StatefulWidget {
 }
 
 class _ParcellePageState extends State<ParcellePage> {
+  final GismoBloc _bloc;
+  _ParcellePageState(this._bloc);
   Line _selectedLine;
   List<Parcelle> _myParcelles;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -227,9 +231,9 @@ class _ParcellePageState extends State<ParcellePage> {
         target: LatLng(location.latitude, location.longitude),
         zoom: 14.0,
       ),));
-    _myParcelles =  await gismoBloc.getParcelles();
+    _myParcelles =  await _bloc.getParcelles();
     //Map<String, dynamic> parcellesJson =  jsonDecode(parcelles);
-    String cadastreStr = await gismoBloc.getCadastre(location);
+    String cadastreStr = await _bloc.getCadastre(location);
     Map<String, dynamic> cadastreJson =  jsonDecode(cadastreStr);
     List<dynamic> featuresJson = cadastreJson['features'];
    featuresJson.forEach((feature) => _drawParcelle(feature));
@@ -240,7 +244,7 @@ class _ParcellePageState extends State<ParcellePage> {
 
   void _onMapClick(Point<double> pt, LatLng coord) async {
     debug.log("coord " + coord.latitude.toString() + " " + coord.longitude.toString(), name:"_ParcellePageState::_onMapClick");
-    String cadastreStr = await gismoBloc.getParcelle(coord);
+    String cadastreStr = await _bloc.getParcelle(coord);
     Map<String, dynamic> parcelleJson =  jsonDecode(cadastreStr);
     if (parcelleJson['features'].length == 0)
       return;
@@ -250,7 +254,7 @@ class _ParcellePageState extends State<ParcellePage> {
       return;
 
     debug.log("parcelle " + myParcelle.toString(), name:"_ParcellePageState::_onMapClick");
-    Pature pature = await gismoBloc.getPature(myParcelle.idu);
+    Pature pature = await _bloc.getPature(myParcelle.idu);
     var navigationResult = Navigator.push(
         context,
         MaterialPageRoute(

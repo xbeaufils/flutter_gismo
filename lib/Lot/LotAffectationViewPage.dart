@@ -1,6 +1,6 @@
-import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
@@ -196,13 +196,13 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
 
   Widget _listBelierWidget() {
     return FutureBuilder(
-      builder: (context, BelierSnap) {
-        if (BelierSnap.connectionState == ConnectionState.none && BelierSnap.hasData == null) {
+      builder: (context, belierSnap) {
+        if (belierSnap.connectionState == ConnectionState.none && belierSnap.hasData == null) {
           return Container();
         }
-        if (BelierSnap.connectionState == ConnectionState.waiting)
+        if (belierSnap.connectionState == ConnectionState.waiting)
           return CircularProgressIndicator();
-        return  _showList(BelierSnap);
+        return  _showList(belierSnap);
       },
       future: _getBeliers(this.widget._currentLot.idb),
     );
@@ -210,14 +210,14 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
 
   Widget _listBrebisWidget() {
     return FutureBuilder(
-        builder: (context, BrebisSnap) {
-          if (BrebisSnap.connectionState == ConnectionState.none &&
-              BrebisSnap.hasData == null) {
+        builder: (context, brebisSnap) {
+          if (brebisSnap.connectionState == ConnectionState.none &&
+              brebisSnap.hasData == null) {
             return Container();
           }
-          if (BrebisSnap.connectionState == ConnectionState.waiting)
+          if (brebisSnap.connectionState == ConnectionState.waiting)
             return CircularProgressIndicator();
-          return _showList(BrebisSnap);
+          return _showList(brebisSnap);
         },
       future: _getBrebis(this.widget._currentLot.idb),
     );

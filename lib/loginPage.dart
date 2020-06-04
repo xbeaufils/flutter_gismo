@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/main.dart';
+import 'package:flutter_gismo/bloc/GismoBloc.dart';
+//import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/welcome.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage( {Key key}) : super(key: key);
+  final GismoBloc _bloc;
+  LoginPage(this._bloc, {Key key}) : super(key: key);
   @override
-  _LoginPageState createState() => new _LoginPageState();
+  _LoginPageState createState() => new _LoginPageState(_bloc);
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final GismoBloc _bloc;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
+
+  _LoginPageState(this._bloc);
 
   @override
   Widget build(BuildContext context) {
@@ -93,9 +98,9 @@ class _LoginPageState extends State<LoginPage> {
   }
   _saveConfig() async {
     try {
-      String message  = await gismoBloc.saveLogin(_emailCtrl.text, _passwordCtrl.text);
+      String message  = await _bloc.saveLogin(_emailCtrl.text, _passwordCtrl.text);
       Navigator.pushReplacement(context, MaterialPageRoute(
-        builder: (context) => new WelcomePage(message),
+        builder: (context) => new WelcomePage(_bloc, message),
       ));
     }
     catch(e) {

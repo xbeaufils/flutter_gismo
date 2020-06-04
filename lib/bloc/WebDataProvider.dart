@@ -2,9 +2,9 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_gismo/Environnement.dart';
 import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
-import 'package:flutter_gismo/config.dart';
-import 'package:flutter_gismo/main.dart';
+import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
@@ -22,13 +22,13 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 
 class WebDataProvider extends DataProvider {
   static BaseOptions options = new BaseOptions(
-    baseUrl: urlTarget,
+    baseUrl: Environnement.getUrlTarget(),
     connectTimeout: 5000,
     receiveTimeout: 3000,
   );
   final Dio _dio = new Dio(options);
 
-  WebDataProvider(/*this._token*/){
+  WebDataProvider(GismoBloc bloc) : super(bloc) {
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (RequestOptions options) => requestInterceptor(options),
       //onResponse: (Response response) => responseInterceptor(response),
@@ -39,7 +39,7 @@ class WebDataProvider extends DataProvider {
   dynamic requestInterceptor(RequestOptions options)  {
     //SharedPreferences prefs = await SharedPreferences.getInstance();
     //String token = prefs.getString("token");
-    options.headers.addAll({"Token": gismoBloc.user.token});
+    options.headers.addAll({"Token": super.token});
     return options;
   }
 
@@ -50,7 +50,7 @@ class WebDataProvider extends DataProvider {
 
   Future<User> auth(User user) async {
     try {
-      final response = await _dio.post(urlTarget + '/user/auth', data: user.toMap());
+      final response = await _dio.post( Environnement.getUrlTarget() + '/user/auth', data: user.toMap());
       debug.log("Send authentication", name: "WebDataProvider::auth");
       if (response.data['error']) {
         throw (response.data['message']);
@@ -59,7 +59,7 @@ class WebDataProvider extends DataProvider {
         user.setCheptel(response.data['result']["cheptel"]);
       }
     } on DioError catch (e) {
-      throw ("Erreur de connection à " + urlTarget);
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
     debug.log("User is $user.cheptel", name: "WebDataProvider::auth");
     return user;
@@ -107,9 +107,9 @@ class WebDataProvider extends DataProvider {
         return response.data['message'];
       }
     } on DioError catch ( e) {
-      throw ("Erreur de connection à " + urlTarget);
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     } on TypeError catch( e) {
-      throw ("Oulala" + urlTarget);
+      throw ("Oulala" +  Environnement.getUrlTarget());
     }
 
   }
@@ -125,7 +125,7 @@ class WebDataProvider extends DataProvider {
       user.setToken(response.data['result']["token"]);
       user.subscribe = true;
     } on DioError catch ( e) {
-      throw ("Erreur de connection à " + urlTarget);
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
     return user;
   }
@@ -157,7 +157,7 @@ class WebDataProvider extends DataProvider {
         return response.data['message'];
       }
     } on DioError catch ( e) {
-        throw ("Erreur de connection à " + urlTarget);
+        throw ("Erreur de connection à " +  Environnement.getUrlTarget());
       }
     }
   @override
@@ -177,7 +177,7 @@ class WebDataProvider extends DataProvider {
         return response.data['message'];
       }
     } on DioError catch ( e) {
-      throw ("Erreur de connection à " + urlTarget);
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
 
@@ -194,7 +194,7 @@ class WebDataProvider extends DataProvider {
         return response.data['message'];
       }
     } on DioError catch ( e) {
-      throw ("Erreur de connection à " + urlTarget);
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
 
   }
@@ -223,7 +223,7 @@ class WebDataProvider extends DataProvider {
         return response.data['message'];
       }
     } on DioError catch ( e) {
-      throw ("Erreur de connection à " + urlTarget);
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
 
@@ -257,7 +257,7 @@ class WebDataProvider extends DataProvider {
         return response.data['message'];
       }
     } on DioError catch ( e) {
-      throw ("Erreur de connection à " + urlTarget);
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
 
@@ -273,7 +273,7 @@ class WebDataProvider extends DataProvider {
         return response.data['message'];
       }
     } on DioError catch ( e) {
-      throw ("Erreur de connection à " + urlTarget);
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
 
@@ -333,7 +333,7 @@ class WebDataProvider extends DataProvider {
           return response.data['message'];
         }
       } on DioError catch ( e) {
-        throw ("Erreur de connection à " + urlTarget);
+        throw ("Erreur de connection à " +  Environnement.getUrlTarget());
       }
   }
 
@@ -353,7 +353,7 @@ class WebDataProvider extends DataProvider {
         return response.data['message'];
       }
     } on DioError catch ( e) {
-      throw ("Erreur de connection à " + urlTarget);
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
 
   }
@@ -370,7 +370,7 @@ class WebDataProvider extends DataProvider {
         return LotModel.fromResult(response.data['result']);
       }
     } on DioError catch ( e) {
-      throw ("Erreur de connection à " + urlTarget);
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
 
@@ -386,7 +386,7 @@ class WebDataProvider extends DataProvider {
       return tempList;
     }
     catch (e) {
-      throw ("Erreur de connection à " + urlTarget);
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
 
   }
@@ -403,7 +403,7 @@ class WebDataProvider extends DataProvider {
       return tempList;
     }
     catch (e) {
-      throw ("Erreur de connection à " + urlTarget);
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
 
   }
@@ -429,7 +429,7 @@ class WebDataProvider extends DataProvider {
         String cadastre =  response.data;
         return cadastre;
     } on DioError catch ( e) {
-      throw ("Erreur de connection à " + urlTarget);
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
 
@@ -443,7 +443,7 @@ class WebDataProvider extends DataProvider {
       String cadastre =  response.data;
       return cadastre;
     } on DioError catch ( e) {
-      throw ("Erreur de connection à " + urlTarget);
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
 
@@ -457,21 +457,20 @@ class WebDataProvider extends DataProvider {
       }
       return parcelles;
     } on DioError catch ( e) {
-      throw ("Erreur de connection à " + urlTarget);
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
   Future<Pature> getPature(String idu) async {
     try {
       final response = await _dio.get(
           '/paturage/' + idu);
-      List<Parcelle> parcelles = new List();
       if( response.data.length>0) {
         Pature pature = Pature.fromResult(response.data);
         return pature;
       }
       throw ("Pature non trouvée");
     } on DioError catch ( e) {
-      throw ("Erreur de connection à " + urlTarget);
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
   Future<String> savePature(Pature pature) async {
@@ -485,7 +484,7 @@ class WebDataProvider extends DataProvider {
         return response.data['message'];
       }
     } on DioError catch ( e) {
-      throw ("Erreur de connection à " + urlTarget);
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
 
   }

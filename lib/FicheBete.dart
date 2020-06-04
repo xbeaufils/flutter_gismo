@@ -1,8 +1,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/Bouclage.dart';
-import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/model/AdoptionQualite.dart';
 import 'package:flutter_gismo/model/AgnelageQualite.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -13,12 +13,14 @@ import 'package:intl/intl.dart';
 
 class FicheBetePage extends StatefulWidget {
   final Bete _bete;
-  FicheBetePage(this._bete, {Key key}) : super(key: key);
+  final GismoBloc _bloc;
+  FicheBetePage(this._bloc, this._bete, {Key key}) : super(key: key);
   @override
-  _FicheBetePageState createState() => new _FicheBetePageState(_bete);
+  _FicheBetePageState createState() => new _FicheBetePageState(this._bloc, _bete);
 }
 
 class _FicheBetePageState extends State<FicheBetePage> with SingleTickerProviderStateMixin {
+  final GismoBloc _bloc;
   TabController _tabController;
   final _formKeyIdentity = GlobalKey<FormState>();
   Bete _bete;
@@ -31,7 +33,7 @@ class _FicheBetePageState extends State<FicheBetePage> with SingleTickerProvider
 
   int _indexExpandedTraitement = -1;
 
-  _FicheBetePageState(this._bete);
+  _FicheBetePageState(this._bloc, this._bete);
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +229,7 @@ class _FicheBetePageState extends State<FicheBetePage> with SingleTickerProvider
               children: _createExpansionList(lstTraitements.data, _indexExpandedTraitement)
          ));
         },
-        future: gismoBloc.getTraitements(_bete),
+        future: _bloc.getTraitements(_bete),
       );
   }
 
@@ -300,7 +302,7 @@ class _FicheBetePageState extends State<FicheBetePage> with SingleTickerProvider
             },
           );
       },
-      future: gismoBloc.getLambs(_bete.idBd),
+      future: _bloc.getLambs(_bete.idBd),
     );
     //gismoBloc.getLambs(_bete.idBd).then( (lstLambs) => {_returnLambs});
   }
@@ -351,7 +353,7 @@ class _FicheBetePageState extends State<FicheBetePage> with SingleTickerProvider
     this._bete.dateEntree = _dateEntree ;
     this._bete.sex = _sex ;
     this._bete.motifEntree = _motif;
-    gismoBloc.saveBete(_bete);
+    _bloc.saveBete(_bete);
   }
 
 

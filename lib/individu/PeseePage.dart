@@ -4,19 +4,19 @@ import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:intl/intl.dart';
 
-class NECPage extends StatefulWidget {
+class PeseePage extends StatefulWidget {
   final GismoBloc _bloc;
   Bete _bete;
 
   @override
-  NECPageState createState() => NECPageState(this._bloc);
+  PeseePageState createState() => PeseePageState(this._bloc);
 
-  NECPage(this._bloc,this._bete);
+  PeseePage(this._bloc,this._bete);
 }
 
-class NECPageState extends State<NECPage> {
+class PeseePageState extends State<PeseePage> {
   final GismoBloc _bloc;
-  NECPageState(this._bloc);
+  PeseePageState(this._bloc);
   int _nec = 0;
   TextEditingController _dateNoteCtl = TextEditingController();
   final _df = new DateFormat('dd/MM/yyyy');
@@ -28,7 +28,7 @@ class NECPageState extends State<NECPage> {
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: const Text("Note d'état corporel"),
+        title: const Text("Pesée"),
         leading: Text(this.widget._bete.numBoucle),
       ),
       body:
@@ -38,11 +38,11 @@ class NECPageState extends State<NECPage> {
                 keyboardType: TextInputType.datetime,
                 controller: _dateNoteCtl,
                 decoration: InputDecoration(
-                    labelText: "Date de notation",
+                    labelText: "Date de pesée",
                     hintText: 'jj/mm/aaaa'),
                 validator: (value) {
                   if (value.isEmpty) {
-                    return "Pas de date de notation";
+                    return "Pas de date de pesée";
                   }},
                 onSaved: (value) {
                   setState(() {

@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/Sanitaire.dart';
 import 'package:flutter_gismo/individu/NECPage.dart';
 import 'package:flutter_gismo/individu/TimeLine.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
-import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 
 class SearchPage extends StatefulWidget {
-  GismoBloc _bloc;
+  final GismoBloc _bloc;
   GismoPage _nextPage;
   Sex searchSex;
-  get bloc => _bloc;
   get nextPage => _nextPage;
   SearchPage(this._bloc, this._nextPage, { Key key }) : super(key: key);
   @override
-  _SearchPageState createState() => new _SearchPageState();
+  _SearchPageState createState() => new _SearchPageState(_bloc);
 }
 
 
@@ -24,6 +23,7 @@ class _SearchPageState extends State<SearchPage> {
   // final key = new GlobalKey<ScaffoldState>();
   final TextEditingController _filter = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GismoBloc _bloc;
 
   String _searchText = "";
   List<Bete> _betes = new List();
@@ -31,7 +31,7 @@ class _SearchPageState extends State<SearchPage> {
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text( 'Recherche boucle' );
 
-  _SearchPageState() {
+  _SearchPageState(this._bloc) {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
         setState(() {
@@ -79,7 +79,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _buildList() {
-    if (!(_searchText.isEmpty)) {
+    if (_searchText.isNotEmpty) {
       List<Bete> tempList = new List();
       for (int i = 0; i < filteredNames.length; i++) {
         if (filteredNames[i].numBoucle.toLowerCase().contains(_searchText.toLowerCase())) {
@@ -105,17 +105,17 @@ class _SearchPageState extends State<SearchPage> {
     var page;
     switch (this.widget.nextPage) {
       case GismoPage.lamb:
-        page = LambPage(bete);
+        page = LambPage(this._bloc, bete);
         break;
       case GismoPage.sanitaire:
-        page = SanitairePage(bete);
+        page = SanitairePage(this._bloc, bete);
         break;
       case GismoPage.individu:
         //page = FicheBetePage(bete);
-        page = TimeLinePage(bete);
+        page = TimeLinePage(_bloc, bete);
         break;
       case GismoPage.etat_corporel:
-        page = NECPage(bete);
+        page = NECPage(this._bloc, bete);
         break;
       case GismoPage.sortie:
       case GismoPage.lot:
@@ -177,13 +177,13 @@ class _SearchPageState extends State<SearchPage> {
     List<Bete> lstBetes = null;
     switch (this.widget.searchSex ) {
       case Sex.femelle:
-        lstBetes = await gismoBloc.getBrebis();
+        lstBetes = await this._bloc.getBrebis();
         break;
       case Sex.male :
-        lstBetes = await gismoBloc.getBeliers();
+        lstBetes = await this._bloc.getBeliers();
         break;
       default :
-        lstBetes = await gismoBloc.getBetes();
+        lstBetes = await this._bloc.getBetes();
     }
     fillList(lstBetes);
    }

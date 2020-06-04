@@ -4,6 +4,7 @@ import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 
 GismoBloc gismoBloc;
+
 //String urlTarget = "http://192.168.1.31:8080/gismoApp/api";
 //String urlTarget = "http://10.0.2.2:8080/gismoApp/api";
 //String urlTarget = "https://gismo.neme-sys.fr/api";
@@ -14,7 +15,7 @@ GismoBloc gismoBloc;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   gismoBloc = new GismoBloc();
-  Environnement.init( "https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api");
+  Environnement.init( "http://10.0.2.2:8080/gismoWeb/bd", "http://192.168.0.13:8080/gismoApp/api");
   //await gismoBloc.init();
   //bool isLogged = false; //gismoBloc.isLogged();
   final GismoApp gismoApp = new GismoApp(gismoBloc,
@@ -23,5 +24,6 @@ void main() async {
   // Run app!
   runApp(gismoApp);
 }
+
 
 

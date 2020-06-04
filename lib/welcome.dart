@@ -1,25 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/main.dart';
+import 'package:flutter_gismo/bloc/GismoBloc.dart';
+//import 'package:flutter_gismo/main.dart';
 
 
 class WelcomePage extends StatefulWidget {
+  GismoBloc _bloc;
   String _message;
-  WelcomePage( this._message, {Key key}) : super(key: key);
+  WelcomePage( this._bloc, this._message, {Key key}) : super(key: key);
   @override
-  _WelcomePageState createState() => new _WelcomePageState();
+  _WelcomePageState createState() => new _WelcomePageState(_bloc);
 }
 
 class _WelcomePageState extends State<WelcomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GismoBloc _bloc;
+
+  _WelcomePageState(this._bloc);
 
   Widget _getStatus(String message) {
     if (message == null)
       message = "";
     Icon iconConnexion = Icon(Icons.person);
     Text userName = new Text("utilisateur local");
-    if (gismoBloc.user.subscribe) {
-       iconConnexion = Icon(Icons.verified_user);
-       userName = new Text(gismoBloc.user.email);
+    if (_bloc.user == null) {
+      iconConnexion = Icon(Icons.error_outline);
+      userName = new Text("Erreur utilisateur");
+    }
+    else {
+      if (_bloc.user.subscribe) {
+        iconConnexion = Icon(Icons.verified_user);
+        userName = new Text(_bloc.user.email);
+      }
     }
     return Card(child:
         Row(children: <Widget>[
@@ -36,7 +47,7 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Widget _getActionButton() {
-    if (gismoBloc.user.subscribe) {
+    if (_bloc.user.subscribe) {
       return IconButton(
         icon: Icon(Icons.cloud_off),
         onPressed: _logoutPressed ,
@@ -57,7 +68,7 @@ class _WelcomePageState extends State<WelcomePage> {
           _getStatus(this.widget._message ) ,
         ],
       appBar: new AppBar(
-        title: new Text('Gismo ' + gismoBloc.user.cheptel),
+        title: new Text('Gismo ' + _bloc.user.cheptel),
         // N'affiche pas la touche back (qui revient à la SplashScreen
         automaticallyImplyLeading: false,
         actions: <Widget>[
@@ -112,7 +123,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 child:
               GridView.count(
                 padding: EdgeInsets.all(8.0),
-                crossAxisCount: 3,
+                crossAxisCount: 4,
                 mainAxisSpacing: 4.0,
                 crossAxisSpacing: 4.0,
                 shrinkWrap: true,
@@ -142,7 +153,16 @@ class _WelcomePageState extends State<WelcomePage> {
                       child: new Column(
                         children: <Widget>[
                           new Image.asset('assets/syringe.png'),
-                          new Text("Traitement")
+                          new Text("Carnet sanitaire")
+                        ],
+                      ))),
+                  Container( child:
+                  new FlatButton(
+                      onPressed: _traitementPressed,
+                      child: new Column(
+                        children: <Widget>[
+                          new Image.asset('assets/peseur.png'),
+                          new Text("Poids")
                         ],
                       ))),
                 ])),
@@ -212,7 +232,7 @@ class _WelcomePageState extends State<WelcomePage> {
    }
 
   void _parcellePressed(){
-    if (gismoBloc.user.subscribe)
+    if (_bloc.user.subscribe)
       Navigator.pushNamed(context, '/parcelle');
     else
       this.showMessage("Les parcelles ne sont pas visibles en mode autonome");
@@ -238,7 +258,7 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   void _logoutPressed() {
-    String message = gismoBloc.logout();
+    String message = _bloc.logout();
     setState(() {
       this.widget._message = message;
     });

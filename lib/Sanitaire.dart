@@ -1,24 +1,28 @@
 //import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/main.dart';
+import 'package:flutter_gismo/bloc/GismoBloc.dart';
+//import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:intl/intl.dart';
 
 class SanitairePage extends StatefulWidget {
+  final GismoBloc _bloc;
   Bete _malade;
   TraitementModel _currentTraitement;
 
-  SanitairePage(this._malade, {Key key}) : super(key: key);
-  SanitairePage.edit(this._currentTraitement, {Key key}) : super(key: key);
+  SanitairePage(this._bloc, this._malade, {Key key}) : super(key: key);
+  SanitairePage.edit(this._bloc, this._currentTraitement, {Key key}) : super(key: key);
 
   @override
-  _SanitairePageState createState() => new _SanitairePageState();
+  _SanitairePageState createState() => new _SanitairePageState(_bloc);
 }
 
 class _SanitairePageState extends State<SanitairePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GismoBloc _bloc;
+  _SanitairePageState(this._bloc);
 
   TextEditingController _dateDebutCtl = TextEditingController();
   TextEditingController _dateFinCtl = TextEditingController();
@@ -241,7 +245,7 @@ class _SanitairePageState extends State<SanitairePage> {
     traitement.ordonnance = _ordonnanceCtl.text;
     traitement.rythme = _rythmeCtl.text;
     traitement.voie = _voieCtl.text;
-    var message  = gismoBloc.saveTraitement(traitement);
+    var message  = _bloc.saveTraitement(traitement);
     message
         .then( (message) {goodSaving(message);})
         .catchError( (message) {badSaving(message);});
