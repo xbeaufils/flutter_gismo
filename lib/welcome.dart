@@ -78,17 +78,28 @@ class _WelcomePageState extends State<WelcomePage> {
     ),
       body:
           Column(
-              children: <Widget>[
-            Card(child:
-              GridView.count(
-                padding: EdgeInsets.all(8.0),
-                crossAxisCount: 3,
-                mainAxisSpacing: 4.0,
-                crossAxisSpacing: 4.0,
-                shrinkWrap: true,
-                children: <Widget>[
-                  Container( child:
-                    new FlatButton(
+            children: <Widget>[
+              Card(
+                child:
+                 ButtonBar(
+                     alignment: MainAxisAlignment.center,
+                     children: <Widget>[
+                  //Container( child:
+                  Container(
+                    decoration: new BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),],
+                      color: Colors.white,
+                      borderRadius: new BorderRadius.circular(20.0),),
+                    padding: const EdgeInsets.all(8.0),
+                    child:FlatButton(
+                      //  padding: EdgeInsets.all(10.0),
+                      //shape:  StadiumBorder(side: BorderSide(color: Colors.blue)),
                       onPressed: _parcellePressed,
                       child: new Column(
                         children: <Widget>[
@@ -96,103 +107,242 @@ class _WelcomePageState extends State<WelcomePage> {
                           new Text("Parcelles")
                         ],
                       )
-                  )),
-
-                  Container( child:
-                    new FlatButton(
-                      onPressed: _lotPressed,
-                      child: new Column(
-                        children: <Widget>[
-                          new Image.asset('assets/Lot.png'),
-                          new Text("Lot")
+                    ),
+                 ),
+                  Container(
+                      decoration: new BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
                         ],
-                      )
-                  )),
-                   Container( child:
-                    new FlatButton(
-                      onPressed: _individuPressed,
-                      child: new Column(
-                        children: <Widget>[
-                          new Image.asset('assets/brebis.png'),
-                          new Text("Individu")
-                        ],
-                      ))),
+                        color: Colors.white,
+                        borderRadius: new BorderRadius.circular(20.0),
+                      ),
+                      padding: const EdgeInsets.all(8.0),
+                      margin: EdgeInsets.all(10),
+                      child:
+                      FlatButton(
+                        onPressed: _lotPressed,
+                        child:
+                         Column(
+                          children: <Widget>[
+                            Image.asset('assets/Lot.png'),
+                            Text("Lot")
+                          ],
+                        )
+                      ),
+                  ),
+                  Container(
+                    decoration: new BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                      color: Colors.white,
+                        borderRadius: new BorderRadius.circular(20.0),
+                    ),
+                    padding: const EdgeInsets.all(8.0),
+                    child:
+                      new FlatButton(
+                        //shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
+                        onPressed: _individuPressed,
+                        child: new Column(
+                          children: <Widget>[
+                            new Image.asset('assets/brebis.png'),
+                            new Text("Individu")
+                          ],
+                        ))),
                ])
           ),
             Card(
-                child:
+              child:
+                ButtonBar(
+                  mainAxisSize: MainAxisSize.max,
+                  alignment: MainAxisAlignment.center,
+                  buttonMinWidth: 120.0,
+                  children: <Widget>[
+                    Container(
+                      decoration: new BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), )],
+                        color: Colors.white,
+                        borderRadius: new BorderRadius.circular(20.0),),
+                      padding: const EdgeInsets.all(8.0),
+                      margin: EdgeInsets.all(10),
+                      child:
+                        FlatButton(
+                          onPressed: _lambPressed,
+                          child: Column(children: <Widget>[
+                             Image.asset('assets/lamb.png'),
+                             Text("Agnelage"),],),
+                        ),
+                    ),// Agnelage
+                    Container(
+                      decoration: new BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
+                        color: Colors.white,
+                        borderRadius: new BorderRadius.circular(20.0),
+                      ),
+                      padding: const EdgeInsets.all(8.0),
+                      child:
+                      new FlatButton(
+                          onPressed: _traitementPressed,
+                          child: Column(children: <Widget>[
+                            Image.asset('assets/syringe.png'),
+                            Text("Carnet sanitaire"),
+                          ])),
+                    ),// Carnet sanitaire
+                  ]),
+              ),
+            Card(
+              child:
+                ButtonBar(
+                  mainAxisSize: MainAxisSize.max,
+                  alignment: MainAxisAlignment.center,
+                  buttonMinWidth: 120.0,
+                  children: <Widget>[
+                  Container(
+                    decoration: new BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
+                        color: Colors.white,
+                        borderRadius: new BorderRadius.circular(20.0),
+                      ),
+                    padding: const EdgeInsets.all(8.0),
+                    margin: EdgeInsets.all(10),
+                    child:
+                      FlatButton(
+                          onPressed: _necPressed,
+                          child:
+                          Column(children: <Widget>[
+                            Image.asset('assets/etat_corporel.png'),
+                            Text("Etat corporel"),])
+                      ),
+                    ), //Etat corporel
+                    Container(
+                      decoration: new BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), ),
+                        ],
+                        color: Colors.white,
+                        borderRadius: new BorderRadius.circular(20.0),
+                      ),
+                      padding: const EdgeInsets.all(8.0),
+                      margin: EdgeInsets.all(10),
+                      child:
+                      FlatButton(
+                          onPressed: _peseePressed,
+                          child: Column(children: <Widget>[
+                            Image.asset('assets/peseur.png'),
+                            Text("Poids"),
+                          ])
+                      ),
+                    ), // Pesée
+                  ]),
+            ),
+    /*
               GridView.count(
                 padding: EdgeInsets.all(8.0),
-                crossAxisCount: 4,
+                crossAxisCount: 2,
                 mainAxisSpacing: 4.0,
                 crossAxisSpacing: 4.0,
                 shrinkWrap: true,
                 children: <Widget>[
-                  Container( child:
-                    new FlatButton(
-                      onPressed: _lambPressed,
-                      child: new Column(
-                        children: <Widget>[
-                          new Image.asset('assets/lamb.png'),
-                          new Text("Agnelage")
-                        ],
-                      ))),
-                  Container( child:
-                    FlatButton(
-                      onPressed: _necPressed,
-                      //color: Theme.of(context).accentColor,
-                      child: new Column(
-                        children: <Widget>[
-                          new Image.asset('assets/etat_corporel.png'),
-                          new Text("Etat corporel")
-                        ],
-                      ))),
-                  Container( child:
-                    new FlatButton(
-                      onPressed: _traitementPressed,
-                      child: new Column(
-                        children: <Widget>[
-                          new Image.asset('assets/syringe.png'),
-                          new Text("Carnet sanitaire")
-                        ],
-                      ))),
-                  Container( child:
-                  new FlatButton(
-                      onPressed: _traitementPressed,
-                      child: new Column(
-                        children: <Widget>[
-                          new Image.asset('assets/peseur.png'),
-                          new Text("Poids")
-                        ],
-                      ))),
+                           /*
+                          child: new Row(
+                            children: <Widget>[
+                              new Image.asset('assets/peseur.png'),
+                              new Text("Poids")
+                            ],
+                          ))*/
+                      )
                 ])),
+                */
+
             Card(child:
-              GridView.count(
-              padding: EdgeInsets.all(8.0),
-              crossAxisCount: 3,
-              mainAxisSpacing: 4.0,
-              crossAxisSpacing: 4.0,
-              shrinkWrap: true,
-              children: <Widget>[
-                Container( child:
-                  new FlatButton(
-                      onPressed: _entreePressed,
-                      child: new Column(
-                        children: <Widget>[
-                          new Image.asset('assets/home.png'),
-                          new Text("Entree")
-                        ],
-                      ))),
-                Container( child:
-                  new FlatButton(
-                      onPressed: _sortiePressed,
-                      child: new Column(
-                        children: <Widget>[
-                          new Image.asset('assets/Truck.png'),
-                          new Text("Sortie")
-                        ],
-                      ))),
-              ])),
+            ButtonBar(
+                alignment:MainAxisAlignment.center,
+                buttonMinWidth: 120.0,
+                children: <Widget>[
+                  Container(
+                    decoration: new BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                      color: Colors.white,
+                      borderRadius: new BorderRadius.circular(20.0),
+                    ),
+                    padding: const EdgeInsets.all(8.0),
+                    margin: EdgeInsets.all(10),
+                    child:
+                    FlatButton(
+                        onPressed: _entreePressed,
+                        child: new Column(
+                          children: <Widget>[
+                            new Image.asset('assets/home.png'),
+                            new Text("Entree")
+                          ],
+                        )),
+                  ), // Entrée
+                  Container(
+                    decoration: new BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                      color: Colors.white,
+                      borderRadius: new BorderRadius.circular(20.0),
+                    ),
+                    padding: const EdgeInsets.all(8.0),
+                    margin: EdgeInsets.all(10),
+                    child:
+                    FlatButton(
+                        onPressed: _sortiePressed,
+                        child: new Column(
+                          children: <Widget>[
+                            new Image.asset('assets/Truck.png'),
+                            new Text("Sortie")
+                          ],
+                        )),
+                  )])),
             /*
             Card(child:
               GridView.count(
@@ -295,6 +445,10 @@ class _WelcomePageState extends State<WelcomePage> {
 
   void _necPressed() {
     Navigator.pushNamed(context, '/nec');
+  }
+
+  void _peseePressed() {
+    Navigator.pushNamed(context, '/pesee');
   }
 
   void _lotPressed() {

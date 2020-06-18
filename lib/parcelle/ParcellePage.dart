@@ -249,7 +249,7 @@ class _ParcellePageState extends State<ParcellePage> {
     if (parcelleJson['features'].length == 0)
       return;
     Map<String, dynamic> feature = parcelleJson['features'][0];
-    Parcelle myParcelle = this._myParcelles.firstWhere((parcelle) => parcelle.idu == feature['properties']['IDU'], orElse: () => null);
+    Parcelle myParcelle = this._myParcelles.firstWhere((parcelle) => parcelle.idu == feature['properties']['id'], orElse: () => null);
     if (myParcelle == null)
       return;
 
@@ -258,7 +258,7 @@ class _ParcellePageState extends State<ParcellePage> {
     var navigationResult = Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => PaturagePage(pature),)
+          builder: (context) => PaturagePage(this._bloc, pature),)
     );
     navigationResult.then((message) {
       if (message != null)
@@ -277,7 +277,7 @@ class _ParcellePageState extends State<ParcellePage> {
   void _drawParcelle(feature) {
     String lineColor = "#ffffff";
     double lineWidth = 1.0;
-    Parcelle foundParcelle = _myParcelles.firstWhere((parcelle) => parcelle.idu == feature['properties']['IDU'], orElse: () => null);
+    Parcelle foundParcelle = _myParcelles.firstWhere((parcelle) => parcelle.idu == feature['properties']['id'], orElse: () => null);
     if (foundParcelle != null) {
       lineWidth = 6.0;
       lineColor = '#58db72';

@@ -9,6 +9,7 @@ import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
+import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/ReportModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:path/path.dart';
@@ -122,10 +123,18 @@ class LocalDataProvider extends DataProvider{
           if (oldVersion == 2) {
             db.execute("alter table 'bete' add COLUMN 'nom' TEXT;");
           }
+          if (oldVersion == 3) {
+            db.execute("CREATE TABLE `pesee` ("
+              "`id` INTEGER NOT NULL,"
+              "`datePesee` TEXT NULL DEFAULT NULL,"
+              "`poids` REAL NULL DEFAULT NULL,"
+              "`bete_id` INTEGER NULL DEFAULT NULL,"
+               " PRIMARY KEY('id'))");
+          }
         },
         // Set the version. This executes the onCreate function and provides a
         // path to perform database upgrades and downgrades.
-        version:3,
+        version:4,
     );
     Report report = new Report();
     report.cheptel = super.cheptel;
@@ -366,7 +375,6 @@ class LocalDataProvider extends DataProvider{
       await db.insert('NEC', note.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     }
     catch(e) {
-
     }
   }
 
@@ -377,6 +385,27 @@ class LocalDataProvider extends DataProvider{
     List<NoteModel> tempList = new List();
     for (int i = 0; i < futureMaps.length; i++) {
       tempList.add(NoteModel.fromResult(futureMaps[i]));
+    }
+    return tempList;
+  }
+
+  @override
+  Future<String> savePesee(Pesee note) async {
+    try {
+      Database db = await this.database;
+      await db.insert('pesee', note.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
+    }
+    catch(e) {
+    }
+  }
+
+  @override
+  Future<List<Pesee>> getPesee(Bete bete) async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> futureMaps = await db.query('pesee',where: 'bete_id = ?', whereArgs: [bete.idBd]);
+    List<Pesee> tempList = new List();
+    for (int i = 0; i < futureMaps.length; i++) {
+      tempList.add(Pesee.fromResult(futureMaps[i]));
     }
     return tempList;
   }

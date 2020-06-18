@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/Sanitaire.dart';
 import 'package:flutter_gismo/individu/NECPage.dart';
+import 'package:flutter_gismo/individu/PeseePage.dart';
 import 'package:flutter_gismo/individu/TimeLine.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/rt510.dart';
 
 class SearchPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -59,11 +62,33 @@ class _SearchPageState extends State<SearchPage> {
       body: Container(
         child: /*(filteredNames == null) ? CircularProgressIndicator(): */_buildList(),
       ),
-      //floatingActionButton: _buildAddButton(),
+      //floatingActionButton: _buildReadButton(),
       resizeToAvoidBottomPadding: false,
     );
   }
 
+  Widget _buildReadButton() {
+    return new FloatingActionButton(
+        child: new Icon(Icons.rss_feed),
+        onPressed: _read);
+  }
+
+  Future<void>  _read() async {
+    String start = await Rt510.start(4);
+    String earTag = await Rt510.read();
+    String _earTag;
+    setState(()  {
+      try {
+        if (earTag != null)
+          _earTag = earTag;
+        else
+          _earTag = "Null";
+      } on PlatformException {
+        _earTag = 'Failed to get platform version.';
+      }
+    });
+
+  }
   Widget _buildBar(BuildContext context) {
     return new AppBar(
       centerTitle: true,
@@ -116,6 +141,9 @@ class _SearchPageState extends State<SearchPage> {
         break;
       case GismoPage.etat_corporel:
         page = NECPage(this._bloc, bete);
+        break;
+      case GismoPage.pesee:
+        page = PeseePage(this._bloc, bete);
         break;
       case GismoPage.sortie:
       case GismoPage.lot:

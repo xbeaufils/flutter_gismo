@@ -11,6 +11,7 @@ import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
+import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/model/User.dart';
 
@@ -284,6 +285,33 @@ class WebDataProvider extends DataProvider {
     List<NoteModel> tempList = new List();
     for (int i = 0; i < response.data.length; i++) {
       tempList.add(new NoteModel.fromResult(response.data[i]));
+    }
+    return tempList;
+  }
+
+  @override
+  Future<String> savePesee(Pesee note) async {
+    try {
+      final response = await _dio.post(
+          '/poids/new', data: note.toJson());
+      if (response.data['error']) {
+        throw (response.data['error']);
+      }
+      else {
+        return response.data['message'];
+      }
+    } on DioError catch ( e) {
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+  }
+
+  @override
+  Future<List<Pesee>> getPesee(Bete bete) async {
+    final response = await _dio.get(
+        '/poids/get/' + bete.idBd.toString());
+    List<Pesee> tempList = new List();
+    for (int i = 0; i < response.data.length; i++) {
+      tempList.add(new Pesee.fromResult(response.data[i]));
     }
     return tempList;
   }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gismo/bloc/GismoRepository.dart';
 import 'package:flutter_gismo/bloc/WebDataProvider.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
+import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/model/User.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -20,6 +22,7 @@ import '../model/BeteModel.dart';
 
 import 'dart:developer' as debug;
 
+
 class GismoBloc {
 
   User _currentUser;
@@ -30,8 +33,31 @@ class GismoBloc {
   Future<String> init() async {
     // Read value
     FlutterSecureStorage storage = new FlutterSecureStorage();
-    String email = await storage.read(key: "email");
-    if (email == null ) {
+    try {
+      String email = await storage.read(key: "email");
+      if (email == null) {
+        this._currentUser = new User(null, null);
+        _currentUser.setCheptel("00000000");
+        _currentUser.subscribe = false;
+        _repository = new GismoRepository(this, RepositoryType.local);
+        debug.log("Mode autonome", name: "GismoBloc::init");
+        return "Mode autonome";
+      }
+      String password = await storage.read(key: "password");
+
+      this._currentUser = new User(email, password);
+      this._currentUser.setCheptel("");
+      this._currentUser.setToken("Nothing");
+      _repository = new GismoRepository(this, RepositoryType.web);
+      this._currentUser =
+      await (_repository.dataProvider as WebDataProvider).login(
+          this._currentUser);
+      debug.log(
+          'Mode connecté email : $email - cheptel: $this._currentUser.cheptel',
+          name: "GismoBloc::init");
+      return "Mode connecté";
+    }
+    on PlatformException catch(e) {
       this._currentUser = new User(null, null);
       _currentUser.setCheptel("00000000");
       _currentUser.subscribe = false;
@@ -39,15 +65,9 @@ class GismoBloc {
       debug.log("Mode autonome", name: "GismoBloc::init");
       return "Mode autonome";
     }
-    String password = await storage.read(key: "password");
-    this._currentUser = new User(email, password);
-    this._currentUser.setCheptel("");
-    this._currentUser.setToken("Nothing");
-    _repository = new GismoRepository(this, RepositoryType.web);
-    this._currentUser = await (_repository.dataProvider as WebDataProvider).login(this._currentUser);
-    debug.log('Mode connecté email : $email - cheptel: $this._currentUser.cheptel', name: "GismoBloc::init");
-    return "Mode connecté";
   }
+
+
 
   bool isLogged() {
      if (_currentUser == null)
@@ -140,9 +160,11 @@ class GismoBloc {
       List<Affectation> lstAffect = await this._repository.dataProvider.getAffectationForBete(bete.idBd);
       debug.log("get nec", name: "GismoBloc::getEvents");
       List<NoteModel> lstNotes = await this._repository.dataProvider.getNec(bete);
+      List<Pesee> lstPoids  = await this._repository.dataProvider.getPesee(bete);
       lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd, EventType.agnelage, lambing.dateAgnelage, lambing.lambs.length.toString()))});
       lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd, EventType.traitement, traitement.debut, traitement.medicament))});
       lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd, EventType.NEC, note.date, note.note.toString()))});
+      lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id, EventType.pesee, poids.datePesee, poids.poids.toString()))});
       lstAffect.forEach( (affect) => {lstEvents.addAll ( _makeEventforAffectation(affect) )});
       lstEvents.sort((a, b) =>  _compareDate(a, b));
       return lstEvents;
@@ -246,6 +268,18 @@ class GismoBloc {
     }
   }
 
+  Future<String> savePesee(Bete bete, double poids, String date ) async {
+    try {
+      Pesee pesee = new Pesee();
+      pesee.bete_id = bete.idBd;
+      pesee.datePesee = date;
+      pesee.poids = poids;
+      await this._repository.dataProvider.savePesee(pesee);
+    }
+    catch (e) {
+      return "Une erreur et survenue";
+    }
+  }
   Future<LotModel> saveLot(LotModel lot) async {
     lot.cheptel = this._currentUser.cheptel;
     LotModel newLot  = await this._repository.dataProvider.saveLot(lot);

@@ -1,23 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/SearchPage.dart';
-import 'package:flutter_gismo/main.dart';
+import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:intl/intl.dart';
 
 class SortiePage extends StatefulWidget {
-  SortiePage({Key key}) : super(key: key);
+  final GismoBloc _bloc;
+
+  SortiePage(this._bloc,{Key key}) : super(key: key);
   @override
-  _SortiePageState createState() => new _SortiePageState();
+  _SortiePageState createState() => new _SortiePageState(this._bloc);
 }
 
 class _SortiePageState extends State<SortiePage> {
-
+  final GismoBloc _bloc;
+  _SortiePageState(this._bloc);
   TextEditingController _dateSortieCtl = TextEditingController();
   final _df = new DateFormat('dd/MM/yyyy');
   List<Bete> _sheeps;
   String _currentMotif;
-  List<DropdownMenuItem<String>> _MotifSortieItems;
+  List<DropdownMenuItem<String>> _motifSortieItems;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   List<DropdownMenuItem<String>> _getMotifSortieItems() {
@@ -89,7 +93,7 @@ class _SortiePageState extends State<SortiePage> {
                       }),
                   new DropdownButton<String>(
                     value: _currentMotif,
-                    items: _MotifSortieItems,
+                    items: _motifSortieItems,
                     hint: Text('Selectionnez une cause de sortie',style: TextStyle(color: Colors.lightGreen,)),
                     onChanged: changedMotifSortieItem,
                   )
@@ -133,7 +137,7 @@ class _SortiePageState extends State<SortiePage> {
       return;
     }
 
-    var message  = gismoBloc.saveSortie(_dateSortieCtl.text, _currentMotif, this._sheeps);
+    var message  = this._bloc.saveSortie(_dateSortieCtl.text, _currentMotif, this._sheeps);
     message
       .then( (message) {goodSaving(message);})
       .catchError( (message) {showError(message);});
@@ -154,7 +158,7 @@ class _SortiePageState extends State<SortiePage> {
   Future _openAddEntryDialog() async {
       Bete selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
           builder: (BuildContext context) {
-            return new SearchPage(gismoBloc, GismoPage.sortie);
+            return new SearchPage(this._bloc, GismoPage.sortie);
           },
           fullscreenDialog: true
       ));
@@ -169,7 +173,7 @@ class _SortiePageState extends State<SortiePage> {
   void initState() {
     super.initState();
     _sheeps = new List();
-    _MotifSortieItems = _getMotifSortieItems();
+    _motifSortieItems = _getMotifSortieItems();
     _dateSortieCtl.text = _df.format(DateTime.now());
   }
 

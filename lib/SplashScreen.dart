@@ -31,14 +31,18 @@ class SplashScreenState extends State<SplashScreen> {
   }
 
   void _initError(e) {
-    final snackBar = SnackBar(content: Text(e),);
-    debug.log("Error is " + e , name: "SplashScreenState::_initError");
+    debug.log("Error is " + e.toString() , name: "SplashScreenState::_initError");
+    SnackBar snackBar;
+    if (e is String)
+      snackBar = SnackBar(content: Text(e),);
+    if (e is Exception)
+      snackBar = SnackBar(content: Text(e.toString()),);
     FocusScope.of(context).unfocus();
     _scaffoldKey.currentState.showSnackBar(snackBar);
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) =>  WelcomePage(_bloc, e),
+          builder: (context) =>  WelcomePage(_bloc, e.toString()),
         ));
 
   }

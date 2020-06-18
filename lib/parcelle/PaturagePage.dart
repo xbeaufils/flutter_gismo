@@ -7,7 +7,8 @@ import 'package:intl/intl.dart';
 import 'dart:developer' as debug;
 
 class PaturagePage extends StatefulWidget {
-  PaturagePage(this._pature, {Key key}) : super(key: key);
+  PaturagePage(this._bloc, this._pature, {Key key}) : super(key: key);
+  final GismoBloc _bloc;
   final Pature _pature;
 
   @override
@@ -83,7 +84,7 @@ class _PaturagePageState extends State<PaturagePage> {
           ),
           new Card(
             child: new FutureBuilder<List<LotModel>>(
-                future: gismoBloc.getLots(),
+                future: this.widget._bloc.getLots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return new Container();
@@ -129,12 +130,12 @@ class _PaturagePageState extends State<PaturagePage> {
     this.widget._pature.debut = _dateDebutCtl.text;
     if ( _dateFinCtl.text.isNotEmpty)
       this.widget._pature.fin = _dateFinCtl.text;
-    String message = await gismoBloc.savePature(this.widget._pature);
+    String message = await this.widget._bloc.savePature(this.widget._pature);
     Navigator.pop(context, message);
   }
 
   Future<List<LotModel>> _getLots()  {
-    return gismoBloc.getLots();
+    return this.widget._bloc.getLots();
   }
 
   @override

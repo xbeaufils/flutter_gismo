@@ -9,6 +9,8 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="Gismo"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.mapbox.token" android:value="pk.eyJ1IjoieGJlYXUiLCJhIjoiY2s4anVjamdwMGVsdDNucDlwZ2I0bGJwNSJ9.lc21my1ozaQZ2-EriDSY5w" />
         <activity

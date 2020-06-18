@@ -4,6 +4,7 @@ import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
+import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 
 abstract class DataProvider {
@@ -26,7 +27,9 @@ abstract class DataProvider {
   Future<TraitementModel> searchTraitement(int idBd);
   Future<void> mort(LambModel lamb, String motif, String date);
   Future<String> saveNec(NoteModel node);
+  Future<String> savePesee(Pesee pesee);
   Future<List<NoteModel>> getNec(Bete bete);
+  Future<List<Pesee>> getPesee(Bete bete);
   Future<List<LotModel>> getLots(String cheptel) ;
   Future<List<Affectation>>getBrebisForLot(int idLot);
   Future<List<Affectation>>getBeliersForLot(int idLot);

@@ -146,6 +146,9 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       case EventType.sortieLot:
         return new Image.asset("assets/Lot_sortie.png");
         break;
+      case EventType.pesee:
+        return new Image.asset("assets/peseur.png");
+        break;
       case EventType.entree:
       case EventType.sortie:
      }
