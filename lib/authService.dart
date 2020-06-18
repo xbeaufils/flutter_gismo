@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter_gismo/Environnement.dart';
 import 'package:flutter_gismo/model/User.dart';
-//import 'package:flutter_gismo/config.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
 
@@ -21,7 +20,7 @@ class AuthService {
     return null;
   }
   */
-
+/*
   Future<bool> saveWebConfig(String cheptel, String email, String token) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("email", email);
@@ -32,7 +31,7 @@ class AuthService {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.setString("cheptel", cheptel);
   }
-
+*/
   Future<User> login(User user) async {
     try {
       final response = await dio.post(

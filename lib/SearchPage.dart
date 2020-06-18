@@ -8,7 +8,7 @@ import 'package:flutter_gismo/individu/TimeLine.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/rt510.dart';
+//import 'package:flutter_gismo/rt510.dart';
 
 class SearchPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -67,12 +67,12 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
+/*
   Widget _buildReadButton() {
     return new FloatingActionButton(
         child: new Icon(Icons.rss_feed),
         onPressed: _read);
   }
-
   Future<void>  _read() async {
     String start = await Rt510.start(4);
     String earTag = await Rt510.read();
@@ -89,6 +89,9 @@ class _SearchPageState extends State<SearchPage> {
     });
 
   }
+ */
+
+
   Widget _buildBar(BuildContext context) {
     return new AppBar(
       centerTitle: true,
