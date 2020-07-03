@@ -48,56 +48,14 @@ class LocalDataProvider extends DataProvider{
         join(await getDatabasesPath() /*documentsDirectory.path*/, 'gismo_database.db'),
           onCreate: (db, version) {
           // Run the CREATE TABLE statement on the database.
-            db.execute("CREATE TABLE `agnelage` ( "
-                "`id` INTEGER PRIMARY KEY,"
-                "`dateAgnelage` TEXT,"
-                "`adoption` INTEGER NULL DEFAULT NULL,"
-                "`qualite` INTEGER NULL DEFAULT NULL,"
-                "`mere_id` INTEGER)");
-
-            db.execute("CREATE TABLE `agneaux` ( "
-            "`id` INTEGER PRIMARY KEY NOT NULL,"
-            "`marquageProvisoire` TEXT NULL DEFAULT NULL,"
-            "`sex` INTEGER NULL DEFAULT NULL,"
-            "`agnelage_id` INTEGER NULL DEFAULT NULL,"
-            "`dateDeces` TEXT,"
-            "`motifDeces` TEXT,"
-            "`devenir_id` INTEGER NULL DEFAULT NULL)");
-
-            db.execute("CREATE TABLE `bete` ( "
-            "`id` INTEGER PRIMARY KEY NOT NULL,"
-            "`cheptel` TEXT,"
-            "`dateEntree` TEXT,"
-            "`motifEntree` TEXT,"
-            "`dateNaissance` TEXT,"
-            "`dateSortie` TEXT,"
-            "`motifSortie` TEXT,"
-            "`numBoucle` TEXT,"
-            "`numMarquage` TEXT,"
-            "`nom` TEXT,"
-            "`sex` INTEGER)");
-
-            db.execute("CREATE TABLE `NEC` ( "
-                "`id` INTEGER PRIMARY KEY,"
-                "`date` TEXT,"
-                "`note` INTEGER NULL DEFAULT NULL,"
-                "`bete_id` INTEGER)");
-
-            return db.execute("CREATE TABLE `traitement` ("
-            "`idBd` INTEGER PRIMARY KEY NOT NULL,"
-            "`debut` TEXT,"
-            "`fin` TEXT,"
-            "`intervenant` TEXT,"
-            "`medicament` TEXT,"
-            "`motif` TEXT,"
-            "`observation`TEXT,"
-            "`beteId` INTEGER NULL DEFAULT NULL,"
-            "`dose` TEXT,"
-            "`duree` TEXT,"
-            "`rythme` TEXT,"
-            "`voie` TEXT,"
-            "`ordonnance` TEXT)",);
-
+            _createTableAgnelage(db);
+            _createTableAgneaux(db);
+            _createTableBete(db);
+            _createTableNec(db);
+            _creatTableTraitement(db);
+            _createTableLot(db);
+            _createTableAffectation(db);
+            _createTablePesee(db);
           },
       onDowngrade: (db, oldVersion, newVersion) {
           db.execute("DROP TABLE `lot`");
@@ -105,31 +63,15 @@ class LocalDataProvider extends DataProvider{
       },
         onUpgrade:(db, oldVersion, newVersion) {
           if (oldVersion == 1) {
-            db.execute("CREATE TABLE `affectation` ("
-                "`idBd` INTEGER PRIMARY KEY NOT NULL,"
-                "`dateEntree` TEXT NULL DEFAULT NULL,"
-                "`dateSortie` TEXT NULL DEFAULT NULL,"
-                "`brebisId` INTEGER NULL DEFAULT NULL,"
-                "`lotId` INTEGER NULL DEFAULT NULL)");
-            db.execute("CREATE TABLE `lot` ("
-                "`idBd` INTEGER PRIMARY KEY NOT NULL,"
-                "`cheptel` TEXT NULL DEFAULT NULL,"
-                "`codeLotLutte` TEXT NULL DEFAULT NULL,"
-                "`dateDebutLutte` TEXT NULL DEFAULT NULL,"
-                "`dateFinLutte` TEXT NULL DEFAULT NULL,"
-                "`campagne` TEXT NULL DEFAULT NULL)");
+            _createTableAffectation(db);
+            _createTableLot(db);
             db.execute("alter table 'bete' add COLUMN 'nom' TEXT;");
           }
           if (oldVersion == 2) {
             db.execute("alter table 'bete' add COLUMN 'nom' TEXT;");
           }
           if (oldVersion == 3) {
-            db.execute("CREATE TABLE `pesee` ("
-              "`id` INTEGER NOT NULL,"
-              "`datePesee` TEXT NULL DEFAULT NULL,"
-              "`poids` REAL NULL DEFAULT NULL,"
-              "`bete_id` INTEGER NULL DEFAULT NULL,"
-               " PRIMARY KEY('id'))");
+            _createTablePesee(db);
           }
         },
         // Set the version. This executes the onCreate function and provides a
@@ -162,6 +104,91 @@ class LocalDataProvider extends DataProvider{
     finally {
       return database;
     }
+  }
+  void _createTableAgnelage(Database db) {
+    db.execute("CREATE TABLE `agnelage` ( "
+        "`id` INTEGER PRIMARY KEY,"
+        "`dateAgnelage` TEXT,"
+        "`adoption` INTEGER NULL DEFAULT NULL,"
+        "`qualite` INTEGER NULL DEFAULT NULL,"
+        "`mere_id` INTEGER)");
+  }
+
+  void _createTableAgneaux(Database db) {
+    db.execute("CREATE TABLE `agneaux` ( "
+        "`id` INTEGER PRIMARY KEY NOT NULL,"
+        "`marquageProvisoire` TEXT NULL DEFAULT NULL,"
+        "`sex` INTEGER NULL DEFAULT NULL,"
+        "`agnelage_id` INTEGER NULL DEFAULT NULL,"
+        "`dateDeces` TEXT,"
+        "`motifDeces` TEXT,"
+        "`devenir_id` INTEGER NULL DEFAULT NULL)");
+  }
+  void _createTableBete(Database db) {
+    db.execute("CREATE TABLE `bete` ( "
+        "`id` INTEGER PRIMARY KEY NOT NULL,"
+        "`cheptel` TEXT,"
+        "`dateEntree` TEXT,"
+        "`motifEntree` TEXT,"
+        "`dateNaissance` TEXT,"
+        "`dateSortie` TEXT,"
+        "`motifSortie` TEXT,"
+        "`numBoucle` TEXT,"
+        "`numMarquage` TEXT,"
+        "`nom` TEXT,"
+        "`sex` INTEGER)");
+  }
+  void _createTableNec(Database db) {
+    db.execute("CREATE TABLE `NEC` ( "
+        "`id` INTEGER PRIMARY KEY,"
+        "`date` TEXT,"
+        "`note` INTEGER NULL DEFAULT NULL,"
+        "`bete_id` INTEGER)");
+  }
+
+  void _createTableAffectation(Database db) {
+    db.execute("CREATE TABLE `affectation` ("
+        "`idBd` INTEGER PRIMARY KEY NOT NULL,"
+        "`dateEntree` TEXT NULL DEFAULT NULL,"
+        "`dateSortie` TEXT NULL DEFAULT NULL,"
+        "`brebisId` INTEGER NULL DEFAULT NULL,"
+        "`lotId` INTEGER NULL DEFAULT NULL)");
+  }
+
+  void _createTableLot(Database db) {
+    db.execute("CREATE TABLE `lot` ("
+        "`idBd` INTEGER PRIMARY KEY NOT NULL,"
+        "`cheptel` TEXT NULL DEFAULT NULL,"
+        "`codeLotLutte` TEXT NULL DEFAULT NULL,"
+        "`dateDebutLutte` TEXT NULL DEFAULT NULL,"
+        "`dateFinLutte` TEXT NULL DEFAULT NULL,"
+        "`campagne` TEXT NULL DEFAULT NULL)");
+  }
+
+  void _createTablePesee(Database db) {
+    db.execute("CREATE TABLE `pesee` ("
+        "`id` INTEGER NOT NULL,"
+        "`datePesee` TEXT NULL DEFAULT NULL,"
+        "`poids` REAL NULL DEFAULT NULL,"
+        "`bete_id` INTEGER NULL DEFAULT NULL,"
+        " PRIMARY KEY('id'))");
+  }
+
+  void _creatTableTraitement(Database db) {
+    db.execute("CREATE TABLE `traitement` ("
+        "`idBd` INTEGER PRIMARY KEY NOT NULL,"
+        "`debut` TEXT,"
+        "`fin` TEXT,"
+        "`intervenant` TEXT,"
+        "`medicament` TEXT,"
+        "`motif` TEXT,"
+        "`observation`TEXT,"
+        "`beteId` INTEGER NULL DEFAULT NULL,"
+        "`dose` TEXT,"
+        "`duree` TEXT,"
+        "`rythme` TEXT,"
+        "`voie` TEXT,"
+        "`ordonnance` TEXT)",);
   }
 
   @override

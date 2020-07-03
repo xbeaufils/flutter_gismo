@@ -77,6 +77,8 @@ class _WelcomePageState extends State<WelcomePage> {
         ]
     ),
       body:
+      SingleChildScrollView(
+        child:
           Column(
             children: <Widget>[
               Card(
@@ -374,7 +376,7 @@ class _WelcomePageState extends State<WelcomePage> {
               ],
             )
           ),*/
-              ]));
+              ])));
   }
 
   @override
