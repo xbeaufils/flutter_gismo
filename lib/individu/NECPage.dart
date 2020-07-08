@@ -102,6 +102,7 @@ class NECPageState extends State<NECPage> {
   @override
   void initState() {
     super.initState();
+    _dateNoteCtl.text = _df.format(DateTime.now());
    // _nec = this.widget._currentLevel;
   }
 

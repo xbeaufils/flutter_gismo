@@ -105,6 +105,8 @@ class GismoBloc {
   }
 
   Future<String> saveLambing(LambingModel lambing ) async {
+    if (lambing.lambs.length == 0)
+      return "Pas d'agneaux de saisie";
     return this._repository.dataProvider.saveLambing(lambing);
   }
 

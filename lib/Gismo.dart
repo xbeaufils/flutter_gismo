@@ -63,7 +63,7 @@ class GismoApp extends StatelessWidget {
         '/sortie': (context) => SortiePage(this._bloc),
         '/entree': (context) => EntreePage(this._bloc),
         '/splash' : (context) => SplashScreen(this._bloc),
-        '/lot' : (context) => LotPage(),
+        '/lot' : (context) => LotPage(this._bloc),
         '/parcelle' : (context) =>ParcellePage(this._bloc)
       },
     );

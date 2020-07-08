@@ -94,6 +94,7 @@ class PeseePageState extends State<PeseePage> {
   @override
   void initState() {
     super.initState();
+    _datePeseeCtl.text = _df.format(DateTime.now());
    // _nec = this.widget._currentLevel;
   }
 

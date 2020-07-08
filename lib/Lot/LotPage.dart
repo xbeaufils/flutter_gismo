@@ -2,17 +2,21 @@ import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Lot/LotAffectationViewPage.dart';
-import 'package:flutter_gismo/main.dart';
+import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 
 
 class LotPage extends StatefulWidget {
-  LotPage({Key key}) : super(key: key);
+  final GismoBloc _bloc;
+
+  LotPage(this._bloc,{Key key}) : super(key: key);
   @override
-  _LotPageState createState() => new _LotPageState();
+  _LotPageState createState() => new _LotPageState(this._bloc);
 }
 
 class _LotPageState extends State<LotPage> {
+  final GismoBloc _bloc;
+  _LotPageState(this._bloc);
   @override
   void initState(){
     super.initState();
@@ -82,21 +86,21 @@ class _LotPageState extends State<LotPage> {
     var navigationResult = Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => LotAffectationViewPage(lot),
+        builder: (context) => LotAffectationViewPage(this._bloc, lot),
       ),
     );
     navigationResult.then( (message) {if (message != null) debug.log(message);} );
   }
 
   Future<List<LotModel>> _getLots()  {
-    return gismoBloc.getLots();
+    return this._bloc.getLots();
   }
 
   void _createLot(){
     var navigationResult = Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => LotAffectationViewPage(new LotModel()),
+        builder: (context) => LotAffectationViewPage(this._bloc, new LotModel()),
       ),
     );
     navigationResult.then( (message) {if (message != null) debug.log(message);} );

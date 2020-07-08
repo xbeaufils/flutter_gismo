@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/SearchPage.dart';
-import 'package:flutter_gismo/main.dart';
+import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
@@ -12,13 +12,16 @@ enum View {fiche, ewe, ram}
 
 class LotAffectationViewPage extends StatefulWidget {
   LotModel _currentLot;
+  final GismoBloc _bloc;
 
-  LotAffectationViewPage(this._currentLot, {Key key}) : super(key: key);
+  LotAffectationViewPage(this._bloc, this._currentLot, {Key key}) : super(key: key);
   @override
-  _LotAffectationViewPageState createState() => new _LotAffectationViewPageState();
+  _LotAffectationViewPageState createState() => new _LotAffectationViewPageState(this._bloc);
 }
 
 class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
+  final GismoBloc _bloc;
+  _LotAffectationViewPageState(this._bloc);
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final _formFicheKey = GlobalKey<FormState>();
   TextEditingController _codeLotCtl = TextEditingController();
@@ -282,7 +285,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
             "Date d'entrée");
         if (dateEntree.isEmpty)
           dateEntree = null;
-        String message = await gismoBloc.addBete(currentLot, selectedBete, dateEntree);
+        String message = await this._bloc.addBete(currentLot, selectedBete, dateEntree);
         final snackBar = SnackBar(
           content: Text(message),
         );
@@ -300,7 +303,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
           "Date de sortie",
           "Date de sortie",
           "Saisir une date de sortie si différente de la date de fin de lot");
-      String message = await gismoBloc.removeFromLot(affect, dateSortie);
+      String message = await this._bloc.removeFromLot(affect, dateSortie);
       final snackBar = SnackBar(
         content: Text(message),
       );
@@ -346,16 +349,16 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
        return;
      }
      currentLot.campagne = _campagneCtrl.text;
-    this.widget._currentLot = await gismoBloc.saveLot(currentLot);
+    this.widget._currentLot = await this._bloc.saveLot(currentLot);
 
   }
 
   Future<List<Affectation>> _getBeliers(int idLot)  {
-    return gismoBloc.getBeliersForLot(idLot);
+    return this._bloc.getBeliersForLot(idLot);
   }
 
   Future<List<Affectation>> _getBrebis(int idLot)  {
-    return gismoBloc.getBrebisForLot(idLot);
+    return this._bloc.getBrebisForLot(idLot);
   }
 
   Future<String> _showDateDialog(BuildContext context, String title, String helpMessage, String label) async {
