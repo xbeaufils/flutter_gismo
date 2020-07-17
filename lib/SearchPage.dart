@@ -60,36 +60,13 @@ class _SearchPageState extends State<SearchPage> {
       appBar: _buildBar(context),
       key: _scaffoldKey,
       body: Container(
-        child: /*(filteredNames == null) ? CircularProgressIndicator(): */_buildList(),
+        child:
+        /*(filteredNames == null) ? CircularProgressIndicator(): */_buildList(),
       ),
       //floatingActionButton: _buildReadButton(),
       resizeToAvoidBottomPadding: false,
     );
   }
-
-/*
-  Widget _buildReadButton() {
-    return new FloatingActionButton(
-        child: new Icon(Icons.rss_feed),
-        onPressed: _read);
-  }
-  Future<void>  _read() async {
-    String start = await Rt510.start(4);
-    String earTag = await Rt510.read();
-    String _earTag;
-    setState(()  {
-      try {
-        if (earTag != null)
-          _earTag = earTag;
-        else
-          _earTag = "Null";
-      } on PlatformException {
-        _earTag = 'Failed to get platform version.';
-      }
-    });
-
-  }
- */
 
 
   Widget _buildBar(BuildContext context) {

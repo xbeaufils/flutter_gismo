@@ -73,10 +73,12 @@ class LocalDataProvider extends DataProvider{
           if (oldVersion == 3) {
             _createTablePesee(db);
           }
+          if (oldVersion == 4)
+            db.execute("ALTER TABLE 'NEC' RENAME COLUMN 'id' TO 'idBd");
         },
         // Set the version. This executes the onCreate function and provides a
         // path to perform database upgrades and downgrades.
-        version:4,
+        version:5,
     );
     Report report = new Report();
     report.cheptel = super.cheptel;
@@ -140,7 +142,7 @@ class LocalDataProvider extends DataProvider{
   }
   void _createTableNec(Database db) {
     db.execute("CREATE TABLE `NEC` ( "
-        "`id` INTEGER PRIMARY KEY,"
+        "`idBd` INTEGER PRIMARY KEY,"
         "`date` TEXT,"
         "`note` INTEGER NULL DEFAULT NULL,"
         "`bete_id` INTEGER)");

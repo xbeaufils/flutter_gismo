@@ -65,7 +65,10 @@ class NoteModel {
 
   NoteModel.fromResult(result) {
     _idBd= result["idBd"] ;
-    _date = result["date"];
+    if (result["date"] != null)
+      _date = result["date"];
+    else
+      _date ="01/01/1900";
     _note = result["note"];
     _idBete = result["bete_id"];
   }

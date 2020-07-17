@@ -262,7 +262,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
     //Future _openAddEntryDialog() async {
       Bete selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
           builder: (BuildContext context) {
-            SearchPage search = new SearchPage(null, GismoPage.lot);
+            SearchPage search = new SearchPage(this._bloc, GismoPage.lot);
             switch (_currentView ) {
               case View.ewe:
                 search.searchSex = Sex.femelle;
