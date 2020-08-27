@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/main.dart';
-import 'package:flutter_gismo/model/User.dart';
 
 import 'dart:developer' as debug;
 
