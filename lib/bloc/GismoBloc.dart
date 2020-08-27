@@ -17,6 +17,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:sentry/browser_client.dart' hide User, Event;
 
 import '../model/BeteModel.dart';
 
@@ -27,9 +28,41 @@ class GismoBloc {
 
   User _currentUser;
   GismoRepository _repository;
+  final _sentry = SentryClient(dsn: "https://4d2738e6799b4264b3dfb02bcf364fb6@o406124.ingest.sentry.io/5373317");
+
+  get sentry => _sentry;
 
   GismoBloc();
+  /*
+  Gestion des exceptions avec sentry
+   */
+  // FRom https://flutter.dev/docs/cookbook/maintenance/error-reporting
+  bool get isInDebugMode {
+    // Assume you're in production mode.
+    bool inDebugMode = false;
 
+    // Assert expressions are only evaluated during development. They are ignored
+    // in production. Therefore, this code only sets `inDebugMode` to true
+    // in a development environment.
+    assert(inDebugMode = true);
+
+    return inDebugMode;
+  }
+
+  Future<void> reportError(dynamic error, dynamic stackTrace) async {
+    // Print the exception to the console.
+    print('Caught error: $error');
+    if (isInDebugMode) {
+      // Print the full stacktrace in debug mode.
+      print(stackTrace);
+    } else {
+      // Send the Exception and Stacktrace to Sentry in Production mode.
+      _sentry.captureException(
+        exception: error,
+        stackTrace: stackTrace,
+      );
+    }
+  }
   Future<String> init() async {
     // Read value
     FlutterSecureStorage storage = new FlutterSecureStorage();
@@ -171,8 +204,8 @@ class GismoBloc {
       lstEvents.sort((a, b) =>  _compareDate(a, b));
       return lstEvents;
     }
-    catch(e) {
-      print(e);
+    catch(e, stackTrace) {
+      this.reportError(e, stackTrace);
     }
   }
 
@@ -198,8 +231,8 @@ class GismoBloc {
       await this._repository.dataProvider.mort(lamb, motif, date);
       return "Enregistrement effectué";
     }
-    catch (e) {
-      print (e);
+    catch (e, stackTrace) {
+      this.reportError(e, stackTrace);
       return "Exception";
     }
   }
@@ -218,7 +251,8 @@ class GismoBloc {
       storage.write(key: "password", value: password);
       return "Connexion réussie";
     }
-    catch (e) {
+    catch (e, stackTrace) {
+      this.reportError(e, stackTrace);
       throw e;
     }
   }
@@ -265,7 +299,8 @@ class GismoBloc {
       await this._repository.dataProvider.saveNec(note);
       return "Enregistrement effectué";
     }
-    catch(e) {
+    catch(e, stackTrace) {
+      this.reportError(e, stackTrace);
       return "Une erreur est survenue";
     }
   }
@@ -278,7 +313,8 @@ class GismoBloc {
       pesee.poids = poids;
       await this._repository.dataProvider.savePesee(pesee);
     }
-    catch (e) {
+    catch (e, stackTrace) {
+      this.reportError(e, stackTrace);
       return "Une erreur et survenue";
     }
   }

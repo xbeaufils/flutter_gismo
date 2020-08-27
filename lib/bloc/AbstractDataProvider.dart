@@ -9,6 +9,9 @@ import 'package:flutter_gismo/model/TraitementModel.dart';
 
 abstract class DataProvider {
   GismoBloc _bloc;
+
+  GismoBloc get bloc => _bloc;
+
   DataProvider(this._bloc);
   String get cheptel => this._bloc.user.cheptel;
   String get token => this._bloc.user.token;

@@ -100,7 +100,8 @@ class LocalDataProvider extends DataProvider{
       final response = await _dio.post(
           '/send', data: report.toJson());
     }
-    catch(e) {
+    catch(e,stackTrace) {
+      super.bloc.reportError(e, stackTrace);
       debug.log("message" + e , name: "LocalDataProvider::_init");
     }
     finally {
@@ -249,9 +250,8 @@ class LocalDataProvider extends DataProvider{
         tempList.add(current);
       }
       return tempList;
-    } catch (e) {
-      // No specified type, handles all
-      print('Something really unknown: $e');
+    } catch (e,stackTrace) {
+      super.bloc.reportError(e, stackTrace);
     }
   }
 
@@ -363,7 +363,8 @@ class LocalDataProvider extends DataProvider{
           conflictAlgorithm: ConflictAlgorithm.replace);
       return " Enregistrement effectué";
     }
-    catch(e) {
+    catch(e,stackTrace) {
+      super.bloc.reportError(e, stackTrace);
       debug.log("Error", error: e);
     }
   }
@@ -403,7 +404,8 @@ class LocalDataProvider extends DataProvider{
       Database db = await this.database;
       await db.insert('NEC', note.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     }
-    catch(e) {
+    catch(e,stackTrace) {
+      super.bloc.reportError(e, stackTrace);
     }
   }
 
@@ -424,7 +426,8 @@ class LocalDataProvider extends DataProvider{
       Database db = await this.database;
       await db.insert('pesee', note.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     }
-    catch(e) {
+    catch(e,stackTrace) {
+      super.bloc.reportError(e, stackTrace);
     }
   }
 
@@ -495,8 +498,9 @@ class LocalDataProvider extends DataProvider{
       lot.idb = id;
       return lot;
     }
-    catch(e) {
+    catch(e, stackTrace) {
       debug.log("Error", error: e);
+      super.bloc.sentry.captureException(exception: e, stackTrace: stackTrace);
     }
 
   }
@@ -517,7 +521,8 @@ class LocalDataProvider extends DataProvider{
       await db.insert("affectation", dataDb,
           conflictAlgorithm: ConflictAlgorithm.replace);
     }
-    catch (e) {
+    catch (e,stackTrace) {
+      super.bloc.reportError(e, stackTrace);
       return "Une erreur est survenue :" + e.toString();
     }
     return "Enregistrement efectué";
@@ -537,7 +542,8 @@ class LocalDataProvider extends DataProvider{
       }
       return tempList;
     }
-    on DatabaseException catch (e) {
+    on DatabaseException catch (e,stackTrace) {
+      super.bloc.reportError(e, stackTrace);
       debug.log("message " + e.toString());
     }
   }
