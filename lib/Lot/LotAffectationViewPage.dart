@@ -33,8 +33,6 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
   int _curIndex=0;
   View _currentView;
 
-  String _codeLot;
-
   LotModel get currentLot => this.widget._currentLot;
 
   @override
@@ -110,6 +108,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
         return _listBelierWidget();
         break;
     }
+    return null;
   }
 
   Widget _getFiche() {

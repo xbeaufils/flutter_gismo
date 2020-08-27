@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/ConfigPage.dart';
 import 'package:flutter_gismo/Lot/LotPage.dart';
 import 'package:flutter_gismo/Mouvement/EntreePage.dart';
 import 'package:flutter_gismo/Mouvement/SortiePage.dart';
@@ -7,7 +6,6 @@ import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/SplashScreen.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/loginPage.dart';
-//import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/parcelle/ParcellePage.dart';
 import 'package:flutter_gismo/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -51,7 +49,7 @@ class GismoApp extends StatelessWidget {
       initialRoute: this.initialRoute,
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
-        '/config':(context) => ConfigPage(this._bloc),
+       // '/config':(context) => ConfigPage(this._bloc),
         '/welcome': (context) => WelcomePage(this._bloc, null),
         '/login': (context) => LoginPage(this._bloc),
         '/nec': (context) => SearchPage(this._bloc, GismoPage.etat_corporel),

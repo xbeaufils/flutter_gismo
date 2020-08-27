@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Environnement.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:sentry/browser_client.dart';
 
 GismoBloc gismoBloc;
 

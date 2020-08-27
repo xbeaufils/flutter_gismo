@@ -17,7 +17,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
-import 'package:sentry/browser_client.dart' hide User, Event;
+import 'package:sentry/sentry.dart' hide User, Event;
 
 import '../model/BeteModel.dart';
 
@@ -28,7 +28,7 @@ class GismoBloc {
 
   User _currentUser;
   GismoRepository _repository;
-  final _sentry = SentryClient(dsn: "https://4d2738e6799b4264b3dfb02bcf364fb6@o406124.ingest.sentry.io/5373317");
+  final _sentry = SentryClient(dsn:  "https://4d2738e6799b4264b3dfb02bcf364fb6@o406124.ingest.sentry.io/5373317");
 
   get sentry => _sentry;
 
