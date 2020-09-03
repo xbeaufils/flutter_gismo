@@ -28,7 +28,7 @@ class GismoBloc {
 
   User _currentUser;
   GismoRepository _repository;
-  final _sentry = SentryClient(dsn:  "https://4d2738e6799b4264b3dfb02bcf364fb6@o406124.ingest.sentry.io/5373317");
+  final _sentry = SentryClient(dsn:  "https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553");
 
   get sentry => _sentry;
 
