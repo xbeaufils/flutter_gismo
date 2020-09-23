@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Gismo.dart';
@@ -27,6 +30,7 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController _filter = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GismoBloc _bloc;
+  static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.LF134');
 
   String _searchText = "";
   List<Bete> _betes = new List();
@@ -167,6 +171,7 @@ class _SearchPageState extends State<SearchPage> {
         this._appBarTitle = new TextField(
           autofocus: true,
           controller: _filter,
+          keyboardType: TextInputType.number,
           decoration: new InputDecoration(
               prefixIcon: new Icon(Icons.search),
               hintText: 'Boucle...'
@@ -203,5 +208,17 @@ class _SearchPageState extends State<SearchPage> {
       filteredNames = _betes;
     });
 
+  }
+
+  Widget _buildReadButton() {
+    return FloatingActionButton(
+      child: Icon(Icons.add),
+      onPressed: _processRead,
+    );
+  }
+  void _processRead() async {
+    await PLATFORM_CHANNEL.invokeMethod('read');
+    final String result = await PLATFORM_CHANNEL.invokeMethod('result');
+    log("result " + result);
   }
 }

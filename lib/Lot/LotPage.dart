@@ -68,7 +68,7 @@ class _LotPageState extends State<LotPage> {
               children: <Widget>[
                 Card(child:
                     ListTile(
-                      title: Text(lot.campagne),
+                      title: Text(lot.codeLotLutte),
                       subtitle: Text(lot.dateDebutLutte),
                       trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () => _viewDetails(lot), )
                     )

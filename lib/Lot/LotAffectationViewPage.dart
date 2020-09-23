@@ -31,6 +31,8 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
   TextEditingController _campagneCtrl = TextEditingController();
   final _df = new DateFormat('dd/MM/yyyy');
   int _curIndex=0;
+  int _nbBrebis = -1;
+  int _nbBeliers = -1;
   View _currentView;
 
   LotModel get currentLot => this.widget._currentLot;
@@ -63,12 +65,24 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
                 onTap: (index) =>{ _changePage(index)}
               ),
             appBar: new AppBar(
-              title: new Text('Lot'),
+              title:
+                new Text('Lot ' + this.currentLot.codeLotLutte),
             ),
             floatingActionButton: _curIndex == 0 ? null : FloatingActionButton(child: Icon(Icons.add), onPressed: _addBete),
             body:
               _getCurrentView()
     );
+  }
+
+  Widget _getTitle() {
+    switch (_currentView) {
+      case View.fiche :
+        return  new Text( currentLot.codeLotLutte );
+      case View.ewe :
+        return new Text(_nbBrebis.toString());
+      case View.ram :
+        return new Text(_nbBeliers.toString());
+    }
   }
 
   void _changePage(int index) {
@@ -203,8 +217,10 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
           return Container();
         }
         if (belierSnap.connectionState == ConnectionState.waiting)
-          return CircularProgressIndicator();
-        return  _showList(belierSnap);
+          return Center(child:CircularProgressIndicator());
+        return  Column( children:  [
+          _showCount(belierSnap.data.length.toString() + " béliers"),
+          _showList(belierSnap) ]);
       },
       future: _getBeliers(this.widget._currentLot.idb),
     );
@@ -218,42 +234,57 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
             return Container();
           }
           if (brebisSnap.connectionState == ConnectionState.waiting)
-            return CircularProgressIndicator();
-          return _showList(brebisSnap);
+            return Center(child:  CircularProgressIndicator(),);
+          return
+            Column(children: <Widget>[
+              _showCount(brebisSnap.data.length.toString() + " brebis"),
+              _showList(brebisSnap)
+            ],);
         },
       future: _getBrebis(this.widget._currentLot.idb),
     );
   }
 
+  Widget _showCount(String libelle) {
+    return Row(children: <Widget>[
+      Expanded(child:
+        Card( color: Theme.of(context).primaryColor,  child:
+          Center(child:
+            Text( libelle, style: TextStyle(fontSize: 16.0, color: Colors.white),),),
+        ),
+      ),
+    ],);
+  }
   Widget _showList(AsyncSnapshot<List<Affectation>> snap) {
     return ListView.builder(
       shrinkWrap: true,
       itemCount: snap.data.length,
       itemBuilder: (context, index) {
         Affectation bete = snap.data[index];
-        return Column(
-          children: <Widget>[
-            Card(child:
-              ListTile(
-                  title:
-                  Row(children:
-                    <Widget>[
-                      Text(bete.numBoucle, style: TextStyle(fontWeight: FontWeight.bold)),
-                      SizedBox(width: 20,),
-                      Text(bete.numMarquage, style: TextStyle(fontStyle: FontStyle.italic),)],
-                  ),
-                  subtitle:
-                      Row(children:
-                        <Widget>[
-                          bete.dateEntree == null? Text(this.widget._currentLot.dateDebutLutte):Text("Entrée le : " + bete.dateEntree,),
-                          SizedBox(width: 20,),
-                          bete.dateSortie == null? Text(this.widget._currentLot.dateFinLutte):Text("Sortie le : "  + bete.dateSortie)],
-                        ),
-                  trailing: IconButton(icon: Icon(Icons.launch), onPressed:() =>{ _removeBete(bete)}, )
-            ))
-          ],
-        );
-      },
+       return Card(child:
+        ListTile(
+            title:
+            Row(children: <Widget>[
+              Text(bete.numBoucle,
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              SizedBox(width: 20,),
+              Text(bete.numMarquage,
+                style: TextStyle(fontStyle: FontStyle.italic),)
+            ],),
+            subtitle:
+            Row(children: <Widget>[
+              bete.dateEntree == null ? Text(
+                  this.widget._currentLot.dateDebutLutte) : Text(
+                "Entrée le : " + bete.dateEntree,),
+              SizedBox(width: 20,),
+              bete.dateSortie == null ? Text(
+                  this.widget._currentLot.dateFinLutte) : Text(
+                  "Sortie le : " + bete.dateSortie)
+            ], ),
+            trailing: IconButton(
+              icon: Icon(Icons.launch), onPressed: () => { _removeBete(bete)},)
+        ));
+      }
     );
   }
 
