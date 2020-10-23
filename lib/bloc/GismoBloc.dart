@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gismo/bloc/GismoRepository.dart';
 import 'package:flutter_gismo/bloc/WebDataProvider.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
+import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
@@ -63,6 +64,7 @@ class GismoBloc {
       );
     }
   }
+
   Future<String> init() async {
     // Read value
     FlutterSecureStorage storage = new FlutterSecureStorage();
@@ -99,8 +101,6 @@ class GismoBloc {
       return "Mode autonome";
     }
   }
-
-
 
   bool isLogged() {
      if (_currentUser == null)
@@ -179,6 +179,10 @@ class GismoBloc {
     return this._repository.dataProvider.searchTraitement(idBd);
   }
 
+  Future<EchographieModel> searchEcho(int idBd) {
+    return this._repository.dataProvider.searchEcho(idBd);
+  }
+
   Future<String> saveBete(Bete bete) {
     bete.cheptel = _currentUser.cheptel;
     return this._repository.dataProvider.saveBete(bete);
@@ -196,11 +200,13 @@ class GismoBloc {
       debug.log("get nec", name: "GismoBloc::getEvents");
       List<NoteModel> lstNotes = await this._repository.dataProvider.getNec(bete);
       List<Pesee> lstPoids  = await this._repository.dataProvider.getPesee(bete);
+      List<EchographieModel> lstEcho = await this._repository.dataProvider.getEcho(bete);
       lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd, EventType.agnelage, lambing.dateAgnelage, lambing.lambs.length.toString()))});
       lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd, EventType.traitement, traitement.debut, traitement.medicament))});
       lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd, EventType.NEC, note.date, note.note.toString()))});
       lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id, EventType.pesee, poids.datePesee, poids.poids.toString()))});
       lstAffect.forEach( (affect) => {lstEvents.addAll ( _makeEventforAffectation(affect) )});
+      lstEcho.forEach((echo) {lstEvents.add(new Event.name(echo.idBd, EventType.echo, echo.dateEcho, echo.nombre.toString())); });
       lstEvents.sort((a, b) =>  _compareDate(a, b));
       return lstEvents;
     }
@@ -312,12 +318,25 @@ class GismoBloc {
       pesee.datePesee = date;
       pesee.poids = poids;
       await this._repository.dataProvider.savePesee(pesee);
+      return "Enregistrement effectué";
     }
     catch (e, stackTrace) {
       this.reportError(e, stackTrace);
       return "Une erreur et survenue";
     }
   }
+
+  Future<String> saveEcho(EchographieModel echo) async {
+    try {
+      await this._repository.dataProvider.saveEcho(echo);
+      return "Enregistrement effectué";
+    }
+    catch (e, stackTrace) {
+      this.reportError(e, stackTrace);
+      return "Une erreur et survenue";
+    }
+  }
+
   Future<LotModel> saveLot(LotModel lot) async {
     lot.cheptel = this._currentUser.cheptel;
     LotModel newLot  = await this._repository.dataProvider.saveLot(lot);

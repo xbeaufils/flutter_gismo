@@ -7,6 +7,7 @@ import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
@@ -161,6 +162,7 @@ class WebDataProvider extends DataProvider {
         throw ("Erreur de connection à " +  Environnement.getUrlTarget());
       }
     }
+
   @override
   Future<String> saveEntree(String cheptel, String date, String motif, List<Bete> lstBete) async {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -314,6 +316,40 @@ class WebDataProvider extends DataProvider {
       tempList.add(new Pesee.fromResult(response.data[i]));
     }
     return tempList;
+  }
+
+  @override
+  Future<String> saveEcho(EchographieModel echo) async {
+    try {
+      final response = await _dio.post(
+          '/echo/new', data: echo.toJson());
+      if (response.data['error']) {
+        throw (response.data['error']);
+      }
+      else {
+        return response.data['message'];
+      }
+    } on DioError catch ( e) {
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+  }
+
+  @override
+  Future<List<EchographieModel>> getEcho(Bete bete) async {
+    final response = await _dio.get(
+        '/echo/get/' + bete.idBd.toString());
+    List<EchographieModel> tempList = new List();
+    for (int i = 0; i < response.data.length; i++) {
+      tempList.add(new EchographieModel.fromResult(response.data[i]));
+    }
+    return tempList;
+  }
+
+  @override
+  Future<EchographieModel> searchEcho(int idBd) async {
+    final response = await _dio.get(
+        '/echo/search/' + idBd.toString());
+    return new EchographieModel.fromResult(response.data);
   }
 
   @override

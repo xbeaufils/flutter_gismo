@@ -1,6 +1,7 @@
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
@@ -31,8 +32,11 @@ abstract class DataProvider {
   Future<void> mort(LambModel lamb, String motif, String date);
   Future<String> saveNec(NoteModel node);
   Future<String> savePesee(Pesee pesee);
+  Future<String> saveEcho(EchographieModel echo);
+  Future<EchographieModel> searchEcho(int idBd);
   Future<List<NoteModel>> getNec(Bete bete);
   Future<List<Pesee>> getPesee(Bete bete);
+  Future<List<EchographieModel>> getEcho(Bete bete);
   Future<List<LotModel>> getLots(String cheptel) ;
   Future<List<Affectation>>getBrebisForLot(int idLot);
   Future<List<Affectation>>getBeliersForLot(int idLot);

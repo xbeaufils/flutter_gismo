@@ -5,12 +5,13 @@ import 'package:flutter_gismo/Mouvement/SortiePage.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/SplashScreen.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/loginPage.dart';
 import 'package:flutter_gismo/parcelle/ParcellePage.dart';
 import 'package:flutter_gismo/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-enum GismoPage {lamb, sanitaire, etat_corporel, individu, sortie, lot, pesee  }
+enum GismoPage {lamb, sanitaire, etat_corporel, individu, sortie, lot, pesee, echo  }
 
 class GismoApp extends StatelessWidget {
   final String initialRoute;
@@ -56,7 +57,7 @@ class GismoApp extends StatelessWidget {
         '/pesee': (context) => SearchPage(this._bloc, GismoPage.pesee),
         '/search': (context) => SearchPage(this._bloc, GismoPage.individu),
         '/sanitaire' : (context) => SearchPage(this._bloc, GismoPage.sanitaire),
-        //'/bete' : (context) => BetePage(this._bloc),
+        '/echo' : (context) => SearchPage(this._bloc, GismoPage.echo),
         '/lamb' : (context) => SearchPage(this._bloc, GismoPage.lamb),
         '/sortie': (context) => SortiePage(this._bloc),
         '/entree': (context) => EntreePage(this._bloc),

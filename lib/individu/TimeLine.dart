@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
 import 'package:flutter_gismo/Sanitaire.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
@@ -104,6 +106,9 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       case EventType.traitement:
         _bloc.searchTraitement(event.idBd).then( (traitement) => { _editTraitement(traitement)});
         break;
+      case EventType.echo:
+        _bloc.searchEcho(event.idBd).then( (echo) => { _editEcho(echo)});
+        break;
        default:
     }
   }
@@ -129,6 +134,16 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
     navigationResult.then( (message) { if (message != null) _showMessage(message);} );
   }
 
+  void _editEcho(EchographieModel  echo)  {
+    var navigationResult = Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EchoPage.edit(_bloc, echo, _bete),
+      ),
+    );
+    navigationResult.then( (message) { if (message != null) _showMessage(message);} );
+  }
+
   Widget _getImageType(EventType type) {
     switch (type) {
       case EventType.traitement :
@@ -149,6 +164,8 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       case EventType.pesee:
         return new Image.asset("assets/peseur.png");
         break;
+      case EventType.echo:
+        return new Image.asset("assets/ultrasound.png");
       case EventType.entree:
       case EventType.sortie:
      }

@@ -25,8 +25,13 @@ class _WelcomePageState extends State<WelcomePage> {
     if (_bloc.user == null) {
       iconConnexion = Icon(Icons.error_outline);
       userName = new Text("Erreur utilisateur");
-    } else {
-      if (_bloc.user.subscribe) {
+    } else
+      if (_bloc.user.subscribe == null) {
+        iconConnexion = Icon(Icons.error_outline);
+        userName = new Text("Erreur utilisateur");
+      } else {
+
+        if (_bloc.user.subscribe) {
         iconConnexion = Icon(Icons.verified_user);
         userName = new Text(_bloc.user.email);
       }
@@ -96,18 +101,21 @@ class _WelcomePageState extends State<WelcomePage> {
                   alignment: MainAxisAlignment.spaceEvenly,
                   buttonMinWidth: 90.0,
                   children: <Widget>[
+                    _buildButton("Echographie", 'assets/ultrasound.png', _echoPressed),
                     _buildButton("Agnelage", 'assets/lamb.png', _lambPressed),
-                    _buildButton("Traitement", "assets/syringe.png",_traitementPressed),
                   ])),
               Card(
-                child: ButtonBar(
-                  mainAxisSize: MainAxisSize.max,
-                  alignment: MainAxisAlignment.spaceEvenly,
-                  buttonMinWidth: 90.0,
-                  children: <Widget>[
-                    _buildButton("Etat corp.", "assets/etat_corporel.png", _necPressed), //Etat corporel
-                    _buildButton("Poids", 'assets/peseur.png', _peseePressed), // Pesée
-                  ])),
+                child: SingleChildScrollView (
+                  scrollDirection: Axis.horizontal,
+                  child: ButtonBar(
+                    mainAxisSize: MainAxisSize.max,
+                    alignment: MainAxisAlignment.spaceEvenly,
+                    buttonMinWidth: 90.0,
+                    children: <Widget>[
+                      _buildButton("Traitement", "assets/syringe.png",_traitementPressed),
+                      _buildButton("Etat corp.", "assets/etat_corporel.png", _necPressed), //Etat corporel
+                      _buildButton("Poids", 'assets/peseur.png', _peseePressed), // Pesée
+                  ]))),
               Card(
                 child:
                   ButtonBar(
@@ -146,6 +154,7 @@ class _WelcomePageState extends State<WelcomePage> {
           ],
       )));
   }
+
   @override
   void initState() {}
 
@@ -213,6 +222,10 @@ class _WelcomePageState extends State<WelcomePage> {
 
   void _traitementPressed() {
     Navigator.pushNamed(context, '/sanitaire');
+  }
+
+  void _echoPressed() {
+    Navigator.pushNamed(context, '/echo');
   }
 
   void _lambPressed() {

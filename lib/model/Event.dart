@@ -1,4 +1,4 @@
-enum EventType {entree, agnelage, traitement, sortie, NEC, entreeLot, sortieLot, pesee}
+enum EventType {entree, agnelage, traitement, sortie, NEC, entreeLot, sortieLot, pesee, echo}
 
 class Event {
    int _idBd;

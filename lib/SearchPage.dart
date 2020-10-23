@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/Sanitaire.dart';
+import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/individu/NECPage.dart';
 import 'package:flutter_gismo/individu/PeseePage.dart';
 import 'package:flutter_gismo/individu/TimeLine.dart';
@@ -128,6 +129,9 @@ class _SearchPageState extends State<SearchPage> {
         break;
       case GismoPage.pesee:
         page = PeseePage(this._bloc, bete);
+        break;
+      case GismoPage.echo:
+        page = EchoPage(this._bloc, bete);
         break;
       case GismoPage.sortie:
       case GismoPage.lot:

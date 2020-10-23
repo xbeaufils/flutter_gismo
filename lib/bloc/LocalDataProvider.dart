@@ -6,6 +6,7 @@ import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
@@ -45,7 +46,7 @@ class LocalDataProvider extends DataProvider{
     Database database =  await openDatabase(
       // Set the path to the database.
 
-        join(await getDatabasesPath() /*documentsDirectory.path*/, 'gismo_database.db'),
+        join(await getDatabasesPath() , 'gismo_database.db'),
           onCreate: (db, version) {
           // Run the CREATE TABLE statement on the database.
             _createTableAgnelage(db);
@@ -56,6 +57,7 @@ class LocalDataProvider extends DataProvider{
             _createTableLot(db);
             _createTableAffectation(db);
             _createTablePesee(db);
+            _createTableEcho(db);
           },
       onDowngrade: (db, oldVersion, newVersion) {
           db.execute("DROP TABLE `lot`");
@@ -75,10 +77,13 @@ class LocalDataProvider extends DataProvider{
           }
           if (oldVersion == 4)
             db.execute("ALTER TABLE 'NEC' RENAME COLUMN 'id' TO 'idBd");
+          if (oldVersion == 5) {
+            _createTableEcho(db);
+          }
         },
         // Set the version. This executes the onCreate function and provides a
         // path to perform database upgrades and downgrades.
-        version:5,
+        version:6,
     );
     Report report = new Report();
     report.cheptel = super.cheptel;
@@ -108,6 +113,7 @@ class LocalDataProvider extends DataProvider{
       return database;
     }
   }
+
   void _createTableAgnelage(Database db) {
     db.execute("CREATE TABLE `agnelage` ( "
         "`id` INTEGER PRIMARY KEY,"
@@ -116,7 +122,6 @@ class LocalDataProvider extends DataProvider{
         "`qualite` INTEGER NULL DEFAULT NULL,"
         "`mere_id` INTEGER)");
   }
-
   void _createTableAgneaux(Database db) {
     db.execute("CREATE TABLE `agneaux` ( "
         "`id` INTEGER PRIMARY KEY NOT NULL,"
@@ -148,7 +153,6 @@ class LocalDataProvider extends DataProvider{
         "`note` INTEGER NULL DEFAULT NULL,"
         "`bete_id` INTEGER)");
   }
-
   void _createTableAffectation(Database db) {
     db.execute("CREATE TABLE `affectation` ("
         "`idBd` INTEGER PRIMARY KEY NOT NULL,"
@@ -157,7 +161,6 @@ class LocalDataProvider extends DataProvider{
         "`brebisId` INTEGER NULL DEFAULT NULL,"
         "`lotId` INTEGER NULL DEFAULT NULL)");
   }
-
   void _createTableLot(Database db) {
     db.execute("CREATE TABLE `lot` ("
         "`idBd` INTEGER PRIMARY KEY NOT NULL,"
@@ -167,7 +170,6 @@ class LocalDataProvider extends DataProvider{
         "`dateFinLutte` TEXT NULL DEFAULT NULL,"
         "`campagne` TEXT NULL DEFAULT NULL)");
   }
-
   void _createTablePesee(Database db) {
     db.execute("CREATE TABLE `pesee` ("
         "`id` INTEGER NOT NULL,"
@@ -176,7 +178,6 @@ class LocalDataProvider extends DataProvider{
         "`bete_id` INTEGER NULL DEFAULT NULL,"
         " PRIMARY KEY('id'))");
   }
-
   void _creatTableTraitement(Database db) {
     db.execute("CREATE TABLE `traitement` ("
         "`idBd` INTEGER PRIMARY KEY NOT NULL,"
@@ -192,6 +193,15 @@ class LocalDataProvider extends DataProvider{
         "`rythme` TEXT,"
         "`voie` TEXT,"
         "`ordonnance` TEXT)",);
+  }
+  void _createTableEcho(Database db) {
+    db.execute("create table Echo ("
+        "id INTEGER PRIMARY KEY NOT NULL, "
+        "dateAgnelage TEXT, "
+        "dateEcho TEXT, "
+        "dateSaillie TEXT, "
+        "nombre INTEGER, "
+        "bete_id INTEGER)");
   }
 
   @override
@@ -441,6 +451,39 @@ class LocalDataProvider extends DataProvider{
     }
     return tempList;
   }
+
+  @override
+  Future<String> saveEcho(EchographieModel echo) async {
+    try {
+      Database db = await this.database;
+      await db.insert('Echo', echo.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
+    }
+    catch(e,stackTrace) {
+      super.bloc.reportError(e, stackTrace);
+    }
+  }
+
+  @override
+  Future<EchographieModel> searchEcho(int idBd) async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> futureMaps = await db.query('Echo',where: 'id= ?', whereArgs: [idBd]);
+    if (futureMaps.length == 0)
+      return null;
+    return EchographieModel.fromResult(futureMaps[0]);
+  }
+
+  @override
+  Future<List<EchographieModel>> getEcho(Bete bete) async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> futureMaps = await db.query('Echo',where: 'bete_id = ?', whereArgs: [bete.idBd]);
+    List<EchographieModel> tempList = new List();
+    for (int i = 0; i < futureMaps.length; i++) {
+      tempList.add(EchographieModel.fromResult(futureMaps[i]));
+    }
+    return tempList;
+  }
+
+
 
   @override
   Future<List<LotModel>> getLots(String cheptel) async {
