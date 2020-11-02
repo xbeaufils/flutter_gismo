@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
 enum TestConfig{NOT, DONE}
+enum ConfirmAction { CANCEL, ACCEPT }
 
 class ConfigPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -142,7 +143,7 @@ class _ConfigPageState extends State<ConfigPage> {
                             new ListTile(
                               title: Text(filename), 
                               trailing: IconButton(icon: Icon(Icons.delete), onPressed: () => this._deleteBackup(filename) ,), 
-                              leading: IconButton(icon: Icon(Icons.restore), onPressed: null) ,)
+                              leading: IconButton(icon: Icon(Icons.restore), onPressed: () => this._restoreBackup(filename)) ,)
                           ]);
                     },
                   );
@@ -189,6 +190,14 @@ class _ConfigPageState extends State<ConfigPage> {
     this._bloc.copyBD();
   }
 
+  void _restoreBackup(String filename) {
+      this._asyncConfirmDialog(context).then((value) => {
+        if (value == ConfirmAction.ACCEPT)
+          this._bloc.restoreBackup(filename)
+      }
+      );
+  }
+
   void _login() async {
       User testUser  = User(_emailCtrl.text, _passwordCtrl.text);
       try {
@@ -202,6 +211,33 @@ class _ConfigPageState extends State<ConfigPage> {
 
   }
 
+Future _asyncConfirmDialog(BuildContext context) async {
+  return showDialog(
+    context: context,
+    barrierDismissible: false, // user must tap button for close dialog!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Restauration de la BD'),
+        content: const Text(
+            'Les données actuelles seront remplacées.'),
+        actions: [
+          FlatButton(
+            child: const Text('Annuler'),
+            onPressed: () {
+              Navigator.of(context).pop(ConfirmAction.CANCEL);
+            },
+          ),
+          FlatButton(
+            child: const Text('Accepter'),
+            onPressed: () {
+              Navigator.of(context).pop(ConfirmAction.ACCEPT);
+            },
+          )
+        ],
+      );
+    },
+  );
+}
   void _saveConfig() {
     //AuthService service = new AuthService();
     this._bloc.saveConfig(this._isSubscribed, _emailCtrl.text, _passwordCtrl.text)

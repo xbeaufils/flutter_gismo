@@ -470,5 +470,17 @@ class GismoBloc {
         File(backupFile).deleteSync();
      }
    }
+
+  void restoreBackup(String filename) async {
+    final Directory extDir = await getExternalStorageDirectory();
+    Directory backupdir =  Directory(extDir.path + '/backup');
+    if ( backupdir.existsSync() ) {
+      String backupFile = join(backupdir.path, filename);
+      String databasePath = await getDatabasesPath();
+      String databaseFile = join(databasePath , 'gismo_database.db');
+      File(backupFile).copySync(databaseFile);
+    }
+  }
+
 }
 

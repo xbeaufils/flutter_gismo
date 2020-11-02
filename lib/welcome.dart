@@ -178,6 +178,9 @@ class _WelcomePageState extends State<WelcomePage> {
     var message = Navigator.pushNamed(context, '/config');
     message.then((message) {
       showMessage(message);
+      setState(() {
+
+      });
     }).catchError((message) {
       showMessage(message);
     });
