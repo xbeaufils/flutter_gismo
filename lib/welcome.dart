@@ -44,8 +44,10 @@ class _WelcomePageState extends State<WelcomePage> {
           new Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
           ),
+          /*
           Icon(Icons.notifications),
           Text(message),
+           */
         ],
       ),
     );
