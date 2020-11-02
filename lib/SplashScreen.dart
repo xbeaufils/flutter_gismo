@@ -32,6 +32,7 @@ class SplashScreenState extends State<SplashScreen> {
 
   void _initError(e) {
     debug.log("Error is " + e.toString() , name: "SplashScreenState::_initError");
+    this._bloc.setUser(null);
     SnackBar snackBar;
     if (e is String)
       snackBar = SnackBar(content: Text(e),);

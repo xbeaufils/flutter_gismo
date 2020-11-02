@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/ConfigPage.dart';
 import 'package:flutter_gismo/Lot/LotPage.dart';
 import 'package:flutter_gismo/Mouvement/EntreePage.dart';
 import 'package:flutter_gismo/Mouvement/SortiePage.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/SplashScreen.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/loginPage.dart';
 import 'package:flutter_gismo/parcelle/ParcellePage.dart';
 import 'package:flutter_gismo/welcome.dart';
@@ -63,7 +63,8 @@ class GismoApp extends StatelessWidget {
         '/entree': (context) => EntreePage(this._bloc),
         '/splash' : (context) => SplashScreen(this._bloc),
         '/lot' : (context) => LotPage(this._bloc),
-        '/parcelle' : (context) =>ParcellePage(this._bloc)
+        '/parcelle' : (context) =>ParcellePage(this._bloc),
+        '/config' : (context) =>ConfigPage(this._bloc)
       },
     );
   }

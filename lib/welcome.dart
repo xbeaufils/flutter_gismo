@@ -52,6 +52,12 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Widget _getActionButton() {
+    return IconButton(
+      icon: Icon(Icons.settings),
+      onPressed: _settingPressed,
+    );
+
+    /*
     if (_bloc.user.subscribe) {
       return IconButton(
         icon: Icon(Icons.cloud_off),
@@ -62,6 +68,7 @@ class _WelcomePageState extends State<WelcomePage> {
       icon: Icon(Icons.account_box),
       onPressed: _loginPressed,
     );
+     */
   }
 
   @override
@@ -73,7 +80,9 @@ class _WelcomePageState extends State<WelcomePage> {
           _getStatus(this.widget._message),
         ],
         appBar: new AppBar(
-            title: new Text('Gismo ' + _bloc.user.cheptel),
+            title: (_bloc.user != null) ?
+              new Text('Gismo ' + _bloc.user.cheptel):
+              new Text('Erreur de connexion'),
             // N'affiche pas la touche back (qui revient à la SplashScreen
             automaticallyImplyLeading: false,
             actions: <Widget>[
@@ -177,22 +186,27 @@ class _WelcomePageState extends State<WelcomePage> {
   void _individuPressed() {
     Navigator.pushNamed(context, '/search');
   }
-
+/*
   void _loginPressed() {
-    var navigationResult = Navigator.pushNamed(context, '/login');
+    var navigationResult = Navigator.pushNamed(context, '/config');
     navigationResult.then((message) {
       setState(() {
         this.widget._message = message;
       });
     });
   }
-
+*/
+/*
   void _logoutPressed() {
+    Navigator.pushNamed(context, '/config');
+
     String message = _bloc.logout();
     setState(() {
       this.widget._message = message;
     });
+
   }
+ */
 
   void _sortiePressed() {
     var message = Navigator.pushNamed(context, '/sortie');

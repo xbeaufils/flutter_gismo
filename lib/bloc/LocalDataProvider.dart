@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_gismo/Environnement.dart';
@@ -619,5 +620,10 @@ class LocalDataProvider extends DataProvider{
      return tempList;
   }
 
+  Future<String> copyBd() async {
+    String databasePath = await getDatabasesPath();
+    String databaseFile = join(databasePath , 'gismo_database.db');
+   // File(databaseFile).copy(newPath);
+  }
 }
 

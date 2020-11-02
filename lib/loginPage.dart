@@ -38,9 +38,7 @@ class _LoginPageState extends State<LoginPage> {
                 new Image.asset('assets/gismo.png',
                   fit:BoxFit.fill,
                 ),
-
               ),
-
               new Card(key: null,
                 child:
                 new Column(
@@ -51,7 +49,6 @@ class _LoginPageState extends State<LoginPage> {
                       new Text(
                         "email",
                       ),
-
                       new TextField(
                         controller: _emailCtrl,
                         keyboardType: TextInputType.emailAddress,
@@ -61,11 +58,9 @@ class _LoginPageState extends State<LoginPage> {
                             border:
                             OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                       ),
-
                       new Text(
                         "Mot de passe",
                       ),
-
                       new TextField(
                         controller: _passwordCtrl,
                         obscureText: true,
@@ -75,7 +70,6 @@ class _LoginPageState extends State<LoginPage> {
                             border:
                             OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                        ),
-
                       new RaisedButton(key:null, onPressed:_saveConfig,
                           color: const Color(0xFFe0e0e0),
                           child:

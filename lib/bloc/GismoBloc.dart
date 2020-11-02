@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/bloc/GismoRepository.dart';
+import 'package:flutter_gismo/bloc/LocalDataProvider.dart';
 import 'package:flutter_gismo/bloc/WebDataProvider.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/EchographieModel.dart';
@@ -18,7 +20,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sentry/sentry.dart' hide User, Event;
+import 'package:sqflite/sqflite.dart';
 
 import '../model/BeteModel.dart';
 
@@ -247,6 +252,33 @@ class GismoBloc {
     return this._repository.dataProvider.getBetes(_currentUser.cheptel);
   }
 
+  Future<String> saveConfig(bool isSubscribe, String email, String password) async {
+    try {
+      final storage = new FlutterSecureStorage();
+      if (isSubscribe) {
+        User user = User(email, password);
+        this._currentUser = await this.login(user);
+        this._repository = new GismoRepository(this, RepositoryType.web);
+        storage.write(key: "email", value: email);
+        storage.write(key: "password", value: password);
+      }
+      else {
+        this._currentUser = new User(null, null);
+        this._currentUser.setCheptel("00000000");
+        this._currentUser.subscribe = false;
+        this._repository = new GismoRepository(this, RepositoryType.local);
+        storage.delete(key: "email");
+        storage.delete(key: "password");
+      }
+      return "Configuration enregistrée";
+    }
+    catch (e, stackTrace) {
+      this.reportError(e, stackTrace);
+      throw e;
+    }
+
+  }
+
   Future<String> saveLogin(String email, String password) async {
     try {
       final storage = new FlutterSecureStorage();
@@ -416,5 +448,27 @@ class GismoBloc {
     throw ("Uniquement web");
    }
 
+   Future<String> copyBD() async {
+     //return (_repository.dataProvider as LocalDataProvider).copyBd();
+     final df = new DateFormat('yyyy-MM-dd');
+     DateTime date = DateTime.now();
+     String databasePath = await getDatabasesPath();
+     String databaseFile = join(databasePath , 'gismo_database.db');
+     final Directory extDir = await getExternalStorageDirectory();
+     Directory backupdir =  Directory(extDir.path + '/backup');
+     if ( ! backupdir.existsSync() )
+       backupdir.createSync();
+     String backupFile = join(backupdir.path, 'gismo_database_'+ df.format(date) + '.db');
+     File(databaseFile).copy(backupFile);
+   }
+
+   void deleleteBackup(String filename) async {
+     final Directory extDir = await getExternalStorageDirectory();
+     Directory backupdir =  Directory(extDir.path + '/backup');
+     if ( backupdir.existsSync() ) {
+       String backupFile = join(backupdir.path, filename);
+        File(backupFile).deleteSync();
+     }
+   }
 }
 

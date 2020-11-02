@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/main.dart';
+import 'package:flutter_gismo/model/User.dart';
 
 import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/welcome.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 
-enum TestConfig{NOT, WRONG, RIGHT}
+enum TestConfig{NOT, DONE}
 
 class ConfigPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -21,118 +26,188 @@ class _ConfigPageState extends State<ConfigPage> {
 
   _ConfigPageState(this._bloc);
 
-  int _currentStep = 0;
   bool _isSubscribed = false;
-  TestConfig _isTested = TestConfig.NOT;
+  TestConfig configTeste = TestConfig.NOT;
   final _cheptelCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
   final _tokenCtrl = TextEditingController();
+  final _passwordCtrl = TextEditingController();
 
-  List<Step> _steps;
- // List<Step> get steps => _steps;
-
-  List<Step> _buildSteps() {
-    debug.log("curentStep = " + _currentStep.toString());
-    _steps = [
-      _getCheptel(),
-      _getAbonnementStep(),
-      _getConfirm()
-    ];
-    return _steps;
-  }
-
-   void switched(value) {
+    void switched(value) {
     this.setState(() {
       this._isSubscribed = value;
       if (this._isSubscribed)
-        _isTested = TestConfig.NOT;
-    });
+        configTeste = TestConfig.NOT;
+     });
   }
 
-  Step _getAbonnementStep() {
-    return Step(
-      title: const Text('Abonnement'),
-      isActive: true,
-      state: _currentStep == 1 ? StepState.editing : StepState.indexed,
-      content:  Column(
-      children: <Widget>[
-        Row(children: <Widget>[
-          Expanded(
-            child: Text("Avec abonnement")
-          ),
-          Switch(
-            value: _isSubscribed,
-            onChanged: (value) {switched(value);},
-          ),
-          ]),
-        TextFormField(
-          controller: _emailCtrl,
-          enabled: _isSubscribed ,
-          keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(labelText: 'Email'),
-        ),
-        TextFormField(
-          controller: _tokenCtrl,
-          enabled: _isSubscribed,
-          decoration: InputDecoration(labelText: 'Token'),
-        ),
-      ],
-    ));
+  Widget _loginPage() {
+    return  new Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            /*
+            new SizedBox(
+              width: 100.0,
+              height: 100.0,
+              child:
+              new Image.asset('assets/gismo.png',
+                fit:BoxFit.fill,
+              ),
+            ),
+
+             */
+            ListTile(
+              title: Text("Mode connecté"),
+              subtitle: Text("Dans ce mode, les données seront enregistrés sur le serveur.\n"
+              "Ce mode nécesite un compte sur gismo"),
+            isThreeLine: true,),
+            new Card(key: null,
+              child:
+              new Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    new Text(
+                      "email",
+                    ),
+                    new TextField(
+                      controller: _emailCtrl,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                          hintText: "Email",
+                          border:
+                          OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+                    ),
+                    new Text(
+                      "Mot de passe",
+                    ),
+                    new TextField(
+                      controller: _passwordCtrl,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                          hintText: "Mot de passe",
+                          border:
+                          OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+                    ),
+                    new RaisedButton(key:null, onPressed:_login,
+                        color: const Color(0xFFe0e0e0),
+                        child:
+                        new Text(
+                          "Connexion",
+                          style: new TextStyle(
+                            color: const Color(0xFF000000),),
+                        )
+                    )
+                  ]
+              ),
+            )
+          ]
+      );
+
   }
 
-  Step _getCheptel() {
-    return Step(
-      isActive: true,
-      state: _currentStep == 0 ? StepState.editing : StepState.indexed,
-      title: const Text('Cheptel'),
-      content: Column(
-        children: <Widget>[
-          TextFormField(
-            controller: _cheptelCtrl,
-            decoration: InputDecoration(labelText: 'Numero Cheptel'),
-          ),
-        ],
+  Widget _autonomePage() {
+    return new Column(children: <Widget>[
+      ListTile(
+        title: Text("Mode autonome"),
+        subtitle: Text("Dans ce mode, les données seront enregistrés dans une base de données de votre téléphone.\n"
+            "Copiez votre base de données locale pour la sauvegarder sur un PC et la restaurer en cas de besoin."),
+        isThreeLine: true,
       ),
+        FutureBuilder(
+            builder: (context, projectSnap) {
+              switch (projectSnap.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.waiting:
+                  return Container();
+                default:
+                  if (projectSnap.data == null)
+                    return Container(child: Text("Data null"),);
+                  if (projectSnap.data.length == 0 ) {
+                    return Container(child: Text("Répertoire vide"),);
+                  }
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: projectSnap.data.length,
+                    itemBuilder: (context, index) {
+                      FileSystemEntity file = projectSnap.data[index];
+                      String filename = path.basename( file.path);
+                      return new Column(
+                          children: <Widget>[
+                            new ListTile(
+                              title: Text(filename), 
+                              trailing: IconButton(icon: Icon(Icons.delete), onPressed: () => this._deleteBackup(filename) ,), 
+                              leading: IconButton(icon: Icon(Icons.restore), onPressed: null) ,)
+                          ]);
+                    },
+                  );
+              }
+            },
+            future: _getFiles(),
+        ),
+      new RaisedButton(key:null, onPressed:_copyBD,
+          color: const Color(0xFFe0e0e0),
+          child:
+          new Text(
+            "Copier la base de données",
+            style: new TextStyle(
+              color: const Color(0xFF000000),),
+          )
+      )
+
+    ],
     );
   }
+  
+  Future<List<FileSystemEntity>> _getFiles() async {
+    /*
+    var permission = Permission.storage;
+    final PermissionStatus status = await permission.request();
+     */
+    final Directory extDir = await getExternalStorageDirectory();
+    final Directory backupDir = Directory(extDir.path + '/backup');
+    if (! backupDir.existsSync())
+      return null;
+    //final isPermissionStatusGranted = await _requestPermissions();
+    List<FileSystemEntity> files = backupDir.listSync();
+    return files;
+  }
 
-  Step _getConfirm() {
-    return Step(
-      isActive: true,
-      state: _currentStep == 2 ? StepState.editing : StepState.indexed,
-      title: const Text('Confirmation'),
-      content: Column(
-        children: <Widget>[
-         _messageConfig(),
+  void _deleteBackup(String nameFile) {
+      this._bloc.deleleteBackup(nameFile);
+      setState(() {
 
-        ],
-      ),
-    );
+      });
+  }
+
+  void _copyBD() {
+    this._bloc.copyBD();
+  }
+
+  void _login() async {
+      User testUser  = User(_emailCtrl.text, _passwordCtrl.text);
+      try {
+        User testedUser = await this._bloc.login(testUser);
+        setState(() {
+          configTeste = TestConfig.DONE;
+        });
+      } catch(e) {
+        _onError(e);
+      }
 
   }
 
-  Widget _messageConfig() {
-    if ( ! _isSubscribed)
-      return  Text("Enregistrer la configuration");
-    else if (_isTested == TestConfig.NOT)
-      return  Text("Tester la configuration");
-    else if (_isTested == TestConfig.WRONG)
-      return Text("La configuration (cheptel, email, token) n'est pas bonne");
-    else return Text("La configuration est correcte");
-  }
-
-  _saveConfig() {
+  void _saveConfig() {
     //AuthService service = new AuthService();
-    if (this._isSubscribed) {
-      gismoBloc.saveWebConfig(_cheptelCtrl.text, _emailCtrl.text, _tokenCtrl.text)
-          .then((message) {_confirmSave();})
-          .catchError((e) {_onError(e);});
-    }
-    else
-      gismoBloc.saveLocalConfig(_cheptelCtrl.text)
-          .then( (message) {_confirmSave();})
-          .catchError((e)  {_onError(e);});
-  }
+    this._bloc.saveConfig(this._isSubscribed, _emailCtrl.text, _passwordCtrl.text)
+        .then((message) {_confirmSave();})
+        .catchError((e) {_onError(e);});
+   }
 
   void _confirmSave() {
     debug.log("Cheptel is " , name: "_ConfigPageState::_confirmSave");
@@ -156,135 +231,49 @@ class _ConfigPageState extends State<ConfigPage> {
     debug.log("Build" , name: "_ConfigPageState:Build");
     return new Scaffold(
         key: _scaffoldKey,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: (! _isSubscribed || configTeste == TestConfig.DONE)?
+        FloatingActionButton.extended(
+            onPressed: _saveConfig,
+            label: Text("Enregistrer la configuration"),
+            icon: Icon(Icons.save),
+        ): null ,
         appBar: AppBar(
           title: Text('Configuration'),
         ),
-        body: Column(children: <Widget>[
-          Expanded(
-            child: new Stepper(
-              currentStep: _currentStep,
-              steps: _buildSteps(),
-              type: StepperType.vertical,
-              onStepContinue: _onStepContinue,
-              onStepCancel: _onStepCancel ,
-              onStepTapped: (step) {
-                setState(() {
-                  _currentStep = step;
-                });
-              },
-              controlsBuilder: (BuildContext context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) { return _controleBuilder();},
-
-            ),
-          ),
-          Container(),
-        ]));
-  }
-
-  Widget _controleBuilder() {
-    if (_currentStep == 2) {
-      // Dernier step
-      if (!_isSubscribed)
-        // Si pas de souscription, pas de test
-        return _buttonBardEndTested();
-      else {
-        if (_isTested == TestConfig.RIGHT)
-          // Souscription et test OK
-          return _buttonBardEndTested();
-        else
-          return _buttonBarEndNotTested();
-      }
-     }
-    return _buttonBarClassic();
-  }
-
-  Widget _buttonBarEndNotTested() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 16.0),
-      child:
-      new RaisedButton(
-        child: new Text('Tester config',style: new TextStyle(color: Colors.white),),
-        onPressed: _testConfigPressed, color: Colors.lightGreen[700],)
+        body:
+          SingleChildScrollView(
+            child:
+              Column(children: <Widget>[
+                    Row(children: <Widget>[
+                      Expanded(
+                          child: Text("Avec abonnement")
+                      ),
+                      Switch(
+                        value: _isSubscribed,
+                        onChanged: (value) {switched(value);},
+                      ),
+                    ]),
+                    AnimatedSwitcher(
+                        duration: Duration(milliseconds: 1000),
+                        child: _isSubscribed ? _loginPage(): _autonomePage(),
+                      ),
+                   ])
+          )
     );
-  }
-
-  Widget _buttonBardEndTested() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 16.0),
-      child:
-      new RaisedButton(
-        child: new Text('Enregistrer',style: new TextStyle(color: Colors.white),),
-        onPressed: _saveConfig, color: Colors.lightGreen[700],)
-    );
-  }
-
-  Widget _buttonBarClassic() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 16.0),
-      child:
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            FlatButton(
-                onPressed: _onStepCancel,
-                child: Row( children: <Widget>[
-                  Icon(Icons.navigate_before),
-                  const Text('Précédent')
-                ],)
-            ),
-            FlatButton(
-                onPressed: _onStepContinue,
-                child: Row( children: <Widget>[
-                  const Text('Suivant'),
-                  Icon(Icons.navigate_next),
-                ],)
-            ),
-          ],
-        ),
-    );
-  }
-
-  void _testConfigPressed() {
-    /*
-    User user = User(_cheptelCtrl.text);
-    user.setEmail(_emailCtrl.text);
-    user.setToken(_tokenCtrl.text);
-    gismoBloc.auth(user)
-        .then( (user) => {_testConfigOk(user)})
-        .catchError((e) => {_testConfigBad()});
-     */
-  }
-
-  _onStepContinue () {
-    setState(() {
-      if (_currentStep < _steps.length - 1) {
-        _currentStep ++;
-      } else {
-        this._currentStep = 0;
-      }
-    });
-  }
-  _onStepCancel () {
-    setState(() {
-      if (_currentStep > 0) {
-        _currentStep --;
-      } else {
-        _currentStep = 0;
-      }
-    });
   }
 
   @override
   void initState() {
     debug.log("initState", name: "_ConfigPageState:initState");
     super.initState();
-    if (gismoBloc.user != null) {
-      _cheptelCtrl.text = gismoBloc.user.cheptel;
-      _emailCtrl.text = gismoBloc.user.email;
-      _tokenCtrl.text = gismoBloc.user.token;
-      if (gismoBloc.user.subscribe != null)
-        _isSubscribed = gismoBloc.user.subscribe;
-
+    if (_bloc.user != null) {
+      _emailCtrl.text = _bloc.user.email;
+      if (_bloc.user.subscribe != null)
+        _isSubscribed = _bloc.user.subscribe;
+    }
+    if (_isSubscribed) {
+      configTeste = TestConfig.DONE;
     }
   }
 
