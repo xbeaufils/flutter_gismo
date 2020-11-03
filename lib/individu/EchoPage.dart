@@ -80,7 +80,7 @@ class EchoPageState extends State<EchoPage> {
               ),
             ),
             new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 new Radio(
                   value: 0,
@@ -102,13 +102,26 @@ class EchoPageState extends State<EchoPage> {
                     fontSize: 16.0,
                   ),
                 ),
-                new Radio(
+              ]),
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    new Radio(
                   value: 2,
                   groupValue: _nombre,
                   onChanged: _handleRdNombreChange,
                 ),
                 new Text(
                   'Double',
+                  style: new TextStyle(fontSize: 16.0),
+                ),
+                new Radio(
+                  value: 3,
+                  groupValue: _nombre,
+                  onChanged: _handleRdNombreChange,
+                ),
+                new Text(
+                  'Triple et +',
                   style: new TextStyle(fontSize: 16.0),
                 ),
               ],
