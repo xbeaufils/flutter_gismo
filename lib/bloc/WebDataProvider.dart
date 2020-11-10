@@ -82,7 +82,22 @@ class WebDataProvider extends DataProvider {
     }
   }
 
-   Future<List<Bete>> getBetes(String cheptel) async {
+  Future<String> saveLamb(LambModel lamb ) async {
+    try {
+      final response = await _dio.post('/lamb/save', data: lamb.toJson());
+      if (response.data['error']) {
+        throw (response.data['message']);
+      }
+      else {
+        return response.data['message'];
+      }
+    }
+    on DioError catch ( e) {
+      debug.log("Error " + e.message);
+    }
+  }
+
+  Future<List<Bete>> getBetes(String cheptel) async {
     final response = await _dio.get(
         '/bete/searchAll?cheptel=' + cheptel);
     List<Bete> tempList = new List();

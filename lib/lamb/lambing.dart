@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 
-import 'package:flutter_gismo/lamb/AddLamb.dart';
 import 'package:flutter_gismo/lamb/Adoption.dart';
 import 'package:flutter_gismo/lamb/AgnelageQualityPage.dart';
-import 'package:flutter_gismo/lamb/LambList.dart';
+import 'package:flutter_gismo/lamb/LambPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/AdoptionQualite.dart';
 import 'package:flutter_gismo/model/AgnelageQualite.dart';
+import 'package:flutter_gismo/model/CauseMort.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer' as debug;
 
-class LambPage extends StatefulWidget {
+class LambingPage extends StatefulWidget {
   final GismoBloc _bloc;
 
   Bete _mere;
   LambingModel _currentLambing;
-  LambPage(this._bloc, this._mere, {Key key}) : super(key: key);
-  LambPage.edit(this._bloc, this._currentLambing);
+  LambingPage(this._bloc, this._mere, {Key key}) : super(key: key);
+  LambingPage.edit(this._bloc, this._currentLambing);
 
   @override
-  _LambPageState createState() => new _LambPageState(_bloc);
+  _LambingPageState createState() => new _LambingPageState(_bloc);
 }
 
-class _LambPageState extends State<LambPage> {
+class _LambingPageState extends State<LambingPage> {
   //List<LambModel> _lambs = new List();
   final GismoBloc _bloc;
   LambingModel _lambing;
+  //List<LambModel> _lambs;
 
   DateTime selectedDate = DateTime.now();
   final df = new DateFormat('dd/MM/yyyy');
@@ -39,7 +40,7 @@ class _LambPageState extends State<LambPage> {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  _LambPageState(this._bloc);
+  _LambingPageState(this._bloc);
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +70,7 @@ class _LambPageState extends State<LambPage> {
                                   hintText: 'jj/mm/aaaa'),
                     validator: (value) {
                                 if (value.isEmpty) {
-                                  return 'Please enter a name';
+                                  return 'Entrez une date d''agnelage';
                                 }},
                     onSaved: (value) {
                                 setState(() {
@@ -106,7 +107,7 @@ class _LambPageState extends State<LambPage> {
                   trailing: new IconButton(onPressed: _openAdoptionDialog, icon: new Icon(Icons.create)),),
               ),
               Expanded(
-                child: LambsPage(this._lambing.lambs, _dateAgnelageCtl.text)
+                child: this._lambList() //LambsPage(this._lambing.lambs, _dateAgnelageCtl.text)
               ),
                new Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -146,7 +147,7 @@ class _LambPageState extends State<LambPage> {
   Future _openAddEntryDialog() async {
     LambModel newLamb = await Navigator.of(context).push(new MaterialPageRoute<LambModel>(
         builder: (BuildContext context) {
-          return new AddingLambDialog();
+          return new LambPage(this._bloc); // AddingLambDialog(this._bloc);
         },
         fullscreenDialog: true
     ));
@@ -212,6 +213,7 @@ class _LambPageState extends State<LambPage> {
     Navigator.pop(context, message);
   }
   //void radioChanged(double value) {}
+
   @override
   void initState() {
     super.initState();
@@ -229,6 +231,67 @@ class _LambPageState extends State<LambPage> {
     }
   }
 
+  Widget _buildLambItem(BuildContext context, int index) {
+    String sexe = (_lambing.lambs[index].sex == Sex.male) ?"Male" : "";
+    sexe = (_lambing.lambs[index].sex == Sex.femelle) ?"Femelle" : sexe;
+    return ListTile(
+      leading: Text(_lambing.lambs[index].marquageProvisoire),
+      title: Text(sexe) ,
+      subtitle: (_lambing.lambs[index].allaitement != null) ? Text(_lambing.lambs[index].allaitement.libelle): Text("Allaitement non spécifié"), // Text(_lambs[index].marquageProvisoire),
+      trailing:  _buildTrailing(_lambing.lambs[index]),);
+  }
+
+  Widget _buildTrailing(LambModel lamb) {
+    if (lamb.idBd == null)
+      return null;
+    if (lamb.idDevenir != null && lamb.dateDeces.isEmpty)
+      return Column(
+        children: <Widget>[
+          Text(lamb.numBoucle),
+          Text(lamb.numMarquage),
+        ],
+      );
+
+    if (lamb.dateDeces != null)
+      return Column(children: <Widget>[
+        Text(CauseMortExtension.getValue(lamb.motifDeces).name),
+        Text(lamb.dateDeces),
+      ],);
+
+    return
+      IconButton(
+        icon: new Icon(Icons.keyboard_arrow_right),
+        onPressed: () {_openEdit(lamb, this._dateAgnelageCtl.text);},);
+   }
+
+  void _openEdit(LambModel lamb, String dateNaissance) async {
+    LambModel newLamb = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => LambPage.edit( null, lamb)),
+    );
+    if (newLamb == null)
+      return;
+    this._bloc.saveLamb(newLamb);
+    _lambing.lambs.forEach((aLamb) {
+      if (aLamb.idBd == newLamb.idBd) {
+        aLamb.sex = newLamb.sex;
+        aLamb.allaitement = newLamb.allaitement;
+        aLamb.marquageProvisoire = newLamb.marquageProvisoire;
+      }
+    });
+    setState(() {
+
+    });
+  }
+
+  Widget _lambList() {
+    return ListView.builder(
+      itemBuilder: _buildLambItem,
+      itemCount: _lambing.lambs.length,
+    );
+
+  }
 }
 
 

@@ -142,10 +142,14 @@ class GismoBloc {
     return "Mode autonome";
   }
 
-  Future<String> saveLambing(LambingModel lambing ) async {
+   Future<String> saveLambing(LambingModel lambing ) async {
     if (lambing.lambs.length == 0)
       return "Pas d'agneaux de saisie";
     return this._repository.dataProvider.saveLambing(lambing);
+  }
+
+  Future<String> saveLamb(LambModel lamb ) async {
+    return this._repository.dataProvider.saveLamb(lamb);
   }
 
   Future<List<LambingModel>> getLambs(int idBete) {

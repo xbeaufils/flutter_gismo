@@ -255,6 +255,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
       ),
     ],);
   }
+
   Widget _showList(AsyncSnapshot<List<Affectation>> snap) {
     return ListView.builder(
       shrinkWrap: true,

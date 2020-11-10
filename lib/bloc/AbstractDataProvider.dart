@@ -19,6 +19,7 @@ abstract class DataProvider {
 
   //Future<String> saveLamb(List<LambModel> lambs );
   Future<String> saveLambing(LambingModel lambing );
+  Future<String> saveLamb(LambModel lambing );
   Future<List<Bete>> getBetes(String cheptel) ;
   Future<String> saveBete(Bete bete);
   Future<List<LambingModel>> getLambs(int idBete) ;

@@ -77,14 +77,16 @@ class LocalDataProvider extends DataProvider{
             _createTablePesee(db);
           }
           if (oldVersion == 4)
-            db.execute("ALTER TABLE 'NEC' RENAME COLUMN 'id' TO 'idBd");
+            db.execute("ALTER TABLE 'NEC' RENAME COLUMN 'id' TO 'idBd'");
           if (oldVersion == 5) {
             _createTableEcho(db);
           }
+          if (oldVersion == 6)
+            db.execute("ALTER TABLE 'agneaux' ADD COLUMN `allaitement` TEXT");
         },
         // Set the version. This executes the onCreate function and provides a
         // path to perform database upgrades and downgrades.
-        version:6,
+        version:7,
     );
     Report report = new Report();
     report.cheptel = super.cheptel;
@@ -131,7 +133,8 @@ class LocalDataProvider extends DataProvider{
         "`agnelage_id` INTEGER NULL DEFAULT NULL,"
         "`dateDeces` TEXT,"
         "`motifDeces` TEXT,"
-        "`devenir_id` INTEGER NULL DEFAULT NULL)");
+        "`devenir_id` INTEGER NULL DEFAULT NULL,"
+        "`allaitement` TEXT)");
   }
   void _createTableBete(Database db) {
     db.execute("CREATE TABLE `bete` ( "
@@ -293,6 +296,12 @@ class LocalDataProvider extends DataProvider{
         lamb.toBdJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
 
+  }
+  Future<String> saveLamb(LambModel lamb ) async {
+    Database db = await this.database;
+    int res =   await db.update("agneaux", lamb.toJson(),
+        where: "id = ?", whereArgs: <int>[lamb.idBd]);
+    return "enregistrement modifié";
   }
 
   @override

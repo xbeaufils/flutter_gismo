@@ -7,8 +7,8 @@ import 'package:intl/intl.dart';
 
 class BouclagePage extends StatefulWidget {
   LambModel _currentLamb ;
-  String _dateNaissance;
-  BouclagePage( this._currentLamb, this._dateNaissance, {Key key}) : super(key: key);
+  //String _dateNaissance;
+  BouclagePage( this._currentLamb, /*this._dateNaissance,*/ {Key key}) : super(key: key);
 
   @override
   _BouclagePageState createState() => new _BouclagePageState();
@@ -73,7 +73,7 @@ class _BouclagePageState extends State<BouclagePage> {
                         'Poser la boucle',
                         style: new TextStyle(color: Colors.white),
                       ),
-                      onPressed: _save,
+                      onPressed: _createBete,
                       color: Colors.lightGreen[900],
                     ),
                   ]
@@ -82,12 +82,15 @@ class _BouclagePageState extends State<BouclagePage> {
 
   }
 
-  void _save() async {
+  void _createBete() async {
     _formKey.currentState.save();
     this.widget._currentLamb.numMarquage = _numMarquage;
     this.widget._currentLamb.numBoucle = _numBoucle;
+    Bete bete = new Bete(null, _numBoucle, _numMarquage, null, null, this.widget._currentLamb.sex, 'NAISSANCE');
+    /*
     Bete bete = new Bete(null, _numBoucle, _numMarquage, null, this.widget._dateNaissance, this.widget._currentLamb.sex, 'NAISSANCE');
     gismoBloc.boucler(this.widget._currentLamb,bete);
+     */
     Navigator
         .of(context)
         .pop(bete);
