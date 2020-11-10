@@ -1,6 +1,6 @@
 import 'package:flutter_gismo/model/BeteModel.dart';
 
-
+class MethodeAllaitementNotFoundException implements Exception {}
 
 class LambingModel {
   int _idBd;
@@ -116,19 +116,53 @@ class LambingModel {
 
 }
 
+class MethodeAllaitement {
+  String _key;
+  String _libelle;
+
+  String get key => _key;
+  String get libelle => _libelle;
+
+  MethodeAllaitement(this._key, this._libelle);
+
+  static MethodeAllaitement ALLAITEMENT_MATERNEL = new MethodeAllaitement("ALLAITEMENT_MATERNEL", "Allaitement maternel");
+  static MethodeAllaitement ALLAITEMENT_ARTIFICIEL = new MethodeAllaitement("ALLAITEMENT_ARTIFICIEL", "Allaitement artificiel");
+  static MethodeAllaitement ADOPTE = new MethodeAllaitement("ADOPTE", "Adopté");
+  static MethodeAllaitement BIBERONNE = new MethodeAllaitement("BIBERONNE", "Biberonné");
+
+  static MethodeAllaitement getMethodeAllaitement(String value) {
+    switch (value) {
+      case "ALLAITEMENT_MATERNEL": return ALLAITEMENT_MATERNEL;
+      case "ALLAITEMENT_ARTIFICIEL": return ALLAITEMENT_ARTIFICIEL;
+      case "ADOPTE": return ADOPTE;
+      case "BIBERONNE": return BIBERONNE;
+    }
+    return null;
+  }
+}
+
 class LambModel {
   int _idBd;
   int _idAgnelage;
   int _idDevenir;
   Sex _sex = Sex.male;
   String _marquageProvisoire;
+
   String _numBoucle;
   String _numMarquage;
   String _dateDeces;
   String _motifDeces;
+  MethodeAllaitement _allaitement;
 
   String get marquageProvisoire => _marquageProvisoire;
+  set marquageProvisoire(String value) {
+    _marquageProvisoire = value;
+  }
+
   Sex get sex => _sex;
+  set sex(Sex value) {
+    _sex = value;
+  }
 
   int get idBd => _idBd;
 
@@ -172,7 +206,13 @@ class LambModel {
     _motifDeces = value;
   }
 
-  LambModel(this._marquageProvisoire, this._sex) ;
+  MethodeAllaitement get allaitement => _allaitement;
+
+  set allaitement(MethodeAllaitement value) {
+    _allaitement = value;
+  }
+
+  LambModel(this._marquageProvisoire, this._sex, this._allaitement) ;
 
   LambModel.fromResult (result){
     _idBd = result["id"];
@@ -184,6 +224,7 @@ class LambModel {
     _idDevenir = result["devenir_id"];
     _dateDeces = result["dateDeces"];
     _motifDeces = result["motifDeces"];
+    _allaitement = MethodeAllaitement.getMethodeAllaitement(result["allaitement"]);
   }
 
   Map<String, dynamic> toBdJson() {
@@ -198,6 +239,7 @@ class LambModel {
     if (this._idBd != null)
       data['id'] = this._idBd;
     data['sex'] = this._sex.toString().split('.').last;
+    data["allaitement"] = this._allaitement.key;
     data['marquageProvisoire'] = this._marquageProvisoire;
     return data;
   }

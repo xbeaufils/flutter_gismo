@@ -115,7 +115,7 @@ class _SearchPageState extends State<SearchPage> {
     var page;
     switch (this.widget.nextPage) {
       case GismoPage.lamb:
-        page = LambPage(this._bloc, bete);
+        page = LambingPage(this._bloc, bete);
         break;
       case GismoPage.sanitaire:
         page = SanitairePage(this._bloc, bete);
