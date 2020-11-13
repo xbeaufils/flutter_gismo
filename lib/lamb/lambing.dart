@@ -244,7 +244,7 @@ class _LambingPageState extends State<LambingPage> {
   Widget _buildTrailing(LambModel lamb) {
     if (lamb.idBd == null)
       return null;
-    if (lamb.idDevenir != null && lamb.dateDeces.isEmpty)
+    if (lamb.numBoucle != null )
       return Column(
         children: <Widget>[
           Text(lamb.numBoucle),
@@ -268,7 +268,7 @@ class _LambingPageState extends State<LambingPage> {
     LambModel newLamb = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => LambPage.edit( null, lamb)),
+          builder: (context) => LambPage.edit( this._bloc, lamb)),
     );
     if (newLamb == null)
       return;
@@ -278,6 +278,10 @@ class _LambingPageState extends State<LambingPage> {
         aLamb.sex = newLamb.sex;
         aLamb.allaitement = newLamb.allaitement;
         aLamb.marquageProvisoire = newLamb.marquageProvisoire;
+        aLamb.dateDeces = newLamb.dateDeces;
+        aLamb.motifDeces = newLamb.motifDeces;
+        aLamb.numBoucle = newLamb.numBoucle;
+        aLamb.numMarquage = newLamb.numMarquage;
       }
     });
     setState(() {
@@ -290,7 +294,6 @@ class _LambingPageState extends State<LambingPage> {
       itemBuilder: _buildLambItem,
       itemCount: _lambing.lambs.length,
     );
-
   }
 }
 

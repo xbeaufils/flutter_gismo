@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:intl/intl.dart';
 
 class MortPage extends StatefulWidget {
   final LambModel _currentLamb ;
-  MortPage( this._currentLamb, {Key key}) : super(key: key);
+  final GismoBloc _bloc;
+  MortPage( this._currentLamb, this._bloc, {Key key}) : super(key: key);
 
   @override
   _MortPageState createState() => new _MortPageState();
@@ -56,7 +58,7 @@ class _MortPageState extends State<MortPage> {
     items.add( new DropdownMenuItem(value: 'Accident', child: new Text('Accident')));
     items.add( new DropdownMenuItem(value: 'Disparu', child: new Text('Disparu')));
     items.add( new DropdownMenuItem(value: 'Autre', child: new Text('Autre')));
-    items.add( new DropdownMenuItem(value: 'Inconnu', child: new Text('Inconnu')));
+    items.add( new DropdownMenuItem(value: 'Inconnue', child: new Text('Inconnue')));
     return items;
   }
 
@@ -119,7 +121,7 @@ class _MortPageState extends State<MortPage> {
                 child: Text('Enregistrer',
                   style: new TextStyle(color: Colors.white, ),),
                 color: Colors.lightGreen[700],
-                onPressed: _saveEntree)
+                onPressed: _saveDeath)
           ]
 
       ),
@@ -132,7 +134,7 @@ class _MortPageState extends State<MortPage> {
     });
   }
 
-  void _saveEntree() {
+  void _saveDeath() {
     if (_dateMortCtl.text.isEmpty) {
       showError("Pas de date de décès");
       return;
@@ -147,7 +149,7 @@ class _MortPageState extends State<MortPage> {
       return;
     }
 
-    var message  = gismoBloc.mort(this.widget._currentLamb, _currentMotif, _dateMortCtl.text);
+    var message  = this.widget._bloc.mort(this.widget._currentLamb, _currentMotif, _dateMortCtl.text);
     message
         .then( (message) {goodSaving(message);})
         .catchError( (message) {showError(message);});
@@ -162,7 +164,9 @@ class _MortPageState extends State<MortPage> {
 
   void goodSaving(String message) {
     message = "Décès : " + message;
-    Navigator.pop(context, message);
+    this.widget._currentLamb.motifDeces = _currentMotif;
+    this.widget._currentLamb.dateDeces =  _dateMortCtl.text;
+    Navigator.pop(context, this.widget._currentLamb);
   }
 
   @override

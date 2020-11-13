@@ -247,3 +247,23 @@ class LambModel {
 
 
 }
+/*
+class Bouclage {
+  final LambModel _lamb;
+  Bete _bete;
+
+  LambModel get lamb => _lamb;
+
+   final String _dateBouclage;
+
+  Bouclage( this._lamb, this._dateBouclage);
+
+  Bete get bete => _bete;
+
+  set bete(Bete value) {
+    _bete = value;
+  }
+
+  String get dateBouclage => _dateBouclage;
+}
+ */

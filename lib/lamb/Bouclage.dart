@@ -91,9 +91,7 @@ class _BouclagePageState extends State<BouclagePage> {
     Bete bete = new Bete(null, _numBoucle, _numMarquage, null, this.widget._dateNaissance, this.widget._currentLamb.sex, 'NAISSANCE');
     gismoBloc.boucler(this.widget._currentLamb,bete);
      */
-    Navigator
-        .of(context)
-        .pop(bete);
+    Navigator.pop(context, bete);
   }
 
   void goodSaving(String message) {

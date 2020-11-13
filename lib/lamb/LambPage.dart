@@ -29,6 +29,17 @@ class LambPageState extends State<LambPage> {
     return new Scaffold(
         appBar: new AppBar(
           title: _mainTitle(),
+          actions: _getActionButton(),
+            /*
+            (this.widget._lamb == null) ? Container():
+            IconButton(
+              icon: Image.asset("assets/tomb.png"),
+              onPressed: () {_openDeath(this.widget._lamb);},),
+            (this.widget._lamb == null) ? Container():
+            IconButton(
+              icon: Image.asset("assets/bouclage.png"),
+              onPressed: () {_openBoucle(this.widget._lamb);},)
+          ],*/
         ),
         body:
         new Column(
@@ -132,7 +143,7 @@ class LambPageState extends State<LambPage> {
   Widget _mainTitle() {
     if (this.widget._lamb == null)
       return Text('Nouvel agneau');
-    return Text("Modification agneau");
+    return Text("Modification");
   }
 
   Widget _mainButton() {
@@ -146,49 +157,65 @@ class LambPageState extends State<LambPage> {
             style: new TextStyle(color: Colors.white),
           )
       );
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-      ButtonBar(
-        mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-         IconButton(
-          icon: Image.asset("assets/tomb.png"),
-          onPressed: () {_openDeath(this.widget._lamb);},),
-        IconButton(
-          icon: Image.asset("assets/bouclage.png"),
-          onPressed: () {_openBoucle(this.widget._lamb);},)
-      ],
-      ),
+    return
       new RaisedButton.icon(
         onPressed:_saveLamb,
       //color: Colors.lightGreen[900],
         icon: Icon(Icons.save),
         label: Text("Enregistrer"),
-      ),
-    ],);
+      ) ;
   }
 
+  List<Widget> _getActionButton() {
+    List <Widget> actionButtons = List<Widget>();
+    if (this.widget._lamb == null)
+      actionButtons.add(Container());
+    else {
+      if (this.widget._lamb.dateDeces != null || this.widget._lamb.numBoucle !=null)
+          actionButtons.add(Container());
+        else {
+          actionButtons.add(
+            IconButton(
+              icon: Image.asset("assets/tomb.png"),
+              onPressed: () {
+                _openDeath(this.widget._lamb);
+              },),);
+          actionButtons.add(
+              IconButton(
+                icon: Image.asset("assets/bouclage.png"),
+                onPressed: () {
+                  _openBoucle(this.widget._lamb);
+                },));
+        }
+  }
+    return actionButtons;
+  }
   void _openBoucle(LambModel lamb) async {
     Bete bete = await Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => BouclagePage(lamb)),
     );
+    this.widget._bloc.boucler(lamb,bete);
+    lamb.idDevenir = bete.idBd;
+    lamb.numBoucle = bete.numBoucle;
+    lamb.numMarquage = bete.numMarquage;
     Navigator
         .of(context)
-        .pop(bete);
-
-
+        .pop(lamb);
   }
+  
   void _openDeath(LambModel lamb) async {
     var navigationResult = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => MortPage(lamb)),
+          builder: (context) => MortPage(lamb, this.widget._bloc)),
     );
     print (navigationResult);
+    Navigator
+        .of(context)
+        .pop(navigationResult);
+
   }
 
 }
