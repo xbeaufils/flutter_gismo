@@ -83,10 +83,12 @@ class LocalDataProvider extends DataProvider{
           }
           if (oldVersion == 6)
             db.execute("ALTER TABLE 'agneaux' ADD COLUMN `allaitement` TEXT");
+          if (oldVersion == 7)
+            db.execute("ALTER TABLE 'pesee' ADD COLUMN `lamb_id` INTEGER NULL DEFAULT NULL");
         },
         // Set the version. This executes the onCreate function and provides a
         // path to perform database upgrades and downgrades.
-        version:7,
+        version:8,
     );
     Report report = new Report();
     report.cheptel = super.cheptel;
@@ -180,6 +182,7 @@ class LocalDataProvider extends DataProvider{
         "`datePesee` TEXT NULL DEFAULT NULL,"
         "`poids` REAL NULL DEFAULT NULL,"
         "`bete_id` INTEGER NULL DEFAULT NULL,"
+        "`lamb_id` INTEGER NULL DEFAULT NULL,"
         " PRIMARY KEY('id'))");
   }
   void _creatTableTraitement(Database db) {
@@ -192,6 +195,7 @@ class LocalDataProvider extends DataProvider{
         "`motif` TEXT,"
         "`observation`TEXT,"
         "`beteId` INTEGER NULL DEFAULT NULL,"
+        "`lamb_id` INTEGER NULL DEFAULT NULL,"
         "`dose` TEXT,"
         "`duree` TEXT,"
         "`rythme` TEXT,"
@@ -269,6 +273,34 @@ class LocalDataProvider extends DataProvider{
     }
   }
 
+
+  @override
+  Future<List<CompleteLambModel>> getAllLambs(String cheptel) async {
+    List<CompleteLambModel> tempList = new List();
+    try {
+      Database db = await this.database;
+      List<Map<String, dynamic>> agneaux  = await db.rawQuery(
+        'select lambentity0_.*, lambingent1_.dateAgnelage, beteentity2_.numBoucle as numBoucleMere, beteentity2_.numMarquage as numMarquageMere '
+        'from agneaux lambentity0_ '
+        //'left outer join mort_agneaux mortentity3_ on lambentity0_.id=mortentity3_.lamb_id '
+        'cross join agnelage lambingent1_ '
+        'cross join bete beteentity2_ '
+        'where lambentity0_.agnelage_id=lambingent1_.id '
+        'and lambingent1_.mere_id=beteentity2_.id '
+        'and beteentity2_.cheptel= ? '
+        'and (lambentity0_.dateDeces is NULL)'
+        'and (lambentity0_.devenir_id is null)',
+      [cheptel]);
+      for (int j = 0; j < agneaux.length; j++) {
+        CompleteLambModel lamb = CompleteLambModel.fromResult(agneaux[j]);
+        tempList.add(lamb);
+      }
+      return tempList;
+    } catch (e,stackTrace) {
+      super.bloc.reportError(e, stackTrace);
+    }
+  }
+
   @override
   Future<String> saveLambing(LambingModel lambing ) async {
     Database db = await this.database;
@@ -302,6 +334,13 @@ class LocalDataProvider extends DataProvider{
     int res =   await db.update("agneaux", lamb.toJson(),
         where: "id = ?", whereArgs: <int>[lamb.idBd]);
     return "enregistrement modifié";
+  }
+
+  Future<String> deleteLamb(int idBd ) async {
+    Database db = await this.database;
+    int res =   await db.delete("agneaux",
+        where: "id = ?", whereArgs: <int>[idBd]);
+    return "Suppression effectuée";
   }
 
   @override
@@ -460,6 +499,27 @@ class LocalDataProvider extends DataProvider{
       tempList.add(Pesee.fromResult(futureMaps[i]));
     }
     return tempList;
+  }
+
+
+  @override
+  Future<List<Pesee>> getPeseeForLamb(LambModel lamb) async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> futureMaps = await db.query('pesee',where: 'lamb_id = ?', whereArgs: [lamb.idBd]);
+    List<Pesee> tempList = new List();
+    for (int i = 0; i < futureMaps.length; i++) {
+      tempList.add(Pesee.fromResult(futureMaps[i]));
+    }
+    return tempList;
+  }
+
+
+  @override
+  Future<String> deletePesee(int idBd) async {
+    Database db = await this.database;
+    int res =   await db.delete("pesee",
+      where: "id = ?", whereArgs: <int>[idBd]);
+    return "Suppression effectuée";
   }
 
   @override

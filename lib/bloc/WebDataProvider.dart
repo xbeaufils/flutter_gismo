@@ -79,10 +79,11 @@ class WebDataProvider extends DataProvider {
     }
     on DioError catch ( e) {
       debug.log("Error " + e.message);
+      return "Error " + e.message;
     }
   }
 
-  Future<String> saveLamb(LambModel lamb ) async {
+   Future<String> saveLamb(LambModel lamb ) async {
     try {
       final response = await _dio.post('/lamb/save', data: lamb.toJson());
       if (response.data['error']) {
@@ -94,8 +95,26 @@ class WebDataProvider extends DataProvider {
     }
     on DioError catch ( e) {
       debug.log("Error " + e.message);
+      return "Error " + e.message;
     }
   }
+
+  Future<String> deleteLamb(int idBd ) async {
+    try {
+      final response = await _dio.get('/lamb/del/' + idBd.toString());
+      if (response.data['error']) {
+        throw (response.data['message']);
+      }
+      else {
+        return response.data['message'];
+      }
+    }
+    on DioError catch ( e) {
+      debug.log("Error " + e.message);
+      return "Error " + e.message;
+    }
+  }
+
 
   Future<List<Bete>> getBetes(String cheptel) async {
     final response = await _dio.get(
@@ -154,6 +173,17 @@ class WebDataProvider extends DataProvider {
     List<LambingModel> tempList = new List();
     for (int i = 0; i < response.data.length; i++) {
       tempList.add(new LambingModel.fromResult(response.data[i]));
+    }
+    return tempList;
+  }
+
+  @override
+  Future<List<CompleteLambModel>> getAllLambs(String cheptel) async {
+    final response = await _dio.get(
+        '/lamb/cheptel/' + cheptel);
+    List<CompleteLambModel> tempList = new List();
+    for (int i = 0; i < response.data.length; i++) {
+      tempList.add(new CompleteLambModel.fromResult(response.data[i]));
     }
     return tempList;
   }
@@ -307,10 +337,10 @@ class WebDataProvider extends DataProvider {
   }
 
   @override
-  Future<String> savePesee(Pesee note) async {
+  Future<String> savePesee(Pesee pesee) async {
     try {
       final response = await _dio.post(
-          '/poids/new', data: note.toJson());
+          '/poids/new', data: pesee.toJson());
       if (response.data['error']) {
         throw (response.data['error']);
       }
@@ -331,6 +361,34 @@ class WebDataProvider extends DataProvider {
       tempList.add(new Pesee.fromResult(response.data[i]));
     }
     return tempList;
+  }
+
+  @override
+  Future<List<Pesee>> getPeseeForLamb(LambModel lamb) async {
+    final response = await _dio.get(
+        '/poids/lamb/' + lamb.idBd.toString());
+    List<Pesee> tempList = new List();
+    for (int i = 0; i < response.data.length; i++) {
+      tempList.add(new Pesee.fromResult(response.data[i]));
+    }
+    return tempList;
+  }
+
+  @override
+  Future<String> deletePesee(int idBd) async {
+    try {
+      final response = await _dio.get('/poids/del/' + idBd.toString());
+      if (response.data['error']) {
+        throw (response.data['message']);
+      }
+      else {
+        return response.data['message'];
+      }
+    }
+    on DioError catch ( e) {
+      debug.log("Error " + e.message);
+      return "Error " + e.message;
+    }
   }
 
   @override

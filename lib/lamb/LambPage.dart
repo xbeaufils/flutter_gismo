@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/individu/PeseePage.dart';
 import 'package:flutter_gismo/lamb/Bouclage.dart';
 import 'package:flutter_gismo/lamb/Mort.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 
 class LambPage extends StatefulWidget {
@@ -19,6 +20,7 @@ class LambPage extends StatefulWidget {
 }
 
 class LambPageState extends State<LambPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController _marquageCtrl = TextEditingController();
   Sex _sex = Sex.male;
   List<DropdownMenuItem<MethodeAllaitement>> _dropDownMenuItems;
@@ -27,19 +29,10 @@ class LambPageState extends State<LambPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        key: _scaffoldKey,
         appBar: new AppBar(
           title: _mainTitle(),
           actions: _getActionButton(),
-            /*
-            (this.widget._lamb == null) ? Container():
-            IconButton(
-              icon: Image.asset("assets/tomb.png"),
-              onPressed: () {_openDeath(this.widget._lamb);},),
-            (this.widget._lamb == null) ? Container():
-            IconButton(
-              icon: Image.asset("assets/bouclage.png"),
-              onPressed: () {_openBoucle(this.widget._lamb);},)
-          ],*/
         ),
         body:
         new Column(
@@ -93,6 +86,8 @@ class LambPageState extends State<LambPage> {
                     this._mainButton()
                   ]
               ),
+              Expanded(
+                  child: (this.widget._lamb == null) ? Container() : _buildEvents())
             ]
         )
     );
@@ -176,6 +171,12 @@ class LambPageState extends State<LambPage> {
         else {
           actionButtons.add(
             IconButton(
+              icon: Image.asset("assets/peseur.png"),
+              onPressed: () {
+                _openPesee(this.widget._lamb);
+              },),);
+          actionButtons.add(
+            IconButton(
               icon: Image.asset("assets/tomb.png"),
               onPressed: () {
                 _openDeath(this.widget._lamb);
@@ -189,6 +190,34 @@ class LambPageState extends State<LambPage> {
         }
   }
     return actionButtons;
+  }
+
+  Widget _buildEvents() {
+     return FutureBuilder(
+      builder:(context, eventSnap) {
+        if (eventSnap.connectionState == ConnectionState.none ||
+            eventSnap.hasData == false) {
+          return Container();
+        }
+        if (eventSnap.connectionState == ConnectionState.waiting)
+          return Center(child:  CircularProgressIndicator(),);
+        return ListView.builder(
+          shrinkWrap: true,
+          itemCount: eventSnap.data.length,
+          itemBuilder: (context, index) {
+            Event event = eventSnap.data[index];
+            return new ListTile(
+                leading: _getImageType(event.type),
+                title: Text(event.eventName),
+                subtitle: Text(event.date),
+                trailing: IconButton(icon: Icon(Icons.delete), onPressed: () =>  _deleteEvent(event), )
+            );
+
+          },
+        );
+      },
+      future: this.widget._bloc.getEventsForLamb(this.widget._lamb),
+    );
   }
   void _openBoucle(LambModel lamb) async {
     Bete bete = await Navigator.push(
@@ -218,5 +247,54 @@ class LambPageState extends State<LambPage> {
 
   }
 
+  void _openPesee(LambModel lamb) async {
+    var navigationResult = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => PeseePage(this.widget._bloc, null, lamb )),
+    );
+    print (navigationResult);
+    Navigator
+        .of(context)
+        .pop(navigationResult);
+
+  }
+
+  Widget _getImageType(EventType type) {
+    switch (type) {
+      case EventType.traitement :
+        return new Image.asset("assets/syringe.png");
+        break;
+      case EventType.agnelage :
+        return new Image.asset("assets/lamb.png");
+        break;
+      case EventType.NEC:
+        return new Image.asset("assets/etat_corporel.png");
+        break;
+      case EventType.entreeLot:
+        return new Image.asset("assets/Lot_entree.png");
+        break;
+      case EventType.sortieLot:
+        return new Image.asset("assets/Lot_sortie.png");
+        break;
+      case EventType.pesee:
+        return new Image.asset("assets/peseur.png");
+        break;
+      case EventType.echo:
+        return new Image.asset("assets/ultrasound.png");
+      case EventType.entree:
+      case EventType.sortie:
+    }
+    return null;
+  }
+
+  void _deleteEvent(Event event) async {
+    String message = await this.widget._bloc.deleteEvent(event);
+    _scaffoldKey.currentState
+        .showSnackBar(SnackBar(content: Text(message)));
+    setState(() {
+
+    });
+  }
 }
 

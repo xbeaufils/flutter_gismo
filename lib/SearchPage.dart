@@ -11,6 +11,7 @@ import 'package:flutter_gismo/individu/TimeLine.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/LambModel.dart';
 //import 'package:flutter_gismo/rt510.dart';
 
 class SearchPage extends StatefulWidget {
@@ -24,17 +25,20 @@ class SearchPage extends StatefulWidget {
 }
 
 
-class _SearchPageState extends State<SearchPage> {
+class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   // final formKey = new GlobalKey<FormState>();
   // final key = new GlobalKey<ScaffoldState>();
   final TextEditingController _filter = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GismoBloc _bloc;
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.LF134');
+  TabController _controller;
 
+  int _selectedTabIndex = 0;
   String _searchText = "";
   List<Bete> _betes = new List();
-  List<Bete> filteredNames = new List();
+  List<Bete> _filteredBetes = new List();
+
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text( 'Recherche boucle' );
 
@@ -43,7 +47,7 @@ class _SearchPageState extends State<SearchPage> {
       if (_filter.text.isEmpty) {
         setState(() {
           _searchText = "";
-          filteredNames = _betes;
+          _filteredBetes = _betes;
         });
       } else {
         setState(() {
@@ -63,12 +67,11 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: _buildBar(context),
       key: _scaffoldKey,
-      body: Container(
-        child:
-        /*(filteredNames == null) ? CircularProgressIndicator(): */_buildList(),
-      ),
-      //floatingActionButton: _buildReadButton(),
-      resizeToAvoidBottomPadding: false,
+      body:
+        Container(
+          child: _buildList(),
+        ),
+    resizeToAvoidBottomPadding: false,
     );
   }
 
@@ -76,8 +79,8 @@ class _SearchPageState extends State<SearchPage> {
   Widget _buildBar(BuildContext context) {
     return new AppBar(
       centerTitle: true,
-      title: _appBarTitle,
-       actions: <Widget>[
+       title: _appBarTitle,
+      actions: <Widget>[
         IconButton(
             icon: const Icon(Icons.search),
             tooltip: 'Recherche',
@@ -90,21 +93,20 @@ class _SearchPageState extends State<SearchPage> {
   Widget _buildList() {
     if (_searchText.isNotEmpty) {
       List<Bete> tempList = new List();
-      for (int i = 0; i < filteredNames.length; i++) {
-        if (filteredNames[i].numBoucle.toLowerCase().contains(_searchText.toLowerCase())) {
-          tempList.add(filteredNames[i]);
+      for (int i = 0; i < _filteredBetes.length; i++) {
+        if (_filteredBetes[i].numBoucle.toLowerCase().contains(_searchText.toLowerCase())) {
+          tempList.add(_filteredBetes[i]);
         }
       }
-      filteredNames = tempList;
+      _filteredBetes = tempList;
     }
     return ListView.builder(
-      itemCount: _betes == null ? 0 : filteredNames.length,
+      itemCount: _betes == null ? 0 : _filteredBetes.length,
       itemBuilder: (BuildContext context, int index) {
         return new ListTile(
-          title: Text( filteredNames[index].numBoucle),
-          subtitle: Text(filteredNames[index].numMarquage),
-
-          onTap: () => selectBete(filteredNames[index]),
+          title: Text( _filteredBetes[index].numBoucle),
+          subtitle: Text(_filteredBetes[index].numMarquage),
+          onTap: () => selectBete(_filteredBetes[index]),
         );
       },
     );
@@ -127,7 +129,7 @@ class _SearchPageState extends State<SearchPage> {
         page = NECPage(this._bloc, bete);
         break;
       case GismoPage.pesee:
-        page = PeseePage(this._bloc, bete);
+        page = PeseePage(this._bloc, bete, null);
         break;
       case GismoPage.echo:
         page = EchoPage(this._bloc, bete);
@@ -183,7 +185,7 @@ class _SearchPageState extends State<SearchPage> {
       } else {
         this._searchIcon = new Icon(Icons.search);
         this._appBarTitle = new Text( 'Recherche boucle' );
-        filteredNames = _betes;
+        _filteredBetes = _betes;
         _filter.clear();
       }
     });
@@ -204,24 +206,13 @@ class _SearchPageState extends State<SearchPage> {
     fillList(lstBetes);
    }
 
-  void fillList(List<Bete> lstBetes) {
+   void fillList(List<Bete> lstBetes) {
     setState(() {
       _betes = lstBetes;
       //names.shuffle();
-      filteredNames = _betes;
+      _filteredBetes = _betes;
     });
 
   }
 
-  Widget _buildReadButton() {
-    return FloatingActionButton(
-      child: Icon(Icons.add),
-      onPressed: _processRead,
-    );
-  }
-  void _processRead() async {
-    await PLATFORM_CHANNEL.invokeMethod('read');
-    final String result = await PLATFORM_CHANNEL.invokeMethod('result');
-    log("result " + result);
-  }
 }

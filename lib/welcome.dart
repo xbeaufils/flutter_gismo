@@ -107,14 +107,17 @@ class _WelcomePageState extends State<WelcomePage> {
                       _buildButton("Individu", "assets/brebis.png", _individuPressed),
                     ]))),
               Card(
-                child: ButtonBar(
-                  mainAxisSize: MainAxisSize.max,
-                  alignment: MainAxisAlignment.spaceEvenly,
-                  buttonMinWidth: 90.0,
-                  children: <Widget>[
-                    _buildButton("Echographie", 'assets/ultrasound.png', _echoPressed),
-                    _buildButton("Agnelage", 'assets/lamb.png', _lambPressed),
-                  ])),
+                child:  SingleChildScrollView (
+                  scrollDirection: Axis.horizontal,
+                  child: ButtonBar(
+                    mainAxisSize: MainAxisSize.max,
+                    alignment: MainAxisAlignment.spaceEvenly,
+                    buttonMinWidth: 90.0,
+                    children: <Widget>[
+                      _buildButton("Echographie", 'assets/ultrasound.png', _echoPressed),
+                      _buildButton("Agnelage", 'assets/lamb.png', _lambingPressed),
+                      _buildButton("Agneaux", 'assets/jumping_lambs.png', _lambPressed),
+                    ]))),
               Card(
                 child: SingleChildScrollView (
                   scrollDirection: Axis.horizontal,
@@ -245,6 +248,10 @@ class _WelcomePageState extends State<WelcomePage> {
 
   void _echoPressed() {
     Navigator.pushNamed(context, '/echo');
+  }
+
+  void _lambingPressed() {
+    Navigator.pushNamed(context, '/lambing');
   }
 
   void _lambPressed() {

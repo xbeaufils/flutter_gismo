@@ -69,7 +69,6 @@ flutter:
     - assets/Lot_entree.png
     - assets/Lot_sortie.png
     - assets/brebis.png
-    - assets/brebis2.png
     - assets/lamb.png
     - assets/etat_corporel.png
     - assets/syringe.png
@@ -90,6 +89,9 @@ flutter:
     - assets/gismo-64.png
     - assets/peseur.png
     - assets/ultrasound.png
+    - assets/male.png
+    - assets/female.png
+    - assets/jumping_lambs.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

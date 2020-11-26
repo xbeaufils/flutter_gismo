@@ -155,7 +155,7 @@ class EchoPageState extends State<EchoPage> {
                 keyboardType: TextInputType.datetime,
                 controller: _dateAgnelageCtl,
                 decoration: InputDecoration(
-                    labelText: "Date de saillie estimée",
+                    labelText: "Date d'agnelage prévu",
                     hintText: 'jj/mm/aaaa'),
                 onSaved: (value) {
                   setState(() {

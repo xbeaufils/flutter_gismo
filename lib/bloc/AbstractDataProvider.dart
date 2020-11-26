@@ -20,6 +20,9 @@ abstract class DataProvider {
   //Future<String> saveLamb(List<LambModel> lambs );
   Future<String> saveLambing(LambingModel lambing );
   Future<String> saveLamb(LambModel lambing );
+  Future<String> deleteLamb(int idBd);
+  Future<String> deletePesee(int idBd);
+  Future<List<CompleteLambModel>> getAllLambs(String cheptel);
   Future<List<Bete>> getBetes(String cheptel) ;
   Future<String> saveBete(Bete bete);
   Future<List<LambingModel>> getLambs(int idBete) ;
@@ -37,6 +40,7 @@ abstract class DataProvider {
   Future<EchographieModel> searchEcho(int idBd);
   Future<List<NoteModel>> getNec(Bete bete);
   Future<List<Pesee>> getPesee(Bete bete);
+  Future<List<Pesee>> getPeseeForLamb(LambModel lamb);
   Future<List<EchographieModel>> getEcho(Bete bete);
   Future<List<LotModel>> getLots(String cheptel) ;
   Future<List<Affectation>>getBrebisForLot(int idLot);

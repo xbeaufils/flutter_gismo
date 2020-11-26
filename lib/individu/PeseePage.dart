@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:intl/intl.dart';
 
 class PeseePage extends StatefulWidget {
   final GismoBloc _bloc;
   final Bete _bete;
+  final LambModel _lamb;
 
   @override
   PeseePageState createState() => PeseePageState(this._bloc);
 
-  PeseePage(this._bloc,this._bete);
+  PeseePage(this._bloc,this._bete, this._lamb);
 }
 
 class PeseePageState extends State<PeseePage> {
@@ -29,7 +31,7 @@ class PeseePageState extends State<PeseePage> {
       key: _scaffoldKey,
       appBar: new AppBar(
         title: const Text("Pesée"),
-        leading: Text(this.widget._bete.numBoucle),
+        //leading: Text(this.widget._bete.numBoucle),
       ),
       body:
       new Column(
@@ -95,12 +97,10 @@ class PeseePageState extends State<PeseePage> {
   void initState() {
     super.initState();
     _datePeseeCtl.text = _df.format(DateTime.now());
-   // _nec = this.widget._currentLevel;
   }
 
   void _savePesee() async {
     double poids = double.tryParse(_poidsCtl.text);
-    //double.tryParse(_poidsCtl.text, NumberStyles.Any, CultureInfo.CurrentCulture, out localCultreResult);
     String message;
     if (poids == null) {
       message = "Le poids n'est pas au format numérique";
@@ -110,9 +110,11 @@ class PeseePageState extends State<PeseePage> {
     setState(() {
       _isSaving = true;
     });
-      message =
-      await this._bloc.savePesee(this.widget._bete, poids, _datePeseeCtl.text);
-      _scaffoldKey.currentState
+    if (this.widget._bete != null)
+      message = await this._bloc.savePesee(this.widget._bete, poids, _datePeseeCtl.text);
+    if (this.widget._lamb != null)
+      message = await this._bloc.savePeseeLamb(this.widget._lamb, poids, _datePeseeCtl.text);
+    _scaffoldKey.currentState
           .showSnackBar(SnackBar(content: Text(message)))
           .closed
           .then((e) => {Navigator.of(context).pop()});

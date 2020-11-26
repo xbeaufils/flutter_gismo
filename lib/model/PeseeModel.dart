@@ -1,6 +1,7 @@
 class Pesee {
   int id;
   int bete_id;
+  int lamb_id;
   double poids;
   String datePesee;
   Pesee();
@@ -11,7 +12,10 @@ class Pesee {
       data["id"] = id ;
     data["datePesee"] = datePesee;
     data["poids"] = poids.toString();
-    data["bete_id"] = bete_id.toString();
+    if (bete_id != null)
+      data["bete_id"] = bete_id.toString();
+    if (lamb_id != null)
+      data["lamb_id"] = lamb_id.toString();
     return data;
   }
 
@@ -20,6 +24,7 @@ class Pesee {
     datePesee = result["datePesee"];
     poids = result["poids"];
     bete_id = result["bete_id"];
+    lamb_id = result["lamb_id"];
   }
 
 }

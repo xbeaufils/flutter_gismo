@@ -3,6 +3,7 @@ import 'package:flutter_gismo/ConfigPage.dart';
 import 'package:flutter_gismo/Lot/LotPage.dart';
 import 'package:flutter_gismo/Mouvement/EntreePage.dart';
 import 'package:flutter_gismo/Mouvement/SortiePage.dart';
+import 'package:flutter_gismo/SearchLambPage.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/SplashScreen.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
@@ -58,7 +59,8 @@ class GismoApp extends StatelessWidget {
         '/search': (context) => SearchPage(this._bloc, GismoPage.individu),
         '/sanitaire' : (context) => SearchPage(this._bloc, GismoPage.sanitaire),
         '/echo' : (context) => SearchPage(this._bloc, GismoPage.echo),
-        '/lamb' : (context) => SearchPage(this._bloc, GismoPage.lamb),
+        '/lambing' : (context) => SearchPage(this._bloc, GismoPage.lamb),
+        '/lamb' : (context) => SearchLambPage(this._bloc),
         '/sortie': (context) => SortiePage(this._bloc),
         '/entree': (context) => EntreePage(this._bloc),
         '/splash' : (context) => SplashScreen(this._bloc),

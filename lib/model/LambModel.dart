@@ -247,6 +247,24 @@ class LambModel {
 
 
 }
+
+class CompleteLambModel extends LambModel {
+  String _numBoucleMere;
+  String _numMarquageMere;
+  String _dateAgnelage;
+
+  String get numBoucleMere => _numBoucleMere;
+
+  String get numMarquageMere => _numMarquageMere;
+
+  String get dateAgnelage => _dateAgnelage;
+
+  CompleteLambModel.fromResult(result) : super.fromResult(result) {
+    _numBoucleMere = result["numBoucleMere"];
+    _numMarquageMere = result["numMarquageMere"];
+    _dateAgnelage = result["dateAgnelage"];
+  }
+}
 /*
 class Bouclage {
   final LambModel _lamb;

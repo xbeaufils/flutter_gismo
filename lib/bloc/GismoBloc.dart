@@ -152,8 +152,16 @@ class GismoBloc {
     return this._repository.dataProvider.saveLamb(lamb);
   }
 
+  Future<String> deleteLamb(LambModel lamb ) async {
+    return this._repository.dataProvider.deleteLamb(lamb.idBd);
+  }
+
   Future<List<LambingModel>> getLambs(int idBete) {
     return this._repository.dataProvider.getLambs(idBete);
+  }
+
+  Future<List<CompleteLambModel>> getAllLambs() {
+    return this._repository.dataProvider.getAllLambs(_currentUser.cheptel);
   }
 
   Future<LambingModel> searchLambing(int idBd) {
@@ -222,6 +230,28 @@ class GismoBloc {
     catch(e, stackTrace) {
       this.reportError(e, stackTrace);
     }
+  }
+
+  Future<List<Event>> getEventsForLamb(LambModel lamb) async {
+    try {
+      List<Event> lstEvents = new List();
+      List<Pesee> lstPoids  = await this._repository.dataProvider.getPeseeForLamb(lamb);
+      lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id, EventType.pesee, poids.datePesee, poids.poids.toString()))});
+      return lstEvents;
+    }
+    catch(e, stackTrace) {
+      this.reportError(e, stackTrace);
+    }
+  }
+
+  Future<String> deleteEvent(Event event) async {
+    String message = "";
+    switch (event.type) {
+      case EventType.pesee:
+        message = await this._repository.dataProvider.deletePesee(event.idBd);
+        break;
+    }
+    return message;
   }
 
   List<Event> _makeEventforAffectation(Affectation affect) {
@@ -351,6 +381,21 @@ class GismoBloc {
     try {
       Pesee pesee = new Pesee();
       pesee.bete_id = bete.idBd;
+      pesee.datePesee = date;
+      pesee.poids = poids;
+      await this._repository.dataProvider.savePesee(pesee);
+      return "Enregistrement effectué";
+    }
+    catch (e, stackTrace) {
+      this.reportError(e, stackTrace);
+      return "Une erreur et survenue";
+    }
+  }
+
+  Future<String> savePeseeLamb(LambModel lamb, double poids, String date ) async {
+    try {
+      Pesee pesee = new Pesee();
+      pesee.lamb_id = lamb.idBd;
       pesee.datePesee = date;
       pesee.poids = poids;
       await this._repository.dataProvider.savePesee(pesee);
