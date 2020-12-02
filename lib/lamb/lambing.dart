@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 
@@ -60,6 +63,12 @@ class _LambingPageState extends State<LambingPage> {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              (this._bloc.isLogged()) ?
+              Container():
+              AdmobBanner(
+                adUnitId: _getBannerAdUnitId(),
+                adSize: AdmobBannerSize.BANNER,),
+              //ca-app-pub-9699928438497749/4514368033
               new Card(
                 child:
                   new TextFormField(
@@ -135,6 +144,15 @@ class _LambingPageState extends State<LambingPage> {
         child: new Icon(Icons.add),
       ): null,
     );
+  }
+
+  String _getBannerAdUnitId() {
+    if (Platform.isIOS) {
+      return 'ca-app-pub-9699928438497749/2969884909';
+    } else if (Platform.isAndroid) {
+      return 'ca-app-pub-9699928438497749/4514368033';
+    }
+    return null;
   }
 
   void _addLamb(LambModel newLamb){

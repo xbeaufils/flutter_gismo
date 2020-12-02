@@ -2,20 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as debug;
 import 'dart:math';
-//import 'dart:html';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/parcelle/PaturagePage.dart';
 
-//import 'package:flutter_map/flutter_map.dart';
-//import 'package:latlong/latlong.dart';
-//import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:location/location.dart';
-//import 'package:webview_flutter/webview_flutter.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 class ParcellePage extends StatefulWidget {
@@ -351,9 +345,9 @@ class _ParcellePageState extends State<ParcellePage> {
     _permissionGranted = await location.hasPermission();
     debug.log("permission Granted " + _permissionGranted.toString(), name:"_ParcellePageState::_getLocation");
 
-    if (_permissionGranted == PermissionStatus.DENIED) {
+    if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.GRANTED) {
+      if (_permissionGranted != PermissionStatus.granted) {
         return null;
       }
     }

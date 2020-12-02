@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
@@ -102,11 +105,17 @@ class _EntreePageState extends State<EntreePage> {
               )),
           Expanded(
             child: Sheeps(this._sheeps, this)),
-            RaisedButton(
-              child: Text('Enregistrer',
+          RaisedButton(
+            child: Text('Enregistrer',
                 style: new TextStyle(color: Colors.white, ),),
-              color: Colors.lightGreen[700],
-              onPressed: _saveEntree)
+            color: Colors.lightGreen[700],
+            onPressed: _saveEntree),
+          (this._bloc.isLogged()) ?
+            Container():
+            AdmobBanner(
+              adUnitId: _getBannerAdUnitId(),
+              adSize: AdmobBannerSize.BANNER,),
+
           ]
 
       ),
@@ -116,6 +125,15 @@ class _EntreePageState extends State<EntreePage> {
         child: new Icon(Icons.add),
       ),
     );
+  }
+
+  String _getBannerAdUnitId() {
+    if (Platform.isIOS) {
+      return 'ca-app-pub-9699928438497749/2969884909';
+    } else if (Platform.isAndroid) {
+      return 'ca-app-pub-9699928438497749/7971231462';
+    }
+    return null;
   }
 
   void _saveEntree() {

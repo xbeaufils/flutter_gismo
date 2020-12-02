@@ -9,11 +9,16 @@
           FlutterApplication and put your custom class here. -->
     <!-- android:allowBackup="false"
    android:fullBackupContent="false" -->
+
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="Gismo"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.mapbox.token" android:value="pk.eyJ1IjoieGJlYXUiLCJhIjoiY2s4anVjamdwMGVsdDNucDlwZ2I0bGJwNSJ9.lc21my1ozaQZ2-EriDSY5w" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-9699928438497749~5245883820"/>    <!-- Prod -->
+        <!--    android:value="ca-app-pub-3940256099942544~3347511713"/>--> <!-- Debug -->
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

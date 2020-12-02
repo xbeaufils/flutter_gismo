@@ -188,8 +188,8 @@ class LambPageState extends State<LambPage> {
                   _openBoucle(this.widget._lamb);
                 },));
         }
-  }
-    return actionButtons;
+    }
+      return actionButtons;
   }
 
   Widget _buildEvents() {
@@ -210,15 +210,15 @@ class LambPageState extends State<LambPage> {
                 leading: _getImageType(event.type),
                 title: Text(event.eventName),
                 subtitle: Text(event.date),
-                trailing: IconButton(icon: Icon(Icons.delete), onPressed: () =>  _deleteEvent(event), )
+                trailing: IconButton(icon: Icon(Icons.delete), onPressed: () =>  _showDialog(context, event), )
             );
-
           },
         );
       },
       future: this.widget._bloc.getEventsForLamb(this.widget._lamb),
     );
   }
+
   void _openBoucle(LambModel lamb) async {
     Bete bete = await Navigator.push(
       context,
@@ -244,7 +244,6 @@ class LambPageState extends State<LambPage> {
     Navigator
         .of(context)
         .pop(navigationResult);
-
   }
 
   void _openPesee(LambModel lamb) async {
@@ -257,7 +256,6 @@ class LambPageState extends State<LambPage> {
     Navigator
         .of(context)
         .pop(navigationResult);
-
   }
 
   Widget _getImageType(EventType type) {
@@ -286,6 +284,43 @@ class LambPageState extends State<LambPage> {
       case EventType.sortie:
     }
     return null;
+  }
+
+  // set up the buttons
+  Widget _cancelButton() {
+    return FlatButton(
+      child: Text("Annuler"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget _continueButton(Event event) {
+    return FlatButton(
+      child: Text("Continuer"),
+      onPressed: () {
+        _deleteEvent(event);
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Future _showDialog(BuildContext context, Event event) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Suppression"),
+          content: Text(
+              "Voulez vous supprimer cette pesée ?"),
+          actions: [
+            _cancelButton(),
+            _continueButton(event),
+          ],
+        );
+      },
+    );
   }
 
   void _deleteEvent(Event event) async {

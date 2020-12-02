@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/bloc/GismoRepository.dart';
@@ -81,6 +82,11 @@ class GismoBloc {
         _currentUser.subscribe = false;
         _repository = new GismoRepository(this, RepositoryType.local);
         debug.log("Mode autonome", name: "GismoBloc::init");
+        // Ajout des pubs
+        Admob.initialize();
+        if (Platform.isIOS) {
+          await Admob.requestTrackingAuthorization();
+        }
         return "Mode autonome";
       }
       String password = await storage.read(key: "password");

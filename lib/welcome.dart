@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 //import 'package:flutter_gismo/main.dart';
@@ -58,19 +61,6 @@ class _WelcomePageState extends State<WelcomePage> {
       icon: Icon(Icons.settings),
       onPressed: _settingPressed,
     );
-
-    /*
-    if (_bloc.user.subscribe) {
-      return IconButton(
-        icon: Icon(Icons.cloud_off),
-        onPressed: _logoutPressed,
-      );
-    }
-    return IconButton(
-      icon: Icon(Icons.account_box),
-      onPressed: _loginPressed,
-    );
-     */
   }
 
   @override
@@ -139,10 +129,23 @@ class _WelcomePageState extends State<WelcomePage> {
                       _buildButton("Entree", "assets/home.png", _entreePressed), // Entrée
                       _buildButton("Sortie", "assets/Truck.png", _sortiePressed),
                     ])),
-               ]));
+              (this._bloc.isLogged()) ?
+                Container():
+                AdmobBanner(
+                  adUnitId: _getBannerAdUnitId(),
+                  adSize: AdmobBannerSize.BANNER,)
+    ]));
   }
 
-  Widget _buildButton(String title, String imageName, Function() press) {
+  String _getBannerAdUnitId() {
+    if (Platform.isIOS) {
+      return 'ca-app-pub-9699928438497749/2969884909';
+    } else if (Platform.isAndroid) {
+      return 'ca-app-pub-9699928438497749/5554017347';
+    }
+    return null;
+  }
+   Widget _buildButton(String title, String imageName, Function() press) {
     return Container(
       decoration: new BoxDecoration(
         boxShadow: [
