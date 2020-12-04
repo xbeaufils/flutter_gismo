@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:admob_flutter/admob_flutter.dart';
+import 'package:facebook_audience_network/ad/ad_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 //import 'package:flutter_gismo/main.dart';
@@ -131,10 +132,19 @@ class _WelcomePageState extends State<WelcomePage> {
                     ])),
               (this._bloc.isLogged()) ?
                 Container():
-                AdmobBanner(
-                  adUnitId: _getBannerAdUnitId(),
-                  adSize: AdmobBannerSize.BANNER,)
-    ]));
+                Card(child:
+                  AdmobBanner(
+                    adUnitId: _getBannerAdUnitId(),
+                    adSize: AdmobBannerSize.BANNER,),
+                  ),
+              (this._bloc.isLogged()) ?
+                Container():
+                Card(child:
+                  FacebookBannerAd(
+                    placementId: '212596486937356_212596826937322',
+                    bannerSize: BannerSize.STANDARD,),
+                ),
+            ]));
   }
 
   String _getBannerAdUnitId() {
