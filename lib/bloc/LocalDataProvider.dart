@@ -61,11 +61,7 @@ class LocalDataProvider extends DataProvider{
             _createTablePesee(db);
             _createTableEcho(db);
           },
-      onDowngrade: (db, oldVersion, newVersion) {
-          db.execute("DROP TABLE `lot`");
-          db.execute("DROP TABLE `affectation`");
-      },
-        onUpgrade:(db, oldVersion, newVersion) {
+         onUpgrade:(db, oldVersion, newVersion) {
           if (oldVersion < 2) {
             this._migrate1to2(db);
             //this._migrate2to3(db);
@@ -174,9 +170,14 @@ class LocalDataProvider extends DataProvider{
   }
   void _migrate7to8(Database db) {
     db.execute("ALTER TABLE 'pesee' ADD COLUMN `lamb_id` INTEGER NULL DEFAULT NULL");
+    _createTableLot(db);
+    _createTableAffectation(db);
   }
   void _migrate8to9(Database db) {
+    _createTableLot(db);
+    _createTableAffectation(db);
     db.execute("ALTER TABLE 'traitement' ADD COLUMN `lambId` INTEGER NULL DEFAULT NULL");
+    db.execute("ALTER TABLE 'bete' ADD COLUMN `observations` TEXT");
   }
 
   void _createTableAgnelage(Database db) {
@@ -210,6 +211,7 @@ class LocalDataProvider extends DataProvider{
         "`numBoucle` TEXT,"
         "`numMarquage` TEXT,"
         "`nom` TEXT,"
+        "`observations` TEXT,"
         "`sex` INTEGER)");
   }
   void _createTableNec(Database db) {
@@ -220,7 +222,7 @@ class LocalDataProvider extends DataProvider{
         "`bete_id` INTEGER)");
   }
   void _createTableAffectation(Database db) {
-    db.execute("CREATE TABLE `affectation` ("
+    db.execute("CREATE TABLE IF NOT EXISTS `affectation` ("
         "`idBd` INTEGER PRIMARY KEY NOT NULL,"
         "`dateEntree` TEXT NULL DEFAULT NULL,"
         "`dateSortie` TEXT NULL DEFAULT NULL,"
@@ -228,7 +230,7 @@ class LocalDataProvider extends DataProvider{
         "`lotId` INTEGER NULL DEFAULT NULL)");
   }
   void _createTableLot(Database db) {
-    db.execute("CREATE TABLE `lot` ("
+    db.execute("CREATE TABLE IF NOT EXISTS `lot` ("
         "`idBd` INTEGER PRIMARY KEY NOT NULL,"
         "`cheptel` TEXT NULL DEFAULT NULL,"
         "`codeLotLutte` TEXT NULL DEFAULT NULL,"
