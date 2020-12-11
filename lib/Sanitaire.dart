@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 //import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:intl/intl.dart';
 
 class SanitairePage extends StatefulWidget {
   final GismoBloc _bloc;
   Bete _malade;
+  LambModel _bebeMalade;
   TraitementModel _currentTraitement;
 
-  SanitairePage(this._bloc, this._malade, {Key key}) : super(key: key);
+  SanitairePage(this._bloc, this._malade, this._bebeMalade, {Key key}) : super(key: key);
   SanitairePage.edit(this._bloc, this._currentTraitement, {Key key}) : super(key: key);
 
   @override
@@ -227,14 +229,18 @@ class _SanitairePageState extends State<SanitairePage> {
     );
   }
 
-  void _save() {
+  void _save() async {
     TraitementModel traitement = new TraitementModel();
     if (this.widget._currentTraitement != null) {
       traitement.idBete = this.widget._currentTraitement.idBete;
       traitement.idBd = this.widget._currentTraitement.idBd;
     }
-    else
-      traitement.idBete = this.widget._malade.idBd;
+    else {
+      if (this.widget._malade != null)
+        traitement.idBete = this.widget._malade.idBd;
+      if (this.widget._bebeMalade != null)
+        traitement.idLamb = this.widget._bebeMalade.idBd;
+    }
     traitement.debut = _dateDebutCtl.text;
     traitement.dose = _doseCtl.text;
     traitement.fin = _dateFinCtl.text;
@@ -245,10 +251,12 @@ class _SanitairePageState extends State<SanitairePage> {
     traitement.ordonnance = _ordonnanceCtl.text;
     traitement.rythme = _rythmeCtl.text;
     traitement.voie = _voieCtl.text;
-    var message  = _bloc.saveTraitement(traitement);
-    message
-        .then( (message) {goodSaving(message);})
-        .catchError( (message) {badSaving(message);});
+    var message  = await _bloc.saveTraitement(traitement);
+    _scaffoldKey.currentState
+        .showSnackBar(SnackBar(content: Text(message)))
+        .closed
+        .then((e) => {Navigator.of(context).pop()});
+
   }
 
 
@@ -268,7 +276,7 @@ class _SanitairePageState extends State<SanitairePage> {
       _voieCtl.text = this.widget._currentTraitement.voie  ;
     }
   }
-
+/*
   void badSaving(String message) {
     final snackBar = SnackBar(
       content: Text(message),
@@ -280,4 +288,6 @@ class _SanitairePageState extends State<SanitairePage> {
     message = "Traitement : " + message;
     Navigator.pop(context, message);
   }
+
+ */
 }

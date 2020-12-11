@@ -74,6 +74,7 @@ class GismoBloc {
   Future<String> init() async {
     // Read value
     FlutterSecureStorage storage = new FlutterSecureStorage();
+
     try {
       String email = await storage.read(key: "email");
       if (email == null) {
@@ -243,6 +244,8 @@ class GismoBloc {
       List<Event> lstEvents = new List();
       List<Pesee> lstPoids  = await this._repository.dataProvider.getPeseeForLamb(lamb);
       lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id, EventType.pesee, poids.datePesee, poids.poids.toString()))});
+      List<TraitementModel> lstTraits = await this._repository.dataProvider.getTraitementsForLamb(lamb);
+      lstTraits.forEach((traitement) {lstEvents.add(new Event.name(traitement.idBd, EventType.traitement,  traitement.debut, traitement.medicament)); });
       return lstEvents;
     }
     catch(e, stackTrace) {
@@ -255,6 +258,9 @@ class GismoBloc {
     switch (event.type) {
       case EventType.pesee:
         message = await this._repository.dataProvider.deletePesee(event.idBd);
+        break;
+      case EventType.traitement:
+        message = await this._repository.dataProvider.deleteTraitement(event.idBd);
         break;
     }
     return message;

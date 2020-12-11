@@ -246,6 +246,8 @@ class WebDataProvider extends DataProvider {
     }
 
   }
+
+  @override
   Future<List<TraitementModel>> getTraitements(Bete bete) async {
     final response = await _dio.get(
         '/traitement/get?idBete=' + bete.idBd.toString());
@@ -254,6 +256,42 @@ class WebDataProvider extends DataProvider {
       tempList.add(new TraitementModel.fromResult(response.data[i]));
     }
     return tempList;
+  }
+
+  @override
+  Future<List<TraitementModel>> getTraitementsForLamb(LambModel lamb) async {
+    final response = await _dio.get(
+        '/traitement/lamb/' + lamb.idBd.toString());
+    List<TraitementModel> tempList = new List();
+    for (int i = 0; i < response.data.length; i++) {
+      tempList.add(new TraitementModel.fromResult(response.data[i]));
+    }
+    return tempList;
+  }
+
+
+  @override
+  Future<String> deleteTraitement(int idBd) async {
+    try {
+      final response = await _dio.get('/traitement/del/' + idBd.toString());
+      if (response.data['error']) {
+        throw (response.data['message']);
+      }
+      else {
+        return response.data['message'];
+      }
+    }
+    on DioError catch ( e) {
+      debug.log("Error " + e.message);
+      return "Error " + e.message;
+    }
+  }
+
+  @override
+  Future<TraitementModel> searchTraitement(int idBd) async {
+    final response = await _dio.get(
+        '/traitement/search?idBd=' + idBd.toString());
+    return new TraitementModel.fromResult(response.data);
   }
 
   @override
@@ -275,12 +313,6 @@ class WebDataProvider extends DataProvider {
     }
   }
 
-  @override
-  Future<TraitementModel> searchTraitement(int idBd) async {
-    final response = await _dio.get(
-        '/traitement/search?idBd=' + idBd.toString());
-    return new TraitementModel.fromResult(response.data);
-  }
 
   @override
   Future<LambingModel> searchLambing(int idBd) async {

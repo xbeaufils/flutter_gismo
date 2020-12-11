@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/Sanitaire.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/individu/PeseePage.dart';
 import 'package:flutter_gismo/lamb/Bouclage.dart';
@@ -177,6 +178,12 @@ class LambPageState extends State<LambPage> {
               },),);
           actionButtons.add(
             IconButton(
+              icon: Image.asset("assets/syringe.png"),
+              onPressed: () {
+                _openTraitement(this.widget._lamb);
+              },),);
+          actionButtons.add(
+            IconButton(
               icon: Image.asset("assets/tomb.png"),
               onPressed: () {
                 _openDeath(this.widget._lamb);
@@ -258,6 +265,18 @@ class LambPageState extends State<LambPage> {
         .pop(navigationResult);
   }
 
+  void _openTraitement(LambModel lamb) async {
+    var navigationResult = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => SanitairePage(this.widget._bloc, null, lamb )),
+    );
+    print (navigationResult);
+    Navigator
+        .of(context)
+        .pop(navigationResult);
+  }
+
   Widget _getImageType(EventType type) {
     switch (type) {
       case EventType.traitement :
@@ -300,20 +319,26 @@ class LambPageState extends State<LambPage> {
     return FlatButton(
       child: Text("Continuer"),
       onPressed: () {
-        _deleteEvent(event);
+        if (event.type == EventType.pesee || event.type == EventType.traitement)
+          _deleteEvent(event);
         Navigator.of(context).pop();
       },
     );
   }
 
   Future _showDialog(BuildContext context, Event event) {
+    String message ="Voulez vous supprimer ";
+    if (event.type == EventType.traitement)
+      message += "ce traitement ?";
+    if (event.type == EventType.pesee)
+      message += "cette pesée ?";
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Suppression"),
           content: Text(
-              "Voulez vous supprimer cette pesée ?"),
+              message),
           actions: [
             _cancelButton(),
             _continueButton(event),

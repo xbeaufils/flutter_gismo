@@ -110,7 +110,18 @@ class _BetePageState extends State<BetePage> {
                           ),
                       ),]
                   ),
-                    new RaisedButton(
+                  new TextFormField(
+                    //keyboardType: TextInputType.number,
+                      initialValue: _nom,
+                      decoration: InputDecoration(labelText: 'Observations', hintText: 'Obs'),
+                      maxLines: null,
+                      onSaved: (value) {
+                        setState(() {
+                          _nom = value;
+                        });
+                      }
+                  ),
+                  new RaisedButton(
                       child: new Text(
                         (_bete == null)?'Ajouter':'Enregistrer',
                         style: new TextStyle(color: Colors.white),

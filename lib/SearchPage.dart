@@ -119,7 +119,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         page = LambingPage(this._bloc, bete);
         break;
       case GismoPage.sanitaire:
-        page = SanitairePage(this._bloc, bete);
+        page = SanitairePage(this._bloc, bete, null);
         break;
       case GismoPage.individu:
         //page = FicheBetePage(bete);

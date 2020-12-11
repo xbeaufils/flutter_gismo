@@ -9,6 +9,7 @@ class TraitementModel {
   String _numBoucle;
   String _numMarquage;
   int _idBete;
+  int _idLamb;
   String _ordonnance;
   String _intervenant;
   String _motif;
@@ -26,6 +27,11 @@ class TraitementModel {
   String get observation =>_observation;
 
   int get idBete => _idBete;
+  int get idLamb => _idLamb;
+
+  set idLamb(int value) {
+    _idLamb = value;
+  }
 
   set idBete(int value) {
     _idBete = value;
@@ -99,7 +105,10 @@ class TraitementModel {
     data["voie"] = _voie;
     data["dose"] = _dose;
     data["rythme"] = _rythme;
-    data["beteId"] = _idBete;
+    if (_idBete != null)
+      data["beteId"] = _idBete.toString();
+    if (_idLamb != null)
+      data["lambId"] = _idLamb.toString();
     data["ordonnance"] = _ordonnance;
     data["intervenant"] = _intervenant;
     data["motif"] = _motif;
@@ -118,6 +127,7 @@ class TraitementModel {
     _dose = result["dose"] ;
     _rythme = result["rythme"] ;
     _idBete = result["beteId"] ;
+    _idLamb = result["lambId"];
     _ordonnance = result["ordonnance"] ;
     _intervenant = result["intervenant"] ;
     _motif = result["motif"] ;

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Environnement.dart';
 import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
@@ -65,30 +66,62 @@ class LocalDataProvider extends DataProvider{
           db.execute("DROP TABLE `affectation`");
       },
         onUpgrade:(db, oldVersion, newVersion) {
-          if (oldVersion == 1) {
-            _createTableAffectation(db);
-            _createTableLot(db);
-            db.execute("alter table 'bete' add COLUMN 'nom' TEXT;");
+          if (oldVersion < 2) {
+            this._migrate1to2(db);
+            //this._migrate2to3(db);
+            //this._migrate3to4(db);
+            //this._migrate4to5(db);
+            //this._migrate5to6(db);
+            //this._migrate6to7(db);
+            //this._migrate7to8(db);
+            //this._migrate8to9(db);
           }
-          if (oldVersion == 2) {
-            db.execute("alter table 'bete' add COLUMN 'nom' TEXT;");
+          if (oldVersion < 3) {
+            this._migrate2to3(db);
+            //this._migrate3to4(db);
+            //this._migrate4to5(db);
+            //this._migrate5to6(db);
+            //this._migrate6to7(db);
+            //this._migrate7to8(db);
+            //this._migrate8to9(db);
           }
-          if (oldVersion == 3) {
-            _createTablePesee(db);
+          if (oldVersion < 4) {
+            this._migrate3to4(db);
+            //this._migrate4to5(db);
+            //this._migrate5to6(db);
+            //this._migrate6to7(db);
+            //this._migrate7to8(db);
+            //this._migrate8to9(db);
           }
-          if (oldVersion == 4)
-            db.execute("ALTER TABLE 'NEC' RENAME COLUMN 'id' TO 'idBd'");
-          if (oldVersion == 5) {
-            _createTableEcho(db);
+          if (oldVersion < 5) {
+            this._migrate4to5(db);
+            //this._migrate5to6(db);
+            //this._migrate6to7(db);
+            //this._migrate7to8(db);
+            //this._migrate8to9(db);
           }
-          if (oldVersion == 6)
-            db.execute("ALTER TABLE 'agneaux' ADD COLUMN `allaitement` TEXT");
-          if (oldVersion == 7)
-            db.execute("ALTER TABLE 'pesee' ADD COLUMN `lamb_id` INTEGER NULL DEFAULT NULL");
-        },
+          if (oldVersion < 6) {
+            this._migrate5to6(db);
+            //this._migrate6to7(db);
+            //this._migrate7to8(db);
+            //this._migrate8to9(db);
+          }
+          if (oldVersion < 7) {
+            this._migrate6to7(db);
+            //this._migrate7to8(db);
+            //this._migrate8to9(db);
+          }
+          if (oldVersion <8) {
+            this._migrate7to8(db);
+            //this._migrate8to9(db);
+          }
+          if (oldVersion < 9) {
+            this._migrate8to9(db);
+          }
+         },
         // Set the version. This executes the onCreate function and provides a
         // path to perform database upgrades and downgrades.
-        version:8,
+        version:9,
     );
     Report report = new Report();
     report.cheptel = super.cheptel;
@@ -117,6 +150,33 @@ class LocalDataProvider extends DataProvider{
     finally {
       return database;
     }
+  }
+
+  void _migrate1to2(Database db) {
+    _createTableAffectation(db);
+    _createTableLot(db);
+    db.execute("alter table 'bete' add COLUMN 'nom' TEXT;");
+  }
+  void _migrate2to3(Database db) {
+    db.execute("alter table 'bete' add COLUMN 'nom' TEXT;");
+  }
+  void _migrate3to4(Database db) {
+    _createTablePesee(db);
+  }
+  void _migrate4to5(Database db) {
+    db.execute("ALTER TABLE 'NEC' RENAME COLUMN 'id' TO 'idBd'");
+  }
+  void _migrate5to6(Database db) {
+    _createTableEcho(db);
+  }
+  void _migrate6to7(Database db) {
+    db.execute("ALTER TABLE 'agneaux' ADD COLUMN `allaitement` TEXT");
+  }
+  void _migrate7to8(Database db) {
+    db.execute("ALTER TABLE 'pesee' ADD COLUMN `lamb_id` INTEGER NULL DEFAULT NULL");
+  }
+  void _migrate8to9(Database db) {
+    db.execute("ALTER TABLE 'traitement' ADD COLUMN `lambId` INTEGER NULL DEFAULT NULL");
   }
 
   void _createTableAgnelage(Database db) {
@@ -195,7 +255,7 @@ class LocalDataProvider extends DataProvider{
         "`motif` TEXT,"
         "`observation`TEXT,"
         "`beteId` INTEGER NULL DEFAULT NULL,"
-        "`lamb_id` INTEGER NULL DEFAULT NULL,"
+        "`lambId` INTEGER NULL DEFAULT NULL,"
         "`dose` TEXT,"
         "`duree` TEXT,"
         "`rythme` TEXT,"
@@ -412,6 +472,8 @@ class LocalDataProvider extends DataProvider{
     int idBete = await db.insert('bete', bete.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     lamb.idDevenir = idBete;
     db.update('agneaux', lamb.toBdJson(),where: "id = ?", whereArgs: <int>[lamb.idBd]);
+    db.rawUpdate('udpate traitement set beteId=? where lambId=?', [idBete, lamb.idBd]);
+    db.rawUpdate("UPDATE pesee set bete_id=? where lamb_id=?", [idBete, lamb.idBd]);
   }
 
   @override
@@ -440,12 +502,31 @@ class LocalDataProvider extends DataProvider{
   }
 
   @override
+  Future<List<TraitementModel>> getTraitementsForLamb(LambModel lamb) async{
+    Database db = await this.database;
+    List<Map<String, dynamic>> futureMaps = await db.query('traitement',where: 'lambId = ?', whereArgs: [lamb.idBd]);
+    List<TraitementModel> tempList = new List();
+    for (int i = 0; i < futureMaps.length; i++) {
+      tempList.add(TraitementModel.fromResult(futureMaps[i]));
+    }
+    return tempList;
+  }
+
+  @override
   Future<TraitementModel> searchTraitement(int idBd) async {
     Database db = await this.database;
     List<Map<String, dynamic>> futureMaps = await db.query('traitement',where: 'idBd = ?', whereArgs: [idBd]);
     if (futureMaps.length == 0)
       return null;
     return TraitementModel.fromResult(futureMaps[0]);
+  }
+
+
+  @override
+  Future<String> deleteTraitement(int idBd) async {
+    Database db = await this.database;
+    db.delete("traitement" , where: 'idBd = ?', whereArgs: [idBd]);
+    return " Enregistrement supprimé";
   }
 
   @override
