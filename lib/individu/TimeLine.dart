@@ -46,10 +46,11 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
               Card(child:
                 ListTile(
                   title: Text(_bete.numBoucle + " " + _bete.numMarquage),
-                  subtitle: Text(_bete.dateEntree),
+                  subtitle: (_bete.dateEntree!= null) ? Text(_bete.dateEntree): null,
                   leading: Image.asset("assets/brebis.png") ,
                   trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: _openIdentityDialog, ),)
                 ,),
+              _getMere(),
             _getEvents(),
           ],),
     );
@@ -58,6 +59,23 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   @override
   void initState() {
      super.initState();
+  }
+
+  Widget _getMere() {
+    return FutureBuilder(
+        builder: (context, mere){
+          if (mere.data == null)
+            return Container();
+          return Card(
+            child: ListTile(
+              leading: Image.asset("assets/sheep_lamb.png"),
+              title: Text(mere.data.numBoucle + " " + mere.data.numMarquage),
+              subtitle: Text(mere.data.dateEntree),
+              trailing: IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _viewMere(mere.data), )),
+          );
+        },
+        future: this._bloc.getMere(_bete),
+    );
   }
 
   Future _openIdentityDialog() async {
@@ -144,6 +162,16 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
     navigationResult.then( (message) { if (message != null) _showMessage(message);} );
   }
 
+  void _viewMere(Bete mere) {
+    var navigationResult = Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TimeLinePage(_bloc, mere),
+      ),
+    );
+    navigationResult.then( (message) { if (message != null) _showMessage(message);} );
+  }
+
   Widget _getImageType(EventType type) {
     switch (type) {
       case EventType.traitement :
@@ -178,8 +206,5 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       );
       _scaffoldKey.currentState.showSnackBar(snackBar);
   }
-
-
-
 }
 

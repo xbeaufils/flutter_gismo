@@ -5,9 +5,9 @@ import 'package:admob_flutter/admob_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/bloc/GismoRepository.dart';
-import 'package:flutter_gismo/bloc/LocalDataProvider.dart';
 import 'package:flutter_gismo/bloc/WebDataProvider.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
+import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
@@ -26,7 +26,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sentry/sentry.dart' hide User, Event;
 import 'package:sqflite/sqflite.dart';
 
-import '../model/BeteModel.dart';
+
 
 import 'dart:developer' as debug;
 
@@ -296,6 +296,10 @@ class GismoBloc {
 
   Future<List<Bete>> getBetes() {
     return this._repository.dataProvider.getBetes(_currentUser.cheptel);
+  }
+
+  Future<Bete> getMere(Bete bete) {
+    return this._repository.dataProvider.getMere(bete);
   }
 
   Future<String> saveConfig(bool isSubscribe, String email, String password) async {

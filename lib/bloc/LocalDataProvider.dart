@@ -307,6 +307,27 @@ class LocalDataProvider extends DataProvider{
     return res.toString() + " enregistrement modifié";
   }
 
+
+  @override
+  Future<Bete> getMere(Bete bete) async {
+    try {
+      Database db = await this.database;
+      List<Map<String, dynamic>> agneaux = await db.query('agneaux',where: 'devenir_id = ?', whereArgs: [bete.idBd]);
+      if (agneaux.isEmpty)
+        return null;
+      LambModel agneau = new LambModel.fromResult(agneaux[0]);
+      final List<Map<String, dynamic>> agnelages = await db.query('agnelage',where: 'id = ?', whereArgs: [ agneau.idAgnelage]);
+      if (agnelages.isEmpty)
+        return null;
+      LambingModel agnelage = new LambingModel.fromResult(agnelages[0]);
+      Bete mere = await this._searchBete(agnelage.idMere);
+      return mere;
+    } catch (e,stackTrace) {
+      super.bloc.reportError(e, stackTrace);
+      throw (e);
+    }
+  }
+
   @override
   Future<List<LambingModel>> getLambs(int idBete) async {
     try {
@@ -471,6 +492,8 @@ class LocalDataProvider extends DataProvider{
   @override
   Future<String> boucler(LambModel lamb, Bete bete) async {
     Database db = await this.database;
+    LambingModel agnelage = await this.searchLambing(lamb.idAgnelage);
+    bete.dateEntree = agnelage.dateAgnelage;
     int idBete = await db.insert('bete', bete.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     lamb.idDevenir = idBete;
     db.update('agneaux', lamb.toBdJson(),where: "id = ?", whereArgs: <int>[lamb.idBd]);

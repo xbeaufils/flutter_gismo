@@ -32,6 +32,7 @@ abstract class DataProvider {
   Future<String> saveBete(Bete bete);
   Future<String> saveSortie(String date, String motif, List<Bete> lstBete);
   Future<String> saveEntree(String cheptel, String date, String motif, List<Bete> lstBete);
+  Future<Bete> getMere(Bete bete);
   // Traitement
   Future<String> saveTraitement(TraitementModel traitement);
   Future<String> deleteTraitement(int idBd);

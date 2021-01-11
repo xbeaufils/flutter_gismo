@@ -147,7 +147,19 @@ class WebDataProvider extends DataProvider {
     } on TypeError catch( e) {
       throw ("Oulala" +  Environnement.getUrlTarget());
     }
+  }
 
+
+  @override
+  Future<Bete> getMere(Bete bete) async {
+    try {
+      final response = await _dio.get(
+          '/bete/mere/' + bete.idBd.toString());
+      Bete mere = new Bete.fromResult(response.data);
+      return mere;
+    } on DioError catch ( e) {
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
   }
 
   Future<User> login(User user) async {
