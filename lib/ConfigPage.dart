@@ -237,6 +237,7 @@ Future _asyncConfirmDialog(BuildContext context) async {
     },
   );
 }
+
   void _saveConfig() {
     //AuthService service = new AuthService();
     this._bloc.saveConfig(this._isSubscribed, _emailCtrl.text, _passwordCtrl.text)

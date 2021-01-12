@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 
 import 'package:flutter_gismo/lamb/Adoption.dart';
@@ -39,6 +40,7 @@ class _LambingPageState extends State<LambingPage> {
   Agnelage _agnelage = Agnelage.level0;
 
   TextEditingController _dateAgnelageCtl = TextEditingController();
+  TextEditingController _obsCtl = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -54,89 +56,109 @@ class _LambingPageState extends State<LambingPage> {
           new Text(this.widget._currentLambing.numBoucleMere + " (" + this.widget._currentLambing.numMarquageMere + ")"),
         key: _scaffoldKey,
       ),
-      body: new Container(
-        child: new Form(
-        key: _formKey,
-        child:
-        new Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              (this._bloc.isLogged()) ?
-              Container():
-              AdmobBanner(
-                adUnitId: _getBannerAdUnitId(),
-                adSize: AdmobBannerSize.BANNER,),
-              //ca-app-pub-9699928438497749/4514368033
-              new Card(
-                child:
-                  new TextFormField(
-                    keyboardType: TextInputType.datetime,
-                    controller: _dateAgnelageCtl,
-                    decoration: InputDecoration(
-                                  labelText: 'Date Agnelage',
-                                  hintText: 'jj/mm/aaaa'),
-                    validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Entrez une date d''agnelage';
-                                }},
-                    onSaved: (value) {
+      body:
+          SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column (
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                (this._bloc.isLogged()) ?
+                Container():
+                AdmobBanner(
+                  adUnitId: _getBannerAdUnitId(),
+                  adSize: AdmobBannerSize.BANNER,),
+                //ca-app-pub-9699928438497749/4514368033
+                new Card(child:
+                   TextFormField(
+                      keyboardType: TextInputType.datetime,
+                      controller: _dateAgnelageCtl,
+                      decoration: InputDecoration(
+
+                                    labelText: 'Date Agnelage',
+                                    hintText: 'jj/mm/aaaa'),
+                      validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Entrez une date d''agnelage';
+                                  }
+                                  return null;
+                                  },
+                      onSaved: (value) {
+                                  setState(() {
+                                    _dateAgnelageCtl.text = value;
+                                  });
+                                },
+                      onTap: () async{
+                              DateTime date = DateTime.now();
+                              FocusScope.of(context).requestFocus(new FocusNode());
+                              date = await showDatePicker(
+                                  context: context,
+                                  initialDate:DateTime.now(),
+                                  firstDate:DateTime(1900),
+                                  lastDate: DateTime(2100));
+                              if (date != null) {
                                 setState(() {
-                                  _dateAgnelageCtl.text = value;
+                                  _dateAgnelageCtl.text = df.format(date);
                                 });
-                              },
-                    onTap: () async{
-                            DateTime date = DateTime.now();
-                            FocusScope.of(context).requestFocus(new FocusNode());
-                            date = await showDatePicker(
-                                context: context,
-                                initialDate:DateTime.now(),
-                                firstDate:DateTime(1900),
-                                lastDate: DateTime(2100));
-                            if (date != null) {
-                              setState(() {
-                                _dateAgnelageCtl.text = df.format(date);
-                              });
-                            }
-                          })
-              ),
-              new Card(
-                child:
+                              }
+                            })
+                ),
+                new Card(
+                  child:
+                    new ListTile(
+                      title: Text("Qualité d'agnelage") ,
+                      subtitle: Text(_agnelage.key.toString() + " : " +_agnelage.value),
+                      trailing: new IconButton(onPressed: _openAgnelageDialog, icon: new Icon(Icons.create)),),
+                ),
+                new Card(
+                  child:
                   new ListTile(
-                    title: Text("Qualité d'agnelage") ,
-                    subtitle: Text(_agnelage.key.toString() + " : " +_agnelage.value),
-                    trailing: new IconButton(onPressed: _openAgnelageDialog, icon: new Icon(Icons.create)),),
-              ),
-              new Card(
-                child:
-                new ListTile(
-                  title: Text("Qualité adoption") ,
-                  subtitle: Text(_adoption.key.toString() + " : " +_adoption.value),
-                  trailing: new IconButton(onPressed: _openAdoptionDialog, icon: new Icon(Icons.create)),),
-              ),
-              Expanded(
-                child: this._lambList() //LambsPage(this._lambing.lambs, _dateAgnelageCtl.text)
-              ),
-               new Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  new RaisedButton(key:null,
-                      onPressed:saveLambing,
-                      color: Colors.lightGreen[700],
-                      child:
-                        new Text(
-                        "Valider l'agnelage",
-                        style: new TextStyle(color: Colors.white, ), )
-                  )
-                ]
-              ),
+                    title: Text("Qualité adoption") ,
+                    subtitle: Text(_adoption.key.toString() + " : " +_adoption.value),
+                    trailing: new IconButton(onPressed: _openAdoptionDialog, icon: new Icon(Icons.create)),),
+                ),
+                Card(child:
+                  TextFormField(
+                    controller: _obsCtl,
+                    decoration: InputDecoration(
+                          labelText: 'Observations',
+                          hintText: 'Obs',
+                          border: OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder()),
+                    maxLines: 3,
+                    onSaved: (value) {
+                      setState(() {
+                          _obsCtl.text = value;
+                      });
+                    }
+                  ),
+                ),
 
-          ])),
+                SizedBox(
+                  height: 200,
+                  child: this._lambList() //LambsPage(this._lambing.lambs, _dateAgnelageCtl.text)
+                ),
 
-    ),
+
+                 new Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    new RaisedButton(key:null,
+                        onPressed:saveLambing,
+                        color: Colors.lightGreen[700],
+                        child:
+                          new Text(
+                          "Valider l'agnelage",
+                          style: new TextStyle(color: Colors.white, ), )
+                    )
+                  ]
+                ),
+
+            ],),
+          ) ,
       floatingActionButton: (this._lambing.idBd == null)?
       new FloatingActionButton(
         onPressed: _openAddEntryDialog,
@@ -204,6 +226,7 @@ class _LambingPageState extends State<LambingPage> {
 
   void saveLambing() {
     _lambing.setDateAgnelage(_dateAgnelageCtl.text);
+    _lambing.observations = _obsCtl.text;
     _lambing.adoption = _adoption.key;
     _lambing.qualite = _agnelage.key;
 
@@ -220,9 +243,7 @@ class _LambingPageState extends State<LambingPage> {
   void badSaving(String message) {
     final snackBar = SnackBar(
       content: Text(message),
-
     );
-
     _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
@@ -244,6 +265,7 @@ class _LambingPageState extends State<LambingPage> {
     else {
       _lambing = this.widget._currentLambing;
       _dateAgnelageCtl.text = _lambing.dateAgnelage;
+      _obsCtl.text = _lambing.observations;
       _adoption = Adoption.getAdoption(_lambing.adoption);
       _agnelage = Agnelage.getAgnelage(_lambing.qualite);
     }

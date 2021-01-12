@@ -1,4 +1,5 @@
 import 'package:flutter_gismo/model/BeteModel.dart';
+enum Sante { VIVANT, MORT_NE, AVORTE }
 
 class MethodeAllaitementNotFoundException implements Exception {}
 
@@ -10,7 +11,14 @@ class LambingModel {
   String _numMarquageMere;
   int _qualite;
   int _adoption;
+  String _observations;
   List<LambModel> _lambs;
+
+  String get observations => _observations;
+
+  set observations(String value) {
+    _observations = value;
+  }
 
   int get qualite => _qualite;
 
@@ -67,6 +75,7 @@ class LambingModel {
     _dateAgnelage = result["dateAgnelage"];
     _qualite = result["qualite"];
     _adoption = result["adoption"];
+    _observations = result["observations"];
     if (result['agneaux'] != null) {
       if (result['agneaux'].length > 0) {
         this._lambs = new List();
@@ -85,6 +94,7 @@ class LambingModel {
     data["dateAgnelage"]= this.dateAgnelage;
     data["qualite"] = this._qualite;
     data["adoption"] = this._adoption;
+    data["observations"] = this._observations;
     data["agneaux"] = this._lambs.map((lamb) => lamb.toJson()).toList();
     return data;
   }
@@ -97,6 +107,7 @@ class LambingModel {
     data["dateAgnelage"]= this.dateAgnelage;
     data["qualite"] = this._qualite;
     data["adoption"] = this._adoption;
+    data["observations"] = this._observations;
     return data;
   }
 
@@ -153,6 +164,14 @@ class LambModel {
   String _dateDeces;
   String _motifDeces;
   MethodeAllaitement _allaitement;
+  Sante _sante;
+
+
+  Sante get sante => _sante;
+
+  set sante(Sante value) {
+    _sante = value;
+  }
 
   String get marquageProvisoire => _marquageProvisoire;
   set marquageProvisoire(String value) {
@@ -212,7 +231,7 @@ class LambModel {
     _allaitement = value;
   }
 
-  LambModel(this._marquageProvisoire, this._sex, this._allaitement) ;
+  LambModel(this._marquageProvisoire, this._sex, this._allaitement, this._sante) ;
 
   LambModel.fromResult (result){
     _idBd = result["id"];
@@ -225,6 +244,19 @@ class LambModel {
     _dateDeces = result["dateDeces"];
     _motifDeces = result["motifDeces"];
     _allaitement = MethodeAllaitement.getMethodeAllaitement(result["allaitement"]);
+    switch (result["sante"]) {
+      case "VIVANT":
+        _sante = Sante.VIVANT;
+        break;
+      case "MORT_NE":
+        _sante = Sante.MORT_NE;
+        break;
+      case "AVORTE":
+        _sante = Sante.AVORTE;
+        break;
+        default:
+          _sante = Sante.VIVANT;
+    }
   }
 
   Map<String, dynamic> toBdJson() {
@@ -241,11 +273,21 @@ class LambModel {
     data['sex'] = this._sex.toString().split('.').last;
     data["allaitement"] = this._allaitement.key;
     data['marquageProvisoire'] = this._marquageProvisoire;
+    switch ( this._sante) {
+      case Sante.VIVANT:
+        data['sante'] = "VIVANT";
+        break;
+      case Sante.MORT_NE:
+        data['sante'] = "MORT_NE";
+        break;
+      case Sante.AVORTE:
+        data['sante'] = "AVORTE";
+        break;
+      default :
+        data['sante'] = "VIVANT";
+    }
     return data;
   }
-
-
-
 }
 
 class CompleteLambModel extends LambModel {
@@ -265,23 +307,3 @@ class CompleteLambModel extends LambModel {
     _dateAgnelage = result["dateAgnelage"];
   }
 }
-/*
-class Bouclage {
-  final LambModel _lamb;
-  Bete _bete;
-
-  LambModel get lamb => _lamb;
-
-   final String _dateBouclage;
-
-  Bouclage( this._lamb, this._dateBouclage);
-
-  Bete get bete => _bete;
-
-  set bete(Bete value) {
-    _bete = value;
-  }
-
-  String get dateBouclage => _dateBouclage;
-}
- */

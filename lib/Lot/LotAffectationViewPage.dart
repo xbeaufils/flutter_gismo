@@ -57,16 +57,16 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
             bottomNavigationBar:
               BottomNavigationBar(
                   items: [
-                    BottomNavigationBarItem(icon: Icon(Icons.edit), title: Text("Edition")),
-                    BottomNavigationBarItem(icon: Image.asset("assets/ram_inactif.png"), activeIcon: Image.asset("assets/ram_actif.png") , title: Text("Beliers")),
-                    BottomNavigationBarItem(icon: Image.asset("assets/ewe_inactif.png"), activeIcon: Image.asset("assets/ewe_actif.png") , title: Text("Brebis")),
+                    BottomNavigationBarItem(icon: Icon(Icons.edit),label:"Edition"),
+                    BottomNavigationBarItem(icon: Image.asset("assets/ram_inactif.png"), activeIcon: Image.asset("assets/ram_actif.png") ,label: "Beliers"),
+                    BottomNavigationBarItem(icon: Image.asset("assets/ewe_inactif.png"), activeIcon: Image.asset("assets/ewe_actif.png") , label: "Brebis"),
                   ],
                 currentIndex: _curIndex,
                 onTap: (index) =>{ _changePage(index)}
               ),
             appBar: new AppBar(
               title:
-                new Text('Lot ' + this.currentLot.codeLotLutte),
+              (this.currentLot.codeLotLutte == null) ? Text("Nouveau lot") : Text('Lot ' + this.currentLot.codeLotLutte),
             ),
             floatingActionButton: _curIndex == 0 ? null : FloatingActionButton(child: Icon(Icons.add), onPressed: _addBete),
             body:
@@ -218,9 +218,12 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
         }
         if (belierSnap.connectionState == ConnectionState.waiting)
           return Center(child:CircularProgressIndicator());
-        return  Column( children:  [
+        return  Column(
+            mainAxisSize: MainAxisSize.max,
+            children:  [
           _showCount(belierSnap.data.length.toString() + " béliers"),
-          _showList(belierSnap) ]);
+          Expanded(child: _showList(belierSnap))
+            ]);
       },
       future: _getBeliers(this.widget._currentLot.idb),
     );
@@ -236,9 +239,11 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
           if (brebisSnap.connectionState == ConnectionState.waiting)
             return Center(child:  CircularProgressIndicator(),);
           return
-            Column(children: <Widget>[
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
               _showCount(brebisSnap.data.length.toString() + " brebis"),
-              _showList(brebisSnap)
+              Expanded(child: _showList(brebisSnap))
             ],);
         },
       future: _getBrebis(this.widget._currentLot.idb),
@@ -258,11 +263,10 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
 
   Widget _showList(AsyncSnapshot<List<Affectation>> snap) {
     return ListView.builder(
-      shrinkWrap: true,
       itemCount: snap.data.length,
       itemBuilder: (context, index) {
         Affectation bete = snap.data[index];
-       return Card(child:
+       return //Card(child:
         ListTile(
             title:
             Row(children: <Widget>[
@@ -284,7 +288,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
             ], ),
             trailing: IconButton(
               icon: Icon(Icons.launch), onPressed: () => { _removeBete(bete)},)
-        ));
+        );
       }
     );
   }

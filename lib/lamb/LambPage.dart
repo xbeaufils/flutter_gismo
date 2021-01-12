@@ -24,6 +24,7 @@ class LambPageState extends State<LambPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController _marquageCtrl = TextEditingController();
   Sex _sex = Sex.male;
+  Sante _sante = Sante.VIVANT;
   List<DropdownMenuItem<MethodeAllaitement>> _dropDownMenuItems;
   MethodeAllaitement _currentAllaitement;
 
@@ -36,79 +37,109 @@ class LambPageState extends State<LambPage> {
           actions: _getActionButton(),
         ),
         body:
-        new Column(
-            children: <Widget>[
-              new TextField(
-                decoration: InputDecoration(labelText: 'Marquage provisoire'),
-                controller: _marquageCtrl,
-              ),
-              new Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    new Flexible (child:
-                      RadioListTile<Sex>(
-                        title: const Text('Male'),
-                        value: Sex.male,
-                        groupValue: _sex,
-                        onChanged: (Sex value) { setState(() { _sex = value; }); },
+            SingleChildScrollView (child:
+          Column(
+              children: <Widget>[
+                new TextField(
+                  decoration: InputDecoration(labelText: 'Marquage provisoire'),
+                  controller: _marquageCtrl,
+                ),
+                new Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      new Flexible (child:
+                        RadioListTile<Sex>(
+                          title: const Text('Male'),
+                          value: Sex.male,
+                          groupValue: _sex,
+                          onChanged: (Sex value) { setState(() { _sex = value; }); },
+                        ),
                       ),
-                    ),
-                    new Flexible( child:
-                      RadioListTile<Sex>(
-                        title: const Text('Femelle'),
-                        value: Sex.femelle,
-                        groupValue: _sex,
-                        onChanged: (Sex value) { setState(() { _sex = value; }); },
-                      ),
-                    ),]
+                      new Flexible( child:
+                        RadioListTile<Sex>(
+                          title: const Text('Femelle'),
+                          value: Sex.femelle,
+                          groupValue: _sex,
+                          onChanged: (Sex value) { setState(() { _sex = value; }); },
+                        ),
+                      ),]
 
-              ),
-               new Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  new Text("Mode d'allaitement: "),
-                  new Container(
-                    padding: new EdgeInsets.all(16.0),
-                  ),
-                  new DropdownButton(
-                    value: _currentAllaitement,
-                    items: _dropDownMenuItems,
-                    onChanged: changedDropDownItem,
-                  )
-                ],
-              ),
-              new Row(
+                ),
+                new Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text("Etat de santé"),
+                        RadioListTile<Sante>(
+                          dense: true,
+                          title: const Text('Vivant'),
+                          value: Sante.VIVANT,
+                          groupValue: _sante,
+                          onChanged: (Sante value) { setState(() { _sante = value; }); },
+                        ),
+                        RadioListTile<Sante>(
+                          dense: true,
+                          title: const Text('Mort-né'),
+                          value: Sante.MORT_NE,
+                          groupValue: _sante,
+                          onChanged: (Sante value) { setState(() { _sante = value; }); },
+                        ),
+                        RadioListTile<Sante>(
+                          dense: true,
+                          title: const Text('Avorté'),
+                          value: Sante.AVORTE,
+                          groupValue: _sante,
+                          onChanged: (Sante value) { setState(() { _sante = value; }); },
+                        ),
+                    ]
+                ),
+                new Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    this._mainButton()
-                  ]
-              ),
-              Expanded(
-                  child: (this.widget._lamb == null) ? Container() : _buildEvents())
-            ]
-        )
-    );
+                    new Text("Mode d'allaitement: "),
+                    new Container(
+                      padding: new EdgeInsets.all(16.0),
+                    ),
+                    new DropdownButton(
+                      value: _currentAllaitement,
+                      items: _dropDownMenuItems,
+                      onChanged: changedDropDownItem,
+                    )
+                  ],
+                ),
+                //new Row(
+                //    mainAxisAlignment: MainAxisAlignment.center,
+                //    mainAxisSize: MainAxisSize.max,
+                //    children: <Widget>[
+                      this._mainButton(),
+                //    ]
+                //),
+                SizedBox(
+                    height: 200,
+                    child : (this.widget._lamb == null) ? Container() : _buildEvents())
+              ]
+          ),
+    ),);
   }
 
   void _addLamb() {
     Navigator
         .of(context)
-        .pop(new LambModel(this._marquageCtrl.text, this._sex, this._currentAllaitement));
+        .pop(new LambModel(this._marquageCtrl.text, this._sex, this._currentAllaitement, this._sante));
   }
 
   void _saveLamb() {
     this.widget._lamb.marquageProvisoire = this._marquageCtrl.text;
     this.widget._lamb.sex = this._sex;
     this.widget._lamb.allaitement = this._currentAllaitement;
+    this.widget._lamb.sante = this._sante;
     Navigator
         .of(context)
         .pop(this.widget._lamb);
-
-    //this.widget._bloc.saveLamb(this.widget._lamb);
   }
 
   void changedDropDownItem(MethodeAllaitement selectedAllaitement) {
@@ -129,6 +160,7 @@ class LambPageState extends State<LambPage> {
       _currentAllaitement = this.widget._lamb.allaitement;
       this._marquageCtrl.text = this.widget._lamb.marquageProvisoire;
       this._sex = this.widget._lamb.sex;
+      this._sante = this.widget._lamb.sante;
     }
     else {
       _currentAllaitement = _dropDownMenuItems[0].value;

@@ -114,10 +114,13 @@ class LocalDataProvider extends DataProvider{
           if (oldVersion < 9) {
             this._migrate8to9(db);
           }
+          if (oldVersion < 10) {
+            this._migrate9to10(db);
+          }
          },
         // Set the version. This executes the onCreate function and provides a
         // path to perform database upgrades and downgrades.
-        version:9,
+        version:10,
     );
     Report report = new Report();
     report.cheptel = super.cheptel;
@@ -179,11 +182,17 @@ class LocalDataProvider extends DataProvider{
     db.execute("ALTER TABLE 'traitement' ADD COLUMN `lambId` INTEGER NULL DEFAULT NULL");
     db.execute("ALTER TABLE 'bete' ADD COLUMN `observations` TEXT");
   }
+  void _migrate9to10(Database db) {
+    db.execute("TABLE `agnelage` ADD COLUMN `observations` TEXT ");
+    db.execute("ALTER TABLE 'agneaux' ADD COLUMN `sante` TEXT");
+    db.execute("UPDATE 'agneaux' set sante='VIVANT' where sante IS NULL");
+  }
 
   void _createTableAgnelage(Database db) {
     db.execute("CREATE TABLE `agnelage` ( "
         "`id` INTEGER PRIMARY KEY,"
         "`dateAgnelage` TEXT,"
+        "`observations` TEXT,"
         "`adoption` INTEGER NULL DEFAULT NULL,"
         "`qualite` INTEGER NULL DEFAULT NULL,"
         "`mere_id` INTEGER)");
@@ -197,6 +206,7 @@ class LocalDataProvider extends DataProvider{
         "`dateDeces` TEXT,"
         "`motifDeces` TEXT,"
         "`devenir_id` INTEGER NULL DEFAULT NULL,"
+        "`sante` TEXT,"
         "`allaitement` TEXT)");
   }
   void _createTableBete(Database db) {
@@ -371,6 +381,7 @@ class LocalDataProvider extends DataProvider{
         'where lambentity0_.agnelage_id=lambingent1_.id '
         'and lambingent1_.mere_id=beteentity2_.id '
         'and beteentity2_.cheptel= ? '
+        'and (lambentity0_.sante="VIVANT"'
         'and (lambentity0_.dateDeces is NULL)'
         'and (lambentity0_.devenir_id is null)',
       [cheptel]);

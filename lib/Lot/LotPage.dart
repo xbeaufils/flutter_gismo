@@ -31,7 +31,6 @@ class _LotPageState extends State<LotPage> {
       ),
       body:
           SingleChildScrollView(
-
             child:
               new Column(
                   mainAxisAlignment: MainAxisAlignment.start,
