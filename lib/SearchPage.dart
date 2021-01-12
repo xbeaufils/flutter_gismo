@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -11,8 +12,6 @@ import 'package:flutter_gismo/individu/TimeLine.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/LambModel.dart';
-//import 'package:flutter_gismo/rt510.dart';
 
 class SearchPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -31,10 +30,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   final TextEditingController _filter = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GismoBloc _bloc;
-  static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.LF134');
-  TabController _controller;
+  static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
 
-  int _selectedTabIndex = 0;
   String _searchText = "";
   List<Bete> _betes = new List();
   List<Bete> _filteredBetes = new List();
@@ -71,10 +68,43 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         Container(
           child: _buildList(),
         ),
+    floatingActionButton: _buildRfid(),
     resizeToAvoidBottomPadding: false,
     );
   }
 
+  Widget _buildRfid() {
+    return FutureBuilder(
+      future: _startService(),
+      builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            switch (snapshot.data) {
+              case "start":
+                return FloatingActionButton(child: Icon(Icons.wifi), onPressed: _readRFID );
+                break;
+              default:
+                return null;
+            }
+          }
+          else {
+            return CircularProgressIndicator();
+          }
+      });
+  }
+
+  void _readRFID() async {
+    String response = await PLATFORM_CHANNEL.invokeMethod("startRead");
+    Map<String, dynamic> mpResponse =  jsonDecode(response);
+    _searchPressed();
+    setState(() {
+     // _searchText = mpResponse['boucle'];
+      _filter.text = mpResponse['boucle'];
+    });
+  }
+
+  Future<String> _startService() {
+    return PLATFORM_CHANNEL.invokeMethod("start");
+  }
 
   Widget _buildBar(BuildContext context) {
     return new AppBar(

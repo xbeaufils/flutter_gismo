@@ -2,10 +2,16 @@ package nemesys.fr.flutter_gismo;
 
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
@@ -14,62 +20,162 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 
 public class MainActivity extends FlutterActivity {
-    private static final String CHANNEL = "nemesys.rfid.LF134";
-    String id;
-    private BroadcastReceiver myRFIDReceiver = new RFIDReceiver();
+    private static final String CHANNEL = "nemesys.rfid.RT610";
+    public Context context;
+    public String TAG = "MAinActivity";
+    public String id;
+    public String nation;
+    public String boucle;
+    public String marquage;
+    public BroadcastReceiver receiver = new RFIDReceiver();
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    /*
     @Override
     public void configureFlutterEngine( FlutterEngine flutterEngine) {
-        Log.d("MainActivity", "configureFlutterEngine: ");
-    */
-    /*
-        FlutterEngine flutterEngine = this.getFlutterEngine();
         GeneratedPluginRegistrant.registerWith(flutterEngine);
-     */
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        String type = intent.getType();
-
-        IntentFilter mFilter = new IntentFilter();
-        mFilter.addAction("nemesys.rfid.LF134.result");
-
-        super.registerReceiver(myRFIDReceiver, mFilter);
-        this.handleSendText(intent);
-        ;
-    /*
         new MethodChannel( flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL).setMethodCallHandler(
-            new MethodChannel.MethodCallHandler() {
-                @Override
-                public void onMethodCall(MethodCall call, MethodChannel.Result result) {
-                    if (call.method.contentEquals("read")) {
-                        Intent toRead = new Intent();
-                        toRead.setAction("nemesys.rfid.LF134.read");
-                        MainActivity.this.sendBroadcast(toRead);
+                new MethodChannel.MethodCallHandler() {
+                    @Override
+                    public void onMethodCall(MethodCall call, MethodChannel.Result result) {
+                        ComponentName componentName;
+                        Log.d(TAG, "onMethodCall: " + call.method);
+                        if (call.method.contentEquals("startRead")) {
+                            Intent intent = new Intent();
+                            intent.setAction("nemesys.rfid.LF134.read");
+                            context.sendBroadcast(intent);
+                            try {
+                                Thread.sleep(2000);
+                                JSONObject jSONObject = new JSONObject();
+                                jSONObject.put("id", id);
+                                jSONObject.put("nation", nation);
+                                jSONObject.put("boucle", boucle);
+                                jSONObject.put("marquage", marquage);
+                                Log.d(TAG, "onMethodCall: obj " + jSONObject.toString());
+                                result.success(jSONObject.toString());
+                            } catch (InterruptedException | JSONException e2) {
+                                e2.printStackTrace();
+                            }
+                        } else if (call.method.contentEquals("start")) {
+                            try {
+                                Intent intent2 = new Intent();
+                                intent2.setComponent(new ComponentName("fr.nemesys.service.rfid", "fr.nemesys.service.rfid.RFIDService"));
+                                if (Build.VERSION.SDK_INT >= 26) {
+                                    Log.d(TAG, "Build version " + Build.VERSION.SDK_INT + " " + 26);
+                                    componentName = context.startForegroundService(intent2);
+                                } else {
+                                    componentName = context.startService(intent2);
+                                }
+                                if (componentName != null) {
+                                    result.success("start");
+                                    Log.d(TAG, "onMethodCall: service should be started");
+                                } else {
+                                    result.success("No service");
+                                }
+                            } catch (Exception e3) {
+                                e3.printStackTrace();
+                                Log.e(TAG, "onMethodCall: ", e3);
+                            }
+                            Log.d(TAG, "onMethodCall: end start");
+                        } else if (!call.method.contentEquals("stopRead") &&  call.method.equals("stop")) {
+                            Intent intent3 = new Intent();
+                            intent3.setComponent(new ComponentName("fr.nemesys.service.rfid", "fr.nemesys.service.rfid.RFIDService"));
+                            context.stopService(intent3);
+                        }
+
                     }
-                    else if (call.method.contentEquals("result")) {
-                        result.success(id);
-                        id = null;
-                    }
-                }
-            });
-     */
+                });
     }
 
-    void handleSendText(Intent intent) {
-        id = intent.getStringExtra("id");
-        String nation = intent.getStringExtra("nation");
-        String type = intent.getStringExtra("type");
-        Log.d("boucleReceiver", "id " + id);
+    @Override
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        FlutterEngine flutterEngine = getFlutterEngine();
+        //GeneratedPluginRegistrant.registerWith(flutterEngine);
+/*
+        new MethodChannel( flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL).setMethodCallHandler(
+        new MethodChannel.MethodCallHandler() {
+            @Override
+            public void onMethodCall(MethodCall call, MethodChannel.Result result) {
+                ComponentName componentName;
+                Log.d(TAG, "onMethodCall: " + call.method);
+                if (call.method.contentEquals("startRead")) {
+                    Intent intent = new Intent();
+                    intent.setAction("nemesys.rfid.LF134.read");
+                    context.sendBroadcast(intent);
+                    try {
+                        Thread.sleep(2000);
+                        JSONObject jSONObject = new JSONObject();
+                        jSONObject.put("id", id);
+                        jSONObject.put("nation", nation);
+                        jSONObject.put("boucle", boucle);
+                        jSONObject.put("marquage", marquage);
+                        Log.d(TAG, "onMethodCall: obj " + jSONObject.toString());
+                        result.success(jSONObject.toString());
+                    } catch (InterruptedException | JSONException e2) {
+                        e2.printStackTrace();
+                    }
+                } else if (call.method.contentEquals("start")) {
+                    try {
+                        Intent intent2 = new Intent();
+                        intent2.setComponent(new ComponentName("fr.nemesys.service.rfid", "fr.nemesys.service.rfid.RFIDService"));
+                        if (Build.VERSION.SDK_INT >= 26) {
+                            Log.d(TAG, "Build version " + Build.VERSION.SDK_INT + " " + 26);
+                            componentName = context.startForegroundService(intent2);
+                        } else {
+                            componentName = context.startService(intent2);
+                        }
+                        if (componentName != null) {
+                            result.success("start");
+                            Log.d(TAG, "onMethodCall: service should be started");
+                        } else {
+                            result.success("No service");
+                        }
+                    } catch (Exception e3) {
+                        e3.printStackTrace();
+                        Log.e(TAG, "onMethodCall: ", e3);
+                    }
+                    Log.d(TAG, "onMethodCall: end start");
+                } else if (!call.method.contentEquals("stopRead") &&  call.method.equals("stop")) {
+                    Intent intent3 = new Intent();
+                    intent3.setComponent(new ComponentName("fr.nemesys.service.rfid", "fr.nemesys.service.rfid.RFIDService"));
+                    context.stopService(intent3);
+                }
+
+            }
+        });
+
+ */
+        Intent intent = getIntent();
+        intent.getAction();
+        intent.getType();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("nemesys.rfid.LF134.result");
+        registerReceiver(this.receiver, intentFilter);
+        this.context = this.getContext();
     }
-    /*
-        MethodChannel methodChannel = new MethodChannel(getFlutterView(), CHANNEL);
-        RFIDReceiver receiver = new RFIDReceiver(methodChannel);
-        IntentFilter mTime = new IntentFilter("nemesys.rfid.LF134.result");
-        registerReceiver(receiver, mTime);
-         */
+
+    public void onDestroy() {
+        super.onDestroy();
+        if (receiver != null) {
+            unregisterReceiver(receiver);
+        }
+    }
+
+     public class RFIDReceiver extends BroadcastReceiver {
+        public RFIDReceiver() {
+        }
+
+        public void onReceive(Context context, Intent intent) {
+            Bundle extras;
+            String action = intent.getAction();
+            Log.d("boucleReceiver", "action " + action);
+            if (action.equals("nemesys.rfid.LF134.result") && (extras = intent.getExtras()) != null) {
+                id = extras.getString("id");
+                nation = extras.getString("nation");
+                boucle = extras.getString("boucle");
+                marquage = extras.getString("marquage");
+                Log.d("boucleReceiver", "id " + id + " boucle " + boucle + " marquage " + marquage);
+            }
+        }
+    }
+
  }
