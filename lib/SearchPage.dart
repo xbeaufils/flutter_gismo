@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +12,7 @@ import 'package:flutter_gismo/individu/TimeLine.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:sentry/sentry.dart';
 
 class SearchPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -60,6 +61,12 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    PLATFORM_CHANNEL.invokeMethod<String>('stop');
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
@@ -74,33 +81,51 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   Widget _buildRfid() {
-    return FutureBuilder(
-      future: _startService(),
-      builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            switch (snapshot.data) {
-              case "start":
-                return FloatingActionButton(child: Icon(Icons.wifi), onPressed: _readRFID );
-                break;
-              default:
-                return null;
+    if (_bloc.isLogged()) {
+      return FutureBuilder(
+          future: _startService(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              switch (snapshot.data) {
+                case "start":
+                  return FloatingActionButton(
+                      child: Icon(Icons.wifi),
+                      backgroundColor: Colors.green,
+                      onPressed: _readRFID);
+                  break;
+                default:
+                  return null;
+              }
             }
-          }
-          else {
-            return CircularProgressIndicator();
-          }
-      });
+            else {
+              return CircularProgressIndicator();
+            }
+          });
+    }
+    else
+      return null;
   }
 
   void _readRFID() async {
-    String response = await PLATFORM_CHANNEL.invokeMethod("startRead");
-    Map<String, dynamic> mpResponse =  jsonDecode(response);
-    _searchPressed();
-    setState(() {
-     // _searchText = mpResponse['boucle'];
-      _filter.text = mpResponse['boucle'];
-    });
-  }
+    try {
+      String response = await PLATFORM_CHANNEL.invokeMethod("startRead");
+      Map<String, dynamic> mpResponse =  jsonDecode(response);
+      if (mpResponse.length >0 ) {
+        _searchPressed();
+        setState(() {
+          // _searchText = mpResponse['boucle'];
+          _filter.text = mpResponse['boucle'];
+        });
+      }
+      else {
+        _showMessage("Pas de boucle lue");
+      }
+    } on Exception catch (e, stackTrace) {
+      _bloc.reportError(e, stackTrace);
+      debug.log(e.toString());
+    }
+
+}
 
   Future<String> _startService() {
     return PLATFORM_CHANNEL.invokeMethod("start");
