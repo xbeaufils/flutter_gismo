@@ -199,7 +199,11 @@ class LambPageState extends State<LambPage> {
     if (this.widget._lamb == null)
       actionButtons.add(Container());
     else {
-      if (this.widget._lamb.dateDeces != null || this.widget._lamb.numBoucle !=null)
+      if (_sante != Sante.VIVANT)
+        return null;
+      else {
+        if (this.widget._lamb.dateDeces != null ||
+            this.widget._lamb.numBoucle != null)
           actionButtons.add(Container());
         else {
           actionButtons.add(
@@ -227,8 +231,9 @@ class LambPageState extends State<LambPage> {
                   _openBoucle(this.widget._lamb);
                 },));
         }
+      }
     }
-      return actionButtons;
+    return actionButtons;
   }
 
   Widget _buildEvents() {

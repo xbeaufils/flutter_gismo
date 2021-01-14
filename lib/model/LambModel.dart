@@ -273,6 +273,7 @@ class LambModel {
     data['sex'] = this._sex.toString().split('.').last;
     data["allaitement"] = this._allaitement.key;
     data['marquageProvisoire'] = this._marquageProvisoire;
+    /*
     switch ( this._sante) {
       case Sante.VIVANT:
         data['sante'] = "VIVANT";
@@ -286,6 +287,8 @@ class LambModel {
       default :
         data['sante'] = "VIVANT";
     }
+
+     */
     return data;
   }
 }
