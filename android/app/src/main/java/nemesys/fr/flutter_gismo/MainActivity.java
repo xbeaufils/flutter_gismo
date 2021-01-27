@@ -28,7 +28,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
     public String nation;
     public String boucle;
     public String marquage;
-    private boolean newValue;
+    private volatile boolean newValue;
     public BroadcastReceiver receiver = new RFIDReceiver();
 
     @Override
@@ -47,15 +47,16 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                     tentative++;
                 }
                 if (! newValue) {
-
+                    result.error("Pas de boucle","Pas de boucle",null);
+                }else {
+                    JSONObject jSONObject = new JSONObject();
+                    jSONObject.put("id", id);
+                    jSONObject.put("nation", nation);
+                    jSONObject.put("boucle", boucle);
+                    jSONObject.put("marquage", marquage);
+                    Log.d(TAG, "onMethodCall: obj " + jSONObject.toString());
+                    result.success(jSONObject.toString());
                 }
-                JSONObject jSONObject = new JSONObject();
-                jSONObject.put("id", id);
-                jSONObject.put("nation", nation);
-                jSONObject.put("boucle", boucle);
-                jSONObject.put("marquage", marquage);
-                Log.d(TAG, "onMethodCall: obj " + jSONObject.toString());
-                result.success(jSONObject.toString());
             } catch (InterruptedException | JSONException e2) {
                 e2.printStackTrace();
             }
