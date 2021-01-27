@@ -28,6 +28,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
     public String nation;
     public String boucle;
     public String marquage;
+    private boolean newValue;
     public BroadcastReceiver receiver = new RFIDReceiver();
 
     @Override
@@ -39,7 +40,15 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
             intent.setAction("nemesys.rfid.LF134.read");
             context.sendBroadcast(intent);
             try {
-                Thread.sleep(2000);
+                newValue = false;
+                int tentative = 0;
+                while (! newValue && tentative<5  ) {
+                    Thread.sleep(1000);
+                    tentative++;
+                }
+                if (! newValue) {
+
+                }
                 JSONObject jSONObject = new JSONObject();
                 jSONObject.put("id", id);
                 jSONObject.put("nation", nation);
@@ -119,6 +128,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                 nation = extras.getString("nation");
                 boucle = extras.getString("boucle");
                 marquage = extras.getString("marquage");
+                newValue = true;
                 Log.d("boucleReceiver", "id " + id + " boucle " + boucle + " marquage " + marquage);
             }
         }

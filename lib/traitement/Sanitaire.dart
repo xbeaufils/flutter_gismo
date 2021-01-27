@@ -11,11 +11,13 @@ import 'package:intl/intl.dart';
 class SanitairePage extends StatefulWidget {
   final GismoBloc _bloc;
   Bete _malade;
+  List<Bete> _betes;
   LambModel _bebeMalade;
   TraitementModel _currentTraitement;
 
   SanitairePage(this._bloc, this._malade, this._bebeMalade, {Key key}) : super(key: key);
   SanitairePage.edit(this._bloc, this._currentTraitement, {Key key}) : super(key: key);
+  SanitairePage.collectif(this._bloc, this._betes, {Key key}): super(key: key);
 
   @override
   _SanitairePageState createState() => new _SanitairePageState(_bloc);
@@ -251,7 +253,11 @@ class _SanitairePageState extends State<SanitairePage> {
     traitement.ordonnance = _ordonnanceCtl.text;
     traitement.rythme = _rythmeCtl.text;
     traitement.voie = _voieCtl.text;
-    var message  = await _bloc.saveTraitement(traitement);
+    var message = "";
+    if (this.widget._betes != null)
+      message = await _bloc.saveTraitementCollectif(traitement, this.widget._betes);
+    else
+      message  = await _bloc.saveTraitement(traitement);
     _scaffoldKey.currentState
         .showSnackBar(SnackBar(content: Text(message)))
         .closed

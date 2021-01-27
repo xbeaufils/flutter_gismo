@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
-import 'package:flutter_gismo/Sanitaire.dart';
+import 'package:flutter_gismo/traitement/Sanitaire.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';

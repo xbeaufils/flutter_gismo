@@ -4,7 +4,7 @@ import 'dart:developer' as debug;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/Sanitaire.dart';
+import 'file:///C:/Users/xbeau.ISIS38/AndroidStudioProjects/flutter_gismo/lib/traitement/Sanitaire.dart';
 import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/individu/NECPage.dart';
 import 'package:flutter_gismo/individu/PeseePage.dart';
@@ -75,7 +75,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         Container(
           child: _buildList(),
         ),
-    floatingActionButton: _buildRfid(),
+    floatingActionButton: null, //_buildRfid(),
     resizeToAvoidBottomPadding: false,
     );
   }
