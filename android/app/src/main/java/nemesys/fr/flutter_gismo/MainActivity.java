@@ -42,13 +42,15 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
             try {
                 newValue = false;
                 int tentative = 0;
-                while (! newValue && tentative<5  ) {
+                while (! newValue && tentative<2  ) {
                     Thread.sleep(1000);
                     tentative++;
                 }
-                if (! newValue) {
+                result.success("Waiting data");
+                /*if (! newValue) {
                     result.error("Pas de boucle","Pas de boucle",null);
-                }else {
+                }
+                else { 
                     JSONObject jSONObject = new JSONObject();
                     jSONObject.put("id", id);
                     jSONObject.put("nation", nation);
@@ -56,9 +58,24 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                     jSONObject.put("marquage", marquage);
                     Log.d(TAG, "onMethodCall: obj " + jSONObject.toString());
                     result.success(jSONObject.toString());
-                }
-            } catch (InterruptedException | JSONException e2) {
+                    
+                }*/
+            } catch (InterruptedException e2) {
                 e2.printStackTrace();
+            }
+        } else if (call.method.contentEquals("data")) {
+            Log.d(TAG, "onMethodCall: data");
+            try {
+                JSONObject jSONObject = new JSONObject();
+                jSONObject.put("id", id);
+                jSONObject.put("nation", nation);
+                jSONObject.put("boucle", boucle);
+                jSONObject.put("marquage", marquage);
+                Log.d(TAG, "onMethodCall: obj " + jSONObject.toString());
+                result.success(jSONObject.toString());
+            }
+            catch (JSONException e) {
+                result.error("JSON", "Exception JSON", "Exception JSON");
             }
         } else if (call.method.contentEquals("start")) {
             try {
