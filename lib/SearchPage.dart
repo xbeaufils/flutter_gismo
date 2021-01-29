@@ -168,8 +168,10 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   void _readRFID() async {
     try {
       String response = await PLATFORM_CHANNEL.invokeMethod("startRead");
-      Map<String, dynamic> mpResponse =  jsonDecode(response);
-      if (mpResponse.length >0 ) {
+      await Future.delayed(Duration(seconds: 4));
+      response = await PLATFORM_CHANNEL.invokeMethod("data");
+      Map<String, dynamic> mpResponse = jsonDecode(response);
+      if (mpResponse.length > 0) {
         _searchPressed();
         setState(() {
           // _searchText = mpResponse['boucle'];
@@ -179,6 +181,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       else {
         _showMessage("Pas de boucle lue");
       }
+    } on PlatformException catch (e) {
+      _showMessage("Pas de boucle lue");
     } on Exception catch (e, stackTrace) {
       _bloc.reportError(e, stackTrace);
       debug.log(e.toString());

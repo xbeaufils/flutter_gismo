@@ -45,6 +45,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
     public String nation;
     public String boucle;
     public String marquage;
+    private volatile boolean newValue;
     public BroadcastReceiver receiver = new RFIDReceiver();
 
     @Override
@@ -56,14 +57,23 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
             intent.setAction("nemesys.rfid.LF134.read");
             context.sendBroadcast(intent);
             try {
-                Thread.sleep(2000);
-                JSONObject jSONObject = new JSONObject();
-                jSONObject.put("id", id);
-                jSONObject.put("nation", nation);
-                jSONObject.put("boucle", boucle);
-                jSONObject.put("marquage", marquage);
-                Log.d(TAG, "onMethodCall: obj " + jSONObject.toString());
-                result.success(jSONObject.toString());
+                newValue = false;
+                int tentative = 0;
+                while (! newValue && tentative<5  ) {
+                    Thread.sleep(1000);
+                    tentative++;
+                }
+                if (! newValue) {
+                    result.error("Pas de boucle","Pas de boucle",null);
+                }else {
+                    JSONObject jSONObject = new JSONObject();
+                    jSONObject.put("id", id);
+                    jSONObject.put("nation", nation);
+                    jSONObject.put("boucle", boucle);
+                    jSONObject.put("marquage", marquage);
+                    Log.d(TAG, "onMethodCall: obj " + jSONObject.toString());
+                    result.success(jSONObject.toString());
+                }
             } catch (InterruptedException | JSONException e2) {
                 e2.printStackTrace();
             }
@@ -148,6 +158,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                 nation = extras.getString("nation");
                 boucle = extras.getString("boucle");
                 marquage = extras.getString("marquage");
+                newValue = true;
                 Log.d("boucleReceiver", "id " + id + " boucle " + boucle + " marquage " + marquage);
             }
         }
