@@ -11,7 +11,9 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
@@ -23,6 +25,9 @@ import androidx.annotation.NonNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
@@ -95,6 +100,17 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = new Intent(); //this, Loca  fr.nemesys.allflex         fr.nemesys.allflex.RFIDService
+        //intent.setComponent(new ComponentName("fr.nemesys.allflex", "fr.nemesys.allflex.RFIDService"));
+        intent.setClassName("fr.nemesys.allflex", "fr.nemesys.allflex.RFIDService");
+        boolean launched = bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        Log.d(TAG, "onStart: " + launched);
+
+    }
+
+    @Override
     public void onCreate(Bundle  bundle) {
         super.onCreate(bundle);
         new MethodChannel(getFlutterEngine().getDartExecutor().getBinaryMessenger(), CHANNEL_RT610)
@@ -153,8 +169,11 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         @Override
         public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
             if (call.method.contentEquals("readBlueTooth")) {
-                final String address = call.argument("address");
-                Message msg = Message.obtain(null, 3, address);
+                String address = call.argument("address");
+                address = "08:DF:1F:A8:3D:7E";
+                Bundle bundleAdress = new Bundle();
+                bundleAdress.putString("address", address);
+                Message msg = Message.obtain(null, 3, bundleAdress);
                 msg.replyTo = replyMessenger;
                 try {
                     mService.send(msg);
@@ -169,6 +188,20 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                 } catch (InterruptedException | JSONException | RemoteException e2) {
                     e2.printStackTrace();
                 }
+            } else if (call.method.contentEquals("listBlueTooth")) {
+                Message msg = Message.obtain(null, 10);
+                msg.replyTo = replyMessenger;
+                try {
+                    devicelist = "";
+                    latch = new CountDownLatch(1);
+                    mService.send(msg);
+                    latch.await(10, TimeUnit.SECONDS);
+                    Log.d(TAG, "onMethodCall: send devices list "+devicelist);
+                    result.success(devicelist);
+                } catch (RemoteException | InterruptedException e) {
+                    Log.e(TAG, "onServiceConnected: ",e );
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -176,7 +209,8 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
     Messenger mService = null;
     boolean mBound = false;
     String bluetoothData = null;
-
+    CountDownLatch latch;
+    String devicelist;
     /**
      * Defines callbacks for service binding, passed to bindService()
      */
@@ -185,17 +219,16 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
-
-            Toast.makeText(MainActivity.this, "connected to service", Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "onServiceConnected: connected to service");
             mService = new Messenger(service);
-            mBound = true;
+            mBound = true;/*
             Message msg = Message.obtain(null, 10);
             msg.replyTo = replyMessenger;
             try {
                 mService.send(msg);
             } catch (RemoteException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
 
         @Override
@@ -205,6 +238,9 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         }
     };
 
+    HandlerThread handlerThread = new HandlerThread("MyHandlerThread");
+    handlerThread.start();
+    Looper looper = handlerThread.getLooper();
     Messenger replyMessenger = new Messenger(new HandlerReplyMsg());
 
     // handler for message from service
@@ -223,11 +259,20 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
             if (msg.what ==2) {
                 MainActivity.this.bluetoothData = msg.obj.toString();
                 //txtRecep.append("READ:" + recdMessage + "\n");
-            }
-            else if (msg.what == 6) {
+            } else if (msg.what == 6) {
                 MainActivity.this.bluetoothData = msg.getData().getString("StringData") + "\n";
                 //txtRecep.append("READ_RAW:" + msg.getData().getString("hexData") + "\n");
+            } else if (msg.what == 8) {
+                Bundle bundleJson = (Bundle) msg.obj;
+                MainActivity.this.devicelist = bundleJson.getString("devicelist");
+                Log.d(TAG, "handleMessage: device list " + MainActivity.this.devicelist);
+                MainActivity.this.latch.countDown();
             }
-           }
+
+        }
+    }
+
+    private void showDevices() {
+
     }
  }

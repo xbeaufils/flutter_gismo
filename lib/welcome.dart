@@ -122,14 +122,17 @@ class _WelcomePageState extends State<WelcomePage> {
                       _buildButton("Poids", 'assets/peseur.png', _peseePressed), // Pesée
                   ]))),
               Card(
-                child:
-                  ButtonBar(
+                  child: SingleChildScrollView (
+                  scrollDirection: Axis.horizontal,
+                  child:
+                    ButtonBar(
                     alignment: MainAxisAlignment.spaceEvenly,
                     buttonMinWidth: 90.0,
                     children: <Widget>[
                       _buildButton("Entree", "assets/home.png", _entreePressed), // Entrée
                       _buildButton("Sortie", "assets/Truck.png", _sortiePressed),
-                    ])),
+                      _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
+                    ]))),
               (this._bloc.isLogged()) ?
                 Container():
                 Card(child:
@@ -281,5 +284,10 @@ class _WelcomePageState extends State<WelcomePage> {
 
   void _lotPressed() {
     Navigator.pushNamed(context, '/lot');
+  }
+
+  void _choixBt() {
+    Navigator.pushNamed(context, '/bluetooth');
+
   }
 }

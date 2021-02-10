@@ -32,6 +32,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GismoBloc _bloc;
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
+  static const  BLUETOOTH_CHANNEL = const MethodChannel('nemesys.rfid.bluetooth');
 
   String _searchText = "";
   List<Bete> _betes = new List();
@@ -91,7 +92,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                   return FloatingActionButton(
                       child: Icon(Icons.wifi),
                       backgroundColor: Colors.green,
-                      onPressed: _readRFID);
+                      onPressed: _readBluetooth); //_readRFID);
                   break;
                 default:
                   return null;
@@ -104,6 +105,26 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     }
     else
       return null;
+  }
+
+  void _readBluetooth() async {
+    try {
+      String response = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth");
+      Map<String, dynamic> mpResponse = jsonDecode(response);
+      if (mpResponse.length > 0) {
+        _searchPressed();
+        setState(() {
+          // _searchText = mpResponse['boucle'];
+          _filter.text = mpResponse['boucle'];
+        });
+      }
+      else {
+        _showMessage("Pas de boucle lue");
+      }
+    } on Exception catch (e, stackTrace) {
+      _bloc.reportError(e, stackTrace);
+      debug.log(e.toString());
+    }
   }
 
   void _readRFID() async {
@@ -125,7 +146,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       debug.log(e.toString());
     }
 
-}
+  }
 
   Future<String> _startService() {
     return PLATFORM_CHANNEL.invokeMethod("start");
