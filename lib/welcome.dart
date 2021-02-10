@@ -57,11 +57,20 @@ class _WelcomePageState extends State<WelcomePage> {
     );
   }
 
-  Widget _getActionButton() {
-    return IconButton(
-      icon: Icon(Icons.settings),
-      onPressed: _settingPressed,
-    );
+  List<Widget> _getActionButton() {
+    List<Widget> actionBtns = new List();
+    actionBtns.add(
+        IconButton(
+          icon: Icon(Icons.edit),
+          onPressed: _choixBt,
+        ));
+    actionBtns.add(
+        IconButton(
+          icon: Icon(Icons.settings),
+        onPressed: _settingPressed,
+      ));
+
+    return actionBtns;
   }
 
   @override
@@ -78,10 +87,8 @@ class _WelcomePageState extends State<WelcomePage> {
               new Text('Erreur de connexion'),
             // N'affiche pas la touche back (qui revient à la SplashScreen
             automaticallyImplyLeading: false,
-            actions: <Widget>[
-              // action button
-              _getActionButton(),
-            ]),
+            actions: _getActionButton(),
+            ),
         body: ListView(
             scrollDirection: Axis.vertical,
             children: <Widget>[

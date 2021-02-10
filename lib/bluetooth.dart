@@ -9,7 +9,6 @@ class BluetoothPage extends StatefulWidget {
   final GismoBloc _bloc;
 
   BluetoothPage(this._bloc,  {Key key}) : super(key: key);
-  BluetoothPage.edit(this._bloc, {Key key}) : super(key: key);
 
   @override
   _BluetoothPagePageState createState() => new _BluetoothPagePageState(_bloc);
@@ -21,6 +20,12 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   static const  BLUETOOTH_CHANNEL = const MethodChannel('nemesys.rfid.bluetooth');
 
   _BluetoothPagePageState(this._bloc);
+  String _preferredAddress;
+
+  @override
+  void initState()  {
+    this._bloc.configBt().then((value) =>  { _changeAddress( value) });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +33,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
       backgroundColor: Colors.lightGreen,
       key: _scaffoldKey,
       appBar: new AppBar(
-          title: new Text('Traitement'),
+          title: new Text('Connexion BlueTooth'),
         ),
       body:_buildBody(),
     );
@@ -36,37 +41,48 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
 
   Widget _buildBody() {
     return FutureBuilder(
-        builder: (context, projectSnap) {
-          if (projectSnap.connectionState == ConnectionState.none &&
-              projectSnap.hasData == null) {
+        builder: (context, deviceSnap) {
+          if (deviceSnap.connectionState == ConnectionState.none &&
+              deviceSnap.hasData == null) {
             //print('project snapshot data is: ${projectSnap.data}');
             return Container();
           }
-          if (projectSnap.data == null)
+          if (deviceSnap.data == null)
             return Container();
           return ListView.builder(
-            itemCount: projectSnap.data.length,
+            itemCount: deviceSnap.data.length,
             itemBuilder: (context, index) {
-              DeviceModel device = projectSnap.data[index];
-              return Column(
-                children: <Widget>[
-                  // Widget to display the list of project
-                ],
-              );
-            },
+              DeviceModel device = deviceSnap.data[index];
+              return Card(child:
+                RadioListTile(
+                  title: Text(device.name),
+                  subtitle: Text(device.address),
+                  value: device.address,
+                  groupValue: _preferredAddress,
+                  onChanged: (value) {_changeAddress(value);
+                  }),);
+              },
           );
         },
       future: _getDeviceList(),);
   }
 
-   Future<List<DeviceModel>> _getDeviceList() async {
+  Future<List<DeviceModel>> _getDeviceList() async {
     String response = await BLUETOOTH_CHANNEL.invokeMethod("listBlueTooth");
-    List<DeviceModel> lstDevice =  jsonDecode(response);
-    /*List<DeviceModel> tempList = new List();
-    for (int i = 0; i < response.data.length; i++) {
-      tempList.add(new DeviceModel.fromResult(response.data[i]));
-    }
-    return tempList;*/
+    List<DeviceModel> lstDevice = ( jsonDecode(response) as List).map( (i) => DeviceModel.fromResult(i)).toList();
     return lstDevice;
+  }
+
+  void _getAddress() async {
+    _preferredAddress = await this._bloc.configBt();
+    setState(() {
+    });
+  }
+
+  void _changeAddress(String value) {
+    setState(() {
+      _preferredAddress = value;
+    });
+    this._bloc.saveBt(_preferredAddress);
   }
 }

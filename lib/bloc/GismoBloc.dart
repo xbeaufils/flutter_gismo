@@ -35,6 +35,8 @@ class GismoBloc {
 
   User _currentUser;
   GismoRepository _repository;
+  static const  BLUETOOTH_CHANNEL = const MethodChannel('nemesys.rfid.bluetooth');
+
   final _sentry = SentryClient(dsn:  "https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553");
 
   get sentry => _sentry;
@@ -69,6 +71,24 @@ class GismoBloc {
         stackTrace: stackTrace,
       );
     }
+  }
+
+  Future<String> configBt() async {
+    FlutterSecureStorage storage = new FlutterSecureStorage();
+    String address = await storage.read(key: "address");
+    return address;
+  }
+
+  void saveBt(String address) {
+    FlutterSecureStorage storage = new FlutterSecureStorage();
+    storage.write(key: "address", value: address);
+  }
+
+  Future<String> readBluetooth() async {
+    FlutterSecureStorage storage = new FlutterSecureStorage();
+    String address = await storage.read(key: "address");
+    String response = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth", { 'address' : address});
+    return response;
   }
 
   Future<String> init() async {

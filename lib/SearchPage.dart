@@ -109,7 +109,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   void _readBluetooth() async {
     try {
-      String response = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth");
+      String response = await this.widget._bloc.readBluetooth();
+      _showMessage("bluetooth reponse " + response);
       Map<String, dynamic> mpResponse = jsonDecode(response);
       if (mpResponse.length > 0) {
         _searchPressed();
