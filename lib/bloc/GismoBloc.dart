@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:admob_flutter/admob_flutter.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_gismo/bloc/GismoRepository.dart';
 import 'package:flutter_gismo/bloc/WebDataProvider.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
@@ -73,22 +75,75 @@ class GismoBloc {
     }
   }
 
+  Future<bool> configIsBt() async {
+    FlutterSecureStorage storage = new FlutterSecureStorage();
+    String bluetooth = await storage.read(key: "bluetooth");
+    bool isBluetooth = (bluetooth == 'true') ?  true : false;
+    return isBluetooth;
+  }
+
   Future<String> configBt() async {
     FlutterSecureStorage storage = new FlutterSecureStorage();
     String address = await storage.read(key: "address");
     return address;
   }
 
-  void saveBt(String address) {
+  void saveBt(bool isBlueTooth, String address) {
     FlutterSecureStorage storage = new FlutterSecureStorage();
-    storage.write(key: "address", value: address);
+    storage.write(key: "bluetooth", value: isBlueTooth.toString());
+    if (isBlueTooth)
+      storage.write(key: "address", value: address);
+    else
+      storage.delete(key: "address");
   }
 
+  Stream<BluetoothState> streamBluetooth() async* {
+    FlutterSecureStorage storage = new FlutterSecureStorage();
+    String address = await storage.read(key: "address");
+    try {
+      String status = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth", { 'address': address});
+      Map<String, dynamic> map = json.decode(status);
+      int i = 0;
+      while (i < 20) {
+        await Future.delayed(Duration(seconds: 1));
+        status = await BLUETOOTH_CHANNEL.invokeMethod("dataBlueTooth");
+        status = status.replaceAll("\n", "");
+        status = status.replaceAll("\r", "");
+        debug.log("Status  Bloc" + status);
+        //map = json.decode(status);
+        BluetoothState state;
+        yield  state = BluetoothState.fromResult(json.decode(status));
+        if ( state.status == 'NONE')
+          i = 100; // Sortie du while
+        i++;
+      }
+    } on PlatformException catch(e) {
+      debug.log("Erreur ", error: e );
+    }
+
+  }
   Future<String> readBluetooth() async {
     FlutterSecureStorage storage = new FlutterSecureStorage();
     String address = await storage.read(key: "address");
-    String response = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth", { 'address' : address});
-    return response;
+    try {
+      String status = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth", { 'address': address});
+      Map<String, dynamic> map = json.decode(status);
+      int i = 0;
+      while (i < 15) {
+        await Future.delayed(Duration(seconds: 1));
+        status = await BLUETOOTH_CHANNEL.invokeMethod("dataBlueTooth");
+        debug.log("Status " + status);
+        map = json.decode(status);
+        if (map['status'] == 'NONE')
+          i = 100; // Sortie du while
+        i++;
+      }
+      if (map['status'] == 'AVAILABLE')
+        return map['data'];
+      return status;
+    } on PlatformException catch(e) {
+      debug.log("Erreur ", error: e );
+    }
   }
 
   Future<String> init() async {

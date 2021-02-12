@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as debug;
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +14,7 @@ import 'package:flutter_gismo/individu/TimeLine.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:sentry/sentry.dart';
 
 class SearchPage extends StatefulWidget {
@@ -33,7 +36,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   final GismoBloc _bloc;
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
   static const  BLUETOOTH_CHANNEL = const MethodChannel('nemesys.rfid.bluetooth');
-
+  Color _lecteurColor;
   String _searchText = "";
   List<Bete> _betes = new List();
   List<Bete> _filteredBetes = new List();
@@ -60,6 +63,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   void initState() {
     this._getBetes();
     super.initState();
+    this._startService();
   }
 
   @override
@@ -83,7 +87,12 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   Widget _buildRfid() {
     if (_bloc.isLogged()) {
-      return FutureBuilder(
+      return FloatingActionButton(
+          child: Icon(Icons.wifi),
+          backgroundColor: _lecteurColor,
+          onPressed: _readBluetooth); //_readRFID);
+    }
+    /*  return FutureBuilder(
           future: _startService(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -91,7 +100,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                 case "start":
                   return FloatingActionButton(
                       child: Icon(Icons.wifi),
-                      backgroundColor: Colors.green,
+                      backgroundColor: _lecteurColor,
                       onPressed: _readBluetooth); //_readRFID);
                   break;
                 default:
@@ -102,26 +111,53 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
               return CircularProgressIndicator();
             }
           });
-    }
+    }*/
     else
       return null;
   }
 
   void _readBluetooth() async {
     try {
+      setState(() {
+        _lecteurColor = Colors.red;
+      });
+      this.widget._bloc.streamBluetooth().listen(
+              (BluetoothState event) {
+                //debug.log("Stream " + event.toString());
+                setState(() {
+                  if (event.status == 'NONE')
+                    _lecteurColor = Colors.green;
+                  if (event.status == 'WAITING') {
+                    if (_lecteurColor == Colors.red)
+                      _lecteurColor = Colors.orange;
+                    else
+                      _lecteurColor = Colors.red;
+                  }
+                  if (event.status == 'AVAILABLE') {
+                    _lecteurColor = Colors.green;
+                    _searchText = event.data;
+                    _filter.text = event.data;
+                    _searchPressed();
+                  }
+
+                });
+              });
+      /*
       String response = await this.widget._bloc.readBluetooth();
+      debug.log("reponse " + response);
       _showMessage("bluetooth reponse " + response);
       Map<String, dynamic> mpResponse = jsonDecode(response);
       if (mpResponse.length > 0) {
         _searchPressed();
         setState(() {
           // _searchText = mpResponse['boucle'];
+          _lecteurColor = Colors.green;
           _filter.text = mpResponse['boucle'];
         });
       }
       else {
         _showMessage("Pas de boucle lue");
-      }
+      }*/
     } on Exception catch (e, stackTrace) {
       _bloc.reportError(e, stackTrace);
       debug.log(e.toString());
@@ -149,8 +185,16 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   }
 
-  Future<String> _startService() {
-    return PLATFORM_CHANNEL.invokeMethod("start");
+  Future<String> _startService() async{
+    String address = await _bloc.configBt();
+    if (address == null) {
+      _lecteurColor = Colors.green;
+      return PLATFORM_CHANNEL.invokeMethod("start");
+    }
+    else {
+      _lecteurColor = Colors.green;
+      return "start";
+    }
   }
 
   Widget _buildBar(BuildContext context) {

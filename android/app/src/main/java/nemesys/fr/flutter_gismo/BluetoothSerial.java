@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.util.Log;
 
 import java.io.IOException;
@@ -96,7 +97,7 @@ public class BluetoothSerial {
         if (address != null) {
             BluetoothDevice device = this.mAdapter.getRemoteDevice(address);
             this.deviceName = device.getName();
-            this.connect(device, true);
+            this.connect(device, false);
         }
     }
 
@@ -195,7 +196,7 @@ public class BluetoothSerial {
             //if (! BuildConfig.DEBUG) {
                 try {
                     if (secure) {
-                        tmp = device.createRfcommSocketToServiceRecord(BluetoothSerial.UUID_SPP);
+                        tmp = device.createRfcommSocketToServiceRecord( BluetoothSerial.UUID_SPP);
                     } else {
                         tmp = device.createInsecureRfcommSocketToServiceRecord(BluetoothSerial.UUID_SPP);
                     }
@@ -212,7 +213,7 @@ public class BluetoothSerial {
             Log.i(BluetoothSerial.TAG, "[ConnectThread::run]SocketType:" + this.mSocketType);
             sendLog("[ConnectThread::run] BEGIN mConnectThread SocketType:" + this.mSocketType);
             setName("ConnectThread" + this.mSocketType);
-            if ( ! BuildConfig.DEBUG) {
+            //if ( ! BuildConfig.DEBUG) {
                 BluetoothSerial.this.mAdapter.cancelDiscovery();
                 try {
                     Log.i(BluetoothSerial.TAG, "Connecting to socket...");
@@ -226,8 +227,8 @@ public class BluetoothSerial {
                     Sentry.captureException(e);
                     try {
                         Log.i(BluetoothSerial.TAG, "Trying fallback...");
-                        this.mmSocket = (BluetoothSocket) this.mmDevice.getClass().getMethod("createRfcommSocket", new Class[]{Integer.TYPE}).invoke(this.mmDevice, new Object[]{1});
-                        this.mmSocket.connect();
+                        BluetoothSerial.this.mmSocket = (BluetoothSocket) this.mmDevice.getClass().getMethod("createRfcommSocket", new Class[]{Integer.TYPE}).invoke(this.mmDevice, new Object[]{1});
+                        BluetoothSerial.this.mmSocket.connect();
                         BluetoothSerial.this.setState(BluetoothSerial.STATE_CONNECTED);
                         Log.i(BluetoothSerial.TAG, "Connected");
                         sendLog("[ConnectThread::run] Connected");
@@ -236,7 +237,7 @@ public class BluetoothSerial {
                         sendLog("[ConnectThread::run] Couldn't establish a Bluetooth connection.");
                         Sentry.captureException(e);
                         try {
-                            this.mmSocket.close();
+                            BluetoothSerial.this.mmSocket.close();
                         } catch (IOException e3) {
                             Log.e(BluetoothSerial.TAG, "unable to close() " + this.mSocketType + " socket during connection failure", e3);
                             sendLog("[ConnectThread::run] unable to close() " + this.mSocketType + " socket during connection failure " + e3.getMessage() );
@@ -246,12 +247,12 @@ public class BluetoothSerial {
                         return;
                     }
                 }
-            }
+            //}
             synchronized (BluetoothSerial.this) {
                 BluetoothSerial.this.mConnectThread = null;
             }
 
-            BluetoothSerial.this.connected(this.mmSocket, this.mmDevice, this.mSocketType);
+            BluetoothSerial.this.connected(BluetoothSerial.this.mmSocket, this.mmDevice, this.mSocketType);
         }
 
         public void cancel() {
@@ -273,6 +274,8 @@ public class BluetoothSerial {
         public ConnectedThread(BluetoothSocket socket, String socketType) {
             Log.d(BluetoothSerial.TAG, "create ConnectedThread: " + socketType);
             sendLog("create ConnectedThread: " + socketType);
+            /*if ( socket.isConnected())
+                throw  new IOException("Socket not connected");*/
             this.mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
@@ -302,11 +305,11 @@ public class BluetoothSerial {
             while (true) {
                 try {
                     sendLog("[ConnectedThread:run] read");
-                    int bytes = this.mmInStream.read(buffer);
+                    int bytes = this.mmInStream.read(buffer); // TODO : Gérer le carriage return 0D
                     sendLog("[ConnectedThead:run] bytes size " + bytes);
                     BluetoothSerial.this.mHandler.obtainMessage(MESSAGE_READ, new String(buffer, 0, bytes)).sendToTarget();
                     if (bytes > 0) {
-                        BluetoothSerial.this.mHandler.obtainMessage(MESSAGE_READ_RAW, Arrays.copyOf(buffer, bytes)).sendToTarget();
+                        BluetoothSerial.this.mHandler.obtainMessage(MESSAGE_READ_RAW, new String(buffer, 0, bytes) /*Arrays.copyOf(buffer, bytes)*/).sendToTarget();
                         return;
                     }
                 } catch (IOException e) {

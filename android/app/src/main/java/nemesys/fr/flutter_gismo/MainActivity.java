@@ -7,16 +7,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
-import android.os.RemoteException;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -106,8 +103,8 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         Intent intent = new Intent();
         //intent.setComponent(new ComponentName("fr.nemesys.allflex", "fr.nemesys.allflex.RFIDService"));
         intent.setClassName("fr.nemesys.allflex", "fr.nemesys.allflex.RFIDService");
-        boolean launched = bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        Log.d(TAG, "onStart: " + launched);
+        //boolean launched = bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        //Log.d(TAG, "onStart: " + launched);
 
     }
 
@@ -164,15 +161,27 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
 
     }
 
-    public class MethodChannelHdlBlueTooth implements  MethodChannel.MethodCallHandler {
-        BluetoothSerial bluetooth = new BluetoothSerial(mHandler);
+    public class MethodChannelHdlBlueTooth implements   MethodChannel.MethodCallHandler {
+        BluetoothHandlerThread btHandlerThread;
+
+        public MethodChannelHdlBlueTooth() {
+            this.btHandlerThread = new BluetoothHandlerThread("bluetooth");
+            this.btHandlerThread.start();
+        }
 
         @Override
         public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
             if (call.method.contentEquals("readBlueTooth")) {
-                String address = (String) call.argument("address");
+                String address = (String) call.argument("address");/*
+                if (btHandlerThread == null)
+                    btHandlerThread = new BluetoothHandlerThread("bluetooth");
+                if ( ! btHandlerThread.isAlive())
+                    btHandlerThread.start();*/
+                BluetoothHandler handler = new BluetoothHandler(btHandlerThread.getLooper());
+                handler.post(new BluetoothRun(address, handler));
+                result.success("{ \"status\" : \"STARTED\"}");
                 //address = "08:DF:1F:A8:3D:7E";
-                MainActivity.this.latch = new CountDownLatch(1);
+/*                MainActivity.this.latch = new CountDownLatch(1);
                 bluetooth.connect(address);
                 try {
                     boolean completed  = latch.await(10, TimeUnit.SECONDS);
@@ -199,12 +208,32 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                 } catch (InterruptedException | JSONException | RemoteException e2) {
                     e2.printStackTrace();
                 }*/
+            } else if (call.method.contentEquals("dataBlueTooth")) {
+                switch (dataState ) {
+                    case  AVAILABLE :
+                        result.success("{\"status\": \"AVAILABLE\", \"data\" : \"" + dataBluetoooth + "\"}");
+                        dataState = DataState.NONE;
+                        //btHandlerThread.quit();
+                        break;
+                    case WAITING:
+                        result.success("{\"status\": \"WAITING\"}");
+                        break;
+                    case ERROR:
+                        result.error("Error", "Error", "Error");
+                        //btHandlerThread.quit();
+                        break;
+                    case NONE:
+                        result.success("{\"status\": \"NONE\"}");
+                        //btHandlerThread.quit();
+                        break;
+                }
+
             } else if (call.method.contentEquals("listBlueTooth")) {
+                BluetoothSerial bluetooth = new BluetoothSerial(null);
                 List<BluetoothDevice> devices = bluetooth.getBondedDevices();
                 JSONArray devicesJson = new JSONArray();
                 for (BluetoothDevice device : devices) {
                     try {
-
                         JSONObject deviceJson = new JSONObject();
                         deviceJson.put("address", device.getAddress());
                         deviceJson.put("name", device.getName());
@@ -239,6 +268,122 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         CONNECTED;
     }
 
+    public enum  DataState {
+        NONE,
+        WAITING,
+        ERROR,
+        AVAILABLE;
+    }
+
+    CountDownLatch latch;
+    String dataBluetoooth;
+    State stateBluetooth;
+    DataState dataState = DataState.NONE;
+
+    public class BluetoothHandlerThread extends HandlerThread {
+
+
+        public BluetoothHandlerThread(String name) {
+            super(name);
+        }
+
+        @Override
+        protected void onLooperPrepared() {
+            //initHandler();
+        }
+        /*
+        private void initHandler() {
+            mHandler = new Handler(getLooper()) {
+                @Override
+                public void handleMessage(Message msg) {
+                    switch (msg.what) {
+                        case BluetoothState.MESSAGE_STATE_CHANGE:
+                            Log.i(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
+                            switch (msg.arg1) {
+                                case BluetoothState.STATE_NONE:
+                                    Log.i(TAG, "BluetoothSerialService.STATE_NONE");
+                                    stateBluetooth = MainActivity.State.NONE;
+                                    break;
+                                case BluetoothState.STATE_LISTEN:
+                                    Log.i(TAG, "BluetoothSerialService.STATE_LISTEN");
+                                    stateBluetooth = MainActivity.State.LISTEN;
+                                    break;
+                                case BluetoothState.STATE_CONNECTING:
+                                    stateBluetooth = MainActivity.State.CONNECTING;
+                                    Log.i(TAG, "BluetoothSerialService.STATE_CONNECTING");
+                                    break;
+                                case BluetoothState.STATE_CONNECTED:
+                                    stateBluetooth = MainActivity.State.CONNECTED;
+                                    Log.i(TAG, "BluetoothSerialService.STATE_CONNECTED");
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case BluetoothState.MESSAGE_READ:
+                            dataBluetoooth = (String) msg.obj;
+                            dataState = DataState.AVAILABLE;
+                            MainActivity.this.latch.countDown();
+                            break;
+                        case BluetoothState.MESSAGE_DEVICE_NAME:
+                            Log.i(TAG, msg.getData().getString(BluetoothState.DEVICE_NAME));
+                            return;
+                /*case BluetoothState.MESSAGE_TOAST:
+                    try {
+                        notifyToast(msg);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                        Sentry.captureException(e);
+                    }
+                    return;
+                        case BluetoothState.MESSAGE_READ_RAW:
+                            dataBluetoooth = (String) msg.obj;
+                            break;
+               case BluetoothState.MESSAGE_LOG:
+                    try {
+                        sendLog(msg);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                        Sentry.captureException(e);
+                    }
+                    break;
+                        default:
+                            return;
+                    }
+                }
+            };
+        }*/
+    }
+
+    public class BluetoothRun implements  Runnable {
+
+        private String address;
+        private Handler handler;
+
+        public BluetoothRun(String address, Handler handler) {
+            this.address = address;
+            this.handler = handler;
+        }
+        @Override
+        public void run() {
+            MainActivity.this.latch = new CountDownLatch(1);
+            dataState = DataState.WAITING;
+            BluetoothSerial bluetooth = new BluetoothSerial(this.handler);
+            bluetooth.connect(this.address);
+            boolean completed = false;
+            try {
+                completed = latch.await(10, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (completed)
+                dataState = DataState.AVAILABLE;
+            else
+                dataState = DataState.NONE;
+        }
+
+    }
+/*
     private final Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -279,7 +424,69 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                         e.printStackTrace();
                         Sentry.captureException(e);
                     }
-                    return;*/
+                    return;
+                case BluetoothState.MESSAGE_READ_RAW:
+                    dataBluetoooth = (String) msg.obj;
+                    break;
+               /*case BluetoothState.MESSAGE_LOG:
+                    try {
+                        sendLog(msg);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                        Sentry.captureException(e);
+                    }
+                    break;
+                default:
+                    return;
+            }
+        }
+    };
+*/
+
+    public class BluetoothHandler extends Handler {
+        public BluetoothHandler(Looper looper) {
+            super(looper);
+        }
+
+        //= new Handler(getLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case BluetoothState.MESSAGE_STATE_CHANGE:
+                    Log.i(TAG, "MESSAGE_STATE_CHANGE: " + msg.arg1);
+                    switch (msg.arg1) {
+                        case BluetoothState.STATE_NONE:
+                            Log.i(TAG, "BluetoothSerialService.STATE_NONE");
+                            stateBluetooth = MainActivity.State.NONE;
+                            break;
+                        case BluetoothState.STATE_LISTEN:
+                            Log.i(TAG, "BluetoothSerialService.STATE_LISTEN");
+                            stateBluetooth = MainActivity.State.LISTEN;
+                            break;
+                        case BluetoothState.STATE_CONNECTING:
+                            stateBluetooth = MainActivity.State.CONNECTING;
+                            Log.i(TAG, "BluetoothSerialService.STATE_CONNECTING");
+                            break;
+                        case BluetoothState.STATE_CONNECTED:
+                            stateBluetooth = MainActivity.State.CONNECTED;
+                            Log.i(TAG, "BluetoothSerialService.STATE_CONNECTED");
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case BluetoothState.MESSAGE_READ:
+                    dataBluetoooth = (String) msg.obj;
+                    dataState = DataState.AVAILABLE;
+                    MainActivity.this.latch.countDown();
+                    break;
+                case BluetoothState.MESSAGE_DEVICE_NAME:
+                    Log.i(TAG, msg.getData().getString(BluetoothState.DEVICE_NAME));
+                    return;
+                case BluetoothState.MESSAGE_TOAST:
+                    Log.d(TAG, "handleMessage: MESSAGE_TOAST");
+                    dataState = DataState.ERROR;
+                    return;
                 case BluetoothState.MESSAGE_READ_RAW:
                     dataBluetoooth = (String) msg.obj;
                     break;
@@ -295,18 +502,16 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                     return;
             }
         }
-    };
+    }
+
 
     Messenger mService = null;
     boolean mBound = false;
-    String bluetoothData = null;
-    CountDownLatch latch;
-    String devicelist;
-    String dataBluetoooth;
-    State stateBluetooth;
+    //String bluetoothData = null;
     /**
      * Defines callbacks for service binding, passed to bindService()
      */
+    /*
     private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
@@ -321,7 +526,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                 mService.send(msg);
             } catch (RemoteException e) {
                 e.printStackTrace();
-            }*/
+            }
         }
 
         @Override
@@ -332,8 +537,9 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
     };
 
     Messenger replyMessenger = new Messenger(new HandlerReplyMsg());
-
+    */
     // handler for message from service
+        /*
     class HandlerReplyMsg extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -345,7 +551,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
             else if (msg.what == BluetoothSerialService.MESSAGE_TOAST) {
                 Toast.makeText(MainActivity.this,  msg.getData().getString(BluetoothSerialService.TOAST), Toast.LENGTH_LONG).show();
             }
-            else*/
+            else*/ /*
             if (msg.what ==2) {
                 MainActivity.this.bluetoothData = msg.obj.toString();
                 //txtRecep.append("READ:" + recdMessage + "\n");
@@ -361,7 +567,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
 
         }
     }
-
+    */
     private void showDevices() {
 
     }

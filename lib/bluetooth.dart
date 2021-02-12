@@ -21,10 +21,17 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
 
   _BluetoothPagePageState(this._bloc);
   String _preferredAddress;
-
+  bool _isBluetooth = false;
   @override
   void initState()  {
-    this._bloc.configBt().then((value) =>  { _changeAddress( value) });
+    this._bloc.configIsBt().then((isBluetooth) => {
+      this._isBluetooth = isBluetooth,
+      if (isBluetooth) {
+        this._bloc.configBt().then((value) => { _changeAddress(value)})
+      }
+
+    });
+    //this._bloc.configBt().then((value) =>  { _changeAddress( value) });
   }
 
   @override
@@ -35,11 +42,28 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
       appBar: new AppBar(
           title: new Text('Connexion BlueTooth'),
         ),
-      body:_buildBody(),
+      body:
+            Column(children: [
+              Card( child:
+              Row(children: <Widget>[
+                Expanded(
+                    child: Text("Lecteur Bluetooth")
+                ),
+                Switch(
+                  value: _isBluetooth,
+                  onChanged: (value) {switched(value);},
+                ),
+              ])),
+              Expanded(
+                  child: _buildBody()
+              ),
+            ],)
+
     );
   }
 
   Widget _buildBody() {
+    if (_isBluetooth)
     return FutureBuilder(
         builder: (context, deviceSnap) {
           if (deviceSnap.connectionState == ConnectionState.none &&
@@ -53,7 +77,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
             itemCount: deviceSnap.data.length,
             itemBuilder: (context, index) {
               DeviceModel device = deviceSnap.data[index];
-              return Card(child:
+              return Card( child:
                 RadioListTile(
                   title: Text(device.name),
                   subtitle: Text(device.address),
@@ -65,6 +89,8 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
           );
         },
       future: _getDeviceList(),);
+    else
+      return Container();
   }
 
   Future<List<DeviceModel>> _getDeviceList() async {
@@ -73,9 +99,10 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
     return lstDevice;
   }
 
-  void _getAddress() async {
-    _preferredAddress = await this._bloc.configBt();
-    setState(() {
+  void switched(value) {
+    this.setState(() {
+      this._isBluetooth = value;
+      this._bloc.saveBt(_isBluetooth, _preferredAddress);
     });
   }
 
@@ -83,6 +110,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
     setState(() {
       _preferredAddress = value;
     });
-    this._bloc.saveBt(_preferredAddress);
+    this._bloc.saveBt(_isBluetooth, _preferredAddress);
   }
+
 }
