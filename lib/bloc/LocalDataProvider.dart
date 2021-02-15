@@ -383,7 +383,7 @@ class LocalDataProvider extends DataProvider{
         'and beteentity2_.cheptel= ? '
         'and (lambentity0_.sante="VIVANT"'
         'and (lambentity0_.dateDeces is NULL)'
-        'and (lambentity0_.devenir_id is null)',
+        'and (lambentity0_.devenir_id is null))',
       [cheptel]);
       for (int j = 0; j < agneaux.length; j++) {
         CompleteLambModel lamb = CompleteLambModel.fromResult(agneaux[j]);
