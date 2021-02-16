@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:intl/intl.dart';
 
 
@@ -20,16 +21,38 @@ class _BetePageState extends State<BetePage> {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController _dateEntreCtrl = new TextEditingController();
+  TextEditingController _numBoucleCtrl = new TextEditingController();
+  TextEditingController _numMarquageCtrl = new TextEditingController();
   Bete _bete;
-  String _numBoucle;
-  String _numMarquage;
+  //String _numBoucle;
+  //String _numMarquage;
   String _nom;
   String _obs;
   Sex _sex ;
   //Motif_Entree _motif = Motif_Entree.achat;
   String _motif;
 
+  bool _bluetoothConnected = false;
+  String _bluetoothState ="NONE";
   _BetePageState(this._bloc, this._bete);
+
+  Widget _statusBluetoothBar() {
+    List<Widget> status = new List();
+    switch (_bluetoothState ) {
+      case  "NONE":
+        status.add(Icon(Icons.bluetooth));
+        status.add(Text("Non connecté"));
+      break;
+      case "WAITING":
+        status.add(Icon(Icons.bluetooth));
+        status.add(Expanded( child:  LinearProgressIndicator(),) );
+        break;
+      case "AVAILABLE":
+        status.add(Icon(Icons.bluetooth));
+        status.add(Text("Données reçues"));
+    }
+    return Row(children: status,);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,11 +71,12 @@ class _BetePageState extends State<BetePage> {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
+                  _statusBluetoothBar(),
                   new TextFormField(
-                      keyboardType: TextInputType.number,
-                      initialValue: _numBoucle,
-                      decoration: InputDecoration(labelText: 'Numero boucle', hintText: 'Boucle'),
-                      validator: (value) {
+                    controller: _numBoucleCtrl,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(labelText: 'Numero boucle', hintText: 'Boucle'),
+                    validator: (value) {
                         if (value.isEmpty) {
                           return 'Entrez un numero de boucle';
                         }
@@ -60,23 +84,23 @@ class _BetePageState extends State<BetePage> {
                       },
                       onSaved: (value) {
                           setState(() {
-                            _numBoucle = value;
+                            _numBoucleCtrl.text = value;
                         });
                       }
                   ),
                   new TextFormField(
                       //keyboardType: TextInputType.number,
-                      initialValue: _numMarquage,
-                      decoration: InputDecoration(labelText: 'Numero marquage', hintText: 'Marquage'),
-                      validator: (value) {
+                    controller: _numMarquageCtrl,
+                    decoration: InputDecoration(labelText: 'Numero marquage', hintText: 'Marquage'),
+                    validator: (value) {
                         if (value.isEmpty) {
                           return 'Entrez un numero de marquage';
                         }
                         return "";
                         },
-                      onSaved: (value) {
+                    onSaved: (value) {
                         setState(() {
-                        _numMarquage = value;
+                        _numMarquageCtrl.text = value;
                         });
                       }
                   ),
@@ -142,19 +166,19 @@ class _BetePageState extends State<BetePage> {
 
   void _save() async {
     _formKey.currentState.save();
-    if (_numBoucle == null) {
+    if (_numBoucleCtrl.text == null) {
       this.badSaving("Numéro de boucle absent");
       return;
     }
-    if (_numBoucle.isEmpty){
+    if (_numBoucleCtrl.text.isEmpty){
       this.badSaving("Numéro de boucle absent");
       return;
     }
-    if (_numMarquage == null){
+    if (_numMarquageCtrl.text == null){
       this.badSaving("Numéro de marquage absent");
       return;
     }
-    if (_numMarquage.isEmpty){
+    if (_numMarquageCtrl.text.isEmpty){
       this.badSaving("Numéro de marquage absent");
       return;
     }
@@ -163,10 +187,10 @@ class _BetePageState extends State<BetePage> {
       return;
     }
     if (_bete == null)
-      _bete = new Bete(null, _numBoucle, _numMarquage,_nom, _obs, _dateEntreCtrl.text, _sex, _motif);
+      _bete = new Bete(null, _numBoucleCtrl.text, _numMarquageCtrl.text,_nom, _obs, _dateEntreCtrl.text, _sex, _motif);
     else {
-      _bete.numBoucle = _numBoucle;
-      _bete.numMarquage = _numMarquage;
+      _bete.numBoucle = _numBoucleCtrl.text;
+      _bete.numMarquage = _numMarquageCtrl.text;
       _bete.nom = _nom;
       _bete.observations = _obs;
       _bete.dateEntree =  _dateEntreCtrl.text;
@@ -199,24 +223,33 @@ class _BetePageState extends State<BetePage> {
       _dateEntreCtrl.text = df.format(selectedDate);
     else {
       _dateEntreCtrl.text = _bete.dateEntree;
-      _numBoucle = _bete.numBoucle;
-      _numMarquage = _bete.numMarquage;
+      _numBoucleCtrl.text = _bete.numBoucle;
+      _numMarquageCtrl.text = _bete.numMarquage;
       _nom = _bete.nom;
       _sex = _bete.sex;
       _motif = _bete.motifEntree;
       _obs = _bete.observations;
     }
+    _bloc.streamBluetooth().listen(
+      (BluetoothState event) {
+        setState(() {
+          _bluetoothState = event.status;
+          if (event.status == 'AVAILABLE') {
+            String _foundBoucle = event.data;
+            _numBoucleCtrl.text = _foundBoucle.substring(_foundBoucle.length - 5);
+            _numMarquageCtrl.text = _foundBoucle.substring(0, _foundBoucle.length - 5);
+          }
+        });
+      });
   }
-/*
+
   @override
   void dispose() {
     // other dispose methods
-    cheptelCtrl.dispose();
-    boucleCtrl.dispose();
-    elevageCtrl.dispose();
-    naissanceCtrl.dispose();
+    _numBoucleCtrl.dispose();
+    _numMarquageCtrl.dispose();
     super.dispose();
   }
 
-   */
+
 }

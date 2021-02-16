@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as debug;
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,7 +14,6 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
-import 'package:sentry/sentry.dart';
 
 class SearchPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -35,7 +33,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GismoBloc _bloc;
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
-  static const  BLUETOOTH_CHANNEL = const MethodChannel('nemesys.rfid.bluetooth');
+  
   Color _lecteurColor;
   String _searchText = "";
   List<Bete> _betes = new List();
@@ -135,8 +133,11 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                   }
                   if (event.status == 'AVAILABLE') {
                     _lecteurColor = Colors.green;
-                    _searchText = event.data;
-                    _filter.text = event.data;
+                    String _foundBoucle = event.data.replaceAll("\n", " ");
+                    _foundBoucle = _foundBoucle.replaceAll("\r", '');
+                    _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 5);
+                    _searchText = _foundBoucle;
+                    _filter.text = _foundBoucle;
                     _searchPressed();
                   }
 
