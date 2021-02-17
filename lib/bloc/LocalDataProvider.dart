@@ -16,6 +16,7 @@ import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/ReportModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:path/path.dart';
+import 'package:sentry/sentry.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'dart:developer' as debug;
@@ -143,7 +144,8 @@ class LocalDataProvider extends DataProvider{
           '/send', data: report.toJson());
     }
     catch(e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
       debug.log("message" + e , name: "LocalDataProvider::_init");
     }
     finally {
@@ -333,7 +335,8 @@ class LocalDataProvider extends DataProvider{
       Bete mere = await this._searchBete(agnelage.idMere);
       return mere;
     } catch (e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
       throw (e);
     }
   }
@@ -362,7 +365,8 @@ class LocalDataProvider extends DataProvider{
       }
       return tempList;
     } catch (e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
     }
   }
 
@@ -391,7 +395,8 @@ class LocalDataProvider extends DataProvider{
       }
       return tempList;
     } catch (e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
     }
   }
 
@@ -521,7 +526,8 @@ class LocalDataProvider extends DataProvider{
       return " Enregistrement effectué";
     }
     catch(e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
       debug.log("Error", error: e);
     }
   }
@@ -591,7 +597,8 @@ class LocalDataProvider extends DataProvider{
       await db.insert('NEC', note.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     }
     catch(e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
     }
   }
 
@@ -613,7 +620,8 @@ class LocalDataProvider extends DataProvider{
       await db.insert('pesee', note.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     }
     catch(e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //      super.bloc.reportError(e, stackTrace);
     }
   }
 
@@ -656,7 +664,8 @@ class LocalDataProvider extends DataProvider{
       await db.insert('Echo', echo.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     }
     catch(e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
     }
   }
 
@@ -740,7 +749,8 @@ class LocalDataProvider extends DataProvider{
     }
     catch(e, stackTrace) {
       debug.log("Error", error: e);
-      super.bloc.sentry.captureException(exception: e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //     super.bloc.sentry.captureException(exception: e, stackTrace: stackTrace);
     }
 
   }
@@ -762,7 +772,8 @@ class LocalDataProvider extends DataProvider{
           conflictAlgorithm: ConflictAlgorithm.replace);
     }
     catch (e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //      super.bloc.reportError(e, stackTrace);
       return "Une erreur est survenue :" + e.toString();
     }
     return "Enregistrement efectué";
@@ -783,7 +794,8 @@ class LocalDataProvider extends DataProvider{
       return tempList;
     }
     on DatabaseException catch (e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //     super.bloc.reportError(e, stackTrace);
       debug.log("message " + e.toString());
     }
   }
@@ -875,7 +887,8 @@ class LocalDataProvider extends DataProvider{
       }
 
     }catch (e, stac) {
-      debug.log("Erreur", stackTrace: stac);
+      Sentry.captureException(e, stackTrace : stac);
+      //debug.log("Erreur", stackTrace: stac);
     }
     //mapBase['betes'].
   }

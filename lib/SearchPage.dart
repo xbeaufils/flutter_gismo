@@ -125,7 +125,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     } on PlatformException catch (e) {
       _showMessage("Pas de boucle lue");
     } on Exception catch (e, stackTrace) {
-      _bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //_bloc.reportError(e, stackTrace);
       debug.log(e.toString());
     }
 

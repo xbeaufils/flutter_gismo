@@ -36,7 +36,8 @@ class GismoBloc {
 
   User _currentUser;
   GismoRepository _repository;
-  final _sentry = SentryClient(dsn:  "https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553");
+  final _sentry = SentryClient( new SentryOptions( dsn: "https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553") );
+          //(options) => options.dsn =  "https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553");
 
   get sentry => _sentry;
 
@@ -55,21 +56,6 @@ class GismoBloc {
     assert(inDebugMode = true);
 
     return inDebugMode;
-  }
-
-  Future<void> reportError(dynamic error, dynamic stackTrace) async {
-    // Print the exception to the console.
-    print('Caught error: $error');
-    if (isInDebugMode) {
-      // Print the full stacktrace in debug mode.
-      print(stackTrace);
-    } else {
-      // Send the Exception and Stacktrace to Sentry in Production mode.
-      _sentry.captureException(
-        exception: error,
-        stackTrace: stackTrace,
-      );
-    }
   }
 
   Future<String> init() async {
@@ -240,7 +226,8 @@ class GismoBloc {
       return lstEvents;
     }
     catch(e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      // this.reportError(e, stackTrace);
     }
   }
 
@@ -254,7 +241,8 @@ class GismoBloc {
       return lstEvents;
     }
     catch(e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
     }
   }
 
@@ -294,7 +282,8 @@ class GismoBloc {
       return "Enregistrement effectué";
     }
     catch (e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
       return "Exception";
     }
   }
@@ -328,7 +317,8 @@ class GismoBloc {
       return "Configuration enregistrée";
     }
     catch (e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
       throw e;
     }
 
@@ -345,7 +335,8 @@ class GismoBloc {
       return "Connexion réussie";
     }
     catch (e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
       throw e;
     }
   }
@@ -393,7 +384,8 @@ class GismoBloc {
       return "Enregistrement effectué";
     }
     catch(e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
       return "Une erreur est survenue";
     }
   }
@@ -408,7 +400,8 @@ class GismoBloc {
       return "Enregistrement effectué";
     }
     catch (e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
       return "Une erreur et survenue";
     }
   }
@@ -423,7 +416,8 @@ class GismoBloc {
       return "Enregistrement effectué";
     }
     catch (e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
       return "Une erreur et survenue";
     }
   }
@@ -434,7 +428,8 @@ class GismoBloc {
       return "Enregistrement effectué";
     }
     catch (e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
       return "Une erreur et survenue";
     }
   }
