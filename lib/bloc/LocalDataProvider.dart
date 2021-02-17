@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Environnement.dart';
 import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
@@ -16,6 +16,7 @@ import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/ReportModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:path/path.dart';
+import 'package:sentry/sentry.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'dart:developer' as debug;
@@ -143,7 +144,8 @@ class LocalDataProvider extends DataProvider{
           '/send', data: report.toJson());
     }
     catch(e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
       debug.log("message" + e , name: "LocalDataProvider::_init");
     }
     finally {
@@ -333,7 +335,8 @@ class LocalDataProvider extends DataProvider{
       Bete mere = await this._searchBete(agnelage.idMere);
       return mere;
     } catch (e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
       throw (e);
     }
   }
@@ -362,7 +365,8 @@ class LocalDataProvider extends DataProvider{
       }
       return tempList;
     } catch (e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
     }
   }
 
@@ -391,7 +395,8 @@ class LocalDataProvider extends DataProvider{
       }
       return tempList;
     } catch (e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
     }
   }
 
@@ -521,9 +526,20 @@ class LocalDataProvider extends DataProvider{
       return " Enregistrement effectué";
     }
     catch(e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
       debug.log("Error", error: e);
     }
+  }
+
+  Future<String> saveTraitementCollectif(TraitementModel traitement, List<Bete> betes) async{
+     betes.forEach((bete)  {
+       TraitementModel entity = new TraitementModel.fromResult(traitement.toJson());
+       entity.idBete  = bete.idBd;
+       //entity.medicament = traitement.medicament;
+      this.saveTraitement(entity);
+    });
+     return " Enregistrement effectué";
   }
 
   @override
@@ -581,7 +597,8 @@ class LocalDataProvider extends DataProvider{
       await db.insert('NEC', note.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     }
     catch(e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
     }
   }
 
@@ -603,7 +620,8 @@ class LocalDataProvider extends DataProvider{
       await db.insert('pesee', note.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     }
     catch(e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //      super.bloc.reportError(e, stackTrace);
     }
   }
 
@@ -646,7 +664,8 @@ class LocalDataProvider extends DataProvider{
       await db.insert('Echo', echo.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     }
     catch(e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
     }
   }
 
@@ -730,7 +749,8 @@ class LocalDataProvider extends DataProvider{
     }
     catch(e, stackTrace) {
       debug.log("Error", error: e);
-      super.bloc.sentry.captureException(exception: e, stackTrace: stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //     super.bloc.sentry.captureException(exception: e, stackTrace: stackTrace);
     }
 
   }
@@ -752,7 +772,8 @@ class LocalDataProvider extends DataProvider{
           conflictAlgorithm: ConflictAlgorithm.replace);
     }
     catch (e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //      super.bloc.reportError(e, stackTrace);
       return "Une erreur est survenue :" + e.toString();
     }
     return "Enregistrement efectué";
@@ -773,7 +794,8 @@ class LocalDataProvider extends DataProvider{
       return tempList;
     }
     on DatabaseException catch (e,stackTrace) {
-      super.bloc.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //     super.bloc.reportError(e, stackTrace);
       debug.log("message " + e.toString());
     }
   }
@@ -806,10 +828,69 @@ class LocalDataProvider extends DataProvider{
      return tempList;
   }
 
-  Future<String> copyBd() async {
+  Future<String> backupBd() async {
     String databasePath = await getDatabasesPath();
     String databaseFile = join(databasePath , 'gismo_database.db');
-   // File(databaseFile).copy(newPath);
+    Database db = await this.database;
+    Map<String, dynamic> mapBase = new Map();
+    mapBase['lots'] = await db.query('lot');
+    mapBase['betes'] = await db.query('bete');
+    mapBase['agnelages'] = await db.query('agnelage');
+    mapBase['agneaux'] =  await db.query('agneaux');
+    mapBase['NEC'] =  await db.query('NEC');
+    mapBase['affectation'] =  await db.query('affectation');
+    mapBase['pesee'] =  await db.query('pesee');
+    mapBase['traitement'] =  await db.query('traitement');
+    mapBase['Echo'] =  await db.query('Echo');
+    return jsonEncode(mapBase);
+  }
+
+  Future<void> restoreBd(String fileName) async {
+
+    Database db = await this.database;
+    if (db.isOpen) {
+      db.close();
+    }
+    String path = join(join(await getDatabasesPath() , 'gismo_database.db'));
+    await deleteDatabase(path);
+    _database = null;
+    db = await this.database;
+    File jsonFile = new File(fileName);
+    try {
+      String base = jsonFile.readAsStringSync();
+      debug.log(base, name: "base" );
+      Map<String, dynamic> mapBase = jsonDecode(jsonFile.readAsStringSync());
+      debug.log(mapBase.toString(),name: "mapBase");
+      for (var i = 0; i < mapBase["betes"].length; i++) {
+        db.insert('bete', mapBase["betes"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (var i = 0; i < mapBase["agnelages"].length; i++) {
+        db.insert('agnelage', mapBase["agnelages"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (var i = 0; i < mapBase["agneaux"].length; i++) {
+        db.insert('agneaux', mapBase["agneaux"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (var i = 0; i < mapBase["lots"].length; i++) {
+        db.insert('lot', mapBase["lots"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (var i = 0; i < mapBase["affectation"].length; i++) {
+        db.insert('affectation', mapBase["affectation"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (var i = 0; i < mapBase["pesee"].length; i++) {
+        db.insert('pesee', mapBase["pesee"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (var i = 0; i < mapBase["traitement"].length; i++) {
+        db.insert('traitement', mapBase["traitement"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (var i = 0; i < mapBase["Echo"].length; i++) {
+        db.insert('Echo', mapBase["Echo"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+
+    }catch (e, stac) {
+      Sentry.captureException(e, stackTrace : stac);
+      //debug.log("Erreur", stackTrace: stac);
+    }
+    //mapBase['betes'].
   }
 }
 

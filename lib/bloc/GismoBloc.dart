@@ -6,6 +6,7 @@ import 'package:admob_flutter/admob_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/bloc/GismoRepository.dart';
+import 'package:flutter_gismo/bloc/LocalDataProvider.dart';
 import 'package:flutter_gismo/bloc/WebDataProvider.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -249,6 +250,10 @@ class GismoBloc {
     return this._repository.dataProvider.saveTraitement(traitement);
   }
 
+  Future<String> saveTraitementCollectif(TraitementModel traitement, List<Bete> betes) {
+    return this._repository.dataProvider.saveTraitementCollectif(traitement, betes);
+  }
+
   Future<List<TraitementModel>> getTraitements(Bete bete) {
     return this._repository.dataProvider.getTraitements(bete);
   }
@@ -303,7 +308,8 @@ class GismoBloc {
       return lstEvents;
     }
     catch(e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
     }
   }
 
@@ -343,7 +349,8 @@ class GismoBloc {
       return "Enregistrement effectué";
     }
     catch (e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
       return "Exception";
     }
   }
@@ -377,7 +384,8 @@ class GismoBloc {
       return "Configuration enregistrée";
     }
     catch (e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
       throw e;
     }
 
@@ -394,7 +402,8 @@ class GismoBloc {
       return "Connexion réussie";
     }
     catch (e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
       throw e;
     }
   }
@@ -442,7 +451,8 @@ class GismoBloc {
       return "Enregistrement effectué";
     }
     catch(e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
       return "Une erreur est survenue";
     }
   }
@@ -457,7 +467,8 @@ class GismoBloc {
       return "Enregistrement effectué";
     }
     catch (e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
       return "Une erreur et survenue";
     }
   }
@@ -472,7 +483,8 @@ class GismoBloc {
       return "Enregistrement effectué";
     }
     catch (e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
       return "Une erreur et survenue";
     }
   }
@@ -483,7 +495,8 @@ class GismoBloc {
       return "Enregistrement effectué";
     }
     catch (e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
       return "Une erreur et survenue";
     }
   }
@@ -577,8 +590,12 @@ class GismoBloc {
      Directory backupdir =  Directory(extDir.path + '/backup');
      if ( ! backupdir.existsSync() )
        backupdir.createSync();
-     String backupFile = join(backupdir.path, 'gismo_database_'+ df.format(date) + '.db');
-     File(databaseFile).copy(backupFile);
+     String backupFile = join(backupdir.path, 'gismo_database_'+ df.format(date) + '.json');
+     //File(databaseFile).copy(backupFile);
+     File file = new File(backupFile);
+     file.createSync();
+     String base = await  (this._repository.dataProvider as LocalDataProvider).backupBd();
+     file.writeAsStringSync(base);
    }
 
    void deleleteBackup(String filename) async {
@@ -594,10 +611,13 @@ class GismoBloc {
     final Directory extDir = await getExternalStorageDirectory();
     Directory backupdir =  Directory(extDir.path + '/backup');
     if ( backupdir.existsSync() ) {
+
       String backupFile = join(backupdir.path, filename);
+      /*
       String databasePath = await getDatabasesPath();
-      String databaseFile = join(databasePath , 'gismo_database.db');
-      File(backupFile).copySync(databaseFile);
+      String databaseFile = join(databasePath , 'gismo_database.db');*/
+      await (this._repository.dataProvider as LocalDataProvider).restoreBd(backupFile);
+      // File(backupFile).copySync(databaseFile);
     }
   }
 
