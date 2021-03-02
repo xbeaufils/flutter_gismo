@@ -10,6 +10,7 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/bluetooth.dart';
 import 'package:flutter_gismo/loginPage.dart';
 import 'package:flutter_gismo/parcelle/ParcellePage.dart';
+import 'package:flutter_gismo/traitement/selecttionTraitement.dart';
 import 'package:flutter_gismo/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -58,7 +59,7 @@ class GismoApp extends StatelessWidget {
         '/nec': (context) => SearchPage(this._bloc, GismoPage.etat_corporel),
         '/pesee': (context) => SearchPage(this._bloc, GismoPage.pesee),
         '/search': (context) => SearchPage(this._bloc, GismoPage.individu),
-        '/sanitaire' : (context) => SearchPage(this._bloc, GismoPage.sanitaire),
+        '/sanitaire' : (context) => SelectionPage(this._bloc),
         '/echo' : (context) => SearchPage(this._bloc, GismoPage.echo),
         '/lambing' : (context) => SearchPage(this._bloc, GismoPage.lamb),
         '/lamb' : (context) => SearchLambPage(this._bloc),
