@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/BluetoothWidget.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
@@ -20,6 +21,7 @@ class _BetePageState extends State<BetePage> {
   final df = new DateFormat('dd/MM/yyyy');
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  BluetoothWidget btWidget;
   TextEditingController _dateEntreCtrl = new TextEditingController();
   TextEditingController _numBoucleCtrl = new TextEditingController();
   TextEditingController _numMarquageCtrl = new TextEditingController();
@@ -219,6 +221,7 @@ class _BetePageState extends State<BetePage> {
   @override
   void initState() {
     super.initState();
+    //this.btWidget = new BluetoothWidget(this.widget._bloc);
     if (_bete == null )
       _dateEntreCtrl.text = df.format(selectedDate);
     else {
@@ -230,17 +233,22 @@ class _BetePageState extends State<BetePage> {
       _motif = _bete.motifEntree;
       _obs = _bete.observations;
     }
+
     _bloc.streamBluetooth().listen(
       (BluetoothState event) {
         setState(() {
           _bluetoothState = event.status;
           if (event.status == 'AVAILABLE') {
             String _foundBoucle = event.data;
+            if (_foundBoucle.length > 15)
+              _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
+
             _numBoucleCtrl.text = _foundBoucle.substring(_foundBoucle.length - 5);
             _numMarquageCtrl.text = _foundBoucle.substring(0, _foundBoucle.length - 5);
           }
         });
       });
+
   }
 
   @override
