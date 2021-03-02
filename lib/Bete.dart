@@ -39,21 +39,32 @@ class _BetePageState extends State<BetePage> {
   _BetePageState(this._bloc, this._bete);
 
   Widget _statusBluetoothBar() {
-    List<Widget> status = new List();
-    switch (_bluetoothState ) {
-      case  "NONE":
-        status.add(Icon(Icons.bluetooth));
-        status.add(Text("Non connecté"));
-      break;
-      case "WAITING":
-        status.add(Icon(Icons.bluetooth));
-        status.add(Expanded( child:  LinearProgressIndicator(),) );
-        break;
-      case "AVAILABLE":
-        status.add(Icon(Icons.bluetooth));
-        status.add(Text("Données reçues"));
-    }
-    return Row(children: status,);
+    return FutureBuilder(
+        future: this._bloc.configIsBt(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.none && snapshot.hasData == null) {
+            return Container();
+          }
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return Center(child: CircularProgressIndicator(),);
+          if (! snapshot.data )
+            return Container();
+          List<Widget> status = new List();
+          switch (_bluetoothState ) {
+            case "NONE":
+              status.add(Icon(Icons.bluetooth));
+              status.add(Text("Non connecté"));
+              break;
+            case "WAITING":
+              status.add(Icon(Icons.bluetooth));
+              status.add(Expanded( child: LinearProgressIndicator(),) );
+              break;
+            case "AVAILABLE":
+              status.add(Icon(Icons.bluetooth));
+              status.add(Text("Données reçues"));
+          }
+          return Row(children: status,);
+    });
   }
 
   @override
@@ -233,22 +244,23 @@ class _BetePageState extends State<BetePage> {
       _motif = _bete.motifEntree;
       _obs = _bete.observations;
     }
-
-    _bloc.streamBluetooth().listen(
-      (BluetoothState event) {
-        setState(() {
-          _bluetoothState = event.status;
-          if (event.status == 'AVAILABLE') {
-            String _foundBoucle = event.data;
-            if (_foundBoucle.length > 15)
+    _bloc.configIsBt().then((isBt) => {
+      if (isBt)
+        _bloc.streamBluetooth().listen(
+        (BluetoothState event) {
+          setState(() {
+            _bluetoothState = event.status;
+            if (event.status == 'AVAILABLE') {
+              String _foundBoucle = event.data;
+              if (_foundBoucle.length > 15)
               _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
 
-            _numBoucleCtrl.text = _foundBoucle.substring(_foundBoucle.length - 5);
-            _numMarquageCtrl.text = _foundBoucle.substring(0, _foundBoucle.length - 5);
-          }
-        });
-      });
-
+              _numBoucleCtrl.text = _foundBoucle.substring(_foundBoucle.length - 5);
+              _numMarquageCtrl.text = _foundBoucle.substring(0, _foundBoucle.length - 5);
+            }
+          });
+      })
+    });
   }
 
   @override

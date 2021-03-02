@@ -5,7 +5,6 @@ import 'dart:developer' as debug;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/Sanitaire.dart';
 import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/individu/NECPage.dart';
 import 'package:flutter_gismo/individu/PeseePage.dart';
@@ -65,30 +64,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     this._getBetes();
     super.initState();
     this._startService();
-    try {
-      this.widget._bloc.streamBluetooth().listen(
-              (BluetoothState event) {
-            //debug.log("Stream " + event.toString());
-            setState(() {
-              _bluetoothState = event.status;
-              if (event.status == 'AVAILABLE') {
-                String _foundBoucle = event.data;
-                if (_foundBoucle.length > 15)
-                  _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
-                _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 5);
-                _searchText = _foundBoucle;
-                _filter.text = _foundBoucle;
-                _searchPressed();
-              }
-
-            });
-          });
-
-    } on Exception catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace : stackTrace);
-      debug.log(e.toString());
     }
-  }
 
   @override
   void dispose() {
@@ -112,51 +88,47 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     );
   }
 
+  Widget _statusBluetoothBar()  {
+    return FutureBuilder(
+        future: this._bloc.configIsBt(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.none &&
+            snapshot.hasData == null) {
+            return Container();
+          }
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return Center(child:  CircularProgressIndicator(),);
+          if (! snapshot.data )
+            return Container();
+          List<Widget> status = new List();
+          switch (_bluetoothState) {
+            case "NONE":
+              status.add(Icon(Icons.bluetooth));
+              status.add(Text("Non connecté"));
+              break;
+            case "WAITING":
+              status.add(Icon(Icons.bluetooth));
+              status.add(Expanded(child: LinearProgressIndicator(),));
+              break;
+            case "AVAILABLE":
+              status.add(Icon(Icons.bluetooth));
+              status.add(Text("Données reçues"));
+          }
+          return Row(children: status,);
+        });
+  }
+
   Widget _buildRfid() {
     if (_bloc.isLogged() && this._rfidPresent) {
       return FloatingActionButton(
           child: Icon(Icons.wifi),
-          backgroundColor: _lecteurColor,
+          backgroundColor: Colors.green,
           onPressed: _readRFID);
     }
     else
       return Container();
   }
 
-  void _readBluetooth() async {
-    try {
-      setState(() {
-        _lecteurColor = Colors.red;
-      });
-      this.widget._bloc.streamBluetooth().listen(
-              (BluetoothState event) {
-                //debug.log("Stream " + event.toString());
-                setState(() {
-                  if (event.status == 'NONE')
-                    _lecteurColor = Colors.green;
-                  if (event.status == 'WAITING') {
-                    if (_lecteurColor == Colors.red)
-                      _lecteurColor = Colors.orange;
-                    else
-                      _lecteurColor = Colors.red;
-                  }
-                  if (event.status == 'AVAILABLE') {
-                    _lecteurColor = Colors.green;
-                    String _foundBoucle = event.data.replaceAll("\n", " ");
-                    _foundBoucle = _foundBoucle.replaceAll("\r", '');
-                    _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 5);
-                    _searchText = _foundBoucle;
-                    _filter.text = _foundBoucle;
-                    _searchPressed();
-                  }
-
-                });
-              });
-     } on Exception catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace : stackTrace);
-      debug.log(e.toString());
-    }
-  }
 
   void _readRFID() async {
     try {
@@ -185,6 +157,30 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 }
 
   Future<String> _startService() async{
+    try {
+      if ( await this._bloc.configIsBt())
+        this.widget._bloc.streamBluetooth().listen(
+                (BluetoothState event) {
+              //debug.log("Stream " + event.toString());
+              setState(() {
+                _bluetoothState = event.status;
+                if (event.status == 'AVAILABLE') {
+                  String _foundBoucle = event.data;
+                  if (_foundBoucle.length > 15)
+                    _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
+                  _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 5);
+                  _searchText = _foundBoucle;
+                  _filter.text = _foundBoucle;
+                  _searchPressed();
+                }
+
+              });
+            });
+
+    } on Exception catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      debug.log(e.toString());
+    }
     String start= await PLATFORM_CHANNEL.invokeMethod("start");
     _rfidPresent =  (start == "start");
     return start;
