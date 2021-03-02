@@ -1,3 +1,5 @@
+import 'package:flutter_gismo/model/BeteModel.dart';
+
 class TraitementModel {
   int _idBd;
   String _debut;
@@ -133,5 +135,24 @@ class TraitementModel {
     _motif = result["motif"] ;
     _observation = result["observation"] ;
 
+  }
+}
+
+class TraitementCollectif {
+  List<Bete> betes;
+  TraitementModel traitement;
+
+  TraitementCollectif(this.traitement, this.betes);
+
+  TraitementCollectif.fromResult(result) {
+    betes = result["betes"];
+    traitement = result["traitement"];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data["betes"] = betes;
+    data["traitement"] = traitement;
+    return data;
   }
 }
