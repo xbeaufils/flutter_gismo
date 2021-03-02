@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/Sanitaire.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/individu/PeseePage.dart';
 import 'package:flutter_gismo/lamb/Bouclage.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_gismo/lamb/Mort.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/traitement/Sanitaire.dart';
 
 class LambPage extends StatefulWidget {
   final GismoBloc _bloc;
