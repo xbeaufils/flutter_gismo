@@ -5,6 +5,7 @@ import 'dart:developer' as debug;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Gismo.dart';
+import 'package:flutter_gismo/Sanitaire.dart';
 import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/individu/NECPage.dart';
 import 'package:flutter_gismo/individu/PeseePage.dart';
@@ -24,8 +25,6 @@ class SearchPage extends StatefulWidget {
   SearchPage(this._bloc, this._nextPage, { Key key }) : super(key: key);
   @override
   _SearchPageState createState() => new _SearchPageState(_bloc);
-
-
 }
 
 
@@ -36,8 +35,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GismoBloc _bloc;
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
-  
-  Color _lecteurColor;
+
   String _searchText = "";
   List<Bete> _betes = new List();
   List<Bete> _filteredBetes = new List();
@@ -114,24 +112,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _statusBluetoothBar() {
-    List<Widget> status = new List();
-    switch (_bluetoothState ) {
-      case  "NONE":
-        status.add(Icon(Icons.bluetooth));
-        status.add(Text("Non connecté"));
-        break;
-      case "WAITING":
-        status.add(Icon(Icons.bluetooth));
-        status.add(Expanded( child:  LinearProgressIndicator(),) );
-        break;
-      case "AVAILABLE":
-        status.add(Icon(Icons.bluetooth));
-        status.add(Text("Données reçues"));
-    }
-    return Row(children: status,);
-  }
-
   Widget _buildRfid() {
     if (_bloc.isLogged() && this._rfidPresent) {
       return FloatingActionButton(
@@ -202,7 +182,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       debug.log(e.toString());
     }
 
-  }
+}
 
   Future<String> _startService() async{
     String start= await PLATFORM_CHANNEL.invokeMethod("start");

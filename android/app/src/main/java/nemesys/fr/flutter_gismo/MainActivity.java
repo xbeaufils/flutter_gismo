@@ -77,6 +77,20 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
             } catch (InterruptedException | JSONException e2) {
                 e2.printStackTrace();
             }
+        } else if (call.method.contentEquals("data")) {
+            Log.d(TAG, "onMethodCall: data");
+            try {
+                JSONObject jSONObject = new JSONObject();
+                jSONObject.put("id", id);
+                jSONObject.put("nation", nation);
+                jSONObject.put("boucle", boucle);
+                jSONObject.put("marquage", marquage);
+                Log.d(TAG, "onMethodCall: obj " + jSONObject.toString());
+                result.success(jSONObject.toString());
+            }
+            catch (JSONException e) {
+                result.error("JSON", "Exception JSON", "Exception JSON");
+            }
         } else if (call.method.contentEquals("start")) {
             try {
                 Intent intent2 = new Intent();
@@ -104,17 +118,6 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
             intent3.setComponent(new ComponentName("fr.nemesys.service.rfid", "fr.nemesys.service.rfid.RFIDService"));
             context.stopService(intent3);
         }
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Intent intent = new Intent();
-        //intent.setComponent(new ComponentName("fr.nemesys.allflex", "fr.nemesys.allflex.RFIDService"));
-        intent.setClassName("fr.nemesys.allflex", "fr.nemesys.allflex.RFIDService");
-        //boolean launched = bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        //Log.d(TAG, "onStart: " + launched);
 
     }
 

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:admob_flutter/admob_flutter.dart';
@@ -291,8 +290,7 @@ class GismoBloc {
       return lstEvents;
     }
     catch(e, stackTrace) {
-      Sentry.captureException(e, stackTrace : stackTrace);
-      //this.reportError(e, stackTrace);
+      this.reportError(e, stackTrace);
     }
   }
 
@@ -609,9 +607,7 @@ class GismoBloc {
     final Directory extDir = await getExternalStorageDirectory();
     Directory backupdir =  Directory(extDir.path + '/backup');
     if ( backupdir.existsSync() ) {
-
       String backupFile = join(backupdir.path, filename);
-      /*
       String databasePath = await getDatabasesPath();
       String databaseFile = join(databasePath , 'gismo_database.db');*/
       await (this._repository.dataProvider as LocalDataProvider).restoreBd(backupFile);

@@ -134,13 +134,10 @@ class _LambingPageState extends State<LambingPage> {
                     }
                   ),
                 ),
-
                 SizedBox(
                   height: 200,
                   child: this._lambList() //LambsPage(this._lambing.lambs, _dateAgnelageCtl.text)
                 ),
-
-
                  new Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
