@@ -138,7 +138,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     children: <Widget>[
                       _buildButton("Entree", "assets/home.png", _entreePressed), // Entrée
                       _buildButton("Sortie", "assets/Truck.png", _sortiePressed),
-                      _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
+                    //  _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
                     ]))),
               (this._bloc.isLogged()) ?
                 Container():
