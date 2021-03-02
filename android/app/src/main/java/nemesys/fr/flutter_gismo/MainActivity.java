@@ -497,6 +497,9 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                 case BluetoothState.MESSAGE_TOAST:
                     Log.d(TAG, "handleMessage: MESSAGE_TOAST");
                     dataState = DataState.ERROR;
+                    Bundle bundle = msg.getData();
+                    String message = bundle.getString("TOAST");
+
                     return;
                 case BluetoothState.MESSAGE_READ_RAW:
                     dataBluetoooth = (String) msg.obj;
