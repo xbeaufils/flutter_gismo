@@ -10,7 +10,7 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/bluetooth.dart';
 import 'package:flutter_gismo/loginPage.dart';
 import 'package:flutter_gismo/parcelle/ParcellePage.dart';
-import 'package:flutter_gismo/traitement/selecttionTraitement.dart';
+import 'package:flutter_gismo/traitement/selectionTraitement.dart';
 import 'package:flutter_gismo/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
