@@ -40,9 +40,9 @@ class GismoBloc {
   GismoRepository _repository;
   static const  BLUETOOTH_CHANNEL = const MethodChannel('nemesys.rfid.bluetooth');
 
-  final _sentry = SentryClient(dsn:  "https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553");
+  //final _sentry = SentryClient(dsn:  "https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553");
 
-  get sentry => _sentry;
+  //get sentry => _sentry;
 
   GismoBloc();
   /*
@@ -69,10 +69,7 @@ class GismoBloc {
       print(stackTrace);
     } else {
       // Send the Exception and Stacktrace to Sentry in Production mode.
-      _sentry.captureException(
-        exception: error,
-        stackTrace: stackTrace,
-      );
+      Sentry.captureException(error,stackTrace: stackTrace);
     }
   }
 
@@ -294,7 +291,8 @@ class GismoBloc {
       return lstEvents;
     }
     catch(e, stackTrace) {
-      this.reportError(e, stackTrace);
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
     }
   }
 
