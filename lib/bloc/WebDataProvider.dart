@@ -256,9 +256,25 @@ class WebDataProvider extends DataProvider {
     } on DioError catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
-
   }
 
+  @override
+  Future<String> saveTraitementCollectif (TraitementModel traitement, List<Bete> betes) async {
+    TraitementCollectif col = new TraitementCollectif(traitement, betes);
+    final Map<String, dynamic> data = col.toJson();
+    try {
+      final response = await _dio.post(
+          '/traitement/collectif', data: data);
+      if (response.data['error']) {
+        throw (response.data['error']);
+      }
+      else {
+        return response.data['message'];
+      }
+    } on DioError catch ( e) {
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+  }
   @override
   Future<List<TraitementModel>> getTraitements(Bete bete) async {
     final response = await _dio.get(
