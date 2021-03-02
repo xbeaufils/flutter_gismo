@@ -35,6 +35,7 @@ abstract class DataProvider {
   Future<Bete> getMere(Bete bete);
   // Traitement
   Future<String> saveTraitement(TraitementModel traitement);
+  Future<String> saveTraitementCollectif(TraitementModel traitement, List<Bete> betes);
   Future<String> deleteTraitement(int idBd);
   Future<List<TraitementModel>> getTraitements(Bete bete);
   Future<List<TraitementModel>> getTraitementsForLamb(LambModel lamb);
