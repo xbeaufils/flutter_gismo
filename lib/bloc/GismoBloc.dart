@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:admob_flutter/admob_flutter.dart';
@@ -608,8 +609,6 @@ class GismoBloc {
     Directory backupdir =  Directory(extDir.path + '/backup');
     if ( backupdir.existsSync() ) {
       String backupFile = join(backupdir.path, filename);
-      String databasePath = await getDatabasesPath();
-      String databaseFile = join(databasePath , 'gismo_database.db');*/
       await (this._repository.dataProvider as LocalDataProvider).restoreBd(backupFile);
       // File(backupFile).copySync(databaseFile);
     }

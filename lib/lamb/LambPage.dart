@@ -267,7 +267,7 @@ class LambPageState extends State<LambPage> {
     Bete bete = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => BouclagePage(lamb)),
+          builder: (context) => BouclagePage(lamb, this.widget._bloc)),
     );
     this.widget._bloc.boucler(lamb,bete);
     lamb.idDevenir = bete.idBd;

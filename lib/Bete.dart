@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gismo/BluetoothWidget.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:intl/intl.dart';
+import 'package:sentry/sentry.dart';
 
 
 class BetePage extends StatefulWidget {
@@ -26,15 +30,13 @@ class _BetePageState extends State<BetePage> {
   TextEditingController _numBoucleCtrl = new TextEditingController();
   TextEditingController _numMarquageCtrl = new TextEditingController();
   Bete _bete;
-  //String _numBoucle;
-  //String _numMarquage;
   String _nom;
   String _obs;
   Sex _sex ;
-  //Motif_Entree _motif = Motif_Entree.achat;
   String _motif;
 
-  bool _bluetoothConnected = false;
+  static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
+  bool _rfidPresent = false;
   String _bluetoothState ="NONE";
   _BetePageState(this._bloc, this._bete);
 
@@ -73,7 +75,9 @@ class _BetePageState extends State<BetePage> {
         key: _scaffoldKey,
         appBar: new AppBar(
           title: new Text('Bete'),
+
         ),
+        floatingActionButton: _buildRfid(),
         body: new Container(
           child: new Form(
             key: _formKey,
@@ -177,6 +181,46 @@ class _BetePageState extends State<BetePage> {
 
   }
 
+  Widget _buildRfid() {
+    if (_bloc.isLogged() && this._rfidPresent) {
+      return FloatingActionButton(
+          child: Icon(Icons.wifi),
+          backgroundColor: Colors.green,
+          onPressed: _readRFID);
+    }
+    else
+      return Container();
+  }
+
+  void _readRFID() async {
+    try {
+      String response = await PLATFORM_CHANNEL.invokeMethod("startRead");
+      await Future.delayed(Duration(seconds: 4));
+      response = await PLATFORM_CHANNEL.invokeMethod("data");
+      Map<String, dynamic> mpResponse = jsonDecode(response);
+      if (mpResponse.length > 0) {
+        setState(() {
+          _numMarquageCtrl.text = mpResponse['marquage'];
+          _numBoucleCtrl.text = mpResponse['boucle'];
+        });
+      }
+      else {
+        _showMessage("Pas de boucle lue");
+      }
+    } on PlatformException catch (e) {
+      _showMessage("Pas de boucle lue");
+    } on Exception catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+    }
+  }
+
+  void _showMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+    );
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
   void _save() async {
     _formKey.currentState.save();
     if (_numBoucleCtrl.text == null) {
@@ -244,23 +288,37 @@ class _BetePageState extends State<BetePage> {
       _motif = _bete.motifEntree;
       _obs = _bete.observations;
     }
-    _bloc.configIsBt().then((isBt) => {
-      if (isBt)
-        _bloc.streamBluetooth().listen(
-        (BluetoothState event) {
-          setState(() {
-            _bluetoothState = event.status;
-            if (event.status == 'AVAILABLE') {
-              String _foundBoucle = event.data;
-              if (_foundBoucle.length > 15)
-              _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
+    this._startService();
+  }
 
-              _numBoucleCtrl.text = _foundBoucle.substring(_foundBoucle.length - 5);
-              _numMarquageCtrl.text = _foundBoucle.substring(0, _foundBoucle.length - 5);
-            }
-          });
-      })
+  Future<String> _startService() async{
+    try {
+      if ( await this._bloc.configIsBt()) {
+        //this._bluetoothStream.listen((BluetoothState event) { })
+        this.widget._bloc.streamBluetooth().listen(
+                (BluetoothState event) {
+                  if (_bluetoothState != event.status)
+                    setState(() {
+                      _bluetoothState = event.status;
+                      if (event.status == 'AVAILABLE') {
+                        String _foundBoucle = event.data;
+                        if (_foundBoucle.length > 15)
+                          _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
+
+                        _numBoucleCtrl.text = _foundBoucle.substring(_foundBoucle.length - 5);
+                        _numMarquageCtrl.text = _foundBoucle.substring(0, _foundBoucle.length - 5);
+                      }
+                    });
+                  });
+      }
+    } on Exception catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+    }
+    String start= await PLATFORM_CHANNEL.invokeMethod("start");
+    setState(() {
+      _rfidPresent =  (start == "start");
     });
+    return start;
   }
 
   @override

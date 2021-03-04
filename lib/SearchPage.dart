@@ -39,6 +39,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   List<Bete> _betes = new List();
   List<Bete> _filteredBetes = new List();
 
+  Stream _bluetoothStream;
   String _bluetoothState ="NONE";
   bool _rfidPresent = false;
   Icon _searchIcon = new Icon(Icons.search);
@@ -83,8 +84,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             Expanded(child: _buildList() ),
           ],
         ),
-    floatingActionButton: _buildRfid(),
-    resizeToAvoidBottomPadding: false,
+      floatingActionButton: _buildRfid(),
+      resizeToAvoidBottomPadding: false,
     );
   }
 
@@ -97,7 +98,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             return Container();
           }
           if (snapshot.connectionState == ConnectionState.waiting)
-            return Center(child:  CircularProgressIndicator(),);
+            return Container();
           if (! snapshot.data )
             return Container();
           List<Widget> status = new List();
@@ -154,29 +155,32 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       debug.log(e.toString());
     }
 
-}
+  }
 
   Future<String> _startService() async{
     try {
-      if ( await this._bloc.configIsBt())
+      if ( await this._bloc.configIsBt()) {
+        this._bluetoothStream = this.widget._bloc.streamBluetooth();
+        //this._bluetoothStream.listen((BluetoothState event) { })
         this.widget._bloc.streamBluetooth().listen(
                 (BluetoothState event) {
-              //debug.log("Stream " + event.toString());
-              setState(() {
-                _bluetoothState = event.status;
-                if (event.status == 'AVAILABLE') {
-                  String _foundBoucle = event.data;
-                  if (_foundBoucle.length > 15)
-                    _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
-                  _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 5);
-                  _searchText = _foundBoucle;
-                  _filter.text = _foundBoucle;
-                  _searchPressed();
-                }
-
-              });
-            });
-
+                  if (_bluetoothState != event.status)
+                    setState(() {
+                    _bluetoothState = event.status;
+                    if (event.status == 'AVAILABLE') {
+                      String _foundBoucle = event.data;
+                      if (_foundBoucle.length > 15)
+                        _foundBoucle =
+                            _foundBoucle.substring(_foundBoucle.length - 15);
+                      _foundBoucle =
+                          _foundBoucle.substring(_foundBoucle.length - 5);
+                      _searchText = _foundBoucle;
+                      _filter.text = _foundBoucle;
+                      _searchPressed();
+                    }
+                  });
+                });
+      }
     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       debug.log(e.toString());
@@ -276,7 +280,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       content: Text(message),
     );
     _scaffoldKey.currentState.showSnackBar(snackBar);
-
   }
 
   void _searchPressed() {
