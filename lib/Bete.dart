@@ -41,6 +41,8 @@ class _BetePageState extends State<BetePage> {
   _BetePageState(this._bloc, this._bete);
 
   Widget _statusBluetoothBar() {
+    if (! this._bloc.isLogged())
+      return Container();
     return FutureBuilder(
         future: this._bloc.configIsBt(),
         builder: (context, AsyncSnapshot snapshot) {
@@ -288,7 +290,8 @@ class _BetePageState extends State<BetePage> {
       _motif = _bete.motifEntree;
       _obs = _bete.observations;
     }
-    this._startService();
+    if (this._bloc.isLogged())
+      this._startService();
   }
 
   Future<String> _startService() async{

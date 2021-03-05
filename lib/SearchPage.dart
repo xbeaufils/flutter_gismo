@@ -64,7 +64,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   void initState() {
     this._getBetes();
     super.initState();
-    this._startService();
+    if (this._bloc.isLogged())
+      this._startService();
     }
 
   @override
@@ -90,6 +91,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   Widget _statusBluetoothBar()  {
+    if ( ! this._bloc.isLogged())
+      return Container();
     return FutureBuilder(
         future: this._bloc.configIsBt(),
         builder: (context, AsyncSnapshot snapshot) {

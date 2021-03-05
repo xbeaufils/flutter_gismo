@@ -104,7 +104,8 @@ class _BouclagePageState extends State<BouclagePage> {
 
   @override
   void initState() {
-    this._startService();
+    if (this._bloc.isLogged())
+      this._startService();
   }
 
   Widget _buildRfid() {
@@ -119,6 +120,8 @@ class _BouclagePageState extends State<BouclagePage> {
   }
 
   Widget _statusBluetoothBar() {
+    if (! this._bloc.isLogged())
+      return Container();
     return FutureBuilder(
         future: this._bloc.configIsBt(),
         builder: (context, AsyncSnapshot snapshot) {
