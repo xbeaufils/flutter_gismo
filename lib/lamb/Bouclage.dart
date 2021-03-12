@@ -176,6 +176,7 @@ class _BouclagePageState extends State<BouclagePage> {
   void dispose() {
     _numBoucleCtrl.dispose();
     _numMarquageCtrl.dispose();
+    this.widget._bloc.stopBluetooth();
     super.dispose();
 
   }

@@ -329,6 +329,7 @@ class _BetePageState extends State<BetePage> {
     // other dispose methods
     _numBoucleCtrl.dispose();
     _numMarquageCtrl.dispose();
+    this._bloc.stopBluetooth();
     super.dispose();
   }
 

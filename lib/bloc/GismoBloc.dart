@@ -118,9 +118,14 @@ class GismoBloc {
           i = 100; // Sortie du while
         i++;
       }
+      await BLUETOOTH_CHANNEL.invokeMethod("stopBlueTooth");
     } on PlatformException catch(e) {
       debug.log("Erreur ", error: e );
     }
+  }
+
+  void stopBluetooth() {
+    BLUETOOTH_CHANNEL.invokeMethod("stopBlueTooth");
   }
 
   Future<String> init() async {

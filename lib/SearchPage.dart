@@ -71,6 +71,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   @override
   void dispose() {
     PLATFORM_CHANNEL.invokeMethod<String>('stop');
+    this._bloc.stopBluetooth();
     super.dispose();
   }
 
