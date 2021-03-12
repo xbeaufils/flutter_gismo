@@ -213,6 +213,8 @@ public class BluetoothSerial {
             Log.i(BluetoothSerial.TAG, "[ConnectThread::run]SocketType:" + this.mSocketType);
             sendLog("[ConnectThread::run] BEGIN mConnectThread SocketType:" + this.mSocketType);
             setName("ConnectThread" + this.mSocketType);
+            if (BluetoothSerial.this.mmSocket == null)
+                return;
             //if ( ! BuildConfig.DEBUG) {
                 BluetoothSerial.this.mAdapter.cancelDiscovery();
                 try {

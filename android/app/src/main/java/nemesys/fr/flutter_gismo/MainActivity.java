@@ -1,7 +1,9 @@
 package nemesys.fr.flutter_gismo;
 
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -21,10 +23,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import io.flutter.BuildConfig;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -168,19 +175,25 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
     }
 
     public class MethodChannelHdlBlueTooth implements   MethodChannel.MethodCallHandler {
-        BluetoothHandlerThread btHandlerThread;
-
+        //BluetoothHandlerThread btHandlerThread = new BluetoothHandlerThread("bluetooth");
+        HandlerThread  btHandlerThread = new HandlerThread("bluetooth");
+        BluetoothRun runBluetooth;
         public MethodChannelHdlBlueTooth() {
-            this.btHandlerThread = new BluetoothHandlerThread("bluetooth");
+            //this.btHandlerThread = new BluetoothHandlerThread("bluetooth");
             this.btHandlerThread.start();
         }
 
         @Override
         public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
+            /*if (this.btHandlerThread != null)
+                this.btHandlerThread.quit();
+            this.btHandlerThread = new BluetoothHandlerThread("bluetooth");
+            this.btHandlerThread.start();*/
             if (call.method.contentEquals("readBlueTooth")) {
                 String address = (String) call.argument("address");
                 BluetoothHandler handler = new BluetoothHandler(btHandlerThread.getLooper());
-                handler.post(new BluetoothRun(address, handler));
+                runBluetooth = new BluetoothRun(address, handler);
+                handler.post(runBluetooth);
                 result.success("{ \"status\" : \"STARTED\"}");
                 //address = "08:DF:1F:A8:3D:7E";
             } else if (call.method.contentEquals("dataBlueTooth")) {
@@ -220,6 +233,9 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                 }
                 result.success(devicesJson.toString());
             }
+            else if (call.method.contentEquals("stopBlueTooth")) {
+                this.runBluetooth.cancel();
+            }
         }
     }
 
@@ -250,25 +266,25 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         }
 
         @Override
+        public boolean quit() {
+            return super.quit();
+        }
+
+        @Override
         protected void onLooperPrepared() {
             //initHandler();
         }
-    }
-
-    public class BluetoothRun implements  Runnable {
-
+/*
         private String address;
         private Handler handler;
+        private BluetoothSerial bluetooth;
 
-        public BluetoothRun(String address, Handler handler) {
-            this.address = address;
-            this.handler = handler;
-        }
         @Override
         public void run() {
+            Log.d("BluetoothRun", "debut");
             MainActivity.this.latch = new CountDownLatch(1);
             dataState = DataState.WAITING;
-            BluetoothSerial bluetooth = new BluetoothSerial(this.handler);
+            bluetooth = new BluetoothSerial(this.handler);
             bluetooth.connect(this.address);
             boolean completed = false;
             try {
@@ -277,13 +293,123 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                 e.printStackTrace();
                 Sentry.captureException(e);
             }
+            Log.d("BluetoothRun", "End " + completed);
+            if (completed)
+                dataState = DataState.AVAILABLE;
+            else
+                dataState = DataState.NONE;
+        }*/
+    }
+
+    public class BluetoothRun extends  Thread {
+
+        private final static String TAG = "BluetoothRun" ;
+        private String address;
+        private Handler handler;
+        private BluetoothSerial bluetooth;
+        public final BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
+        public String deviceName;
+
+        BluetoothReader reader;
+        private BluetoothDevice mmDevice;
+        private BluetoothSocket mmSocket;
+
+        public BluetoothRun(String address, Handler handler) {
+            this.address = address;
+            this.handler = handler;
+            mmDevice = this.mAdapter.getRemoteDevice(address);
+            this.deviceName = mmDevice.getName();
+        }
+
+        public void cancel() {
+            if (reader != null)
+                reader.cancel();
+            latch.countDown();
+        }
+
+        public void connect() {
+            BluetoothSocket tmp = null;
+            //this.mSocketType = secure ? "Secure" : "Insecure";
+            //if (! BuildConfig.DEBUG) {
+            try {
+              //  if (secure) {
+                    tmp = mmDevice.createRfcommSocketToServiceRecord( BluetoothSerial.UUID_SPP);
+               /* } else {
+                    tmp = mmDevice.createInsecureRfcommSocketToServiceRecord(BluetoothSerial.UUID_SPP);
+                }*/
+            } catch (IOException e) {
+                Log.e(BluetoothRun.TAG, "Socket create() failed", e);
+                //sendLog("[ConnectThread::ConnectThread] Socket Type: " + this.mSocketType + "create() failed" + this.mSocketType);
+                Sentry.captureException(e);
+            }
+            //}
+            this.mmSocket = tmp;
+            if (this.mmSocket == null) {
+                stateBluetooth = MainActivity.State.NONE;
+                return;
+            }
+            //if ( ! BuildConfig.DEBUG) {
+            this.mAdapter.cancelDiscovery();
+            try {
+                Log.i(BluetoothRun.TAG, "Connecting to socket...");
+                this.mmSocket.connect();
+                Log.i(BluetoothRun.TAG, "Connected");
+                stateBluetooth = MainActivity.State.CONNECTED;
+                //BluetoothSerial.this.setState(BluetoothSerial.STATE_CONNECTED);
+                reader = new BluetoothReader(this.mmSocket, this.handler);
+                reader.start();
+            } catch (IOException e) {
+                Log.e(BluetoothRun.TAG, e.toString());
+                Sentry.captureException(e);
+                /*
+                try {
+                    Log.i(BluetoothRun.TAG, "Trying fallback...");
+                    this.mmSocket = (BluetoothSocket) this.mmDevice.getClass().getMethod("createRfcommSocket", new Class[]{Integer.TYPE}).invoke(this.mmDevice, new Object[]{1});
+                    this.mmSocket.connect();
+                    this.setState(BluetoothSerial.STATE_CONNECTED);
+                    Log.i(BluetoothRun.TAG, "Connected");
+                } catch (Exception e2) {
+                    Log.e(BluetoothRun.TAG, "Couldn't establish a Bluetooth connection.");
+                    Sentry.captureException(e);
+                    try {
+                        this.mmSocket.close();
+                    } catch (IOException e3) {
+                        Log.e(BluetoothRun.TAG, "unable to close() " + this.mSocketType + " socket during connection failure", e3);
+                        Sentry.captureException(e);
+                    }
+                    BluetoothSerial.this.connectionFailed();
+                    return;
+                }*/
+            }
+           // BluetoothSerial.this.connected(this.mmSocket, this.mmDevice, this.mSocketType);
+        }
+
+        @Override
+        public void run() {
+            Log.d("BluetoothRun", "debut");
+            MainActivity.this.latch = new CountDownLatch(1);
+            dataState = DataState.WAITING;
+            //bluetooth = new BluetoothSerial(this.handler);
+            //bluetooth.connect(this.address);
+            this.connect();
+            boolean completed = false;
+            try {
+//                Log.d(TAG, "run: Wait start " + LocalTime.now().toString());
+                completed = latch.await(10, TimeUnit.SECONDS);
+//                Log.d(TAG, "run: Wait end " + LocalTime.now().toString());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                completed  = false;
+                Sentry.captureException(e);
+            }
+            Log.d("BluetoothRun", "End " + completed);
             if (completed)
                 dataState = DataState.AVAILABLE;
             else
                 dataState = DataState.NONE;
         }
-
     }
+
 
     public class BluetoothHandler extends Handler {
         public BluetoothHandler(Looper looper) {
