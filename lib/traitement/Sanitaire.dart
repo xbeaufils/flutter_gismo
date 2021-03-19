@@ -268,6 +268,7 @@ class _SanitairePageState extends State<SanitairePage> {
 
   @override
   void initState() {
+    DateTime selectedDate = DateTime.now();
     super.initState();
     if (this.widget._currentTraitement != null) {
       _dateDebutCtl.text = this.widget._currentTraitement.debut ;
@@ -280,6 +281,10 @@ class _SanitairePageState extends State<SanitairePage> {
       _ordonnanceCtl.text = this.widget._currentTraitement.ordonnance  ;
       _rythmeCtl.text = this.widget._currentTraitement.rythme ;
       _voieCtl.text = this.widget._currentTraitement.voie  ;
+    }
+    else {
+      _dateDebutCtl.text = df.format(selectedDate);
+      _dateFinCtl.text = df.format(selectedDate);
     }
   }
 /*
