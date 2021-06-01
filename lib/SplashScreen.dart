@@ -1,12 +1,10 @@
 import 'dart:io';
 
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/ConfigPage.dart';
 import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
-//import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/welcome.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -73,7 +71,7 @@ class SplashScreenState extends State<SplashScreen> {
       body:
       new Center(
         child:
-        new Image(image: AssetImage('assets/gismo.png')),
+        new Image(image: AssetImage('assets/amalthe.png' /*+ this._bloc.flavor.splashAsset*/)),
         ),
 
       );

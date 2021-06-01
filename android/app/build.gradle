@@ -47,7 +47,22 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
+    flavorDimensions "app"
+    productFlavors {
+        ovin {
+            dimension "app"
+            applicationId "nemesys.fr.flutter_gismo"
+            versionCode flutterVersionCode.toInteger()
+            versionName flutterVersionName
+        }
 
+        caprin {
+            dimension "app"
+            applicationId "nemesys.fr.amalthe"
+            versionCode flutterVersionCode.toInteger()
+            versionName flutterVersionName
+        }
+    }
     signingConfigs {
         release {
             keyAlias keystoreProperties['keyAlias']
@@ -84,6 +99,7 @@ android {
 
 dependencies {
     implementation 'io.sentry:sentry-android:4.2.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
 }
 flutter {
     source '../..'

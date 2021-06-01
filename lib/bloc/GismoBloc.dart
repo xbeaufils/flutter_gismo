@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gismo/bloc/GismoRepository.dart';
 import 'package:flutter_gismo/bloc/LocalDataProvider.dart';
 import 'package:flutter_gismo/bloc/WebDataProvider.dart';
+import 'package:flutter_gismo/flavor/Flavor.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
@@ -38,13 +39,21 @@ class GismoBloc {
 
   User _currentUser;
   GismoRepository _repository;
+  final Flavor _flavor;
   static const  BLUETOOTH_CHANNEL = const MethodChannel('nemesys.rfid.bluetooth');
-
+  static const CHANNEL_GPS = const MethodChannel( "nemesys.gps");
   //final _sentry = SentryClient(dsn:  "https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553");
 
   //get sentry => _sentry;
+  bool _isLocated;
 
-  GismoBloc();
+  bool get isLocated => _isLocated;
+
+  set isLocated(bool value) {
+    _isLocated = value;
+  }
+
+  GismoBloc(this._flavor);
   /*
   Gestion des exceptions avec sentry
    */
@@ -128,6 +137,27 @@ class GismoBloc {
     BLUETOOTH_CHANNEL.invokeMethod("stopBlueTooth");
   }
 
+  Stream<LocationData> streamLocation() async* {
+    String status = await CHANNEL_GPS.invokeMethod("startPosition");
+    debug.log("[streamLocation] Status " + status);
+    while (this.isLocated) {
+      await Future.delayed(Duration(seconds: 1));
+      String locationString = await CHANNEL_GPS.invokeMethod("readPosition");
+      if (locationString == null)
+        debug.log("Location is null");
+      else {
+        debug.log("Location " + locationString);
+        const JsonDecoder decoder = JsonDecoder();
+        //var toto =  decoder.convert(locationString);
+        var locationJson = decoder.convert(locationString);
+        LocationData location;
+        yield location = LocationData.fromMap(locationJson.cast<String, double>());
+      }
+    }
+    await CHANNEL_GPS.invokeMethod("stopPosition");
+    debug.log("End of streamLocation");
+  }
+
   Future<String> init() async {
     // Read value
     FlutterSecureStorage storage = new FlutterSecureStorage();
@@ -179,6 +209,9 @@ class GismoBloc {
   }
 
    final dio = new Dio();
+
+
+  Flavor get flavor => _flavor;
 
   User get user => _currentUser;
   void setUser(User user) {

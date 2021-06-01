@@ -18,7 +18,7 @@ import 'package:sentry/sentry.dart';
 
 class SearchPage extends StatefulWidget {
   final GismoBloc _bloc;
-  GismoPage _nextPage;
+  final GismoPage _nextPage;
   Sex searchSex;
   get nextPage => _nextPage;
   SearchPage(this._bloc, this._nextPage, { Key key }) : super(key: key);
@@ -39,7 +39,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   List<Bete> _betes = new List();
   List<Bete> _filteredBetes = new List();
 
-  Stream _bluetoothStream;
   String _bluetoothState ="NONE";
   bool _rfidPresent = false;
   Icon _searchIcon = new Icon(Icons.search);
@@ -164,11 +163,9 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   Future<String> _startService() async{
     try {
       if ( await this._bloc.configIsBt()) {
-        this._bluetoothStream = this.widget._bloc.streamBluetooth();
-        //this._bluetoothStream.listen((BluetoothState event) { })
         this.widget._bloc.streamBluetooth().listen(
                 (BluetoothState event) {
-                  if (_bluetoothState != event.status)
+                  if (_bluetoothState != event.status && this.mounted)
                     setState(() {
                     _bluetoothState = event.status;
                     if (event.status == 'AVAILABLE') {
@@ -324,12 +321,13 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
    }
 
    void fillList(List<Bete> lstBetes) {
-    setState(() {
-      _betes = lstBetes;
-      //names.shuffle();
-      _filteredBetes = _betes;
-    });
-
+    if (this.mounted) {
+      setState(() {
+        _betes = lstBetes;
+        //names.shuffle();
+        _filteredBetes = _betes;
+      });
+    }
   }
 
 }

@@ -47,7 +47,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
                 ListTile(
                   title: Text(_bete.numBoucle + " " + _bete.numMarquage),
                   subtitle: (_bete.dateEntree!= null) ? Text(_bete.dateEntree): null,
-                  leading: Image.asset("assets/brebis.png") ,
+                  leading: Image.asset( 'assets/' + _bloc.flavor.individuAsset) ,
                   trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: _openIdentityDialog, ),)
                 ,),
               _getMere(),
@@ -68,7 +68,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
             return Container();
           return Card(
             child: ListTile(
-              leading: Image.asset("assets/sheep_lamb.png"),
+              leading: Image.asset("assets/" + this._bloc.flavor.parentAsset),
               title: Text(mere.data.numBoucle + " " + mere.data.numMarquage),
               subtitle: Text(mere.data.dateEntree),
               trailing: IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _viewMere(mere.data), )),

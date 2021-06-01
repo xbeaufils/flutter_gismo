@@ -83,7 +83,7 @@ class _WelcomePageState extends State<WelcomePage> {
         ],
         appBar: new AppBar(
             title: (_bloc.user != null) ?
-              new Text('Gismo ' + _bloc.user.cheptel):
+              new Text(  this._bloc.flavor.appName + ' ' + _bloc.user.cheptel):
               new Text('Erreur de connexion'),
             // N'affiche pas la touche back (qui revient à la SplashScreen
             automaticallyImplyLeading: false,
@@ -101,8 +101,8 @@ class _WelcomePageState extends State<WelcomePage> {
                     buttonMinWidth: 90.0,
                     children: <Widget>[
                       _buildButton("Parcelles", "assets/parcelles.png", _parcellePressed),
-                      _buildButton("Lot", "assets/Lot.png",_lotPressed),
-                      _buildButton("Individu", "assets/brebis.png", _individuPressed),
+                      _buildButton("Lot",  "assets/" + this._bloc.flavor.lotAsset,_lotPressed),
+                      _buildButton("Individu", "assets/" + this._bloc.flavor.individuAsset, _individuPressed),
                     ]))),
               Card(
                 child:  SingleChildScrollView (
@@ -113,8 +113,8 @@ class _WelcomePageState extends State<WelcomePage> {
                     buttonMinWidth: 90.0,
                     children: <Widget>[
                       _buildButton("Echographie", 'assets/ultrasound.png', _echoPressed),
-                      _buildButton("Agnelage", 'assets/lamb.png', _lambingPressed),
-                      _buildButton("Agneaux", 'assets/jumping_lambs.png', _lambPressed),
+                      _buildButton( this._bloc.flavor.miseBasLibelle , 'assets/' + this._bloc.flavor.miseBasAsset, _lambingPressed),
+                      _buildButton( this._bloc.flavor.enfantLibelle, 'assets/' + this._bloc.flavor.enfantAsset, _lambPressed),
                     ]))),
               Card(
                 child: SingleChildScrollView (

@@ -5,6 +5,8 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/parcelle/PaturagePage.dart';
@@ -61,21 +63,24 @@ class _ParcellePageState extends State<ParcellePage> {
   Line _selectedLine;
   List<Parcelle> _myParcelles;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  /*
-  MapBox
-   */
   MapboxMapController _mapController;
   MapboxMap _mapBox;
 
   void _onMapCreated(MapboxMapController controller) {
     _mapController = controller;
+    _getCurrentLatLng().then( (location) => {
+        _drawParcelles(location)
+    }).catchError((error, stackTrace) {
+      // error is SecondError
+      debug.log("outer: $error", name:"_ParcellePageState::_onMapCreated");
+    });
      //mapController.addLine(options);
-    _getLocation().then( (location) => { _drawParcelles(location) })
+    /*_getLocation().then( (location) => { _drawParcelles(location) })
         .catchError((error, stackTrace) {
         // error is SecondError
         debug.log("outer: $error", name:"_ParcellePageState::_onMapCreated");
         }   );
-
+    */
   }
 
   @override
@@ -92,55 +97,7 @@ class _ParcellePageState extends State<ParcellePage> {
       //_mapBoxView()
     );
   }
-/*
-  Widget _leaflet() {
-    return new FlutterMap(
-      options: new MapOptions(
-        center: new LatLng(45.2618, 5.7348),
-        zoom: 13.0,
-      ),
-      layers: [
-        new TileLayerOptions(
-          urlTemplate: //"https://api.tiles.mapbox.com/v4/"
-              //"{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
-            //"https://wxs.ign.fr/{ignKey}/geoportail/wmts",
-            "https://wxs.ign.fr/{ignKey}/geoportail/wmts?"
-            "service=WMTS"
-            "&request=GetTile"
-            "&version=1.0.0"
-                "&layer=CADASTRALPARCELS.PARCELS"
-                "&style=bdparcellaire_o"
-                "&tilematrixSet=PM"
-                "&format=image/png"
-                "&height=256"
-                "&width=256"
-                "&tilematrix=16"
-                "&tilerow=23508"
-                "&tilecol=33815",
-        additionalOptions: {
-           'ignKey': 'mv1g555wk9ot6na1nux9u7go',
-          'debug': 'true',
-            'layer': 'ORTHOIMAGERY.ORTHOPHOTOS',
-          },
-        ),
-        new MarkerLayerOptions(
-          markers: [
-            new Marker(
-              width: 80.0,
-              height: 80.0,
-              point: new LatLng(45.2618, 5.7348),
-              builder: (ctx) =>
-              new Container(
-                child: new FlutterLogo(),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
 
- */
 
   Widget _webView() {
     /*
@@ -212,8 +169,8 @@ class _ParcellePageState extends State<ParcellePage> {
       onMapClick: _onMapClick,
       //cameraTargetBounds: ,
       myLocationEnabled: true,
-        styleString: MapboxStyles.SATELLITE,
-        initialCameraPosition: const CameraPosition(target: LatLng(45.26, 5.73), zoom: 14),
+      styleString: MapboxStyles.SATELLITE,
+      initialCameraPosition: const CameraPosition(target: LatLng(45.26, 5.73), zoom: 14),
     );
     return _mapBox;
   }
@@ -230,10 +187,9 @@ class _ParcellePageState extends State<ParcellePage> {
     String cadastreStr = await _bloc.getCadastre(location);
     Map<String, dynamic> cadastreJson =  jsonDecode(cadastreStr);
     List<dynamic> featuresJson = cadastreJson['features'];
-   featuresJson.forEach((feature) => _drawParcelle(feature));
-   //_mapController.onLineTapped.add(_onLineTapped);
+    featuresJson.forEach((feature) => _drawParcelle(feature));
+    //_mapController.onLineTapped.add(_onLineTapped);
     OnMapClickCallback getParcelle = _onMapClick;
-
   }
 
   void _onMapClick(Point<double> pt, LatLng coord) async {
@@ -306,12 +262,28 @@ class _ParcellePageState extends State<ParcellePage> {
       ),
     );
   }
+
   void _updateSelectedLine(LineOptions changes) {
     _mapController.updateLine(_selectedLine, changes);
   }
 
   @override
   void initState() {
+    this._bloc.isLocated= true;
+    /*
+    this._bloc.streamLocation().listen(
+            (LocationData event) {
+              LatLng location = LatLng(event.latitude, event.longitude);
+              _mapController.moveCamera(CameraUpdate.newLatLng(LatLng(event.latitude, event.longitude)));
+              debug.log("Position " + event.latitude.toString() + " " + event.longitude.toString() );
+            });
+     */
+  }
+
+  @override
+  void dispose() {
+    this._bloc.isLocated = false;
+    super.dispose();
   }
 
   List<LatLng> _buildList(List coordinates) {
@@ -326,6 +298,43 @@ class _ParcellePageState extends State<ParcellePage> {
     double lat = coordinate[1];
     double lng = coordinate[0];
     return new LatLng(lat, lng);
+  }
+
+  static const CHANNEL_GPS = const MethodChannel( "nemesys.gps");
+  bool _isLocated;
+
+  Future<LocationData> _getCurrentLatLng()  async {
+    String status = await CHANNEL_GPS.invokeMethod("startPosition");
+    _isLocated = false;
+    LocationData location;
+    debug.log("[streamLocation] Status " + status);
+    while ( ! this._isLocated) {
+      await Future.delayed(Duration(seconds: 1));
+      String locationString = await CHANNEL_GPS.invokeMethod("readPosition");
+      if (locationString == null)
+        debug.log("Location is null");
+      else {
+        debug.log("Location " + locationString);
+        const JsonDecoder decoder = JsonDecoder();
+        var locationJson = decoder.convert(locationString);
+        location = LocationData.fromMap(locationJson.cast<String, double>());
+        _isLocated = true;
+      }
+    }
+    await CHANNEL_GPS.invokeMethod("stopPosition");
+    //if (location.latitude == 30.643029 && location.longitude == 109.304741) {
+      Map<String, double> dataMap = new Map();
+      dataMap["latitude"] = 45.262127;
+      dataMap['longitude'] = 5.737683;
+      location = LocationData.fromMap(dataMap);
+    //}
+    return location;
+  }
+  double calculateDistance(lat1, lon1, lat2, lon2){
+
+    var p = 0.017453292519943295;
+    var a = 0.5 - cos((lat2 - lat1) * p)/2 + cos(lat1 * p) * cos(lat2 * p) * (1 - cos((lon2 - lon1) * p))/2;
+    return 12742 * asin(sqrt(a));
   }
 
   Future<LocationData> _getLocation() async{
