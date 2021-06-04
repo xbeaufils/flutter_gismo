@@ -210,6 +210,7 @@ class _ParcellePageState extends State<ParcellePage> {
   Widget _mapBoxView() {
     //MapboxMap map = new MapboxMap(initialCameraPosition: null);
     _mapBox =  MapboxMap(
+      accessToken: 'pk.eyJ1IjoieGJlYXUiLCJhIjoiY2s4anVjamdwMGVsdDNucDlwZ2I0bGJwNSJ9.lc21my1ozaQZ2-EriDSY5w',
       onMapCreated: _onMapCreated,
       onMapClick: _onMapClick,
       //cameraTargetBounds: ,

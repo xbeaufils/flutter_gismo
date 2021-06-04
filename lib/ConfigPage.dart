@@ -33,7 +33,7 @@ class _ConfigPageState extends State<ConfigPage> {
   final _tokenCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
 
-    void switched(value) {
+  void switched(value) {
     this.setState(() {
       this._isSubscribed = value;
       if (this._isSubscribed)

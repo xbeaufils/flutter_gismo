@@ -19,7 +19,7 @@ import 'package:sentry/sentry.dart';
 class SearchPage extends StatefulWidget {
   final GismoBloc _bloc;
   GismoPage _nextPage;
-  late Sex searchSex;
+  Sex ? searchSex;
   get nextPage => _nextPage;
   SearchPage(this._bloc, this._nextPage, { Key? key }) : super(key: key);
   @override
@@ -311,15 +311,20 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   void _getBetes() async {
     List<Bete> ? lstBetes ;
-    switch (this.widget.searchSex ) {
-      case Sex.femelle:
-        lstBetes = await this._bloc.getBrebis();
-        break;
-      case Sex.male :
-        lstBetes = await this._bloc.getBeliers();
-        break;
-      default :
-        lstBetes = await this._bloc.getBetes();
+    if (this.widget.searchSex == null) {
+      lstBetes = await this._bloc.getBetes();
+    }
+    else {
+      switch (this.widget.searchSex) {
+        case Sex.femelle:
+          lstBetes = await this._bloc.getBrebis();
+          break;
+        case Sex.male :
+          lstBetes = await this._bloc.getBeliers();
+          break;
+        default :
+          lstBetes = await this._bloc.getBetes();
+      }
     }
     fillList(lstBetes);
    }

@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:admob_flutter/admob_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/ConfigPage.dart';
 import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/loginPage.dart';
 //import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/welcome.dart';
 
@@ -27,10 +29,8 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   void initState()  {
     debug.log("initState" , name: "SplashScreenState:initState");
-    super.initState();
     this._bloc.init().then( (message) => route(message))
         .catchError( (e)  {_initError(e);});
-    //route(null);
   }
 
   void _initError(e) {
