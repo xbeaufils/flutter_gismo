@@ -1,14 +1,14 @@
 class Report {
- String cheptel;
- int betes;
- int agnelages;
- int agneaux;
- int sorties;
- int entrees;
- int traitements;
- int nec;
- int lots;
- int affectations;
+ late String cheptel;
+ late int betes;
+ late int agnelages;
+ late int agneaux;
+ late int sorties;
+ late int entrees;
+ late int traitements;
+ late int nec;
+ late int lots;
+ late int affectations;
 
  Map<String, dynamic> toJson() {
    final Map<String, dynamic> data = new Map<String, dynamic>();

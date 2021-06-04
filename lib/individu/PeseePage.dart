@@ -6,8 +6,8 @@ import 'package:intl/intl.dart';
 
 class PeseePage extends StatefulWidget {
   final GismoBloc _bloc;
-  final Bete _bete;
-  final LambModel _lamb;
+  final Bete ? _bete;
+  final LambModel ? _lamb;
 
   @override
   PeseePageState createState() => PeseePageState(this._bloc);
@@ -43,16 +43,16 @@ class PeseePageState extends State<PeseePage> {
                     labelText: "Date de pesée",
                     hintText: 'jj/mm/aaaa'),
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return "Pas de date de pesée";
                   }},
                 onSaved: (value) {
                   setState(() {
-                    _datePeseeCtl.text = value;
+                    _datePeseeCtl.text = value!;
                   });
                 },
                 onTap: () async{
-                  DateTime date = DateTime.now();
+                  DateTime ? date = DateTime.now();
                   FocusScope.of(context).requestFocus(new FocusNode());
                   date = await showDatePicker(
                       locale: const Locale("fr","FR"),
@@ -62,7 +62,7 @@ class PeseePageState extends State<PeseePage> {
                       lastDate: DateTime(2100));
                   if (date != null) {
                     setState(() {
-                      _datePeseeCtl.text = _df.format(date);
+                      _datePeseeCtl.text = _df.format(date!);
                     });
                   }
                 }),
@@ -73,12 +73,12 @@ class PeseePageState extends State<PeseePage> {
                   labelText: "Poids",
                   hintText: 'Poids en kg'),
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return "Pas de poids saisi";
                   }},
                 onSaved: (value) {
                   setState(() {
-                    _poidsCtl.text = value;
+                    _poidsCtl.text = value!;
                   });
                 }
             ),
@@ -100,22 +100,21 @@ class PeseePageState extends State<PeseePage> {
   }
 
   void _savePesee() async {
-    double poids = double.tryParse(_poidsCtl.text);
-    String message;
+    double? poids = double.tryParse(_poidsCtl.text);
+    String message="";
     if (poids == null) {
       message = "Le poids n'est pas au format numérique";
-      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
       return;
     }
     setState(() {
       _isSaving = true;
     });
     if (this.widget._bete != null)
-      message = await this._bloc.savePesee(this.widget._bete, poids, _datePeseeCtl.text);
+      message = await this._bloc.savePesee(this.widget._bete!, poids, _datePeseeCtl.text);
     if (this.widget._lamb != null)
-      message = await this._bloc.savePeseeLamb(this.widget._lamb, poids, _datePeseeCtl.text);
-    _scaffoldKey.currentState
-          .showSnackBar(SnackBar(content: Text(message)))
+      message = await this._bloc.savePeseeLamb(this.widget._lamb!, poids, _datePeseeCtl.text);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)))
           .closed
           .then((e) => {Navigator.of(context).pop()});
   }

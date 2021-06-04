@@ -1,9 +1,9 @@
 class Pesee {
-  int id;
-  int bete_id;
-  int lamb_id;
-  double poids;
-  String datePesee;
+  late int id;
+  late int bete_id;
+  late int lamb_id;
+  late double poids;
+  late String datePesee;
   Pesee();
 
   Map<String, dynamic> toJson() {

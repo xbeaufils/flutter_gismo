@@ -10,14 +10,14 @@ import 'package:intl/intl.dart';
 
 class SanitairePage extends StatefulWidget {
   final GismoBloc _bloc;
-  Bete _malade;
-  List<Bete> _betes;
-  LambModel _bebeMalade;
-  TraitementModel _currentTraitement;
+  Bete ? _malade;
+  List<Bete> ? _betes;
+  LambModel ? _bebeMalade;
+  TraitementModel ? _currentTraitement;
 
-  SanitairePage(this._bloc, this._malade, this._bebeMalade, {Key key}) : super(key: key);
-  SanitairePage.edit(this._bloc, this._currentTraitement, {Key key}) : super(key: key);
-  SanitairePage.collectif(this._bloc, this._betes, {Key key}): super(key: key);
+  SanitairePage(this._bloc, this._malade, this._bebeMalade, {Key ? key}) : super(key: key);
+  SanitairePage.edit(this._bloc, this._currentTraitement, {Key ? key}) : super(key: key);
+  SanitairePage.collectif(this._bloc, this._betes, {Key ? key}): super(key: key);
 
   @override
   _SanitairePageState createState() => new _SanitairePageState(_bloc);
@@ -234,14 +234,14 @@ class _SanitairePageState extends State<SanitairePage> {
   void _save() async {
     TraitementModel traitement = new TraitementModel();
     if (this.widget._currentTraitement != null) {
-      traitement.idBete = this.widget._currentTraitement.idBete;
-      traitement.idBd = this.widget._currentTraitement.idBd;
+      traitement.idBete = this.widget._currentTraitement?.idBete;
+      traitement.idBd = this.widget._currentTraitement?.idBd;
     }
     else {
       if (this.widget._malade != null)
-        traitement.idBete = this.widget._malade.idBd;
+        traitement.idBete = this.widget._malade?.idBd;
       if (this.widget._bebeMalade != null)
-        traitement.idLamb = this.widget._bebeMalade.idBd;
+        traitement.idLamb = this.widget._bebeMalade?.idBd;
     }
     traitement.debut = _dateDebutCtl.text;
     traitement.dose = _doseCtl.text;
@@ -255,7 +255,7 @@ class _SanitairePageState extends State<SanitairePage> {
     traitement.voie = _voieCtl.text;
     var message = "";
     if (this.widget._betes != null)
-      message = await _bloc.saveTraitementCollectif(traitement, this.widget._betes);
+      message = await _bloc.saveTraitementCollectif(traitement, this.widget._betes!);
     else
       message  = await _bloc.saveTraitement(traitement);
     _scaffoldKey.currentState
@@ -271,16 +271,16 @@ class _SanitairePageState extends State<SanitairePage> {
     DateTime selectedDate = DateTime.now();
     super.initState();
     if (this.widget._currentTraitement != null) {
-      _dateDebutCtl.text = this.widget._currentTraitement.debut ;
-      _doseCtl.text = this.widget._currentTraitement.dose  ;
-      _dateFinCtl.text = this.widget._currentTraitement.fin  ;
-      _intervenantCtl.text = this.widget._currentTraitement.intervenant ;
-      _observationCtl.text = this.widget._currentTraitement.observation  ;
-      _motifCtl.text = this.widget._currentTraitement.motif ;
-      _medicamentCtl.text = this.widget._currentTraitement.medicament  ;
-      _ordonnanceCtl.text = this.widget._currentTraitement.ordonnance  ;
-      _rythmeCtl.text = this.widget._currentTraitement.rythme ;
-      _voieCtl.text = this.widget._currentTraitement.voie  ;
+      _dateDebutCtl.text = this.widget._currentTraitement?.debut as String;
+      _doseCtl.text = this.widget._currentTraitement?.dose  as String;
+      _dateFinCtl.text = this.widget._currentTraitement?.fin  as String;
+      _intervenantCtl.text = this.widget._currentTraitement?.intervenant as String;
+      _observationCtl.text = this.widget._currentTraitement?.observation  as String;
+      _motifCtl.text = this.widget._currentTraitement?.motif as String;
+      _medicamentCtl.text = this.widget._currentTraitement?.medicament  as String;
+      _ordonnanceCtl.text = this.widget._currentTraitement?.ordonnance  as String;
+      _rythmeCtl.text = this.widget._currentTraitement?.rythme as String;
+      _voieCtl.text = this.widget._currentTraitement?.voie  as String;
     }
     else {
       _dateDebutCtl.text = df.format(selectedDate);

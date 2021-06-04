@@ -9,7 +9,7 @@ import 'package:flutter_gismo/model/LambModel.dart';
 
 class SearchLambPage extends StatefulWidget {
   final GismoBloc _bloc;
-  SearchLambPage(this._bloc, { Key key }) : super(key: key);
+  SearchLambPage(this._bloc, { Key? key }) : super(key: key);
   @override
   _SearchLambPageState createState() => new _SearchLambPageState(_bloc);
 }
@@ -23,8 +23,8 @@ class _SearchLambPageState extends State<SearchLambPage> {
   final GismoBloc _bloc;
 
   String _searchText = "";
-  List<CompleteLambModel> _filteredLambs = new List();
-  List<CompleteLambModel> _lambs = new List();
+  List<CompleteLambModel> _filteredLambs = <CompleteLambModel>[]; //new List();
+  List<CompleteLambModel> _lambs =<CompleteLambModel>[];// new List();
 
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text( 'Numéro provisoire' );
@@ -58,12 +58,12 @@ class _SearchLambPageState extends State<SearchLambPage> {
         Container (
           child: _buildListLamb(),// _buildFutureLambs(), //
         ),
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
     );
   }
 
 
-  Widget _buildBar(BuildContext context) {
+  AppBar _buildBar(BuildContext context) {
     return new AppBar(
       centerTitle: true,
       title: _appBarTitle,
@@ -123,7 +123,7 @@ class _SearchLambPageState extends State<SearchLambPage> {
 
   Widget _buildListLamb() {
     if (_searchText.isNotEmpty) {
-      List<CompleteLambModel> tempList = new List();
+      List<CompleteLambModel> tempList = <CompleteLambModel>[]; //new List();
       for (int i = 0; i < _filteredLambs.length; i++) {
         if (_filteredLambs[i].marquageProvisoire.isNotEmpty) {
           if (_filteredLambs[i].marquageProvisoire.toLowerCase().contains(
@@ -242,7 +242,8 @@ class _SearchLambPageState extends State<SearchLambPage> {
       final snackBar = SnackBar(
         content: Text(message),
       );
-      _scaffoldKey.currentState.showSnackBar(snackBar);
+      if (_scaffoldKey.currentState != null)
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
     }
 

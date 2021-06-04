@@ -23,7 +23,7 @@ class ParcellePage extends StatefulWidget {
       this.onCameraTrackingDismissed,
       this.onCameraTrackingChanged,
       //this.onMapIdle,*/
-      {Key key}) : super(key: key);
+      {Key ? key}) : super(key: key);
   @override
   _ParcellePageState createState() => new _ParcellePageState(_bloc);
 /*
@@ -58,14 +58,14 @@ class ParcellePage extends StatefulWidget {
 class _ParcellePageState extends State<ParcellePage> {
   final GismoBloc _bloc;
   _ParcellePageState(this._bloc);
-  Line _selectedLine;
-  List<Parcelle> _myParcelles;
+  Line ? _selectedLine;
+  List<Parcelle?> _myParcelles=[];
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   /*
   MapBox
    */
-  MapboxMapController _mapController;
-  MapboxMap _mapBox;
+  MapboxMapController ? _mapController;
+  MapboxMap ? _mapBox;
 
   void _onMapCreated(MapboxMapController controller) {
     _mapController = controller;
@@ -165,6 +165,7 @@ class _ParcellePageState extends State<ParcellePage> {
     );
 
      */
+    return Container();
   }
 
   Widget _InAppWebView() { /*
@@ -203,6 +204,7 @@ class _ParcellePageState extends State<ParcellePage> {
         ],)
     );
     */
+    return Container();
   }
 
   Widget _mapBoxView() {
@@ -215,12 +217,14 @@ class _ParcellePageState extends State<ParcellePage> {
         styleString: MapboxStyles.SATELLITE,
         initialCameraPosition: const CameraPosition(target: LatLng(45.26, 5.73), zoom: 14),
     );
-    return _mapBox;
+    return _mapBox!;
   }
 
-  void _drawParcelles(LocationData location) async {
+  void _drawParcelles(LocationData ? location) async {
+    if (location == null)
+      return;
     debug.log("" + location.toString(), name: "_ParcellePageState::_drawParcelles" );
-    _mapController.moveCamera(CameraUpdate.newCameraPosition(
+    _mapController!.moveCamera(CameraUpdate.newCameraPosition(
       new CameraPosition(
         target: LatLng(location.latitude, location.longitude),
         zoom: 14.0,
@@ -243,7 +247,7 @@ class _ParcellePageState extends State<ParcellePage> {
     if (parcelleJson['features'].length == 0)
       return;
     Map<String, dynamic> feature = parcelleJson['features'][0];
-    Parcelle myParcelle = this._myParcelles.firstWhere((parcelle) => parcelle.idu == feature['properties']['id'], orElse: () => null);
+    Parcelle ? myParcelle = this._myParcelles.firstWhere((parcelle) => parcelle!.idu == feature['properties']['id'], orElse: () => null);
     if (myParcelle == null)
       return;
 
@@ -265,22 +269,22 @@ class _ParcellePageState extends State<ParcellePage> {
     final snackBar = SnackBar(
       content: Text(message),
     );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   void _drawParcelle(feature) {
     String lineColor = "#ffffff";
     double lineWidth = 1.0;
-    Parcelle foundParcelle = _myParcelles.firstWhere((parcelle) => parcelle.idu == feature['properties']['id'], orElse: () => null);
+    Parcelle ? foundParcelle = _myParcelles.firstWhere((parcelle) => parcelle!.idu == feature['properties']['id'], orElse: () => null);
     if (foundParcelle != null) {
       lineWidth = 6.0;
       lineColor = '#58db72';
     }
     Map<String, dynamic>  geometry = feature['geometry'];
     List coordinates = geometry['coordinates'][0][0];
-    List<LatLng> lstLatLng = new List();
+    List<LatLng> lstLatLng = [];
     coordinates.forEach( (anArray) => lstLatLng.add(LatLng(anArray[1], anArray[0])));
-    _mapController.addLine(LineOptions(
+    _mapController!.addLine(LineOptions(
       geometry: lstLatLng,
       lineColor: lineColor,
       lineWidth: lineWidth,
@@ -307,7 +311,7 @@ class _ParcellePageState extends State<ParcellePage> {
     );
   }
   void _updateSelectedLine(LineOptions changes) {
-    _mapController.updateLine(_selectedLine, changes);
+    _mapController!.updateLine(_selectedLine, changes);
   }
 
   @override
@@ -315,7 +319,7 @@ class _ParcellePageState extends State<ParcellePage> {
   }
 
   List<LatLng> _buildList(List coordinates) {
-    List<LatLng> lstCoordinates = new List();
+    List<LatLng> lstCoordinates = [];
     coordinates[0].forEach((coordinate) => {
       lstCoordinates.add( _build(coordinate))
     });
@@ -328,7 +332,7 @@ class _ParcellePageState extends State<ParcellePage> {
     return new LatLng(lat, lng);
   }
 
-  Future<LocationData> _getLocation() async{
+  Future<LocationData?> _getLocation() async{
     Location location = new Location();
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;

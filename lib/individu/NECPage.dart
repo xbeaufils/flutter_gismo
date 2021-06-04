@@ -41,16 +41,16 @@ class NECPageState extends State<NECPage> {
                     labelText: "Date de notation",
                     hintText: 'jj/mm/aaaa'),
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return "Pas de date de notation";
                   }},
                 onSaved: (value) {
                   setState(() {
-                    _dateNoteCtl.text = value;
+                    _dateNoteCtl.text = value!;
                   });
                 },
                 onTap: () async{
-                  DateTime date = DateTime.now();
+                  DateTime ? date = DateTime.now();
                   FocusScope.of(context).requestFocus(new FocusNode());
                   date = await showDatePicker(
                       locale: const Locale("fr","FR"),
@@ -60,7 +60,7 @@ class NECPageState extends State<NECPage> {
                       lastDate: DateTime(2100));
                   if (date != null) {
                     setState(() {
-                      _dateNoteCtl.text = _df.format(date);
+                      _dateNoteCtl.text = _df.format(date!);
                     });
                   }
                 }),
@@ -91,9 +91,9 @@ class NECPageState extends State<NECPage> {
           Navigator.push(context,MaterialPageRoute(builder: (context) => HelpPage( nec),),)},),
       value: nec.note,
       groupValue: _nec,
-      onChanged: (int value) {
+      onChanged: (int ? value) {
         setState(() {
-          _nec = value;
+          _nec = value!;
         });
       },
     );
@@ -111,7 +111,7 @@ class NECPageState extends State<NECPage> {
       _isSaving = true;
     });
     String message = await this._bloc.saveNec(this.widget._bete,  NEC.getNEC(_nec), _dateNoteCtl.text);
-    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)))
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)))
         .closed
         .then((e) => {Navigator.of(context).pop()});
   }
