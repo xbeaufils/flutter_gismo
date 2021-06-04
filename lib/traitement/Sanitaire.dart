@@ -70,7 +70,7 @@ class _SanitairePageState extends State<SanitairePage> {
                               decoration: InputDecoration(
                                 labelText: "Date de début",),
                               onTap: () async{
-                                DateTime date = DateTime.now();
+                                DateTime ? date = DateTime.now();
                                 FocusScope.of(context).requestFocus(new FocusNode());
 
                                 date = await showDatePicker(
@@ -90,7 +90,7 @@ class _SanitairePageState extends State<SanitairePage> {
                               decoration: InputDecoration(
                                 labelText: "Date de Fin",),
                               onTap: () async{
-                                DateTime date = DateTime.now();
+                                DateTime ? date = DateTime.now();
                                 FocusScope.of(context).requestFocus(new FocusNode());
 
                                 date = await showDatePicker(
@@ -258,7 +258,7 @@ class _SanitairePageState extends State<SanitairePage> {
       message = await _bloc.saveTraitementCollectif(traitement, this.widget._betes!);
     else
       message  = await _bloc.saveTraitement(traitement);
-    _scaffoldKey.currentState
+    ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)))
         .closed
         .then((e) => {Navigator.of(context).pop()});

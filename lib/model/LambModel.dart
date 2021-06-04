@@ -80,7 +80,7 @@ class LambingModel {
       if (result['agneaux'].length > 0) {
         this._lambs = [];
         for (int i = 0; i < result['agneaux'].length; i++) {
-          this._lambs!.add(LambModel.fromResult(result['agneaux'][i]));
+          this._lambs.add(LambModel.fromResult(result['agneaux'][i]));
         }
       }
     }
@@ -95,7 +95,7 @@ class LambingModel {
     data["qualite"] = this._qualite;
     data["adoption"] = this._adoption;
     data["observations"] = this._observations;
-    data["agneaux"] = this._lambs!.map((lamb) => lamb.toJson()).toList();
+    data["agneaux"] = this._lambs.map((lamb) => lamb.toJson()).toList();
     return data;
   }
 

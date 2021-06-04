@@ -1,42 +1,41 @@
 import 'package:flutter_gismo/model/BeteModel.dart';
 
 class TraitementModel {
-  late int _idBd;
-
+  int ? _idBd;
   late String _debut;
   late String _fin;
   late String _medicament;
-  late String _voie;
-  late String _dose;
-  late String _rythme;
-  late String _numBoucle;
+  String ? _voie;
+  String ? _dose;
+  String ? _rythme;
+  late String  _numBoucle;
   late String _numMarquage;
-  late int _idBete;
-  late int _idLamb;
-  late String _ordonnance;
-  late String _intervenant;
-  late String _motif;
-  late String _observation;
+  int ? _idBete;
+  int ? _idLamb;
+  String ? _ordonnance;
+  String ? _intervenant;
+  String ? _motif;
+  String ? _observation;
 
-  int get idBd => _idBd;
+  int ? get idBd => _idBd;
   String get debut =>_debut;
   String get fin =>_fin;
   String get numBoucle =>_numBoucle;
   String get numMarquage =>_numMarquage;
   String get medicament =>_medicament;
-  String get ordonnance =>_ordonnance;
-  String get intervenant =>_intervenant;
-  String get motif =>_motif;
-  String get observation =>_observation;
+  String ? get ordonnance =>_ordonnance;
+  String ? get intervenant =>_intervenant;
+  String ? get motif =>_motif;
+  String ? get observation =>_observation;
 
-  int get idBete => _idBete;
-  int get idLamb => _idLamb;
+  int ? get idBete => _idBete;
+  int ? get idLamb => _idLamb;
 
-  set idLamb(int value) {
+  set idLamb(int ? value) {
     _idLamb = value;
   }
 
-  set idBete(int value) {
+  set idBete(int ? value) {
     _idBete = value;
   }
 
@@ -44,7 +43,7 @@ class TraitementModel {
     _numBoucle = value;
   }
 
-  set idBd(int value) {
+  set idBd(int ? value) {
     _idBd = value;
   }
 
@@ -52,33 +51,33 @@ class TraitementModel {
     _debut = value;
   }
 
-  set observation(String value) {
+  set observation(String ? value) {
     _observation = value;
   }
 
-  set motif(String value) {
+  set motif(String ? value) {
     _motif = value;
   }
 
-  set intervenant(String value) {
+  set intervenant(String ? value) {
     _intervenant = value;
   }
 
-  set ordonnance(String value) {
+  set ordonnance(String ? value) {
     _ordonnance = value;
   }
 
-  set numMarquage(String value) {
-    _numMarquage = value;
+  set numMarquage(String ? value) {
+    _numMarquage = value!;
   }
 
-  set medicament(String value) {
-    _medicament = value;
+  set medicament(String ? value) {
+    _medicament = value!;
   }
 
-  String get voie => _voie;
+  String ? get voie => _voie;
 
-  set voie(String value) {
+  set voie(String ? value) {
     _voie = value;
   }
 
@@ -86,15 +85,15 @@ class TraitementModel {
     _fin = value;
   }
 
-  String get dose => _dose;
+  String ? get dose => _dose;
 
-  String get rythme => _rythme;
+  String ? get rythme => _rythme;
 
-  set rythme(String  value) {
+  set rythme(String  ? value) {
     _rythme = value;
   }
 
-  set dose(String value) {
+  set dose(String ? value) {
     _dose = value;
   }
 

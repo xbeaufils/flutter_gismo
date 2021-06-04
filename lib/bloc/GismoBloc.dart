@@ -288,7 +288,7 @@ class GismoBloc {
       List<Pesee> lstPoids  = await this._repository!.dataProvider.getPesee(bete);
       List<EchographieModel> lstEcho = await this._repository!.dataProvider.getEcho(bete);
       lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd, EventType.agnelage, lambing.dateAgnelage, lambing.lambs.length.toString()))});
-      lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd, EventType.traitement, traitement.debut, traitement.medicament))});
+      lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement, traitement.debut, traitement.medicament))});
       lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd, EventType.NEC, note.date, note.note.toString()))});
       lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id, EventType.pesee, poids.datePesee, poids.poids.toString()))});
       lstAffect.forEach( (affect) => {lstEvents.addAll ( _makeEventforAffectation(affect) )});
@@ -308,7 +308,7 @@ class GismoBloc {
       List<Pesee> lstPoids  = await this._repository!.dataProvider.getPeseeForLamb(lamb);
       lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id, EventType.pesee, poids.datePesee, poids.poids.toString()))});
       List<TraitementModel> lstTraits = await this._repository!.dataProvider.getTraitementsForLamb(lamb);
-      lstTraits.forEach((traitement) {lstEvents.add(new Event.name(traitement.idBd, EventType.traitement,  traitement.debut, traitement.medicament)); });
+      lstTraits.forEach((traitement) {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement,  traitement.debut, traitement.medicament)); });
       return lstEvents;
     }
     catch(e, stackTrace) {

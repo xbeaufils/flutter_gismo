@@ -53,7 +53,7 @@ class _LambingPageState extends State<LambingPage> {
       appBar: new AppBar(
         title: (this.widget._mere != null) ? 
           new Text(this.widget._mere.numBoucle + " (" + this.widget._mere.numMarquage + ")") :
-          new Text(this.widget._currentLambing.numBoucleMere! + " (" + this.widget._currentLambing.numMarquageMere! + ")"),
+          new Text(this.widget._currentLambing.numBoucleMere + " (" + this.widget._currentLambing.numMarquageMere + ")"),
         key: _scaffoldKey,
       ),
       body:
@@ -176,7 +176,7 @@ class _LambingPageState extends State<LambingPage> {
 
   void _addLamb(LambModel newLamb){
     setState(() {
-      _lambing.lambs!.add(newLamb);
+      _lambing.lambs.add(newLamb);
       //_lambs.add(newLamb);
     });
   }
