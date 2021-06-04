@@ -22,7 +22,7 @@ class _EntreePageState extends State<EntreePage> {
   TextEditingController _dateEntreeCtl = TextEditingController();
   final _df = new DateFormat('dd/MM/yyyy');
   late List<Bete> _sheeps;
-  late String _currentMotif;
+  String ?  _currentMotif;
   late List<DropdownMenuItem<String>> _motifEntreeItems;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -147,7 +147,7 @@ class _EntreePageState extends State<EntreePage> {
       showError("Cause d'entrée obligatoire");
       return;
     }
-    if (_currentMotif.isEmpty) {
+    if (_currentMotif!.isEmpty) {
       showError("Cause d'entrée obligatoire");
       return;
     }
@@ -156,7 +156,7 @@ class _EntreePageState extends State<EntreePage> {
       return;
     }
 
-    var message  = this._bloc.saveEntree(_dateEntreeCtl.text, _currentMotif, this._sheeps);
+    var message  = this._bloc.saveEntree(_dateEntreeCtl.text, _currentMotif!, this._sheeps);
     message
       .then( (message) {goodSaving(message);})
       .catchError( (message) {showError(message);});
