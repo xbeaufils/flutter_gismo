@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 class SortiePage extends StatefulWidget {
   final GismoBloc _bloc;
 
-  SortiePage(this._bloc,{Key key}) : super(key: key);
+  SortiePage(this._bloc,{Key ? key}) : super(key: key);
   @override
   _SortiePageState createState() => new _SortiePageState(this._bloc);
 }
@@ -19,13 +19,13 @@ class _SortiePageState extends State<SortiePage> {
   _SortiePageState(this._bloc);
   TextEditingController _dateSortieCtl = TextEditingController();
   final _df = new DateFormat('dd/MM/yyyy');
-  List<Bete> _sheeps;
-  String _currentMotif;
-  List<DropdownMenuItem<String>> _motifSortieItems;
+  late List<Bete> _sheeps;
+  late String _currentMotif;
+  late List<DropdownMenuItem<String>> _motifSortieItems;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   List<DropdownMenuItem<String>> _getMotifSortieItems() {
-    List<DropdownMenuItem<String>> items = new List();
+    List<DropdownMenuItem<String>> items = [];
     items.add( new DropdownMenuItem(value: 'MORT', child: new Text('Mort')));
     items.add( new DropdownMenuItem(value: 'VENTE_BOUCHERIE', child: new Text('Vente boucherie')));
     items.add( new DropdownMenuItem(value: 'VENTE_REPRODUCTEUR', child: new Text('Vente reproducteur')));
@@ -38,9 +38,9 @@ class _SortiePageState extends State<SortiePage> {
     return items;
   }
 
-  void changedMotifSortieItem(String selectedMotif) {
+  void changedMotifSortieItem(String ? selectedMotif) {
     setState(() {
-      _currentMotif= selectedMotif;
+      _currentMotif= selectedMotif!;
     });
   }
 
@@ -67,12 +67,12 @@ class _SortiePageState extends State<SortiePage> {
                           labelText: 'Date de sortie',
                           hintText: 'jj/mm/aaaa'),
                       validator: (value) {
-                        if (value.isEmpty) {
+                        if (value!.isEmpty) {
                           return 'Pas de date de sortie';
                         }},
                       onSaved: (value) {
                         setState(() {
-                          _dateSortieCtl.text = value;
+                          _dateSortieCtl.text = value!;
                         });
                       },
                       onTap: () async{
@@ -84,7 +84,7 @@ class _SortiePageState extends State<SortiePage> {
                           context: context,
                           initialDate:DateTime.now(),
                           firstDate:DateTime(1900),
-                          lastDate: DateTime(2100));
+                          lastDate: DateTime(2100)) as DateTime;
                         if (date != null) {
                           setState(() {
                             _dateSortieCtl.text = _df.format(date);
@@ -147,7 +147,8 @@ class _SortiePageState extends State<SortiePage> {
     final snackBar = SnackBar(
       content: Text(message),
     );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    //_scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
   void goodSaving(String message) {
@@ -161,7 +162,7 @@ class _SortiePageState extends State<SortiePage> {
             return new SearchPage(this._bloc, GismoPage.sortie);
           },
           fullscreenDialog: true
-      ));
+      )) as Bete;
       if (selectedBete != null) {
         setState(() {
           _sheeps.add(selectedBete);
@@ -172,7 +173,7 @@ class _SortiePageState extends State<SortiePage> {
   @override
   void initState() {
     super.initState();
-    _sheeps = new List();
+    _sheeps = [];
     _motifSortieItems = _getMotifSortieItems();
     _dateSortieCtl.text = _df.format(DateTime.now());
   }

@@ -1,20 +1,20 @@
 class User {
-  String _email;
-  String _password;
-  String _cheptel;
-  String _token;
-  bool _subscribe;
+  String ? _email;
+  String ? _password;
+  String ? _cheptel;
+  String ? _token;
+  bool ? _subscribe;
 
-  bool get subscribe => _subscribe;
+  bool ? get subscribe => _subscribe;
 
-  set subscribe(bool value) {
+  set subscribe(bool ? value) {
     _subscribe = value;
   }
 
-  String get email =>_email;
-  String get password =>_password;
-  String get cheptel =>_cheptel;
-  String get token =>_token;
+  String ? get email =>_email;
+  String ? get password =>_password;
+  String ? get cheptel =>_cheptel;
+  String ? get token =>_token;
 
   void setCheptel(String cheptel) {
     this._cheptel = cheptel;

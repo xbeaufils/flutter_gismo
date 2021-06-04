@@ -11,7 +11,7 @@ import 'package:flutter_gismo/welcome.dart';
 
 class SplashScreen extends StatefulWidget {
   GismoBloc _bloc;
-  SplashScreen(this._bloc, {Key key}) : super(key: key);
+  SplashScreen(this._bloc, {Key ? key}) : super(key: key);
 
   @override
   SplashScreenState createState() => new SplashScreenState(_bloc);
@@ -36,13 +36,13 @@ class SplashScreenState extends State<SplashScreen> {
   void _initError(e) {
     debug.log("Error is " + e.toString() , name: "SplashScreenState::_initError");
     this._bloc.setUser(null);
-    SnackBar snackBar;
+    SnackBar snackBar =SnackBar(content: Text(""),);;
     if (e is String)
       snackBar = SnackBar(content: Text(e),);
     if (e is Exception)
       snackBar = SnackBar(content: Text(e.toString()),);
     FocusScope.of(context).unfocus();
-    _scaffoldKey.currentState.showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -52,7 +52,7 @@ class SplashScreenState extends State<SplashScreen> {
   }
 
   void route(String message) {
-    bool _isLogged = this._bloc.isLogged();
+    bool _isLogged = this._bloc.isLogged()!;
     debug.log("Is logged " + _isLogged.toString(), name: "SplashScreenState::route");
     Widget homePage = _isLogged ? WelcomePage(_bloc, message):  ConfigPage(_bloc);
     homePage = WelcomePage(_bloc, message);

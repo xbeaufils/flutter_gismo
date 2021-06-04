@@ -17,7 +17,7 @@ import 'package:flutter_gismo/traitement/Sanitaire.dart';
 class TimeLinePage extends StatefulWidget {
   final Bete _bete;
   final GismoBloc _bloc;
-  TimeLinePage(this._bloc, this._bete, {Key key}) : super(key: key);
+  TimeLinePage(this._bloc, this._bete, {Key ? key}) : super(key: key);
   @override
   _TimeLinePageState createState() => new _TimeLinePageState(this._bloc, _bete);
 }
@@ -63,7 +63,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
 
   Widget _getMere() {
     return FutureBuilder(
-        builder: (context, mere){
+        builder: (context, AsyncSnapshot mere){
           if (mere.data == null)
             return Container();
           return Card(
@@ -79,7 +79,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   }
 
   Future _openIdentityDialog() async {
-    Bete selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
+    Bete ? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
         builder: (BuildContext context) {
           return new BetePage(this._bloc, _bete);
         },
@@ -94,7 +94,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
 
   Widget _getEvents() {
     return FutureBuilder(
-      builder: (context, lstEvents){
+      builder: (context, AsyncSnapshot lstEvents){
         if (lstEvents.data == null)
           return Container();
         return ListView.builder(
@@ -119,13 +119,13 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   void _searchEvent(Event event) {
     switch (event.type) {
       case EventType.agnelage :
-        _bloc.searchLambing(event.idBd).then( (lambing) => {_editLambing(lambing)} );
+        _bloc.searchLambing(event.idBd).then( (lambing) => {_editLambing(lambing!)} );
         break;
       case EventType.traitement:
-        _bloc.searchTraitement(event.idBd).then( (traitement) => { _editTraitement(traitement)});
+        _bloc.searchTraitement(event.idBd).then( (traitement) => { _editTraitement(traitement!)});
         break;
       case EventType.echo:
-        _bloc.searchEcho(event.idBd).then( (echo) => { _editEcho(echo)});
+        _bloc.searchEcho(event.idBd).then( (echo) => { _editEcho(echo!)});
         break;
        default:
     }
@@ -197,14 +197,14 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       case EventType.entree:
       case EventType.sortie:
      }
-    return null;
+    return Container();
   }
 
   void _showMessage(String message) {
       final snackBar = SnackBar(
         content: Text(message),
       );
-      _scaffoldKey.currentState.showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 
