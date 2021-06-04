@@ -8,9 +8,9 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 
 class WelcomePage extends StatefulWidget {
   GismoBloc _bloc;
-  String _message;
+  String ? _message;
 
-  WelcomePage(this._bloc, this._message, {Key key}) : super(key: key);
+  WelcomePage(this._bloc, this._message, {Key ? key}) : super(key: key);
 
   @override
   _WelcomePageState createState() => new _WelcomePageState(_bloc);
@@ -30,15 +30,15 @@ class _WelcomePageState extends State<WelcomePage> {
       iconConnexion = Icon(Icons.error_outline);
       userName = new Text("Erreur utilisateur");
     } else
-      if (_bloc.user.subscribe == null) {
+      if (_bloc.user!.subscribe == null) {
         iconConnexion = Icon(Icons.error_outline);
         userName = new Text("Erreur utilisateur");
       } else {
 
-        if (_bloc.user.subscribe) {
-        iconConnexion = Icon(Icons.verified_user);
-        userName = new Text(_bloc.user.email);
-      }
+        if (_bloc.user!.subscribe!) {
+          iconConnexion = Icon(Icons.verified_user);
+          userName = new Text(_bloc.user!.email!);
+        }
     }
     return Card(
       child: Row(
@@ -58,7 +58,7 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   List<Widget> _getActionButton() {
-    List<Widget> actionBtns = new List();
+    List<Widget> actionBtns = List.empty(growable: true);
     actionBtns.add(
         IconButton(
           icon: Icon(Icons.edit),
@@ -79,11 +79,11 @@ class _WelcomePageState extends State<WelcomePage> {
         key: _scaffoldKey,
         backgroundColor: Colors.lightGreen,
         persistentFooterButtons: <Widget>[
-          _getStatus(this.widget._message),
+          _getStatus(this.widget._message!),
         ],
         appBar: new AppBar(
             title: (_bloc.user != null) ?
-              new Text(  this._bloc.flavor.appName + ' ' + _bloc.user.cheptel):
+              new Text('Gismo ' + _bloc.user!.cheptel!):
               new Text('Erreur de connexion'),
             // N'affiche pas la touche back (qui revient à la SplashScreen
             automaticallyImplyLeading: false,
@@ -101,8 +101,8 @@ class _WelcomePageState extends State<WelcomePage> {
                     buttonMinWidth: 90.0,
                     children: <Widget>[
                       _buildButton("Parcelles", "assets/parcelles.png", _parcellePressed),
-                      _buildButton("Lot",  "assets/" + this._bloc.flavor.lotAsset,_lotPressed),
-                      _buildButton("Individu", "assets/" + this._bloc.flavor.individuAsset, _individuPressed),
+                      _buildButton("Lot", "assets/Lot.png",_lotPressed),
+                      _buildButton("Individu", "assets/brebis.png", _individuPressed),
                     ]))),
               Card(
                 child:  SingleChildScrollView (
@@ -113,8 +113,8 @@ class _WelcomePageState extends State<WelcomePage> {
                     buttonMinWidth: 90.0,
                     children: <Widget>[
                       _buildButton("Echographie", 'assets/ultrasound.png', _echoPressed),
-                      _buildButton( this._bloc.flavor.miseBasLibelle , 'assets/' + this._bloc.flavor.miseBasAsset, _lambingPressed),
-                      _buildButton( this._bloc.flavor.enfantLibelle, 'assets/' + this._bloc.flavor.enfantAsset, _lambPressed),
+                      _buildButton("Agnelage", 'assets/lamb.png', _lambingPressed),
+                      _buildButton("Agneaux", 'assets/jumping_lambs.png', _lambPressed),
                     ]))),
               Card(
                 child: SingleChildScrollView (
@@ -140,14 +140,14 @@ class _WelcomePageState extends State<WelcomePage> {
                       _buildButton("Sortie", "assets/Truck.png", _sortiePressed),
                     //  _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
                     ]))),
-              (this._bloc.isLogged()) ?
+              (this._bloc.isLogged()!) ?
                 Container():
                 Card(child:
                   AdmobBanner(
                     adUnitId: _getBannerAdUnitId(),
                     adSize: AdmobBannerSize.BANNER,),
                   ),
-              (this._bloc.isLogged()) ?
+              (this._bloc.isLogged()!) ?
                 Container():
                 Card(child:
                   FacebookBannerAd(
@@ -163,9 +163,10 @@ class _WelcomePageState extends State<WelcomePage> {
     } else if (Platform.isAndroid) {
       return 'ca-app-pub-9699928438497749/5554017347';
     }
-    return null;
+    return "";
   }
-   Widget _buildButton(String title, String imageName, Function() press) {
+
+  Widget _buildButton(String title, String imageName, Function() press) {
     return Container(
       decoration: new BoxDecoration(
         boxShadow: [
@@ -181,7 +182,7 @@ class _WelcomePageState extends State<WelcomePage> {
       ),
       margin: const EdgeInsets.all(4.0),
       padding: const EdgeInsets.all(4.0),
-      child: new FlatButton(
+      child: new TextButton(
       //shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
         onPressed: press,
         child: new Column(
@@ -196,14 +197,14 @@ class _WelcomePageState extends State<WelcomePage> {
   void initState() {}
 
   void _parcellePressed() {
-    if (_bloc.user.subscribe)
+    if (_bloc.user!.subscribe!)
       Navigator.pushNamed(context, '/parcelle');
     else
       this.showMessage("Les parcelles ne sont pas visibles en mode autonome");
   }
 
   void _settingPressed() {
-    var message = Navigator.pushNamed(context, '/config');
+    Future<String> message = Navigator.pushNamed(context, '/config') as Future<String>;
     message.then((message) {
       showMessage(message);
       setState(() {
@@ -240,7 +241,7 @@ class _WelcomePageState extends State<WelcomePage> {
  */
 
   void _sortiePressed() {
-    var message = Navigator.pushNamed(context, '/sortie');
+    Future<String>  message = Navigator.pushNamed(context, '/sortie') as Future<String> ;
     message.then((message) {
       showMessage(message);
     }).catchError((message) {
@@ -249,7 +250,7 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   void _entreePressed() {
-    var message = Navigator.pushNamed(context, '/entree');
+    Future<String>  message = Navigator.pushNamed(context, '/entree') as Future<String> ;
     message.then((message) {
       showMessage(message);
     }).catchError((message) {
@@ -257,12 +258,13 @@ class _WelcomePageState extends State<WelcomePage> {
     });
   }
 
-  void showMessage(String message) {
+  void showMessage(String ? message) {
     if (message == null) return;
     final snackBar = SnackBar(
       content: Text(message),
     );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    //_scaffoldKey.currentState!.showSnackBar(snackBar);
   }
 
   void _traitementPressed() {

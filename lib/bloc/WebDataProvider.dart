@@ -32,20 +32,21 @@ class WebDataProvider extends DataProvider {
 
   WebDataProvider(GismoBloc bloc) : super(bloc) {
     _dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (RequestOptions options) => requestInterceptor(options),
+
+      onRequest: (RequestOptions options,RequestInterceptorHandler requestInterceptorHandler) => requestInterceptor(options, requestInterceptorHandler),
       //onResponse: (Response response) => responseInterceptor(response),
-      onError: (DioError dioError) => onError(dioError)
+      onError: (DioError dioError,ErrorInterceptorHandler requestInterceptorHandler) => onError(dioError,requestInterceptorHandler)
     ));
   }
 
-  dynamic requestInterceptor(RequestOptions options)  {
+  dynamic requestInterceptor(RequestOptions options, RequestInterceptorHandler requestInterceptorHandler)  {
     //SharedPreferences prefs = await SharedPreferences.getInstance();
     //String token = prefs.getString("token");
     options.headers.addAll({"Token": super.token});
     return options;
   }
 
-  FutureOr<dynamic> onError(DioError dioError) {
+  FutureOr<dynamic> onError(DioError dioError,ErrorInterceptorHandler requestInterceptorHandler) {
     debug.log("dioError " + dioError.toString(), name: "WebDataProvider::onError");
     return dioError;
   }
@@ -119,7 +120,7 @@ class WebDataProvider extends DataProvider {
   Future<List<Bete>> getBetes(String cheptel) async {
     final response = await _dio.get(
         '/bete/searchAll?cheptel=' + cheptel);
-    List<Bete> tempList = new List();
+    List<Bete> tempList = [];
     for (int i = 0; i < response.data.length; i++) {
       tempList.add(new Bete.fromResult(response.data[i]));
     }
@@ -182,7 +183,7 @@ class WebDataProvider extends DataProvider {
   Future<List<LambingModel>> getLambs(int idBete) async {
     final response = await _dio.get(
         '/lamb/searchAll?idMere=' + idBete.toString());
-    List<LambingModel> tempList = new List();
+    List<LambingModel> tempList = [];
     for (int i = 0; i < response.data.length; i++) {
       tempList.add(new LambingModel.fromResult(response.data[i]));
     }
@@ -193,7 +194,7 @@ class WebDataProvider extends DataProvider {
   Future<List<CompleteLambModel>> getAllLambs(String cheptel) async {
     final response = await _dio.get(
         '/lamb/cheptel/' + cheptel);
-    List<CompleteLambModel> tempList = new List();
+    List<CompleteLambModel> tempList = [];
     for (int i = 0; i < response.data.length; i++) {
       tempList.add(new CompleteLambModel.fromResult(response.data[i]));
     }
@@ -279,7 +280,7 @@ class WebDataProvider extends DataProvider {
   Future<List<TraitementModel>> getTraitements(Bete bete) async {
     final response = await _dio.get(
         '/traitement/get?idBete=' + bete.idBd.toString());
-    List<TraitementModel> tempList = new List();
+    List<TraitementModel> tempList = [];
     for (int i = 0; i < response.data.length; i++) {
       tempList.add(new TraitementModel.fromResult(response.data[i]));
     }
@@ -290,7 +291,7 @@ class WebDataProvider extends DataProvider {
   Future<List<TraitementModel>> getTraitementsForLamb(LambModel lamb) async {
     final response = await _dio.get(
         '/traitement/lamb/' + lamb.idBd.toString());
-    List<TraitementModel> tempList = new List();
+    List<TraitementModel> tempList = [];
     for (int i = 0; i < response.data.length; i++) {
       tempList.add(new TraitementModel.fromResult(response.data[i]));
     }
@@ -389,7 +390,7 @@ class WebDataProvider extends DataProvider {
   Future<List<NoteModel>> getNec(Bete bete) async {
     final response = await _dio.get(
         '/nec/get?idBete=' + bete.idBd.toString());
-    List<NoteModel> tempList = new List();
+    List<NoteModel> tempList = List.empty(growable: true);
     for (int i = 0; i < response.data.length; i++) {
       tempList.add(new NoteModel.fromResult(response.data[i]));
     }
@@ -416,7 +417,7 @@ class WebDataProvider extends DataProvider {
   Future<List<Pesee>> getPesee(Bete bete) async {
     final response = await _dio.get(
         '/poids/get/' + bete.idBd.toString());
-    List<Pesee> tempList = new List();
+    List<Pesee> tempList = List.empty(growable: true);
     for (int i = 0; i < response.data.length; i++) {
       tempList.add(new Pesee.fromResult(response.data[i]));
     }
@@ -427,7 +428,7 @@ class WebDataProvider extends DataProvider {
   Future<List<Pesee>> getPeseeForLamb(LambModel lamb) async {
     final response = await _dio.get(
         '/poids/lamb/' + lamb.idBd.toString());
-    List<Pesee> tempList = new List();
+    List<Pesee> tempList = List.empty(growable: true);
     for (int i = 0; i < response.data.length; i++) {
       tempList.add(new Pesee.fromResult(response.data[i]));
     }
@@ -471,7 +472,7 @@ class WebDataProvider extends DataProvider {
   Future<List<EchographieModel>> getEcho(Bete bete) async {
     final response = await _dio.get(
         '/echo/get/' + bete.idBd.toString());
-    List<EchographieModel> tempList = new List();
+    List<EchographieModel> tempList = [];
     for (int i = 0; i < response.data.length; i++) {
       tempList.add(new EchographieModel.fromResult(response.data[i]));
     }
@@ -489,7 +490,7 @@ class WebDataProvider extends DataProvider {
   Future<List<LotModel>> getLots(String cheptel) async {
     final response = await _dio.get(
         '/lot/getAll/' + cheptel);
-    List<LotModel> tempList = new List();
+    List<LotModel> tempList =[];
     for (int i = 0; i < response.data.length; i++) {
       tempList.add(new LotModel.fromResult(response.data[i]));
     }
@@ -500,7 +501,7 @@ class WebDataProvider extends DataProvider {
   Future<List<Affectation>> getBeliersForLot(int idLot) async {
     final response = await _dio.get(
         '/lot/getBeliers/' + idLot.toString());
-    List<Affectation> tempList = new List();
+    List<Affectation> tempList = [];
     for (int i = 0; i < response.data.length; i++) {
       tempList.add(new Affectation.fromResult(response.data[i]));
     }
@@ -511,7 +512,7 @@ class WebDataProvider extends DataProvider {
   Future<List<Affectation>> getBrebisForLot(int idLot) async {
     final response = await _dio.get(
         '/lot/getBrebis/' + idLot.toString());
-    List<Affectation> tempList = new List();
+    List<Affectation> tempList = [];
     for (int i = 0; i < response.data.length; i++) {
       tempList.add(new Affectation.fromResult(response.data[i]));
     }
@@ -519,7 +520,7 @@ class WebDataProvider extends DataProvider {
   }
 
   @override
-  Future<Function> remove(Affectation affect) async {
+  Future<String> remove(Affectation affect) async {
       try {
         final response = await _dio.post(
             '/lot/del', data: affect.toJson());
@@ -576,7 +577,7 @@ class WebDataProvider extends DataProvider {
     try {
       final response = await _dio.get(
           '/lot/bete/' + idBete.toString());
-      List<Affectation> tempList = new List();
+      List<Affectation> tempList = [];
       for (int i = 0; i < response.data.length; i++) {
         tempList.add(new Affectation.fromResult(response.data[i]));
       }
@@ -593,7 +594,7 @@ class WebDataProvider extends DataProvider {
     try {
       final response = await _dio.get(
           '/bete/getBeliers/');
-      List<Bete> tempList = new List();
+      List<Bete> tempList = [];
       for (int i = 0; i < response.data.length; i++) {
         tempList.add(new Bete.fromResult(response.data[i]));
       }
@@ -609,7 +610,7 @@ class WebDataProvider extends DataProvider {
   Future<List<Bete>> getBrebis() async {
     final response = await _dio.get(
         '/bete/getBrebis/');
-    List<Bete> tempList = new List();
+    List<Bete> tempList = [];
     for (int i = 0; i < response.data.length; i++) {
       tempList.add(new Bete.fromResult(response.data[i]));
     }
@@ -648,7 +649,7 @@ class WebDataProvider extends DataProvider {
     try {
       final response = await _dio.get(
           '/map/parcelles/');
-      List<Parcelle> parcelles = new List();
+      List<Parcelle> parcelles = [];
       for (int i = 0; i < response.data.length; i++) {
         parcelles.add(Parcelle.fromResult(response.data[i]));
       }

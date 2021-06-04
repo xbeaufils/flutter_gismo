@@ -1,21 +1,22 @@
 import 'package:flutter_gismo/model/BeteModel.dart';
 
 class TraitementModel {
-  int _idBd;
-  String _debut;
-  String _fin;
-  String _medicament;
-  String _voie;
-  String _dose;
-  String _rythme;
-  String _numBoucle;
-  String _numMarquage;
-  int _idBete;
-  int _idLamb;
-  String _ordonnance;
-  String _intervenant;
-  String _motif;
-  String _observation;
+  late int _idBd;
+
+  late String _debut;
+  late String _fin;
+  late String _medicament;
+  late String _voie;
+  late String _dose;
+  late String _rythme;
+  late String _numBoucle;
+  late String _numMarquage;
+  late int _idBete;
+  late int _idLamb;
+  late String _ordonnance;
+  late String _intervenant;
+  late String _motif;
+  late String _observation;
 
   int get idBd => _idBd;
   String get debut =>_debut;
@@ -89,7 +90,7 @@ class TraitementModel {
 
   String get rythme => _rythme;
 
-  set rythme(String value) {
+  set rythme(String  value) {
     _rythme = value;
   }
 
@@ -139,8 +140,8 @@ class TraitementModel {
 }
 
 class TraitementCollectif {
-  List<Bete> betes;
-  TraitementModel traitement;
+  late List<Bete> betes;
+  late TraitementModel traitement;
 
   TraitementCollectif(this.traitement, this.betes);
 
