@@ -45,9 +45,9 @@ class AgnelageState extends State<AgnelageDialog> {
       subtitle: Text(agnelage.value),
       value: agnelage.key,
       groupValue: _agnelage,
-      onChanged: (int value) {
+      onChanged: (int ? value) {
         setState(() {
-          _agnelage = value;
+          _agnelage = value!;
           Navigator
               .of(context)
               .pop(_agnelage);

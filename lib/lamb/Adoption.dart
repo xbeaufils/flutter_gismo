@@ -47,9 +47,9 @@ class AdoptionState extends State<AdoptionDialog> {
       subtitle: Text(adoption.value),
       value: adoption.key,
       groupValue: _adoption,
-      onChanged: (int value) {
+      onChanged: (int ? value) {
         setState(() {
-          _adoption = value;
+          _adoption = value!;
           Navigator
               .of(context)
               .pop(_adoption);
