@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'dart:developer' as debug;
 
 class PaturagePage extends StatefulWidget {
-  PaturagePage(this._bloc, this._pature, {Key key}) : super(key: key);
+  PaturagePage(this._bloc, this._pature, {Key ? key}) : super(key: key);
   final GismoBloc _bloc;
   final Pature _pature;
 
@@ -18,8 +18,8 @@ class _PaturagePageState extends State<PaturagePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController _dateDebutCtl = TextEditingController();
   TextEditingController _dateFinCtl = TextEditingController();
-  List<DropdownMenuItem<LotModel>> _dropdownMenuLots;
-  int _currentLot;
+  late List<DropdownMenuItem<LotModel>> _dropdownMenuLots;
+  int ? _currentLot;
 
   final df = new DateFormat('dd/MM/yyyy');
 
@@ -44,7 +44,7 @@ class _PaturagePageState extends State<PaturagePage> {
                     decoration: InputDecoration(
                       labelText: "Date de début",),
                     onTap: () async{
-                      DateTime date = DateTime.now();
+                      DateTime ? date = DateTime.now();
                       FocusScope.of(context).requestFocus(new FocusNode());
 
                       date = await showDatePicker(
@@ -64,7 +64,7 @@ class _PaturagePageState extends State<PaturagePage> {
                     decoration: InputDecoration(
                       labelText: "Date de Fin",),
                     onTap: () async{
-                      DateTime date = DateTime.now();
+                      DateTime ? date = DateTime.now();
                       FocusScope.of(context).requestFocus(new FocusNode());
 
                       date = await showDatePicker(
@@ -84,7 +84,7 @@ class _PaturagePageState extends State<PaturagePage> {
           new Card(
             child: new FutureBuilder<List<LotModel>>(
                 future: this.widget._bloc.getLots(),
-                builder: (context, snapshot) {
+                builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.hasError) {
                     return new Container();
                   } else if (!snapshot.hasData) {
@@ -99,7 +99,7 @@ class _PaturagePageState extends State<PaturagePage> {
                           )
                         ).toList(),
                     value: _currentLot,
-                    onChanged: (int value) {
+                    onChanged: (int ? value) {
                       setState(() {
                         _currentLot = value;
                       });
@@ -125,7 +125,8 @@ class _PaturagePageState extends State<PaturagePage> {
 
   void _save() async {
     debug.log("Message", name: "_PaturagePageState::_save");
-    this.widget._pature.lotId = _currentLot;
+    if (_currentLot != null)
+      this.widget._pature.lotId = _currentLot!;
     this.widget._pature.debut = _dateDebutCtl.text;
     if ( _dateFinCtl.text.isNotEmpty)
       this.widget._pature.fin = _dateFinCtl.text;

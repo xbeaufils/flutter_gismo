@@ -1,11 +1,11 @@
 class Parcelle {
-  int id;
-  String idu;
-  String numero;
-  String cheptel;
-  String nomCommune;
-  String secteurName;
-  int secteurId;
+  late int id;
+  late String idu;
+  late String numero;
+  late String cheptel;
+  late String nomCommune;
+  late String secteurName;
+  late int secteurId;
 
   Parcelle.fromResult(result) {
     id= result['id'];
@@ -19,12 +19,12 @@ class Parcelle {
 }
 
 class Pature {
-  int id;
-  int lotId;
-  String lot;
-  String debut;
-  String fin;
-  int parcelleId;
+  late int id;
+  late int lotId;
+  late String lot;
+  late String debut;
+  late String fin;
+  late int parcelleId;
 
   Pature.fromResult(result) {
     id = result['id'];

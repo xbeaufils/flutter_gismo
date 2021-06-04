@@ -14,7 +14,7 @@ enum View {fiche, ewe, ram}
 class SelectionPage extends StatefulWidget {
    final GismoBloc _bloc;
 
-  SelectionPage(this._bloc,{Key key}) : super(key: key);
+  SelectionPage(this._bloc,{Key ? key}) : super(key: key);
   @override
   _SelectionPageState createState() => new _SelectionPageState(this._bloc);
 }
@@ -23,7 +23,7 @@ class _SelectionPageState extends State<SelectionPage> {
   final GismoBloc _bloc;
   _SelectionPageState(this._bloc);
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  List<Bete> lstBete = new List();
+  List<Bete> lstBete = [];
   TextEditingController _codeLotCtl = TextEditingController();
   TextEditingController _dateDebutCtl = TextEditingController();
   TextEditingController _dateFinCtl = TextEditingController();
@@ -84,7 +84,7 @@ class _SelectionPageState extends State<SelectionPage> {
 
   Future _addBete() async {
     //Future _openAddEntryDialog() async {
-      Bete selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
+      Bete ? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
           builder: (BuildContext context) {
             SearchPage search = new SearchPage(this._bloc, GismoPage.lot);
             return search;

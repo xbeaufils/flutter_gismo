@@ -18,10 +18,10 @@ import 'package:sentry/sentry.dart';
 
 class SearchPage extends StatefulWidget {
   final GismoBloc _bloc;
-  final GismoPage _nextPage;
-  Sex searchSex;
+  GismoPage _nextPage;
+  late Sex searchSex;
   get nextPage => _nextPage;
-  SearchPage(this._bloc, this._nextPage, { Key key }) : super(key: key);
+  SearchPage(this._bloc, this._nextPage, { Key? key }) : super(key: key);
   @override
   _SearchPageState createState() => new _SearchPageState(_bloc);
 }
@@ -36,9 +36,10 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
 
   String _searchText = "";
-  List<Bete> _betes = new List();
-  List<Bete> _filteredBetes = new List();
+  List<Bete> _betes = <Bete>[]; //new List();
+  List<Bete> _filteredBetes = <Bete>[]; //new List();
 
+  late Stream _bluetoothStream;
   String _bluetoothState ="NONE";
   bool _rfidPresent = false;
   Icon _searchIcon = new Icon(Icons.search);
@@ -63,7 +64,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   void initState() {
     this._getBetes();
     super.initState();
-    if (this._bloc.isLogged())
+    if (this._bloc.isLogged()!)
       this._startService();
     }
 
@@ -86,12 +87,12 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           ],
         ),
       floatingActionButton: _buildRfid(),
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
     );
   }
 
   Widget _statusBluetoothBar()  {
-    if ( ! this._bloc.isLogged())
+    if ( ! this._bloc.isLogged()!)
       return Container();
     return FutureBuilder(
         future: this._bloc.configIsBt(),
@@ -104,7 +105,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
             return Container();
           if (! snapshot.data )
             return Container();
-          List<Widget> status = new List();
+          List<Widget> status = <Widget>[]; //new List();
           switch (_bluetoothState) {
             case "NONE":
               status.add(Icon(Icons.bluetooth));
@@ -123,7 +124,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   Widget _buildRfid() {
-    if (_bloc.isLogged() && this._rfidPresent) {
+    if (_bloc.isLogged()! && this._rfidPresent) {
       return FloatingActionButton(
           child: Icon(Icons.wifi),
           backgroundColor: Colors.green,
@@ -163,9 +164,11 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   Future<String> _startService() async{
     try {
       if ( await this._bloc.configIsBt()) {
+        this._bluetoothStream = this.widget._bloc.streamBluetooth();
+        //this._bluetoothStream.listen((BluetoothState event) { })
         this.widget._bloc.streamBluetooth().listen(
                 (BluetoothState event) {
-                  if (_bluetoothState != event.status && this.mounted)
+                  if (_bluetoothState != event.status)
                     setState(() {
                     _bluetoothState = event.status;
                     if (event.status == 'AVAILABLE') {
@@ -191,7 +194,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     return start;
   }
 
-  Widget _buildBar(BuildContext context) {
+  AppBar _buildBar(BuildContext context) {
     return new AppBar(
       centerTitle: true,
        title: _appBarTitle,
@@ -207,7 +210,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   Widget _buildList() {
     if (_searchText.isNotEmpty) {
-      List<Bete> tempList = new List();
+      List<Bete> tempList = <Bete>[]; // new List();
       for (int i = 0; i < _filteredBetes.length; i++) {
         if (_filteredBetes[i].numBoucle.toLowerCase().contains(_searchText.toLowerCase())) {
           tempList.add(_filteredBetes[i]);
@@ -280,7 +283,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     final snackBar = SnackBar(
       content: Text(message),
     );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    //_scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
   void _searchPressed() {
@@ -306,7 +310,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   void _getBetes() async {
-    List<Bete> lstBetes = null;
+    List<Bete> ? lstBetes ;
     switch (this.widget.searchSex ) {
       case Sex.femelle:
         lstBetes = await this._bloc.getBrebis();
@@ -321,13 +325,12 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
    }
 
    void fillList(List<Bete> lstBetes) {
-    if (this.mounted) {
-      setState(() {
-        _betes = lstBetes;
-        //names.shuffle();
-        _filteredBetes = _betes;
-      });
-    }
+    setState(() {
+      _betes = lstBetes;
+      //names.shuffle();
+      _filteredBetes = _betes;
+    });
+
   }
 
 }
