@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:facebook_audience_network/ad/ad_banner.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 //import 'package:flutter_gismo/main.dart';
@@ -140,21 +141,39 @@ class _WelcomePageState extends State<WelcomePage> {
                       _buildButton("Sortie", "assets/Truck.png", _sortiePressed),
                     //  _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
                     ]))),
-              (this._bloc.isLogged()!) ?
-                Container():
-                Card(child:
-                  AdmobBanner(
-                    adUnitId: _getBannerAdUnitId(),
-                    adSize: AdmobBannerSize.BANNER,),
-                  ),
-              (this._bloc.isLogged()!) ?
-                Container():
-                Card(child:
-                  FacebookBannerAd(
-                    placementId: '212596486937356_212596826937322',
-                    bannerSize: BannerSize.STANDARD,),
-                ),
+              this._getAdmobAdvice(),
+              this._getFacebookAdvice(),
             ]));
+  }
+
+  Widget _getAdmobAdvice() {
+    if (this._bloc.isLogged() ! ) {
+      return Container();
+    }
+    if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
+      return
+        Card(child:
+        AdmobBanner(
+          adUnitId: _getBannerAdUnitId(),
+          adSize: AdmobBannerSize.BANNER,),
+        );
+    }
+    return Container();
+  }
+
+  Widget _getFacebookAdvice() {
+    if (this._bloc.isLogged() ! ) {
+      return Container();
+    }
+    if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
+      return
+        Card(child:
+          FacebookBannerAd(
+            placementId: '212596486937356_212596826937322',
+            bannerSize: BannerSize.STANDARD,),
+          );
+    }
+    return Container();
   }
 
   String _getBannerAdUnitId() {
@@ -218,16 +237,6 @@ class _WelcomePageState extends State<WelcomePage> {
   void _individuPressed() {
     Navigator.pushNamed(context, '/search');
   }
-/*
-  void _loginPressed() {
-    var navigationResult = Navigator.pushNamed(context, '/config');
-    navigationResult.then((message) {
-      setState(() {
-        this.widget._message = message;
-      });
-    });
-  }
-*/
 /*
   void _logoutPressed() {
     Navigator.pushNamed(context, '/config');

@@ -1,11 +1,11 @@
 import 'dart:async';
-
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Environnement.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/flavor/FlavorOvin.dart';
 import 'package:sentry/sentry.dart';
 
 GismoBloc gismoBloc = new GismoBloc();
@@ -13,13 +13,17 @@ GismoBloc gismoBloc = new GismoBloc();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Admob.initialize(testDeviceIds: ['CDB1827517618849EC4C60C7389786D9']);
-  gismoBloc = new GismoBloc(new FlavorOvin());
+  if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))
+    Admob.initialize(testDeviceIds: ['CDB1827517618849EC4C60C7389786D9']);
+  gismoBloc = new GismoBloc();
   Environnement.init( "http://10.0.2.2:8080/gismoWeb/bd", "http://192.168.0.212:8080/gismoApp/api");
   //await gismoBloc.init();
   //bool isLogged = false; //gismoBloc.isLogged();
+  String nextPage = '/login';
+  if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))
+    nextPage='/splash';
   final GismoApp gismoApp = new GismoApp(gismoBloc,
-     initialRoute: '/splash', //isLogged ? '/welcome' : '/config',
+     initialRoute: nextPage, //isLogged ? '/welcome' : '/config',
   );
   // Run app!
   /*

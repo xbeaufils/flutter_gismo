@@ -247,7 +247,7 @@ class _BetePageState extends State<BetePage> {
       return;
     }
     if (_bete == null)
-      _bete = new Bete(null, _numBoucleCtrl.text, _numMarquageCtrl.text,_nom!, _obs!, _dateEntreCtrl.text, _sex!, _motif!);
+      _bete = new Bete(null, _numBoucleCtrl.text, _numMarquageCtrl.text,_nom, _obs, _dateEntreCtrl.text, _sex!, _motif);
     else {
       _bete!.numBoucle = _numBoucleCtrl.text;
       _bete!.numMarquage = _numMarquageCtrl.text;

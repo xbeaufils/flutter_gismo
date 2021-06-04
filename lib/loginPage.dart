@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
-//import 'package:flutter_gismo/main.dart';
+import 'package:flutter_gismo/model/User.dart';
 import 'package:flutter_gismo/welcome.dart';
 
 class LoginPage extends StatefulWidget {
@@ -92,10 +92,9 @@ class _LoginPageState extends State<LoginPage> {
   }
   _saveConfig() async {
     try {
-      String message  = await _bloc.saveLogin(_emailCtrl.text, _passwordCtrl.text);
-      Navigator.pushReplacement(context, MaterialPageRoute(
-        builder: (context) => new WelcomePage(_bloc, message),
-      ));
+      User testUser  = User(_emailCtrl.text, _passwordCtrl.text);
+      User testedUser = await this._bloc.login(testUser);
+      Navigator.pushNamed(context,'/welcome');
     }
     catch(e) {
       this.showMessage(e.toString());
