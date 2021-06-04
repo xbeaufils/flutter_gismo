@@ -6,20 +6,20 @@ import 'package:intl/intl.dart';
 class MortPage extends StatefulWidget {
   final LambModel _currentLamb ;
   final GismoBloc _bloc;
-  MortPage( this._currentLamb, this._bloc, {Key key}) : super(key: key);
+  MortPage( this._currentLamb, this._bloc, {Key ? key}) : super(key: key);
 
   @override
   _MortPageState createState() => new _MortPageState();
 }
 
 class _MortPageState extends State<MortPage> {
-  String _currentMotif;
+  late String _currentMotif;
   TextEditingController _dateMortCtl = TextEditingController();
   final _df = new DateFormat('dd/MM/yyyy');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   List<DropdownMenuItem<String>> _getCauseMortItems() {
-    List<DropdownMenuItem<String>> items = new List();
+    List<DropdownMenuItem<String>> items = [];
     items.add( new DropdownMenuItem(value: 'Mise_bas', child: new Text('Mise bas')));
     items.add( new DropdownMenuItem(value: 'Pas_de_contraction_dilatation', child: new Text('Pas de contraction/dilatation')));
     items.add( new DropdownMenuItem(value: 'Prolapsus', child: new Text('Prolapsus')));
@@ -84,16 +84,16 @@ class _MortPageState extends State<MortPage> {
                             labelText: "Date de décès",
                             hintText: 'jj/mm/aaaa'),
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value!.isEmpty) {
                             return "Pas de date de décès";
                           }},
                         onSaved: (value) {
                           setState(() {
-                            _dateMortCtl.text = value;
+                            _dateMortCtl.text = value!;
                           });
                         },
                         onTap: () async{
-                          DateTime date = DateTime.now();
+                          DateTime ? date = DateTime.now();
                           FocusScope.of(context).requestFocus(new FocusNode());
                           date = await showDatePicker(
                               locale: const Locale("fr","FR"),
@@ -103,7 +103,7 @@ class _MortPageState extends State<MortPage> {
                               lastDate: DateTime(2100));
                           if (date != null) {
                             setState(() {
-                              _dateMortCtl.text = _df.format(date);
+                              _dateMortCtl.text = _df.format(date!);
                             });
                           }
                         }),
@@ -127,9 +127,9 @@ class _MortPageState extends State<MortPage> {
     );
   }
 
-  void _changedCauseDecesItem(String selectedMotif) {
+  void _changedCauseDecesItem(String ? selectedMotif) {
     setState(() {
-      _currentMotif= selectedMotif;
+      _currentMotif= selectedMotif!;
     });
   }
 
@@ -158,7 +158,7 @@ class _MortPageState extends State<MortPage> {
     final snackBar = SnackBar(
       content: Text(message),
     );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   void goodSaving(String message) {

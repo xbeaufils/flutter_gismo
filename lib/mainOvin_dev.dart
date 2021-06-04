@@ -8,7 +8,7 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/flavor/FlavorOvin.dart';
 import 'package:sentry/sentry.dart';
 
-GismoBloc gismoBloc;
+GismoBloc gismoBloc = new GismoBloc();
 
 
 void main() async {

@@ -1,22 +1,22 @@
 import 'package:flutter_gismo/model/BeteModel.dart';
 
 class LotModel {
-  int _idb;
-  String _cheptel;
-  String _codeLotLutte;
-  String _campagne;
+  late int _idb;
+  late String _cheptel;
+  late String _codeLotLutte;
+  late String _campagne;
   //<xsd:element name="DateDebutLutte" type="xsd:date"/>
-  String _dateDebutLutte;
+  late String _dateDebutLutte;
   //<xsd:element name="DateFinLutte" type="xsd:date"/>
-  String _dateFinLutte;
+  late String _dateFinLutte;
   //<xsd:element name="CodeReproduction" type="CODEMETHODEREPRODUCTION:TypeCodeMethodeReproduction"/>
   //<xsd:element name="CodeLutteMain" type="xsd:boolean"/>
-  bool _codeLutteMain;
+  late bool _codeLutteMain;
   //<xsd:element name="NombreDeBrebis" type="Nombre4Chiffres" minOccurs="0"/>
   //<xsd:element name="NombreDeBeliers" type="Nombre4Chiffres" minOccurs="0"/>
   //<xsd:element name="CodeRacePereSuppose" type="CODERACEOVIN:TypeCodeRacePhenotypiqueOvin" minOccurs="0"/>
-  List<Bete> _brebis;
-  List<Bete> _beliers;
+  late List<Bete> _brebis;
+  late List<Bete> _beliers;
 
   int get idb => _idb;
 
@@ -53,13 +53,13 @@ class LotModel {
     _codeLotLutte = value;
   }
 
-  get dateDebutLutte => _dateDebutLutte;
+  String get dateDebutLutte => _dateDebutLutte;
 
   set dateDebutLutte(String value) {
     _dateDebutLutte = value;
   }
 
-  get dateFinLutte => _dateFinLutte;
+  String get dateFinLutte => _dateFinLutte;
 
   set dateFinLutte(String value) {
     _dateFinLutte = value;

@@ -1,10 +1,10 @@
 class EchographieModel {
-  int _idBd;
-  String _dateEcho;
-  String _dateAgnelage;
-  String _dateSaillie;
-  int _nombre;
-  int _bete_id;
+  int ? _idBd;
+  late String _dateEcho;
+  String ? _dateAgnelage;
+  String ? _dateSaillie;
+  late int _nombre;
+  late int _bete_id;
 
   EchographieModel();
 
@@ -37,10 +37,10 @@ class EchographieModel {
     _dateEcho = value;
   }
 
-  set idBd(int value) {
+  set idBd(int ? value) {
     _idBd = value;
   }
-  set dateAgnelage(String value) {
+  set dateAgnelage(String ? value) {
     _dateAgnelage = value;
   }
 
@@ -48,7 +48,7 @@ class EchographieModel {
     _nombre = value;
   }
 
-  set dateSaillie(String value) {
+  set dateSaillie(String ? value) {
     _dateSaillie = value;
   }
 
@@ -56,12 +56,12 @@ class EchographieModel {
 
   int get nombre => _nombre;
 
-  String get dateSaillie => _dateSaillie;
+  String ? get dateSaillie => _dateSaillie;
 
-  String get dateAgnelage => _dateAgnelage;
+  String ? get dateAgnelage => _dateAgnelage;
 
   String get dateEcho => _dateEcho;
 
-  int get idBd => _idBd;
+  int ? get idBd => _idBd;
 
  }

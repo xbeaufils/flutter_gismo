@@ -7,12 +7,12 @@ import 'package:intl/intl.dart';
 class EchoPage extends StatefulWidget {
   final GismoBloc _bloc;
   Bete _bete;
-  EchographieModel _currentEcho;
+  EchographieModel ? _currentEcho;
   @override
   EchoPageState createState() => EchoPageState(this._bloc);
 
   EchoPage(this._bloc,this._bete);
-  EchoPage.edit(this._bloc, this._currentEcho, this._bete, {Key key}) : super(key: key);
+  EchoPage.edit(this._bloc, this._currentEcho, this._bete, {Key ? key}) : super(key: key);
 
 }
 
@@ -25,7 +25,7 @@ class EchoPageState extends State<EchoPage> {
   TextEditingController _dateAgnelageCtl = TextEditingController();
 
   //TextEditingController _nombreCtl = TextEditingController();
-  int _nombre;
+  late int _nombre;
 
   final _df = new DateFormat('dd/MM/yyyy');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -49,12 +49,12 @@ class EchoPageState extends State<EchoPage> {
                     labelText: "Date d\'echographie",
                     hintText: 'jj/mm/aaaa'),
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value!.isEmpty) {
                     return "Pas de date saisie";
                   }},
                 onSaved: (value) {
                   setState(() {
-                    _dateEchoCtl.text = value;
+                    _dateEchoCtl.text = value!;
                   });
                 },
                 onTap: () async{
@@ -65,7 +65,7 @@ class EchoPageState extends State<EchoPage> {
                       context: context,
                       initialDate:DateTime.now(),
                       firstDate:DateTime(1900),
-                      lastDate: DateTime(2100));
+                      lastDate: DateTime(2100)) as DateTime;
                   if (date != null) {
                     setState(() {
                       _dateEchoCtl.text = _df.format(date);
@@ -134,7 +134,7 @@ class EchoPageState extends State<EchoPage> {
                     hintText: 'jj/mm/aaaa'),
                 onSaved: (value) {
                   setState(() {
-                    _dateSaillieCtl.text = value;
+                    _dateSaillieCtl.text = value!;
                   });
                 },
                 onTap: () async{
@@ -144,7 +144,7 @@ class EchoPageState extends State<EchoPage> {
                       context: context,
                       initialDate:DateTime.now(),
                       firstDate:DateTime(1900),
-                      lastDate: DateTime(2100));
+                      lastDate: DateTime(2100)) as DateTime;
                   if (date != null) {
                     setState(() {
                       _dateSaillieCtl.text = _df.format(date);
@@ -159,12 +159,12 @@ class EchoPageState extends State<EchoPage> {
                     hintText: 'jj/mm/aaaa'),
                 onSaved: (value) {
                   setState(() {
-                    _dateAgnelageCtl.text = value;
+                    _dateAgnelageCtl.text = value!;
                   });
                 },
                 onTap: () async{
                   FocusScope.of(context).requestFocus(new FocusNode());
-                  DateTime date = await showDatePicker(
+                  DateTime ? date = await showDatePicker(
                       locale: const Locale("fr","FR"),
                       context: context,
                       initialDate:DateTime.now(),
@@ -194,17 +194,19 @@ class EchoPageState extends State<EchoPage> {
     if (this.widget._currentEcho == null)
       _dateEchoCtl.text = _df.format(DateTime.now());
     else {
-      _nombre = this.widget._currentEcho.nombre;
-      _dateEchoCtl.text = this.widget._currentEcho.dateEcho;
-      _dateAgnelageCtl.text = this.widget._currentEcho.dateAgnelage;
-      _dateSaillieCtl.text = this.widget._currentEcho.dateSaillie;
+      _nombre = this.widget._currentEcho!.nombre;
+      _dateEchoCtl.text = this.widget._currentEcho!.dateEcho;
+      if (this.widget._currentEcho!.dateAgnelage != null)
+        _dateAgnelageCtl.text = this.widget._currentEcho!.dateAgnelage!;
+      if (this.widget._currentEcho!.dateSaillie != null)
+      _dateSaillieCtl.text = this.widget._currentEcho!.dateSaillie!;
     }
    // _nec = this.widget._currentLevel;
   }
 
-  void _handleRdNombreChange(int value) {
+  void _handleRdNombreChange(int ? value) {
     setState(() {
-      _nombre = value;
+      _nombre = value!;
     });
   }
 
@@ -212,7 +214,7 @@ class EchoPageState extends State<EchoPage> {
     String message;
     if (_nombre == null) {
       message = "Le nombre de foetus est vide";
-      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
       return;
     }
     setState(() {
@@ -220,20 +222,20 @@ class EchoPageState extends State<EchoPage> {
     });
     if (this.widget._currentEcho == null)
       this.widget._currentEcho = new EchographieModel();
-    this.widget._currentEcho.bete_id = this.widget._bete.idBd;
-    this.widget._currentEcho.dateEcho = _dateEchoCtl.text;
-    this.widget._currentEcho.nombre = _nombre;
+    this.widget._currentEcho!.bete_id = this.widget._bete.idBd;
+    this.widget._currentEcho!.dateEcho = _dateEchoCtl.text;
+    this.widget._currentEcho!.nombre = _nombre;
     if (_dateSaillieCtl.text.isNotEmpty)
-      this.widget._currentEcho.dateSaillie = _dateSaillieCtl.text;
+      this.widget._currentEcho!.dateSaillie = _dateSaillieCtl.text;
     else
-      this.widget._currentEcho.dateSaillie = null;
+      this.widget._currentEcho!.dateSaillie = null;
     if (_dateAgnelageCtl.text.isNotEmpty )
-      this.widget._currentEcho.dateAgnelage = _dateAgnelageCtl.text;
+      this.widget._currentEcho!.dateAgnelage = _dateAgnelageCtl.text;
     else
-      this.widget._currentEcho.dateAgnelage = null;
+      this.widget._currentEcho!.dateAgnelage = null;
     message =
-      await this._bloc.saveEcho(this.widget._currentEcho);
-      _scaffoldKey.currentState
+      await this._bloc.saveEcho(this.widget._currentEcho!);
+    ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(message)))
           .closed
           .then((e) => {Navigator.of(context).pop()});

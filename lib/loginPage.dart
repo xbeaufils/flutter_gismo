@@ -5,7 +5,7 @@ import 'package:flutter_gismo/welcome.dart';
 
 class LoginPage extends StatefulWidget {
   final GismoBloc _bloc;
-  LoginPage(this._bloc, {Key key}) : super(key: key);
+  LoginPage(this._bloc, { Key? key}) : super(key: key);
   @override
   _LoginPageState createState() => new _LoginPageState(_bloc);
 }
@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
       ));
     }
     catch(e) {
-      this.showMessage(e);
+      this.showMessage(e.toString());
     }
   }
 
@@ -108,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
     final snackBar = SnackBar(
       content: Text(message),
     );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
+    _scaffoldKey.currentState!.showSnackBar(snackBar);
   }
 
 }

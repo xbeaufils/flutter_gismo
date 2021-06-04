@@ -8,7 +8,7 @@ import 'package:flutter_gismo/model/DeviceModel.dart';
 class BluetoothPage extends StatefulWidget {
   final GismoBloc _bloc;
 
-  BluetoothPage(this._bloc,  {Key key}) : super(key: key);
+  BluetoothPage(this._bloc,  {Key ? key}) : super(key: key);
 
   @override
   _BluetoothPagePageState createState() => new _BluetoothPagePageState(_bloc);
@@ -20,7 +20,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   static const  BLUETOOTH_CHANNEL = const MethodChannel('nemesys.rfid.bluetooth');
 
   _BluetoothPagePageState(this._bloc);
-  String _preferredAddress;
+  String ? _preferredAddress;
   bool _isBluetooth = false;
   @override
   void initState()  {
@@ -65,7 +65,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   Widget _buildBody() {
     if (_isBluetooth)
     return FutureBuilder(
-        builder: (context, deviceSnap) {
+        builder: (context, AsyncSnapshot deviceSnap) {
           if (deviceSnap.connectionState == ConnectionState.none &&
               deviceSnap.hasData == null) {
             //print('project snapshot data is: ${projectSnap.data}');
@@ -83,7 +83,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
                   subtitle: Text(device.address),
                   value: device.address,
                   groupValue: _preferredAddress,
-                  onChanged: (value) {_changeAddress(value);
+                  onChanged: (String ? value) {_changeAddress(value!);
                   }),);
               },
           );
@@ -102,7 +102,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   void switched(value) {
     this.setState(() {
       this._isBluetooth = value;
-      this._bloc.saveBt(_isBluetooth, _preferredAddress);
+      this._bloc.saveBt(_isBluetooth, _preferredAddress!);
     });
   }
 
@@ -110,7 +110,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
     setState(() {
       _preferredAddress = value;
     });
-    this._bloc.saveBt(_isBluetooth, _preferredAddress);
+    this._bloc.saveBt(_isBluetooth, _preferredAddress!);
   }
 
 }

@@ -24,7 +24,7 @@ import 'dart:developer' as debug;
 class LocalDataProvider extends DataProvider{
 
   // only have a single app-wide reference to the database
-  static Database _database;
+  static Database ? _database;
   static BaseOptions options = new BaseOptions(
     baseUrl: Environnement.getUrlWebTarget(),
     connectTimeout: 5000,
@@ -35,10 +35,10 @@ class LocalDataProvider extends DataProvider{
   LocalDataProvider(GismoBloc bloc) : super(bloc);
 
   Future<Database> get database async {
-    if (_database != null) return _database;
+    if (_database != null) return _database!;
     // lazily instantiate the db the first time it is accessed
     _database = await _init();
-    return _database;
+    return _database!;
   }
 
   Future<Database> _init() async{
@@ -124,7 +124,7 @@ class LocalDataProvider extends DataProvider{
         version:10,
     );
     Report report = new Report();
-    report.cheptel = super.cheptel;
+    report.cheptel = super.cheptel!;
     List<Map<String, dynamic>> maps = await database.rawQuery("select count(*) as nb from bete");
     report.betes = maps[0]['nb'];
     maps = await database.rawQuery("select count(*) as nb from lot");
@@ -146,7 +146,7 @@ class LocalDataProvider extends DataProvider{
     catch(e,stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       //super.bloc.reportError(e, stackTrace);
-      debug.log("message" + e , name: "LocalDataProvider::_init");
+      debug.log("message"  , name: "LocalDataProvider::_init");
     }
     finally {
       return database;
@@ -294,14 +294,14 @@ class LocalDataProvider extends DataProvider{
     //final Future<List<Map<String, dynamic>>> futureMaps = client.query('car', where: 'id = ?', whereArgs: [id]);
     //futureMaps.then(onValue)
     var maps = await futureMaps;
-    List<Bete> tempList = new List();
+    List<Bete> tempList = [];
     for (int i = 0; i < maps.length; i++) {
       tempList.add(new Bete.fromResult(maps[i]));
     }
     return tempList;
   }
 
-  Future<Bete> _searchBete(int idBd) async {
+  Future<Bete?> _searchBete(int idBd) async {
     Database db = await this.database;
     List<Map<String, dynamic>> futureMaps = await db.query('bete' ,where: 'id = ?', whereArgs: [idBd]);
     if (futureMaps.length == 0) {
@@ -321,7 +321,7 @@ class LocalDataProvider extends DataProvider{
 
 
   @override
-  Future<Bete> getMere(Bete bete) async {
+  Future<Bete?> getMere(Bete bete) async {
     try {
       Database db = await this.database;
       List<Map<String, dynamic>> agneaux = await db.query('agneaux',where: 'devenir_id = ?', whereArgs: [bete.idBd]);
@@ -332,7 +332,7 @@ class LocalDataProvider extends DataProvider{
       if (agnelages.isEmpty)
         return null;
       LambingModel agnelage = new LambingModel.fromResult(agnelages[0]);
-      Bete mere = await this._searchBete(agnelage.idMere);
+      Bete ? mere = await this._searchBete(agnelage.idMere);
       return mere;
     } catch (e,stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
@@ -343,37 +343,39 @@ class LocalDataProvider extends DataProvider{
 
   @override
   Future<List<LambingModel>> getLambs(int idBete) async {
+    List<LambingModel> tempList = [];
     try {
       Database db = await this.database;
       final Future<List<Map<String, dynamic>>> futureMaps = db.query('agnelage',where: 'mere_id = ?', whereArgs: [idBete]);
       var maps = await futureMaps;
-      List<LambingModel> tempList = new List();
       for (int i = 0; i < maps.length; i++) {
         LambingModel current = new LambingModel.fromResult(maps[i]);
-        current.lambs = new List();
+        current.lambs = [];
         List<Map<String, dynamic>> agneaux = await db.query('agneaux',where: 'agnelage_id = ?', whereArgs: [current.idBd]);
         for (int j = 0; j < agneaux.length; j++) {
           LambModel lamb = LambModel.fromResult(agneaux[j]);
           if (lamb.idDevenir != null) {
-            Bete devenu = await this._searchBete(lamb.idDevenir);
-            lamb.numBoucle = devenu.numBoucle;
-            lamb.numMarquage = devenu.numMarquage;
+            Bete ? devenu = await this._searchBete(lamb.idDevenir);
+            if (devenu != null) {
+              lamb.numBoucle = devenu.numBoucle;
+              lamb.numMarquage = devenu.numMarquage;
+            }
           }
           current.lambs.add(lamb);
         }
         tempList.add(current);
       }
-      return tempList;
-    } catch (e,stackTrace) {
+     } catch (e,stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       //super.bloc.reportError(e, stackTrace);
     }
+    return tempList;
   }
 
 
   @override
   Future<List<CompleteLambModel>> getAllLambs(String cheptel) async {
-    List<CompleteLambModel> tempList = new List();
+    List<CompleteLambModel> tempList = [];
     try {
       Database db = await this.database;
       List<Map<String, dynamic>> agneaux  = await db.rawQuery(
@@ -393,11 +395,11 @@ class LocalDataProvider extends DataProvider{
         CompleteLambModel lamb = CompleteLambModel.fromResult(agneaux[j]);
         tempList.add(lamb);
       }
-      return tempList;
     } catch (e,stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       //super.bloc.reportError(e, stackTrace);
     }
+    return tempList;
   }
 
   @override
@@ -443,25 +445,31 @@ class LocalDataProvider extends DataProvider{
   }
 
   @override
-  Future<LambingModel> searchLambing(int idBd) async {
+  Future<LambingModel ?> searchLambing(int idBd) async {
     Database db = await this.database;
-    final List<Map<String, dynamic>> futureMaps = await db.query('agnelage',where: 'id = ?', whereArgs: [idBd]);
+    final List<Map<String, dynamic>> futureMaps = await db.query(
+        'agnelage', where: 'id = ?', whereArgs: [idBd]);
     if (futureMaps.length == 0) {
-      debug.log("Agnelage non trouvé " + idBd.toString(), name: "LocalDataProvider::searchLambing" );
+      debug.log("Agnelage non trouvé " + idBd.toString(),
+          name: "LocalDataProvider::searchLambing");
       return null;
     }
     LambingModel current = new LambingModel.fromResult(futureMaps[0]);
-    Bete mere = await this._searchBete(current.idMere);
-    current.numMarquageMere = mere.numMarquage;
+    Bete ? mere = await this._searchBete(current.idMere);
+    if (mere != null) {
+      current.numMarquageMere = mere.numMarquage;
     current.numBoucleMere = mere.numBoucle;
-    current.lambs = new List();
+    }
+    current.lambs = [];
     List<Map<String, dynamic>> agneaux = await db.query('agneaux',where: 'agnelage_id = ?', whereArgs: [current.idBd]);
     for (int j = 0; j < agneaux.length; j++) {
       LambModel aLamb = LambModel.fromResult(agneaux[j]);
       if (aLamb.idDevenir != null ) {
-        Bete devenu = await this._searchBete(idBd);
-        aLamb.numMarquage = devenu.numMarquage;
-        aLamb.numBoucle = devenu.numBoucle;
+        Bete ? devenu = await this._searchBete(idBd);
+        if (devenu != null) {
+          aLamb.numMarquage = devenu.numMarquage;
+          aLamb.numBoucle = devenu.numBoucle;
+        }
       }
       current.lambs.add(aLamb);
     }
@@ -475,7 +483,7 @@ class LocalDataProvider extends DataProvider{
     lstBete.forEach((bete) => { _updateSortie(batch, date, motif, bete)});
     var results = await batch.commit();
     print(results);
-
+    return "Sortie enregistrée";
   }
 
   void _updateSortie(Batch batch, String date, String motif, Bete bete) {
@@ -492,6 +500,7 @@ class LocalDataProvider extends DataProvider{
     lstBete.forEach((bete) => { _insertEntree(batch, cheptel, date, motif, bete)});
     var results = await batch.commit();
     print(results);
+    return "Entrée enregistrée";
   }
 
   void _insertEntree(Batch batch, String cheptel, String date, String motif, Bete bete) async {
@@ -508,13 +517,20 @@ class LocalDataProvider extends DataProvider{
   @override
   Future<String> boucler(LambModel lamb, Bete bete) async {
     Database db = await this.database;
-    LambingModel agnelage = await this.searchLambing(lamb.idAgnelage);
+    LambingModel ? agnelage = await this.searchLambing(lamb.idAgnelage);
+    if (agnelage == null)
+      return "Agnelage non trouvé";
     bete.dateEntree = agnelage.dateAgnelage;
-    int idBete = await db.insert('bete', bete.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
+    int idBete = await db.insert(
+        'bete', bete.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     lamb.idDevenir = idBete;
-    db.update('agneaux', lamb.toBdJson(),where: "id = ?", whereArgs: <int>[lamb.idBd]);
-    db.rawUpdate('udpate traitement set beteId=? where lambId=?', [idBete, lamb.idBd]);
-    db.rawUpdate("UPDATE pesee set bete_id=? where lamb_id=?", [idBete, lamb.idBd]);
+    db.update('agneaux', lamb.toBdJson(), where: "id = ?",
+        whereArgs: <int>[lamb.idBd]);
+    db.rawUpdate(
+        'udpate traitement set beteId=? where lambId=?', [idBete, lamb.idBd]);
+    db.rawUpdate(
+        "UPDATE pesee set bete_id=? where lamb_id=?", [idBete, lamb.idBd]);
+    return "Bouclage enregistré";
   }
 
   @override
@@ -529,6 +545,7 @@ class LocalDataProvider extends DataProvider{
       Sentry.captureException(e, stackTrace : stackTrace);
       //super.bloc.reportError(e, stackTrace);
       debug.log("Error", error: e);
+      return "Erreur d'enregistrement";
     }
   }
 
@@ -546,7 +563,7 @@ class LocalDataProvider extends DataProvider{
   Future<List<TraitementModel>> getTraitements(Bete bete) async{
     Database db = await this.database;
     List<Map<String, dynamic>> futureMaps = await db.query('traitement',where: 'beteId = ?', whereArgs: [bete.idBd]);
-    List<TraitementModel> tempList = new List();
+    List<TraitementModel> tempList = [];
     for (int i = 0; i < futureMaps.length; i++) {
       tempList.add(TraitementModel.fromResult(futureMaps[i]));
     }
@@ -557,7 +574,7 @@ class LocalDataProvider extends DataProvider{
   Future<List<TraitementModel>> getTraitementsForLamb(LambModel lamb) async{
     Database db = await this.database;
     List<Map<String, dynamic>> futureMaps = await db.query('traitement',where: 'lambId = ?', whereArgs: [lamb.idBd]);
-    List<TraitementModel> tempList = new List();
+    List<TraitementModel> tempList = [];
     for (int i = 0; i < futureMaps.length; i++) {
       tempList.add(TraitementModel.fromResult(futureMaps[i]));
     }
@@ -565,7 +582,7 @@ class LocalDataProvider extends DataProvider{
   }
 
   @override
-  Future<TraitementModel> searchTraitement(int idBd) async {
+  Future<TraitementModel?> searchTraitement(int idBd) async {
     Database db = await this.database;
     List<Map<String, dynamic>> futureMaps = await db.query('traitement',where: 'idBd = ?', whereArgs: [idBd]);
     if (futureMaps.length == 0)
@@ -595,18 +612,20 @@ class LocalDataProvider extends DataProvider{
     try {
       Database db = await this.database;
       await db.insert('NEC', note.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
+      return "Enregistrement de la note";
     }
     catch(e,stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       //super.bloc.reportError(e, stackTrace);
     }
+    return "Erreur d'enregistrement";
   }
 
   @override
   Future<List<NoteModel>> getNec(Bete bete) async {
     Database db = await this.database;
     List<Map<String, dynamic>> futureMaps = await db.query('NEC',where: 'bete_id = ?', whereArgs: [bete.idBd]);
-    List<NoteModel> tempList = new List();
+    List<NoteModel> tempList = [];
     for (int i = 0; i < futureMaps.length; i++) {
       tempList.add(NoteModel.fromResult(futureMaps[i]));
     }
@@ -618,18 +637,20 @@ class LocalDataProvider extends DataProvider{
     try {
       Database db = await this.database;
       await db.insert('pesee', note.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
+      return "Enregsitrement de la pesée";
     }
     catch(e,stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       //      super.bloc.reportError(e, stackTrace);
     }
+    return "Erreur d'enregistrement";
   }
 
   @override
   Future<List<Pesee>> getPesee(Bete bete) async {
     Database db = await this.database;
     List<Map<String, dynamic>> futureMaps = await db.query('pesee',where: 'bete_id = ?', whereArgs: [bete.idBd]);
-    List<Pesee> tempList = new List();
+    List<Pesee> tempList = [];
     for (int i = 0; i < futureMaps.length; i++) {
       tempList.add(Pesee.fromResult(futureMaps[i]));
     }
@@ -641,7 +662,7 @@ class LocalDataProvider extends DataProvider{
   Future<List<Pesee>> getPeseeForLamb(LambModel lamb) async {
     Database db = await this.database;
     List<Map<String, dynamic>> futureMaps = await db.query('pesee',where: 'lamb_id = ?', whereArgs: [lamb.idBd]);
-    List<Pesee> tempList = new List();
+    List<Pesee> tempList = [];
     for (int i = 0; i < futureMaps.length; i++) {
       tempList.add(Pesee.fromResult(futureMaps[i]));
     }
@@ -662,15 +683,17 @@ class LocalDataProvider extends DataProvider{
     try {
       Database db = await this.database;
       await db.insert('Echo', echo.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
+      return "Enregistrement de l'echographie";
     }
     catch(e,stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       //super.bloc.reportError(e, stackTrace);
     }
+    return "Erreur d'enregistrement";
   }
 
   @override
-  Future<EchographieModel> searchEcho(int idBd) async {
+  Future<EchographieModel?> searchEcho(int idBd) async {
     Database db = await this.database;
     List<Map<String, dynamic>> futureMaps = await db.query('Echo',where: 'id= ?', whereArgs: [idBd]);
     if (futureMaps.length == 0)
@@ -682,20 +705,18 @@ class LocalDataProvider extends DataProvider{
   Future<List<EchographieModel>> getEcho(Bete bete) async {
     Database db = await this.database;
     List<Map<String, dynamic>> futureMaps = await db.query('Echo',where: 'bete_id = ?', whereArgs: [bete.idBd]);
-    List<EchographieModel> tempList = new List();
+    List<EchographieModel> tempList = [];
     for (int i = 0; i < futureMaps.length; i++) {
       tempList.add(EchographieModel.fromResult(futureMaps[i]));
     }
     return tempList;
   }
 
-
-
   @override
   Future<List<LotModel>> getLots(String cheptel) async {
     Database db = await this.database;
     List<Map<String, dynamic>> maps = await db.query('lot' ,where: 'cheptel = ?', whereArgs: [cheptel]);
-    List<LotModel> tempList = new List();
+    List<LotModel> tempList = [];
     for (int i = 0; i < maps.length; i++) {
       tempList.add(new LotModel.fromResult(maps[i]));
     }
@@ -710,7 +731,7 @@ class LocalDataProvider extends DataProvider{
         'from affectation INNER JOIN bete ON affectation.brebisId = bete.id '
         'where lotId = ' + idLot.toString()
         + " AND bete.sex = 'male' ");
-    List<Affectation> tempList = new List();
+    List<Affectation> tempList = [];
     for (int i = 0; i < maps.length; i++) {
       tempList.add(new Affectation.fromResult(maps[i]));
     }
@@ -725,7 +746,7 @@ class LocalDataProvider extends DataProvider{
             'from affectation INNER JOIN bete ON affectation.brebisId = bete.id '
             'where lotId = ' + idLot.toString()
             + " AND bete.sex = 'femelle' ");
-    List<Affectation> tempList = new List();
+    List<Affectation> tempList = [];
     for (int i = 0; i < maps.length; i++) {
       tempList.add(new Affectation.fromResult(maps[i]));
     }
@@ -733,13 +754,14 @@ class LocalDataProvider extends DataProvider{
   }
 
   @override
-  Future<void> remove(Affectation affect) async{
+  Future<String> remove(Affectation affect) async{
     Database db = await this.database;
     db.update("affectation", affect.toJson(), where: "id = ?", whereArgs: <int>[affect.idAffectation]);
+    return "Suppression OK";
   }
 
   @override
-  Future<LotModel> saveLot(LotModel lot) async {
+  Future<LotModel ?> saveLot(LotModel lot) async {
     try {
       Database db = await this.database;
       int id = await db.insert("lot", lot.toJson(),
@@ -752,7 +774,7 @@ class LocalDataProvider extends DataProvider{
       Sentry.captureException(e, stackTrace : stackTrace);
       //     super.bloc.sentry.captureException(exception: e, stackTrace: stackTrace);
     }
-
+    return null;
   }
 
   @override
@@ -787,7 +809,7 @@ class LocalDataProvider extends DataProvider{
           "SELECT affec.*, lot.codeLotLutte as lotName, lot.dateDebutLutte, lot.dateFinLutte FROM affectation affec "
               "LEFT outer JOIN lot lot ON affec.lotId = lot.idBd "
               "WHERE brebisId= " + idBete.toString());
-      List<Affectation> tempList = new List();
+      List<Affectation> tempList = [];
       for (int i = 0; i < maps.length; i++) {
         tempList.add(new Affectation.fromResult(maps[i]));
       }
@@ -797,6 +819,7 @@ class LocalDataProvider extends DataProvider{
       Sentry.captureException(e, stackTrace : stackTrace);
       //     super.bloc.reportError(e, stackTrace);
       debug.log("message " + e.toString());
+      throw e;
     }
   }
 
@@ -806,8 +829,8 @@ class LocalDataProvider extends DataProvider{
     List<Map<String, dynamic>> maps = await db.rawQuery(
         'Select * from bete '
             + "WHERE bete.sex = 'male' "
-            "AND cheptel = '" + super.cheptel + "'");
-    List<Bete> tempList = new List();
+            "AND cheptel = '" + super.cheptel! + "'");
+    List<Bete> tempList = [];
     for (int i = 0; i < maps.length; i++) {
       tempList.add(new Bete.fromResult(maps[i]));
     }
@@ -820,8 +843,8 @@ class LocalDataProvider extends DataProvider{
     List<Map<String, dynamic>> maps = await db.rawQuery(
         'Select * from bete '
             + "WHERE bete.sex = 'femelle' "
-    "AND cheptel = '" + super.cheptel + "'");
-    List<Bete> tempList = new List();
+    "AND cheptel = '" + super.cheptel! + "'");
+    List<Bete> tempList = [];
     for (int i = 0; i < maps.length; i++) {
       tempList.add(new Bete.fromResult(maps[i]));
     }

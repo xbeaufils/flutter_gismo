@@ -15,7 +15,7 @@ enum ConfirmAction { CANCEL, ACCEPT }
 
 class ConfigPage extends StatefulWidget {
   final GismoBloc _bloc;
-  ConfigPage(this._bloc, {Key key}) : super(key: key);
+  ConfigPage(this._bloc, {Key ? key}) : super(key: key);
   @override
   _ConfigPageState createState() => new _ConfigPageState(_bloc);
 }
@@ -120,7 +120,7 @@ class _ConfigPageState extends State<ConfigPage> {
         isThreeLine: true,
       ),
         FutureBuilder(
-            builder: (context, projectSnap) {
+            builder: (context,AsyncSnapshot projectSnap) {
               switch (projectSnap.connectionState) {
                 case ConnectionState.none:
                 case ConnectionState.waiting:
@@ -172,7 +172,7 @@ class _ConfigPageState extends State<ConfigPage> {
     final Directory extDir = await getExternalStorageDirectory();
     final Directory backupDir = Directory(extDir.path + '/backup');
     if (! backupDir.existsSync())
-      return null;
+      return [];
     //final isPermissionStatusGranted = await _requestPermissions();
     List<FileSystemEntity> files = backupDir.listSync();
     return files;
@@ -259,7 +259,8 @@ Future _asyncConfirmDialog(BuildContext context) async {
     final snackBar = SnackBar(content: Text(e),);
     debug.log("Cheptel is " , name: "_ConfigPageState::_onError");
     FocusScope.of(context).unfocus();
-    _scaffoldKey.currentState.showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    //_scaffoldKey.currentState.showSnackBar(snackBar);
    }
 
   @override
@@ -304,9 +305,9 @@ Future _asyncConfirmDialog(BuildContext context) async {
     debug.log("initState", name: "_ConfigPageState:initState");
     super.initState();
     if (_bloc.user != null) {
-      _emailCtrl.text = _bloc.user.email;
-      if (_bloc.user.subscribe != null)
-        _isSubscribed = _bloc.user.subscribe;
+      _emailCtrl.text = _bloc.user!.email!;
+      if (_bloc.user!.subscribe != null)
+        _isSubscribed = _bloc.user!.subscribe!;
     }
     if (_isSubscribed) {
       configTeste = TestConfig.DONE;

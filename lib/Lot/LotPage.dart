@@ -9,7 +9,7 @@ import 'package:flutter_gismo/model/LotModel.dart';
 class LotPage extends StatefulWidget {
   final GismoBloc _bloc;
 
-  LotPage(this._bloc,{Key key}) : super(key: key);
+  LotPage(this._bloc,{Key ? key}) : super(key: key);
   @override
   _LotPageState createState() => new _LotPageState(this._bloc);
 }
@@ -52,7 +52,7 @@ class _LotPageState extends State<LotPage> {
 
   Widget _listLotWidget() {
     return FutureBuilder(
-      builder: (context, lotSnap) {
+      builder: (context, AsyncSnapshot lotSnap) {
         if (lotSnap.connectionState == ConnectionState.none && lotSnap.hasData == null) {
           return Container();
         }

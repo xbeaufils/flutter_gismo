@@ -1,9 +1,9 @@
 class NECNotFoundException implements Exception {}
 
 class NEC {
-  int _note;
-  String _description;
-  String _label;
+  late int _note;
+  late String _description;
+  late String _label;
 
 
   int get note => _note;
@@ -56,10 +56,10 @@ class NEC {
 }
 
 class NoteModel {
-  int _idBd;
-  String _date;
-  int _note;
-  int _idBete;
+  late int _idBd;
+  late String _date;
+  late int _note;
+  late int _idBete;
 
   NoteModel();
 
