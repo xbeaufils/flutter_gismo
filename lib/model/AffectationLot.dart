@@ -1,12 +1,12 @@
 class Affectation {
-  int idAffectation;
-  String numBoucle;
-  String numMarquage;
-  int brebisId;
-  int lotId;
-  String lotName;
-  String dateEntree;
-  String dateSortie;
+  late int idAffectation;
+  late String numBoucle;
+  late String numMarquage;
+  late int brebisId;
+  late int lotId;
+  late String lotName;
+  late String dateEntree;
+  late String dateSortie;
 
   Affectation();
 
