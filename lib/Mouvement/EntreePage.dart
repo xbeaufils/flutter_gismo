@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 
 class EntreePage extends StatefulWidget {
   final GismoBloc _bloc;
-  EntreePage(this._bloc, {Key key}) : super(key: key);
+  EntreePage(this._bloc, {Key ? key}) : super(key: key);
   @override
   _EntreePageState createState() => new _EntreePageState(_bloc);
 }
@@ -21,13 +21,13 @@ class _EntreePageState extends State<EntreePage> {
 
   TextEditingController _dateEntreeCtl = TextEditingController();
   final _df = new DateFormat('dd/MM/yyyy');
-  List<Bete> _sheeps;
-  String _currentMotif;
-  List<DropdownMenuItem<String>> _motifEntreeItems;
+  late List<Bete> _sheeps;
+  late String _currentMotif;
+  late List<DropdownMenuItem<String>> _motifEntreeItems;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   List<DropdownMenuItem<String>> _getMotifEntreeItems() {
-    List<DropdownMenuItem<String>> items = new List();
+    List<DropdownMenuItem<String>> items = [];
     items.add( new DropdownMenuItem(value: 'NAISSANCE', child: new Text('Naissance')));
     items.add( new DropdownMenuItem(value: 'CREATION', child: new Text('Création')));
     items.add( new DropdownMenuItem(value: 'RENOUVELLEMENT', child: new Text('Renouvellement')));
@@ -41,9 +41,10 @@ class _EntreePageState extends State<EntreePage> {
     return items;
   }
 
-  void _changedMotifEntreeItem(String selectedMotif) {
+  void _changedMotifEntreeItem(String ? selectedMotif) {
     setState(() {
-      _currentMotif= selectedMotif;
+      if (selectedMotif != null)
+        _currentMotif= selectedMotif;
     });
   }
 
@@ -70,24 +71,24 @@ class _EntreePageState extends State<EntreePage> {
                           labelText: "Date d'entrée",
                           hintText: 'jj/mm/aaaa'),
                       validator: (value) {
-                        if (value.isEmpty) {
+                        if (value!.isEmpty) {
                           return "Pas de date d'entrée";
                         }},
                       onSaved: (value) {
                         setState(() {
-                          _dateEntreeCtl.text = value;
+                          _dateEntreeCtl.text = value!;
                         });
                       },
                       onTap: () async{
                         DateTime date = DateTime.now();
                         FocusScope.of(context).requestFocus(new FocusNode());
-                        date = await showDatePicker(
+                        date = (await showDatePicker(
 
                           locale: const Locale("fr","FR"),
                           context: context,
                           initialDate:DateTime.now(),
                           firstDate:DateTime(1900),
-                          lastDate: DateTime(2100));
+                          lastDate: DateTime(2100)))!;
                         if (date != null) {
                           setState(() {
                             _dateEntreeCtl.text = _df.format(date);
@@ -98,7 +99,7 @@ class _EntreePageState extends State<EntreePage> {
                     value: _currentMotif,
                     items: _motifEntreeItems,
                     hint: Text("Selectionnez une cause d'entree",style: TextStyle(color: Colors.lightGreen,)),
-                    onChanged: _changedMotifEntreeItem,
+                    onChanged: _changedMotifEntreeItem!,
                   )
 
                 ],
@@ -110,7 +111,7 @@ class _EntreePageState extends State<EntreePage> {
                 style: new TextStyle(color: Colors.white, ),),
             color: Colors.lightGreen[700],
             onPressed: _saveEntree),
-          (this._bloc.isLogged()) ?
+          (this._bloc.isLogged()!) ?
             Container():
             AdmobBanner(
               adUnitId: _getBannerAdUnitId(),
@@ -127,7 +128,7 @@ class _EntreePageState extends State<EntreePage> {
     );
   }
 
-  String _getBannerAdUnitId() {
+  String ? _getBannerAdUnitId() {
     if (Platform.isIOS) {
       return 'ca-app-pub-9699928438497749/2969884909';
     } else if (Platform.isAndroid) {
@@ -165,7 +166,7 @@ class _EntreePageState extends State<EntreePage> {
     final snackBar = SnackBar(
       content: Text(message),
     );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
+    ScaffoldMessenger.of(context)..showSnackBar(snackBar);
   }
 
   void goodSaving(String message) {
@@ -179,7 +180,7 @@ class _EntreePageState extends State<EntreePage> {
             return new BetePage(this._bloc, null);
           },
           fullscreenDialog: true
-      ));
+      )) as Bete;
       if (selectedBete != null) {
         setState(() {
           _sheeps.add(selectedBete);
@@ -190,7 +191,7 @@ class _EntreePageState extends State<EntreePage> {
   @override
   void initState() {
     super.initState();
-    _sheeps = new List();
+    _sheeps = [];
     _motifEntreeItems = _getMotifEntreeItems();
     _dateEntreeCtl.text = _df.format(DateTime.now());
   }

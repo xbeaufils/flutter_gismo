@@ -7,7 +7,7 @@ import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:sentry/sentry.dart';
 
-GismoBloc gismoBloc;
+GismoBloc gismoBloc = new GismoBloc();
 
 
 void main() async {

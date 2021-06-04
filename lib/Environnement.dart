@@ -1,5 +1,5 @@
 class Environnement {
-  static Environnement _instance;
+  static Environnement ? _instance;
   Environnement(this._urlTarget, this._urlWebTarget);
 
   String _urlWebTarget;
@@ -11,14 +11,14 @@ class Environnement {
   }
 
   static String getUrlTarget() {
-    return _instance._urlTarget;
+    return _instance!._urlTarget;
   }
 
   static String getUrlWebTarget() {
-    return _instance._urlWebTarget;
+    return _instance!._urlWebTarget;
   }
 
   static Environnement getInstance() {
-    return _instance;
+    return _instance!;
   }
 }

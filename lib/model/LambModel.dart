@@ -4,15 +4,15 @@ enum Sante { VIVANT, MORT_NE, AVORTE }
 class MethodeAllaitementNotFoundException implements Exception {}
 
 class LambingModel {
-  int _idBd;
-  String _dateAgnelage;
-  int _idMere;
-  String _numBoucleMere;
-  String _numMarquageMere;
-  int _qualite;
-  int _adoption;
-  String _observations;
-  List<LambModel> _lambs;
+  late int _idBd;
+  late String _dateAgnelage;
+  late int _idMere;
+  late String _numBoucleMere;
+  late String _numMarquageMere;
+  late int _qualite;
+  late int _adoption;
+  late String _observations;
+  late List<LambModel> _lambs;
 
   String get observations => _observations;
 
@@ -64,7 +64,7 @@ class LambingModel {
   }
 
   LambingModel(this._idMere) {
-    this._lambs = new List();
+    this._lambs = [];
   }
 
   LambingModel.fromResult (result){
@@ -78,9 +78,9 @@ class LambingModel {
     _observations = result["observations"];
     if (result['agneaux'] != null) {
       if (result['agneaux'].length > 0) {
-        this._lambs = new List();
+        this._lambs = [];
         for (int i = 0; i < result['agneaux'].length; i++) {
-          this._lambs.add(LambModel.fromResult(result['agneaux'][i]));
+          this._lambs!.add(LambModel.fromResult(result['agneaux'][i]));
         }
       }
     }
@@ -95,7 +95,7 @@ class LambingModel {
     data["qualite"] = this._qualite;
     data["adoption"] = this._adoption;
     data["observations"] = this._observations;
-    data["agneaux"] = this._lambs.map((lamb) => lamb.toJson()).toList();
+    data["agneaux"] = this._lambs!.map((lamb) => lamb.toJson()).toList();
     return data;
   }
 
@@ -148,23 +148,23 @@ class MethodeAllaitement {
       case "ADOPTE": return ADOPTE;
       case "BIBERONNE": return BIBERONNE;
     }
-    return null;
+    throw new MethodeAllaitementNotFoundException();
   }
 }
 
 class LambModel {
-  int _idBd;
-  int _idAgnelage;
-  int _idDevenir;
-  Sex _sex = Sex.male;
-  String _marquageProvisoire;
+  late int _idBd;
+  late int _idAgnelage;
+  late int _idDevenir;
+  late Sex _sex = Sex.male;
+  late String _marquageProvisoire;
 
-  String _numBoucle;
-  String _numMarquage;
-  String _dateDeces;
-  String _motifDeces;
-  MethodeAllaitement _allaitement;
-  Sante _sante;
+  late String _numBoucle;
+  late String _numMarquage;
+  late String _dateDeces;
+  late String _motifDeces;
+  late MethodeAllaitement _allaitement;
+  late Sante _sante;
 
 
   Sante get sante => _sante;
@@ -291,9 +291,9 @@ class LambModel {
 }
 
 class CompleteLambModel extends LambModel {
-  String _numBoucleMere;
-  String _numMarquageMere;
-  String _dateAgnelage;
+  late String _numBoucleMere;
+  late String _numMarquageMere;
+  late String _dateAgnelage;
 
   String get numBoucleMere => _numBoucleMere;
 

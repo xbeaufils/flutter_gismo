@@ -1,5 +1,5 @@
 class DeviceModel {
-  String _name;
+  late String _name;
 
   String get name => _name;
 
@@ -7,8 +7,8 @@ class DeviceModel {
     _name = value;
   }
 
-  String _address;
-  String _id;
+  late String _address;
+  late String _id;
 
   String get address => _address;
 

@@ -14,7 +14,7 @@ class LotAffectationViewPage extends StatefulWidget {
   LotModel _currentLot;
   final GismoBloc _bloc;
 
-  LotAffectationViewPage(this._bloc, this._currentLot, {Key key}) : super(key: key);
+  LotAffectationViewPage(this._bloc, this._currentLot, {Key? key}) : super(key: key);
   @override
   _LotAffectationViewPageState createState() => new _LotAffectationViewPageState(this._bloc);
 }
@@ -33,7 +33,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
   int _curIndex=0;
   int _nbBrebis = -1;
   int _nbBeliers = -1;
-  View _currentView;
+  late View _currentView;
 
   LotModel get currentLot => this.widget._currentLot;
 
@@ -90,7 +90,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
       final snackBar = SnackBar(
         content: Text("vous devez enregistrer le lot avant d'ajouter"),
       );
-      _scaffoldKey.currentState.showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
       return;
     }
     setState(() {
@@ -122,7 +122,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
         return _listBelierWidget();
         break;
     }
-    return null;
+    return Container();
   }
 
   Widget _getFiche() {
@@ -166,7 +166,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
                             decoration: InputDecoration(
                               labelText: "Date de début",),
                             onTap: () async{
-                              DateTime date = DateTime.now();
+                              DateTime ? date = DateTime.now();
                               FocusScope.of(context).requestFocus(new FocusNode());
 
                               date = await showDatePicker(
@@ -186,7 +186,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
                             decoration: InputDecoration(
                               labelText: "Date de Fin",),
                             onTap: () async{
-                              DateTime date = DateTime.now();
+                              DateTime ? date = DateTime.now();
                               FocusScope.of(context).requestFocus(new FocusNode());
                               date = await showDatePicker(
                                   context: context,
@@ -212,7 +212,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
 
   Widget _listBelierWidget() {
     return FutureBuilder(
-      builder: (context, belierSnap) {
+      builder: (context, AsyncSnapshot<List<Affectation>> belierSnap) {
         if (belierSnap.connectionState == ConnectionState.none && belierSnap.hasData == null) {
           return Container();
         }
@@ -221,7 +221,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
         return  Column(
             mainAxisSize: MainAxisSize.max,
             children:  [
-          _showCount(belierSnap.data.length.toString() + " béliers"),
+          _showCount(belierSnap.data!.length.toString() + " béliers"),
           Expanded(child: _showList(belierSnap))
             ]);
       },
@@ -231,7 +231,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
 
   Widget _listBrebisWidget() {
     return FutureBuilder(
-        builder: (context, brebisSnap) {
+        builder: (context, AsyncSnapshot<List<Affectation>> brebisSnap) {
           if (brebisSnap.connectionState == ConnectionState.none &&
               brebisSnap.hasData == null) {
             return Container();
@@ -242,7 +242,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
             Column(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-              _showCount(brebisSnap.data.length.toString() + " brebis"),
+              _showCount(brebisSnap.data!.length.toString() + " brebis"),
               Expanded(child: _showList(brebisSnap))
             ],);
         },
@@ -263,9 +263,9 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
 
   Widget _showList(AsyncSnapshot<List<Affectation>> snap) {
     return ListView.builder(
-      itemCount: snap.data.length,
+      itemCount: snap.data!.length,
       itemBuilder: (context, index) {
-        Affectation bete = snap.data[index];
+        Affectation bete = snap.data![index];
        return //Card(child:
         ListTile(
             title:
@@ -295,7 +295,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
 
   Future _addBete() async {
     //Future _openAddEntryDialog() async {
-      Bete selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
+      Bete ? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
           builder: (BuildContext context) {
             SearchPage search = new SearchPage(this._bloc, GismoPage.lot);
             switch (_currentView ) {
@@ -314,37 +314,38 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
       if (selectedBete != null) {
         //if (_dateEntreeCtl.text.isEmpty)
         //  _dateEntreeCtl.text = this.widget._currentLot.dateDebutLutte;
-        String dateEntree = await _showDateDialog(this.context,
+        String ? dateEntree = await _showDateDialog(this.context,
             "Date d'entrée",
             "Saisir une date d'entrée si différente de la date de début de lot",
             "Date d'entrée");
-        if (dateEntree.isEmpty)
-          dateEntree = null;
-        String message = await this._bloc.addBete(currentLot, selectedBete, dateEntree);
-        final snackBar = SnackBar(
-          content: Text(message),
-        );
-        _scaffoldKey.currentState.showSnackBar(snackBar);
+        if (dateEntree != null) {
+          String message = await this._bloc.addBete(
+              currentLot, selectedBete, dateEntree);
+          final snackBar = SnackBar(
+            content: Text(message),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-        setState(() {
+          setState(() {
 
-        });
-
+          });
+        }
       }
   }
 
   Future _removeBete(Affectation affect) async {
-      String dateSortie = await _showDateDialog(this.context,
+      String ? dateSortie = await _showDateDialog(this.context,
           "Date de sortie",
           "Date de sortie",
           "Saisir une date de sortie si différente de la date de fin de lot");
-      String message = await this._bloc.removeFromLot(affect, dateSortie);
-      final snackBar = SnackBar(
-        content: Text(message),
-      );
-      _scaffoldKey.currentState.showSnackBar(snackBar);
-      setState(() {
-      });
+      if (dateSortie != null ) {
+        String message = await this._bloc.removeFromLot(affect, dateSortie);
+        final snackBar = SnackBar(
+          content: Text(message),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        setState(() {});
+      }
   }
 
   void _save() async {
@@ -354,14 +355,14 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
         content: Text(
             "La date de début est obligatoire"),
       );
-      _scaffoldKey.currentState.showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
       return;
     }
     if (_df.parse(_dateDebutCtl.text).year.toString() != _campagneCtrl.text) {
       final snackBar = SnackBar(
          content: Text("L'année de la date de début doit être égale à la campagne"),
       );
-      _scaffoldKey.currentState.showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
       return;
     }
     currentLot.dateFinLutte =  _dateFinCtl.text;
@@ -370,7 +371,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
         content: Text(
             "La date de fin est obligatoire"),
       );
-      _scaffoldKey.currentState.showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
       return;
     }
     currentLot.campagne = _campagneCtrl.text;
@@ -380,12 +381,11 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
          content: Text(
              "Le nom du lot est obligatoire"),
        );
-       _scaffoldKey.currentState.showSnackBar(snackBar);
+       ScaffoldMessenger.of(context).showSnackBar(snackBar);
        return;
      }
      currentLot.campagne = _campagneCtrl.text;
-    this.widget._currentLot = await this._bloc.saveLot(currentLot);
-
+    this.widget._currentLot = (await this._bloc.saveLot(currentLot))!;
   }
 
   Future<List<Affectation>> _getBeliers(int idLot)  {
@@ -396,7 +396,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
     return this._bloc.getBrebisForLot(idLot);
   }
 
-  Future<String> _showDateDialog(BuildContext context, String title, String helpMessage, String label) async {
+  Future<String?> _showDateDialog(BuildContext context, String title, String helpMessage, String label) async {
     return showDialog<String>(
         context: context,
         barrierDismissible: false,
@@ -418,7 +418,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
                       decoration: InputDecoration(
                         labelText: label,),
                       onTap: () async {
-                        DateTime date = DateTime.now();
+                        DateTime ? date = DateTime.now();
                         FocusScope.of(context).requestFocus(new FocusNode());
                         date = await showDatePicker(
                             context: context,

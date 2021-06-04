@@ -19,9 +19,9 @@ import 'dart:developer' as debug;
 class LambingPage extends StatefulWidget {
   final GismoBloc _bloc;
 
-  Bete _mere;
-  LambingModel _currentLambing;
-  LambingPage(this._bloc, this._mere, {Key key}) : super(key: key);
+  late Bete _mere;
+  late LambingModel _currentLambing;
+  LambingPage(this._bloc, this._mere, {Key? key}) : super(key: key);
   LambingPage.edit(this._bloc, this._currentLambing);
 
   @override
@@ -31,7 +31,7 @@ class LambingPage extends StatefulWidget {
 class _LambingPageState extends State<LambingPage> {
   //List<LambModel> _lambs = new List();
   final GismoBloc _bloc;
-  LambingModel _lambing;
+  late LambingModel _lambing;
   //List<LambModel> _lambs;
 
   DateTime selectedDate = DateTime.now();
@@ -53,7 +53,7 @@ class _LambingPageState extends State<LambingPage> {
       appBar: new AppBar(
         title: (this.widget._mere != null) ? 
           new Text(this.widget._mere.numBoucle + " (" + this.widget._mere.numMarquage + ")") :
-          new Text(this.widget._currentLambing.numBoucleMere + " (" + this.widget._currentLambing.numMarquageMere + ")"),
+          new Text(this.widget._currentLambing.numBoucleMere! + " (" + this.widget._currentLambing.numMarquageMere! + ")"),
         key: _scaffoldKey,
       ),
       body:
@@ -64,7 +64,7 @@ class _LambingPageState extends State<LambingPage> {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                (this._bloc.isLogged()) ?
+                (this._bloc.isLogged()!) ?
                 Container():
                 AdmobBanner(
                   adUnitId: _getBannerAdUnitId(),
@@ -79,14 +79,14 @@ class _LambingPageState extends State<LambingPage> {
                                     labelText: 'Date Agnelage',
                                     hintText: 'jj/mm/aaaa'),
                       validator: (value) {
-                                  if (value.isEmpty) {
+                                  if (value!.isEmpty) {
                                     return 'Entrez une date d''agnelage';
                                   }
                                   return null;
                                   },
                       onSaved: (value) {
                                   setState(() {
-                                    _dateAgnelageCtl.text = value;
+                                    _dateAgnelageCtl.text = value!;
                                   });
                                 },
                       onTap: () async{
@@ -96,7 +96,7 @@ class _LambingPageState extends State<LambingPage> {
                                   context: context,
                                   initialDate:DateTime.now(),
                                   firstDate:DateTime(1900),
-                                  lastDate: DateTime(2100));
+                                  lastDate: DateTime(2100)) as DateTime;
                               if (date != null) {
                                 setState(() {
                                   _dateAgnelageCtl.text = df.format(date);
@@ -129,7 +129,7 @@ class _LambingPageState extends State<LambingPage> {
                     maxLines: 3,
                     onSaved: (value) {
                       setState(() {
-                          _obsCtl.text = value;
+                          _obsCtl.text = value!;
                       });
                     }
                   ),
@@ -171,12 +171,12 @@ class _LambingPageState extends State<LambingPage> {
     } else if (Platform.isAndroid) {
       return 'ca-app-pub-9699928438497749/4514368033';
     }
-    return null;
+    return "";
   }
 
   void _addLamb(LambModel newLamb){
     setState(() {
-      _lambing.lambs.add(newLamb);
+      _lambing.lambs!.add(newLamb);
       //_lambs.add(newLamb);
     });
   }
@@ -187,7 +187,7 @@ class _LambingPageState extends State<LambingPage> {
           return new LambPage(this._bloc); // AddingLambDialog(this._bloc);
         },
         fullscreenDialog: true
-    ));
+    )) as LambModel;
     if (newLamb != null) {
       _addLamb(newLamb);
     }
@@ -199,7 +199,7 @@ class _LambingPageState extends State<LambingPage> {
           return new AdoptionDialog(this._adoption.key);
         },
         fullscreenDialog: true
-    ));
+    )) as int;
     if (qualiteAdoption != null) {
       setState(() {
         _adoption = Adoption.getAdoption(qualiteAdoption);
@@ -213,7 +213,7 @@ class _LambingPageState extends State<LambingPage> {
           return new AgnelageDialog(this._agnelage.key);
         },
         fullscreenDialog: true
-    ));
+    ))as int;
     if (qualiteAgnelage != null) {
       setState(() {
         _agnelage = Agnelage.getAgnelage(qualiteAgnelage);
@@ -228,7 +228,7 @@ class _LambingPageState extends State<LambingPage> {
     _lambing.qualite = _agnelage.key;
 
     var message  = this._bloc.saveLambing(this._lambing);
-    message
+    message!
         .then( (message) {goodSaving(message);})
         .catchError( (message) {  _handleError(message); /*badSaving(message);*/});
   }
@@ -241,7 +241,7 @@ class _LambingPageState extends State<LambingPage> {
     final snackBar = SnackBar(
       content: Text(message),
     );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   void goodSaving(String message) {
@@ -278,7 +278,7 @@ class _LambingPageState extends State<LambingPage> {
       trailing:  _buildTrailing(_lambing.lambs[index]),);
   }
 
-  Widget _buildTrailing(LambModel lamb) {
+  Widget ? _buildTrailing(LambModel lamb) {
     if (lamb.idBd == null)
       return null;
     if (lamb.numBoucle != null )

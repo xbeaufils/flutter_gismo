@@ -2,16 +2,16 @@ enum Sex { male, femelle }
 //enum Motif_Entree {bouclage, achat}
 
 class Bete  {
-  int _idBd;
-  String _numBoucle;
-  String _numMarquage;
-  String _nom;
-  String _dateEntree;
-  Sex _sex = Sex.male;
+  int ? _idBd;
+  late String _numBoucle;
+  String ? _numMarquage;
+  String ? _nom;
+  String ? _dateEntree;
+  late Sex _sex = Sex.male;
   //Motif_Entree _motifEntree = Motif_Entree.achat;
-  String _observations;
-  String _motifEntree ;
-  String _cheptel;
+  String ? _observations;
+  String ? _motifEntree ;
+  String ? _cheptel;
 
   Bete( this._idBd, this._numBoucle, this._numMarquage, this._nom, this._observations, this._dateEntree, this._sex, this._motifEntree);
 
@@ -23,7 +23,7 @@ class Bete  {
     _dateEntree = result["dateEntree"];
     _observations = result["observations"];
     if (result['sex'] != null)
-      _sex= Sex.values.firstWhere((e) => e.toString() == 'Sex.' + result["sex"], orElse: () => null);
+      _sex= Sex.values.firstWhere((e) => e.toString() == 'Sex.' + result["sex"]);
     _motifEntree = result["motifEntree"]; //Motif_Entree.values.firstWhere((e) => e.toString() == 'Motif_Entree.' + result["motifEntree"]);
     _cheptel = result["cheptel"];
   }
@@ -43,15 +43,15 @@ class Bete  {
     return data;
   }
 
-  int get idBd => _idBd;
+  int get idBd => _idBd!;
   String get numBoucle =>_numBoucle;
-  String get numMarquage =>_numMarquage;
-  String get nom =>_nom;
-  String get dateEntree => _dateEntree ;
+  String get numMarquage =>_numMarquage!;
+  String get nom =>_nom!;
+  String get dateEntree => _dateEntree! ;
   Sex get sex => _sex;
-  String get motifEntree =>_motifEntree;
+  String get motifEntree =>_motifEntree!;
 
-  String get observations => _observations;
+  String get observations => _observations!;
 
   set observations(String value) {
     _observations = value;
@@ -85,7 +85,7 @@ class Bete  {
     _idBd = value;
   }
 
-  String get cheptel => _cheptel;
+  String get cheptel => _cheptel!;
 
   set cheptel(String value) {
     _cheptel = value;

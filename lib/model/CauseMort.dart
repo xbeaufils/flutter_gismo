@@ -121,8 +121,8 @@ extension CauseMortExtension on CauseMort {
     CauseMort.Inconnue:"060000",
   };
 
-  String get name => documentation[this];
-  String get code => codeIdele[this];
+  String get name => documentation[this]!;
+  String get code => codeIdele[this]!;
 
   static CauseMort getValue(String value) {
     return CauseMort.values.firstWhere((e) => e.toString() == 'CauseMort.' + value);

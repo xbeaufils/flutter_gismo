@@ -1,6 +1,6 @@
 class BluetoothState {
-  String _status;
-  String _data;
+  late String _status;
+  late String _data;
 
   BluetoothState.fromResult(result) {
     _status = result["status"];

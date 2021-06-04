@@ -1,0 +1,3 @@
+class MethodeAllaitementException implements Exception {
+
+}

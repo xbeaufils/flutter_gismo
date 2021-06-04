@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
@@ -15,7 +14,7 @@ class BouclagePage extends StatefulWidget {
   LambModel _currentLamb ;
   final GismoBloc _bloc;
   //String _dateNaissance;
-  BouclagePage( this._currentLamb, this._bloc, {Key key}) : super(key: key);
+  BouclagePage( this._currentLamb, this._bloc, {Key ? key}) : super(key: key);
 
   @override
   _BouclagePageState createState() => new _BouclagePageState(this._bloc);
@@ -62,14 +61,14 @@ class _BouclagePageState extends State<BouclagePage> {
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(labelText: 'Numero boucle', hintText: 'Boucle'),
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value!.isEmpty) {
                             return 'Please enter a name';
                           }
                           return "";
                         },
                         onSaved: (value) {
                           setState(() {
-                            _numBoucleCtrl.text = value;
+                            _numBoucleCtrl.text = value!;
                           });
                         }
                     ),
@@ -78,14 +77,14 @@ class _BouclagePageState extends State<BouclagePage> {
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(labelText: 'Numero marquage', hintText: 'Marquage'),
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value!.isEmpty) {
                             return 'Please enter a name';
                           }
                           return "";
                         },
                         onSaved: (value) {
                           setState(() {
-                            _numMarquageCtrl.text = value;
+                            _numMarquageCtrl.text = value!;
                           });
                         }
                     ),
@@ -104,12 +103,12 @@ class _BouclagePageState extends State<BouclagePage> {
 
   @override
   void initState() {
-    if (this._bloc.isLogged())
+    if (this._bloc.isLogged()!)
       this._startService();
   }
 
   Widget _buildRfid() {
-    if (_bloc.isLogged() && this._rfidPresent) {
+    if (_bloc.isLogged()! && this._rfidPresent) {
       return FloatingActionButton(
           child: Icon(Icons.wifi),
           backgroundColor: Colors.green,
@@ -120,7 +119,7 @@ class _BouclagePageState extends State<BouclagePage> {
   }
 
   Widget _statusBluetoothBar() {
-    if (! this._bloc.isLogged())
+    if (! this._bloc.isLogged()!)
       return Container();
     return FutureBuilder(
         future: this._bloc.configIsBt(),
@@ -132,7 +131,7 @@ class _BouclagePageState extends State<BouclagePage> {
             return  Container();
           if (! snapshot.data )
             return Container();
-          List<Widget> status = new List();
+          List<Widget> status = [];
           switch (_bluetoothState ) {
             case "NONE":
               status.add(Icon(Icons.bluetooth));
@@ -182,7 +181,7 @@ class _BouclagePageState extends State<BouclagePage> {
   }
 
   void _createBete() async {
-    _formKey.currentState.save();
+    _formKey.currentState!.save();
     this.widget._currentLamb.numMarquage = _numMarquageCtrl.text;
     this.widget._currentLamb.numBoucle = _numBoucleCtrl.text;
     Bete bete = new Bete(null, _numBoucleCtrl.text, _numMarquageCtrl.text, null, null, null, this.widget._currentLamb.sex, 'NAISSANCE');
@@ -193,7 +192,8 @@ class _BouclagePageState extends State<BouclagePage> {
     final snackBar = SnackBar(
       content: Text(message),
     );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    //_scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
   void goodSaving(String message) {
@@ -204,7 +204,8 @@ class _BouclagePageState extends State<BouclagePage> {
     final snackBar = SnackBar(
       content: Text(message),
     );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    //_scaffoldKey.currentState.showSnackBar(snackBar);
 
   }
 

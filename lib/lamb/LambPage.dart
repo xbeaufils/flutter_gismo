@@ -10,7 +10,7 @@ import 'package:flutter_gismo/traitement/Sanitaire.dart';
 
 class LambPage extends StatefulWidget {
   final GismoBloc _bloc;
-  LambModel _lamb;
+  LambModel ? _lamb;
 
 
   @override
@@ -25,8 +25,8 @@ class LambPageState extends State<LambPage> {
   TextEditingController _marquageCtrl = TextEditingController();
   Sex _sex = Sex.male;
   Sante _sante = Sante.VIVANT;
-  List<DropdownMenuItem<MethodeAllaitement>> _dropDownMenuItems;
-  MethodeAllaitement _currentAllaitement;
+  late List<DropdownMenuItem<MethodeAllaitement>> _dropDownMenuItems;
+  late MethodeAllaitement _currentAllaitement;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class LambPageState extends State<LambPage> {
                           title: const Text('Male'),
                           value: Sex.male,
                           groupValue: _sex,
-                          onChanged: (Sex value) { setState(() { _sex = value; }); },
+                          onChanged: (Sex ? value) { setState(() { _sex = value! ; }); },
                         ),
                       ),
                       new Flexible( child:
@@ -62,7 +62,7 @@ class LambPageState extends State<LambPage> {
                           title: const Text('Femelle'),
                           value: Sex.femelle,
                           groupValue: _sex,
-                          onChanged: (Sex value) { setState(() { _sex = value; }); },
+                          onChanged: (Sex ? value) { setState(() { _sex = value!; }); },
                         ),
                       ),]
 
@@ -78,21 +78,21 @@ class LambPageState extends State<LambPage> {
                           title: const Text('Vivant'),
                           value: Sante.VIVANT,
                           groupValue: _sante,
-                          onChanged: (Sante value) { setState(() { _sante = value; }); },
+                          onChanged: (Sante ? value) { setState(() { _sante = value!; }); },
                         ),
                         RadioListTile<Sante>(
                           dense: true,
                           title: const Text('Mort-né'),
                           value: Sante.MORT_NE,
                           groupValue: _sante,
-                          onChanged: (Sante value) { setState(() { _sante = value; }); },
+                          onChanged: (Sante ? value) { setState(() { _sante = value!; }); },
                         ),
                         RadioListTile<Sante>(
                           dense: true,
                           title: const Text('Avorté'),
                           value: Sante.AVORTE,
                           groupValue: _sante,
-                          onChanged: (Sante value) { setState(() { _sante = value; }); },
+                          onChanged: (Sante ? value) { setState(() { _sante = value!; }); },
                         ),
                     ]
                 ),
@@ -133,37 +133,37 @@ class LambPageState extends State<LambPage> {
   }
 
   void _saveLamb() {
-    this.widget._lamb.marquageProvisoire = this._marquageCtrl.text;
-    this.widget._lamb.sex = this._sex;
-    this.widget._lamb.allaitement = this._currentAllaitement;
-    this.widget._lamb.sante = this._sante;
+    this.widget._lamb!.marquageProvisoire = this._marquageCtrl.text;
+    this.widget._lamb!.sex = this._sex;
+    this.widget._lamb!.allaitement = this._currentAllaitement;
+    this.widget._lamb!.sante = this._sante;
     Navigator
         .of(context)
         .pop(this.widget._lamb);
   }
 
-  void changedDropDownItem(MethodeAllaitement selectedAllaitement) {
+  void changedDropDownItem(MethodeAllaitement ? selectedAllaitement) {
     setState(() {
-      _currentAllaitement = selectedAllaitement;
+      _currentAllaitement = selectedAllaitement!;
     });
   }
 
   @override
   void initState() {
-    List<DropdownMenuItem<MethodeAllaitement>> items = new List();
+    List<DropdownMenuItem<MethodeAllaitement>> items = [];
     items.add(new DropdownMenuItem( value: MethodeAllaitement.ALLAITEMENT_MATERNEL, child: new Text(MethodeAllaitement.ALLAITEMENT_MATERNEL.libelle)));
     items.add(new DropdownMenuItem( value: MethodeAllaitement.ALLAITEMENT_ARTIFICIEL, child: new Text(MethodeAllaitement.ALLAITEMENT_ARTIFICIEL.libelle)));
     items.add(new DropdownMenuItem( value: MethodeAllaitement.ADOPTE, child: new Text(MethodeAllaitement.ADOPTE.libelle)));
     items.add(new DropdownMenuItem( value: MethodeAllaitement.BIBERONNE, child: new Text(MethodeAllaitement.BIBERONNE.libelle)));
     _dropDownMenuItems = items;
     if (this.widget._lamb != null) {
-      _currentAllaitement = this.widget._lamb.allaitement;
-      this._marquageCtrl.text = this.widget._lamb.marquageProvisoire;
-      this._sex = this.widget._lamb.sex;
-      this._sante = this.widget._lamb.sante;
+      _currentAllaitement = this.widget._lamb!.allaitement;
+      this._marquageCtrl.text = this.widget._lamb!.marquageProvisoire;
+      this._sex = this.widget._lamb!.sex;
+      this._sante = this.widget._lamb!.sante;
     }
     else {
-      _currentAllaitement = _dropDownMenuItems[0].value;
+      _currentAllaitement = _dropDownMenuItems[0].value!;
     }
     super.initState();
   }
@@ -195,40 +195,40 @@ class LambPageState extends State<LambPage> {
   }
 
   List<Widget> _getActionButton() {
-    List <Widget> actionButtons = List<Widget>();
+    List <Widget> actionButtons = [];
     if (this.widget._lamb == null)
       actionButtons.add(Container());
     else {
       if (_sante != Sante.VIVANT)
-        return null;
+        actionButtons.add(Container());
       else {
-        if (this.widget._lamb.dateDeces != null ||
-            this.widget._lamb.numBoucle != null)
+        if (this.widget._lamb!.dateDeces != null ||
+            this.widget._lamb!.numBoucle != null)
           actionButtons.add(Container());
         else {
           actionButtons.add(
             IconButton(
               icon: Image.asset("assets/peseur.png"),
               onPressed: () {
-                _openPesee(this.widget._lamb);
+                _openPesee(this.widget._lamb!);
               },),);
           actionButtons.add(
             IconButton(
               icon: Image.asset("assets/syringe.png"),
               onPressed: () {
-                _openTraitement(this.widget._lamb);
+                _openTraitement(this.widget._lamb!);
               },),);
           actionButtons.add(
             IconButton(
               icon: Image.asset("assets/tomb.png"),
               onPressed: () {
-                _openDeath(this.widget._lamb);
+                _openDeath(this.widget._lamb!);
               },),);
           actionButtons.add(
               IconButton(
                 icon: Image.asset("assets/bouclage.png"),
                 onPressed: () {
-                  _openBoucle(this.widget._lamb);
+                  _openBoucle(this.widget._lamb!);
                 },));
         }
       }
@@ -238,7 +238,7 @@ class LambPageState extends State<LambPage> {
 
   Widget _buildEvents() {
      return FutureBuilder(
-      builder:(context, eventSnap) {
+      builder:(context, AsyncSnapshot eventSnap) {
         if (eventSnap.connectionState == ConnectionState.none ||
             eventSnap.hasData == false) {
           return Container();
@@ -259,7 +259,7 @@ class LambPageState extends State<LambPage> {
           },
         );
       },
-      future: this.widget._bloc.getEventsForLamb(this.widget._lamb),
+      future: this.widget._bloc.getEventsForLamb(this.widget._lamb!),
     );
   }
 
@@ -339,7 +339,7 @@ class LambPageState extends State<LambPage> {
       case EventType.entree:
       case EventType.sortie:
     }
-    return null;
+    return Container();
   }
 
   // set up the buttons
@@ -387,8 +387,9 @@ class LambPageState extends State<LambPage> {
 
   void _deleteEvent(Event event) async {
     String message = await this.widget._bloc.deleteEvent(event);
-    _scaffoldKey.currentState
-        .showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    /*_scaffoldKey.currentState
+        .showSnackBar(SnackBar(content: Text(message)));*/
     setState(() {
 
     });
