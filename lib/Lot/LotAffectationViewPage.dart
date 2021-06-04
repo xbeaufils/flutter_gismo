@@ -114,15 +114,11 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
     switch (_currentView) {
       case View.fiche:
         return _getFiche();
-        break;
       case View.ewe :
         return _listBrebisWidget();
-        break;
       case View.ram:
         return _listBelierWidget();
-        break;
     }
-    return Container();
   }
 
   Widget _getFiche() {

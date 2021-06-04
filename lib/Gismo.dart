@@ -19,8 +19,7 @@ enum GismoPage {lamb, sanitaire, etat_corporel, individu, sortie, lot, pesee, ec
 class GismoApp extends StatelessWidget {
   final String initialRoute;
   GismoBloc _bloc;
-  GismoApp(this._bloc,{required this.initialRoute}) {
-  }
+  GismoApp(this._bloc,{required this.initialRoute}) ;
 
   // This widget is the root of your application.
   @override

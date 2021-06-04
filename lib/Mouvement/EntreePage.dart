@@ -99,7 +99,7 @@ class _EntreePageState extends State<EntreePage> {
                     value: _currentMotif,
                     items: _motifEntreeItems,
                     hint: Text("Selectionnez une cause d'entree",style: TextStyle(color: Colors.lightGreen,)),
-                    onChanged: _changedMotifEntreeItem!,
+                    onChanged: _changedMotifEntreeItem,
                   )
 
                 ],
