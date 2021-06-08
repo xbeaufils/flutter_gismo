@@ -51,7 +51,7 @@ class _BetePageState extends State<BetePage> {
           }
           if (snapshot.connectionState == ConnectionState.waiting)
             return Center(child: CircularProgressIndicator(),);
-          if (! snapshot.data )
+          if (! snapshot.hasData )
             return Container();
           List<Widget> status = [];
           switch (_bluetoothState ) {

@@ -31,24 +31,31 @@ class WebDataProvider extends DataProvider {
   final Dio _dio = new Dio(options);
 
   WebDataProvider(GismoBloc bloc) : super(bloc) {
+    //_dio.interceptors.add(LogInterceptor(responseBody: false));
     _dio.interceptors.add(InterceptorsWrapper(
 
       onRequest: (RequestOptions options,RequestInterceptorHandler requestInterceptorHandler) => requestInterceptor(options, requestInterceptorHandler),
-      //onResponse: (Response response) => responseInterceptor(response),
+      onResponse: (Response<dynamic> options,ResponseInterceptorHandler requestInterceptorHandler) => responseInterceptor(options, requestInterceptorHandler),
       onError: (DioError dioError,ErrorInterceptorHandler requestInterceptorHandler) => onError(dioError,requestInterceptorHandler)
     ));
   }
 
-  dynamic requestInterceptor(RequestOptions options, RequestInterceptorHandler requestInterceptorHandler)  {
-    //SharedPreferences prefs = await SharedPreferences.getInstance();
-    //String token = prefs.getString("token");
-    options.headers.addAll({"Token": super.token});
-    return options;
+  void responseInterceptor(Response<dynamic> response,ResponseInterceptorHandler handler) {
+    return handler.next(response) ;// super.onResponse(response, handler);
   }
 
-  FutureOr<dynamic> onError(DioError dioError,ErrorInterceptorHandler requestInterceptorHandler) {
+  void requestInterceptor(RequestOptions options, RequestInterceptorHandler handler)  {
+    //SharedPreferences prefs = await SharedPreferences.getInstance();
+    //String token = prefs.getString("token");
+    if (super.token != null)
+      options.headers.addAll({"Token": super.token});
+    return handler.next(options);
+    //return options;
+  }
+
+  void onError(DioError dioError,ErrorInterceptorHandler handler) {
     debug.log("dioError " + dioError.toString(), name: "WebDataProvider::onError");
-    return dioError;
+    return handler.next(dioError);
   }
 
   Future<User> auth(User user) async {
@@ -544,12 +551,7 @@ class WebDataProvider extends DataProvider {
     try {
       final response = await _dio.post(
           '/lot/add', data: data);
-      if (response.data['error']) {
-        throw (response.data['error']);
-      }
-      else {
-        return response.data['message'];
-      }
+         return response.data['message'];
     } on DioError catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }

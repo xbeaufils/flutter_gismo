@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 enum View {fiche, ewe, ram}
 
 class LotAffectationViewPage extends StatefulWidget {
-  LotModel _currentLot;
+  LotModel  _currentLot;
   final GismoBloc _bloc;
 
   LotAffectationViewPage(this._bloc, this._currentLot, {Key? key}) : super(key: key);
@@ -41,13 +41,16 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
   void initState(){
     super.initState();
     _currentView = View.fiche;
-    _codeLotCtl.text = currentLot.codeLotLutte;
-    _dateDebutCtl.text = currentLot.dateDebutLutte;
-    _dateFinCtl.text = currentLot.dateFinLutte;
+    if (currentLot.codeLotLutte != null)
+      _codeLotCtl.text = currentLot.codeLotLutte!;
+    if (currentLot.dateDebutLutte != null)
+      _dateDebutCtl.text = currentLot.dateDebutLutte!;
+    if (currentLot.dateFinLutte != null)
+    _dateFinCtl.text = currentLot.dateFinLutte!;
     if (currentLot.campagne == null)
       _campagneCtrl.text = DateTime.now().year.toString();
     else
-      _campagneCtrl.text = currentLot.campagne;
+      _campagneCtrl.text = currentLot.campagne!;
    }
 
   @override
@@ -66,7 +69,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
               ),
             appBar: new AppBar(
               title:
-              (this.currentLot.codeLotLutte == null) ? Text("Nouveau lot") : Text('Lot ' + this.currentLot.codeLotLutte),
+              (this.currentLot.codeLotLutte == null) ? Text("Nouveau lot") : Text('Lot ' + this.currentLot.codeLotLutte!),
             ),
             floatingActionButton: _curIndex == 0 ? null : FloatingActionButton(child: Icon(Icons.add), onPressed: _addBete),
             body:
@@ -77,7 +80,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
   Widget _getTitle() {
     switch (_currentView) {
       case View.fiche :
-        return  new Text( currentLot.codeLotLutte );
+        return  new Text( currentLot.codeLotLutte! );
       case View.ewe :
         return new Text(_nbBrebis.toString());
       case View.ram :
@@ -221,7 +224,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
           Expanded(child: _showList(belierSnap))
             ]);
       },
-      future: _getBeliers(this.widget._currentLot.idb),
+      future: _getBeliers(this.widget._currentLot.idb!),
     );
   }
 
@@ -242,7 +245,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
               Expanded(child: _showList(brebisSnap))
             ],);
         },
-      future: _getBrebis(this.widget._currentLot.idb),
+      future: _getBrebis(this.widget._currentLot.idb!),
     );
   }
 
@@ -273,13 +276,13 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
                 style: TextStyle(fontStyle: FontStyle.italic),)
             ],),
             subtitle:
-            Row(children: <Widget>[
+            Column(children: <Widget>[
               bete.dateEntree == null ? Text(
-                  this.widget._currentLot.dateDebutLutte) : Text(
+                  this.widget._currentLot.dateDebutLutte!) : Text(
                 "Entrée le : " + bete.dateEntree,),
               SizedBox(width: 20,),
               bete.dateSortie == null ? Text(
-                  this.widget._currentLot.dateFinLutte) : Text(
+                  this.widget._currentLot.dateFinLutte!) : Text(
                   "Sortie le : " + bete.dateSortie)
             ], ),
             trailing: IconButton(
@@ -332,8 +335,8 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
   Future _removeBete(Affectation affect) async {
       String ? dateSortie = await _showDateDialog(this.context,
           "Date de sortie",
-          "Date de sortie",
-          "Saisir une date de sortie si différente de la date de fin de lot");
+          "Saisir une date de sortie si différente de la date de fin de lot",
+          "Date de sortie");
       if (dateSortie != null ) {
         String message = await this._bloc.removeFromLot(affect, dateSortie);
         final snackBar = SnackBar(

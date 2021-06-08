@@ -20,7 +20,7 @@ class _SortiePageState extends State<SortiePage> {
   TextEditingController _dateSortieCtl = TextEditingController();
   final _df = new DateFormat('dd/MM/yyyy');
   late List<Bete> _sheeps;
-  late String _currentMotif;
+  String ? _currentMotif;
   late List<DropdownMenuItem<String>> _motifSortieItems;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -128,7 +128,7 @@ class _SortiePageState extends State<SortiePage> {
       showError("Cause de sortie obligatoire");
       return;
     }
-    if (_currentMotif.isEmpty) {
+    if (_currentMotif!.isEmpty) {
       showError("Cause de sortie obligatoire");
       return;
     }
@@ -137,7 +137,7 @@ class _SortiePageState extends State<SortiePage> {
       return;
     }
 
-    var message  = this._bloc.saveSortie(_dateSortieCtl.text, _currentMotif, this._sheeps);
+    var message  = this._bloc.saveSortie(_dateSortieCtl.text, _currentMotif!, this._sheeps);
     message
       .then( (message) {goodSaving(message);})
       .catchError( (message) {showError(message);});

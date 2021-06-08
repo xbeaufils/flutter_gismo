@@ -1,26 +1,26 @@
 import 'package:flutter_gismo/model/BeteModel.dart';
 
 class LotModel {
-  late int _idb;
-  late String _cheptel;
-  late String _codeLotLutte;
-  late String _campagne;
+  int ? _idb;
+  String ? _cheptel;
+  String ? _codeLotLutte;
+  String ? _campagne;
   //<xsd:element name="DateDebutLutte" type="xsd:date"/>
-  late String _dateDebutLutte;
+  String ? _dateDebutLutte;
   //<xsd:element name="DateFinLutte" type="xsd:date"/>
-  late String _dateFinLutte;
+  String ? _dateFinLutte;
   //<xsd:element name="CodeReproduction" type="CODEMETHODEREPRODUCTION:TypeCodeMethodeReproduction"/>
   //<xsd:element name="CodeLutteMain" type="xsd:boolean"/>
-  late bool _codeLutteMain;
+  bool ? _codeLutteMain;
   //<xsd:element name="NombreDeBrebis" type="Nombre4Chiffres" minOccurs="0"/>
   //<xsd:element name="NombreDeBeliers" type="Nombre4Chiffres" minOccurs="0"/>
   //<xsd:element name="CodeRacePereSuppose" type="CODERACEOVIN:TypeCodeRacePhenotypiqueOvin" minOccurs="0"/>
   late List<Bete> _brebis;
   late List<Bete> _beliers;
 
-  int get idb => _idb;
+  int ? get idb => _idb;
 
-  set idb(int value) {
+  set idb(int ? value) {
     _idb = value;
   }
 
@@ -47,27 +47,27 @@ class LotModel {
     return data;
   }
 
-  String get codeLotLutte => _codeLotLutte;
+  String ? get codeLotLutte => _codeLotLutte;
 
-  set codeLotLutte(String value){
+  set codeLotLutte(String ? value){
     _codeLotLutte = value;
   }
 
-  String get dateDebutLutte => _dateDebutLutte;
+  String ? get dateDebutLutte => _dateDebutLutte;
 
-  set dateDebutLutte(String value) {
+  set dateDebutLutte(String ? value) {
     _dateDebutLutte = value;
   }
 
-  String get dateFinLutte => _dateFinLutte;
+  String ? get dateFinLutte => _dateFinLutte;
 
-  set dateFinLutte(String value) {
+  set dateFinLutte(String ? value) {
     _dateFinLutte = value;
   }
 
-  bool get codeLutteMain => _codeLutteMain;
+  bool ? get codeLutteMain => _codeLutteMain;
 
-  set codeLutteMain(bool value) {
+  set codeLutteMain(bool ? value) {
     _codeLutteMain = value;
   }
 
@@ -83,15 +83,15 @@ class LotModel {
     _beliers = value;
   }
 
-  String get cheptel => _cheptel;
+  String ? get cheptel => _cheptel;
 
-  set cheptel(String value) {
+  set cheptel(String ? value) {
     _cheptel = value;
   }
 
-  String get campagne => _campagne;
+  String ? get campagne => _campagne;
 
-  set campagne(String value) {
+  set campagne(String ? value) {
     _campagne = value;
   }
 

@@ -305,7 +305,8 @@ Future _asyncConfirmDialog(BuildContext context) async {
     debug.log("initState", name: "_ConfigPageState:initState");
     super.initState();
     if (_bloc.user != null) {
-      _emailCtrl.text = _bloc.user!.email!;
+      if (_bloc.user!.email != null)
+        _emailCtrl.text = _bloc.user!.email!;
       if (_bloc.user!.subscribe != null)
         _isSubscribed = _bloc.user!.subscribe!;
     }

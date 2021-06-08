@@ -19,8 +19,8 @@ import 'dart:developer' as debug;
 class LambingPage extends StatefulWidget {
   final GismoBloc _bloc;
 
-  late Bete _mere;
-  late LambingModel _currentLambing;
+  Bete ? _mere;
+  LambingModel ? _currentLambing;
   LambingPage(this._bloc, this._mere, {Key? key}) : super(key: key);
   LambingPage.edit(this._bloc, this._currentLambing);
 
@@ -52,8 +52,8 @@ class _LambingPageState extends State<LambingPage> {
     return new Scaffold(
       appBar: new AppBar(
         title: (this.widget._mere != null) ? 
-          new Text(this.widget._mere.numBoucle + " (" + this.widget._mere.numMarquage + ")") :
-          new Text(this.widget._currentLambing.numBoucleMere + " (" + this.widget._currentLambing.numMarquageMere + ")"),
+          new Text(this.widget._mere!.numBoucle + " (" + this.widget._mere!.numMarquage + ")") :
+          new Text(this.widget._currentLambing!.numBoucleMere + " (" + this.widget._currentLambing!.numMarquageMere + ")"),
         key: _scaffoldKey,
       ),
       body:
@@ -254,13 +254,13 @@ class _LambingPageState extends State<LambingPage> {
   void initState() {
     super.initState();
     if (this.widget._currentLambing == null) {
-      _lambing = new LambingModel(this.widget._mere.idBd);
+      _lambing = new LambingModel(this.widget._mere!.idBd);
       _dateAgnelageCtl.text = df.format(selectedDate);
       _adoption = Adoption.level0;
       _agnelage = Agnelage.level0;
     }
     else {
-      _lambing = this.widget._currentLambing;
+      _lambing = this.widget._currentLambing!;
       _dateAgnelageCtl.text = _lambing.dateAgnelage;
       _obsCtl.text = _lambing.observations;
       _adoption = Adoption.getAdoption(_lambing.adoption);

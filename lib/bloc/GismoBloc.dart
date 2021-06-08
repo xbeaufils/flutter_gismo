@@ -289,8 +289,8 @@ class GismoBloc {
       List<EchographieModel> lstEcho = await this._repository!.dataProvider.getEcho(bete);
       lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd, EventType.agnelage, lambing.dateAgnelage, lambing.lambs.length.toString()))});
       lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement, traitement.debut, traitement.medicament))});
-      lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd, EventType.NEC, note.date, note.note.toString()))});
-      lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id, EventType.pesee, poids.datePesee, poids.poids.toString()))});
+      lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd!, EventType.NEC, note.date, note.note.toString()))});
+      lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id!, EventType.pesee, poids.datePesee, poids.poids.toString()))});
       lstAffect.forEach( (affect) => {lstEvents.addAll ( _makeEventforAffectation(affect) )});
       lstEcho.forEach((echo) {lstEvents.add(new Event.name(echo.idBd!, EventType.echo, echo.dateEcho, echo.nombre.toString())); });
       lstEvents.sort((a, b) =>  _compareDate(a, b));
@@ -306,7 +306,7 @@ class GismoBloc {
     try {
       List<Event> lstEvents = [];
       List<Pesee> lstPoids  = await this._repository!.dataProvider.getPeseeForLamb(lamb);
-      lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id, EventType.pesee, poids.datePesee, poids.poids.toString()))});
+      lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id!, EventType.pesee, poids.datePesee, poids.poids.toString()))});
       List<TraitementModel> lstTraits = await this._repository!.dataProvider.getTraitementsForLamb(lamb);
       lstTraits.forEach((traitement) {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement,  traitement.debut, traitement.medicament)); });
       return lstEvents;

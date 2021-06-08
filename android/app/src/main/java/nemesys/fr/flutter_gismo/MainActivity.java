@@ -234,7 +234,8 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                 result.success(devicesJson.toString());
             }
             else if (call.method.contentEquals("stopBlueTooth")) {
-                this.runBluetooth.cancel();
+                if (this.runBluetooth != null)
+                    this.runBluetooth.cancel();
             }
         }
     }

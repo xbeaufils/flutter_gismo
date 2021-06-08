@@ -56,7 +56,7 @@ class NEC {
 }
 
 class NoteModel {
-  late int _idBd;
+  int ? _idBd;
   late String _date;
   late int _note;
   late int _idBete;
@@ -101,9 +101,9 @@ class NoteModel {
     _date = value;
   }
 
-  int get idBd => _idBd;
+  int ? get idBd => _idBd;
 
-  set idBd(int value) {
+  set idBd(int ? value) {
     _idBd = value;
   }
 
