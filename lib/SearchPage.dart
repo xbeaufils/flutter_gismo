@@ -103,7 +103,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           }
           if (snapshot.connectionState == ConnectionState.waiting)
             return Container();
-          if (! snapshot.data )
+          if (! snapshot.hasData )
             return Container();
           List<Widget> status = <Widget>[]; //new List();
           switch (_bluetoothState) {

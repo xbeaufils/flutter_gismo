@@ -46,14 +46,14 @@ class Bete  {
   int get idBd => _idBd!;
   String get numBoucle =>_numBoucle;
   String get numMarquage =>_numMarquage!;
-  String get nom =>_nom!;
+  String ? get nom =>_nom;
   String get dateEntree => _dateEntree! ;
   Sex get sex => _sex;
   String get motifEntree =>_motifEntree!;
 
-  String get observations => _observations!;
+  String ? get observations => _observations;
 
-  set observations(String value) {
+  set observations(String ? value) {
     _observations = value;
   }
 
@@ -77,7 +77,7 @@ class Bete  {
     _numMarquage = value;
   }
 
-  set nom(String value) {
+  set nom(String ? value) {
     _nom = value;
   }
 

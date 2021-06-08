@@ -1,5 +1,5 @@
 class Pesee {
-  late int id;
+  int ? id;
   late int bete_id;
   late int lamb_id;
   late double poids;

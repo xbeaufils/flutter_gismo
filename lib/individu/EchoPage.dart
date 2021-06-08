@@ -25,7 +25,7 @@ class EchoPageState extends State<EchoPage> {
   TextEditingController _dateAgnelageCtl = TextEditingController();
 
   //TextEditingController _nombreCtl = TextEditingController();
-  late int _nombre;
+  int _nombre = 0;
 
   final _df = new DateFormat('dd/MM/yyyy');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();

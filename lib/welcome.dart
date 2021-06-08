@@ -80,7 +80,7 @@ class _WelcomePageState extends State<WelcomePage> {
         key: _scaffoldKey,
         backgroundColor: Colors.lightGreen,
         persistentFooterButtons: <Widget>[
-          _getStatus(this.widget._message!),
+          (this.widget._message==null)? Container():_getStatus(this.widget._message!),
         ],
         appBar: new AppBar(
             title: (_bloc.user != null) ?
@@ -223,7 +223,7 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   void _settingPressed() {
-    Future<String> message = Navigator.pushNamed(context, '/config') as Future<String>;
+    Future<dynamic> message = Navigator.pushNamed(context, '/config') ;
     message.then((message) {
       showMessage(message);
       setState(() {
@@ -250,7 +250,7 @@ class _WelcomePageState extends State<WelcomePage> {
  */
 
   void _sortiePressed() {
-    Future<String>  message = Navigator.pushNamed(context, '/sortie') as Future<String> ;
+    Future<dynamic>  message = Navigator.pushNamed(context, '/sortie')  ;
     message.then((message) {
       showMessage(message);
     }).catchError((message) {
@@ -259,7 +259,7 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   void _entreePressed() {
-    Future<String>  message = Navigator.pushNamed(context, '/entree') as Future<String> ;
+    Future<dynamic>  message = Navigator.pushNamed(context, '/entree') ;
     message.then((message) {
       showMessage(message);
     }).catchError((message) {

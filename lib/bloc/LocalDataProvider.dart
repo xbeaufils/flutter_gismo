@@ -781,7 +781,7 @@ class LocalDataProvider extends DataProvider{
   Future<String> addBete(LotModel lot, Bete bete, String dateEntree) async {
     try {
       Affectation affect = new Affectation();
-      affect.lotId = lot.idb;
+      affect.lotId = lot.idb!;
       affect.brebisId = bete.idBd;
       if (dateEntree != null)
         if (dateEntree.isNotEmpty)

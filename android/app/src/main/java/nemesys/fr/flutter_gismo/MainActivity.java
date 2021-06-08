@@ -1,7 +1,6 @@
 package nemesys.fr.flutter_gismo;
 
 
-import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -10,11 +9,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.location.GpsStatus;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,17 +18,20 @@ import android.os.Message;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import io.flutter.BuildConfig;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -44,10 +41,9 @@ import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 import io.sentry.Sentry;
 
-public class MainActivity extends FlutterActivity implements MethodChannel.MethodCallHandler, PluginRegistry.PluginRegistrantCallback {
+public class MainActivity extends FlutterActivity  implements  MethodChannel.MethodCallHandler, PluginRegistry.PluginRegistrantCallback{
     private static final String CHANNEL_RT610 = "nemesys.rfid.RT610";
     private static final String CHANNEL_BLUETOOTH = "nemesys.rfid.bluetooth";
-    private static final String CHANNEL_GPS = "nemesys.gps";
 
     public Context context;
     public String TAG = "MAinActivity";
@@ -69,7 +65,7 @@ public class MainActivity extends FlutterActivity implements MethodChannel.Metho
             try {
                 newValue = false;
                 int tentative = 0;
-                while (!newValue && tentative < 5) {
+                while (! newValue && tentative<5  ) {
                     Thread.sleep(1000);
                     tentative++;
                 }
@@ -88,7 +84,8 @@ public class MainActivity extends FlutterActivity implements MethodChannel.Metho
                 jSONObject.put("marquage", marquage);
                 Log.d(TAG, "onMethodCall: obj " + jSONObject.toString());
                 result.success(jSONObject.toString());
-            } catch (JSONException e) {
+            }
+            catch (JSONException e) {
                 result.error("JSON", "Exception JSON", "Exception JSON");
                 Sentry.captureException(e);
             }
@@ -96,7 +93,7 @@ public class MainActivity extends FlutterActivity implements MethodChannel.Metho
             try {
                 Intent intent2 = new Intent();
                 intent2.setComponent(new ComponentName("fr.nemesys.service.rfid", "fr.nemesys.service.rfid.RFIDService"));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ) {
                     Log.d(TAG, "Build version " + Build.VERSION.SDK_INT + " " + 26);
                     componentName = context.startForegroundService(intent2);
                 } else {
@@ -112,7 +109,7 @@ public class MainActivity extends FlutterActivity implements MethodChannel.Metho
                 e3.printStackTrace();
                 Log.e(TAG, "onMethodCall: ", e3);
                 Sentry.captureException(e3);
-                result.error("Start failed", "Start failed", "Start failed");
+                result.error("Start failed", "Start failed","Start failed");
             }
             Log.d(TAG, "onMethodCall: end start");
         } else if (call.method.contentEquals("stopRead") || call.method.equals("stop")) {
@@ -124,13 +121,11 @@ public class MainActivity extends FlutterActivity implements MethodChannel.Metho
     }
 
     @Override
-    public void onCreate(Bundle bundle) {
+    public void onCreate(Bundle  bundle) {
         super.onCreate(bundle);
         new MethodChannel(getFlutterEngine().getDartExecutor().getBinaryMessenger(), CHANNEL_RT610)
                 .setMethodCallHandler(this::onMethodCall);
         new MethodChannelBlueTooth(getFlutterEngine().getDartExecutor().getBinaryMessenger(), CHANNEL_BLUETOOTH);
-        new MethodChannel(getFlutterEngine().getDartExecutor().getBinaryMessenger(),CHANNEL_GPS)
-                .setMethodCallHandler(new MethodChannelHdlGps());
         Intent intent = getIntent();
         intent.getAction();
         intent.getType();
@@ -171,7 +166,7 @@ public class MainActivity extends FlutterActivity implements MethodChannel.Metho
         }
     }
 
-    public class MethodChannelBlueTooth extends MethodChannel {
+    public class MethodChannelBlueTooth extends  MethodChannel {
         public MethodChannelBlueTooth(BinaryMessenger messenger, String name) {
             super(messenger, name);
             this.setMethodCallHandler(new MethodChannelHdlBlueTooth());
@@ -179,11 +174,10 @@ public class MainActivity extends FlutterActivity implements MethodChannel.Metho
 
     }
 
-    public class MethodChannelHdlBlueTooth implements MethodChannel.MethodCallHandler {
+    public class MethodChannelHdlBlueTooth implements   MethodChannel.MethodCallHandler {
         //BluetoothHandlerThread btHandlerThread = new BluetoothHandlerThread("bluetooth");
-        HandlerThread btHandlerThread = new HandlerThread("bluetooth");
+        HandlerThread  btHandlerThread = new HandlerThread("bluetooth");
         BluetoothRun runBluetooth;
-
         public MethodChannelHdlBlueTooth() {
             //this.btHandlerThread = new BluetoothHandlerThread("bluetooth");
             this.btHandlerThread.start();
@@ -203,8 +197,8 @@ public class MainActivity extends FlutterActivity implements MethodChannel.Metho
                 result.success("{ \"status\" : \"STARTED\"}");
                 //address = "08:DF:1F:A8:3D:7E";
             } else if (call.method.contentEquals("dataBlueTooth")) {
-                switch (dataState) {
-                    case AVAILABLE:
+                switch (dataState ) {
+                    case  AVAILABLE :
                         result.success("{\"status\": \"AVAILABLE\", \"data\" : \"" + dataBluetoooth + "\"}");
                         dataState = DataState.NONE;
                         //btHandlerThread.quit();
@@ -232,13 +226,16 @@ public class MainActivity extends FlutterActivity implements MethodChannel.Metho
                         deviceJson.put("address", device.getAddress());
                         deviceJson.put("name", device.getName());
                         devicesJson.put(deviceJson);
-                    } catch (JSONException e) {
+                    }
+                    catch (JSONException e) {
                         Sentry.captureException(e);
                     }
                 }
                 result.success(devicesJson.toString());
-            } else if (call.method.contentEquals("stopBlueTooth")) {
-                this.runBluetooth.cancel();
+            }
+            else if (call.method.contentEquals("stopBlueTooth")) {
+                if (this.runBluetooth != null)
+                    this.runBluetooth.cancel();
             }
         }
     }
@@ -250,7 +247,7 @@ public class MainActivity extends FlutterActivity implements MethodChannel.Metho
         CONNECTED;
     }
 
-    public enum DataState {
+    public enum  DataState {
         NONE,
         WAITING,
         ERROR,
@@ -278,13 +275,38 @@ public class MainActivity extends FlutterActivity implements MethodChannel.Metho
         protected void onLooperPrepared() {
             //initHandler();
         }
+/*
+        private String address;
+        private Handler handler;
+        private BluetoothSerial bluetooth;
+
+        @Override
+        public void run() {
+            Log.d("BluetoothRun", "debut");
+            MainActivity.this.latch = new CountDownLatch(1);
+            dataState = DataState.WAITING;
+            bluetooth = new BluetoothSerial(this.handler);
+            bluetooth.connect(this.address);
+            boolean completed = false;
+            try {
+                completed = latch.await(10, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                Sentry.captureException(e);
+            }
+            Log.d("BluetoothRun", "End " + completed);
+            if (completed)
+                dataState = DataState.AVAILABLE;
+            else
+                dataState = DataState.NONE;
+        }*/
     }
 
-    public class BluetoothRun extends Thread {
+    public class BluetoothRun extends  Thread {
 
-        private final static String TAG = "BluetoothRun";
-        private final String address;
-        private final Handler handler;
+        private final static String TAG = "BluetoothRun" ;
+        private String address;
+        private Handler handler;
         private BluetoothSerial bluetooth;
         public final BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
         public String deviceName;
@@ -311,8 +333,8 @@ public class MainActivity extends FlutterActivity implements MethodChannel.Metho
             //this.mSocketType = secure ? "Secure" : "Insecure";
             //if (! BuildConfig.DEBUG) {
             try {
-                //  if (secure) {
-                tmp = mmDevice.createRfcommSocketToServiceRecord(BluetoothSerial.UUID_SPP);
+              //  if (secure) {
+                    tmp = mmDevice.createRfcommSocketToServiceRecord( BluetoothSerial.UUID_SPP);
                /* } else {
                     tmp = mmDevice.createInsecureRfcommSocketToServiceRecord(BluetoothSerial.UUID_SPP);
                 }*/
@@ -340,8 +362,27 @@ public class MainActivity extends FlutterActivity implements MethodChannel.Metho
             } catch (IOException e) {
                 Log.e(BluetoothRun.TAG, e.toString());
                 Sentry.captureException(e);
-             }
-            // BluetoothSerial.this.connected(this.mmSocket, this.mmDevice, this.mSocketType);
+                /*
+                try {
+                    Log.i(BluetoothRun.TAG, "Trying fallback...");
+                    this.mmSocket = (BluetoothSocket) this.mmDevice.getClass().getMethod("createRfcommSocket", new Class[]{Integer.TYPE}).invoke(this.mmDevice, new Object[]{1});
+                    this.mmSocket.connect();
+                    this.setState(BluetoothSerial.STATE_CONNECTED);
+                    Log.i(BluetoothRun.TAG, "Connected");
+                } catch (Exception e2) {
+                    Log.e(BluetoothRun.TAG, "Couldn't establish a Bluetooth connection.");
+                    Sentry.captureException(e);
+                    try {
+                        this.mmSocket.close();
+                    } catch (IOException e3) {
+                        Log.e(BluetoothRun.TAG, "unable to close() " + this.mSocketType + " socket during connection failure", e3);
+                        Sentry.captureException(e);
+                    }
+                    BluetoothSerial.this.connectionFailed();
+                    return;
+                }*/
+            }
+           // BluetoothSerial.this.connected(this.mmSocket, this.mmDevice, this.mSocketType);
         }
 
         @Override
@@ -349,6 +390,8 @@ public class MainActivity extends FlutterActivity implements MethodChannel.Metho
             Log.d("BluetoothRun", "debut");
             MainActivity.this.latch = new CountDownLatch(1);
             dataState = DataState.WAITING;
+            //bluetooth = new BluetoothSerial(this.handler);
+            //bluetooth.connect(this.address);
             this.connect();
             boolean completed = false;
             try {
@@ -357,7 +400,7 @@ public class MainActivity extends FlutterActivity implements MethodChannel.Metho
 //                Log.d(TAG, "run: Wait end " + LocalTime.now().toString());
             } catch (InterruptedException e) {
                 e.printStackTrace();
-                completed = false;
+                completed  = false;
                 Sentry.captureException(e);
             }
             Log.d("BluetoothRun", "End " + completed);
@@ -425,81 +468,4 @@ public class MainActivity extends FlutterActivity implements MethodChannel.Metho
         }
     }
 
-    Location myLocation;
-
-    // Define a listener that responds to location updates
-    LocationListener locationListener = new LocationListener() {
-        public void onLocationChanged(Location location) {
-            // Called when a new location is found by the network location provider.
-            Log.d(TAG, "onLocationChanged: " + location.getLatitude() + " " + location.getLongitude() + " " + location.getProvider() + " " + location.getAccuracy() + " " + location.isFromMockProvider());
-            myLocation = location;
-        }
-
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.d(TAG, "onStatusChanged: " + provider);
-        }
-
-        public void onProviderEnabled(String provider) {
-            Log.d(TAG, "onProviderEnabled: " + provider);
-        }
-
-        public void onProviderDisabled(String provider) {
-            Log.d(TAG, "onProviderDisabled: " + provider);
-        }
-    };
-
-     public class MethodChannelHdlGps implements MethodChannel.MethodCallHandler {
-        private LocationManager locationManager;
-        @Override
-        public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-            if (call.method.contentEquals("startPosition")) {
-                locationManager = (LocationManager) MainActivity.this.getSystemService(Context.LOCATION_SERVICE);
-
-            // Register the listener with the Location Manager to receive location updates
-                if (ActivityCompat.checkSelfPermission( MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    result.error("PERMISSION","No permission granted", null);
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                List<String> providers = locationManager.getAllProviders();
-                Log.d(TAG, "onMethodCall: Gps location enable " + locationManager.isLocationEnabled());
-                Log.d(TAG, "onMethodCall: GPS provider enable " + locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER));
-                Log.d(TAG, "onMethodCall: Net provider enable " + locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER));
-                //locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,locationListener, null);
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, locationListener);
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 500, 0, locationListener);
-                result.success("{ \"status\" : \"STARTED\"}");
-            }
-            else if (call.method.contentEquals("readPosition")) {
-                Location localisation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if (localisation != null )
-                    Log.d(TAG, "onMethodCall: Last known " + localisation.getLatitude() + " " + localisation.getLongitude());
-                else
-                    Log.d(TAG, "onMethodCall: Last known null");
-                if (myLocation == null)
-                    result.success(null);
-                else {
-                    JSONObject locationJson = new JSONObject();
-                    try {
-                        locationJson.put("latitude", myLocation.getLatitude());
-                        locationJson.put("longitude", myLocation.getLongitude());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    result.success(locationJson.toString());
-                }
-            }
-            else if (call.method.contentEquals("stopPosition")) {
-                locationManager.removeUpdates(locationListener);
-                result.success("STOP GPS");
-            }
-        }
-    }
  }
