@@ -13,7 +13,7 @@ class MortPage extends StatefulWidget {
 }
 
 class _MortPageState extends State<MortPage> {
-  late String _currentMotif;
+  String ? _currentMotif;
   TextEditingController _dateMortCtl = TextEditingController();
   final _df = new DateFormat('dd/MM/yyyy');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -143,12 +143,12 @@ class _MortPageState extends State<MortPage> {
       showError("Cause de décès obligatoire");
       return;
     }
-    if (_currentMotif.isEmpty) {
+    if (_currentMotif!.isEmpty) {
       showError("Cause de décès obligatoire");
       return;
     }
 
-    var message  = this.widget._bloc.mort(this.widget._currentLamb, _currentMotif, _dateMortCtl.text);
+    var message  = this.widget._bloc.mort(this.widget._currentLamb, _currentMotif!, _dateMortCtl.text);
     message
         .then( (message) {goodSaving(message);})
         .catchError( (message) {showError(message);});

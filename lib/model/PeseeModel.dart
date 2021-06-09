@@ -1,7 +1,7 @@
 class Pesee {
   int ? id;
-  late int bete_id;
-  late int lamb_id;
+  int ? bete_id;
+  int ? lamb_id;
   late double poids;
   late String datePesee;
   Pesee();

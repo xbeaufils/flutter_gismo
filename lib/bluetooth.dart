@@ -102,7 +102,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   void switched(value) {
     this.setState(() {
       this._isBluetooth = value;
-      this._bloc.saveBt(_isBluetooth, _preferredAddress!);
+      this._bloc.saveBt(_isBluetooth, _preferredAddress);
     });
   }
 
@@ -110,7 +110,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
     setState(() {
       _preferredAddress = value;
     });
-    this._bloc.saveBt(_isBluetooth, _preferredAddress!);
+    this._bloc.saveBt(_isBluetooth, _preferredAddress);
   }
 
 }

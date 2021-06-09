@@ -4,30 +4,30 @@ enum Sante { VIVANT, MORT_NE, AVORTE }
 class MethodeAllaitementNotFoundException implements Exception {}
 
 class LambingModel {
-  late int _idBd;
-  late String _dateAgnelage;
+  int ? _idBd;
+  String ? _dateAgnelage;
   late int _idMere;
-  late String _numBoucleMere;
-  late String _numMarquageMere;
-  late int _qualite;
-  late int _adoption;
-  late String _observations;
+  String ? _numBoucleMere;
+  String ? _numMarquageMere;
+  int ? _qualite;
+  int ? _adoption;
+  String ? _observations;
   late List<LambModel> _lambs;
 
-  String get observations => _observations;
+  String ? get observations => _observations;
 
-  set observations(String value) {
+  set observations(String ? value) {
     _observations = value;
   }
 
-  int get qualite => _qualite;
+  int ? get qualite => _qualite;
 
-  set qualite(int value) {
+  set qualite(int ? value) {
     _qualite = value;
   }
 
-  String get dateAgnelage => _dateAgnelage ;
-  void setDateAgnelage(String dateAgnelage) {
+  String ? get dateAgnelage => _dateAgnelage ;
+  void setDateAgnelage(String ? dateAgnelage) {
     this._dateAgnelage = dateAgnelage;
   }
   int get idMere => _idMere;
@@ -35,25 +35,25 @@ class LambingModel {
     this._idMere = idMere;
   }
 
-  String get numMarquageMere => _numMarquageMere;
+  String ? get numMarquageMere => _numMarquageMere;
 
-  set numMarquageMere(String value) {
+  set numMarquageMere(String ? value) {
     _numMarquageMere = value;
   }
 
-  String get numBoucleMere => _numBoucleMere;
+  String ? get numBoucleMere => _numBoucleMere;
 
-  set numBoucleMere(String value) {
+  set numBoucleMere(String ? value) {
     _numBoucleMere = value;
   }
 
-  int get idBd => _idBd;
-  set idBd(int value) {
+  int ? get idBd => _idBd;
+  set idBd(int ? value) {
     _idBd = value;
   }
-  int get adoption => _adoption;
+  int ? get adoption => _adoption;
 
-  set adoption(int value) {
+  set adoption(int ? value) {
     _adoption = value;
   }
 
@@ -153,16 +153,16 @@ class MethodeAllaitement {
 }
 
 class LambModel {
-  late int _idBd;
+  int ? _idBd;
   late int _idAgnelage;
-  late int _idDevenir;
+  int ? _idDevenir;
   late Sex _sex = Sex.male;
-  late String _marquageProvisoire;
+  String ? _marquageProvisoire;
 
-  late String _numBoucle;
-  late String _numMarquage;
-  late String _dateDeces;
-  late String _motifDeces;
+  String ? _numBoucle;
+  String ? _numMarquage;
+  String ? _dateDeces;
+  String ? _motifDeces;
   late MethodeAllaitement _allaitement;
   late Sante _sante;
 
@@ -173,8 +173,8 @@ class LambModel {
     _sante = value;
   }
 
-  String get marquageProvisoire => _marquageProvisoire;
-  set marquageProvisoire(String value) {
+  String ? get marquageProvisoire => _marquageProvisoire;
+  set marquageProvisoire(String ? value) {
     _marquageProvisoire = value;
   }
 
@@ -183,7 +183,7 @@ class LambModel {
     _sex = value;
   }
 
-  int get idBd => _idBd;
+  int ? get idBd => _idBd;
 
   int get idAgnelage => _idAgnelage;
 
@@ -191,37 +191,37 @@ class LambModel {
     _idAgnelage = value;
   }
 
-  int get idDevenir => _idDevenir;
+  int ? get idDevenir => _idDevenir;
 
-  set idDevenir(int value) {
+  set idDevenir(int ? value) {
     _idDevenir = value;
   }
 
-  String get numBoucle => _numBoucle;
+  String ? get numBoucle => _numBoucle;
 
-  set numBoucle(String value) {
+  set numBoucle(String ? value) {
     _numBoucle = value;
   }
 
-  String get numMarquage => _numMarquage;
+  String ? get numMarquage => _numMarquage;
 
-  set numMarquage(String value) {
+  set numMarquage(String ? value) {
     _numMarquage = value;
   }
 
-  set idBd(int value) {
+  set idBd(int ? value) {
     _idBd = value;
   }
 
-  String get dateDeces => _dateDeces;
+  String ? get dateDeces => _dateDeces;
 
-  set dateDeces(String value) {
+  set dateDeces(String ? value) {
     _dateDeces = value;
   }
 
-  String get motifDeces => _motifDeces;
+  String ? get motifDeces => _motifDeces;
 
-  set motifDeces(String value) {
+  set motifDeces(String ? value) {
     _motifDeces = value;
   }
 

@@ -53,7 +53,7 @@ class _LambingPageState extends State<LambingPage> {
       appBar: new AppBar(
         title: (this.widget._mere != null) ? 
           new Text(this.widget._mere!.numBoucle + " (" + this.widget._mere!.numMarquage + ")") :
-          new Text(this.widget._currentLambing!.numBoucleMere + " (" + this.widget._currentLambing!.numMarquageMere + ")"),
+          new Text(this.widget._currentLambing!.numBoucleMere! + " (" + this.widget._currentLambing!.numMarquageMere! + ")"),
         key: _scaffoldKey,
       ),
       body:
@@ -261,10 +261,11 @@ class _LambingPageState extends State<LambingPage> {
     }
     else {
       _lambing = this.widget._currentLambing!;
-      _dateAgnelageCtl.text = _lambing.dateAgnelage;
-      _obsCtl.text = _lambing.observations;
-      _adoption = Adoption.getAdoption(_lambing.adoption);
-      _agnelage = Agnelage.getAgnelage(_lambing.qualite);
+      _dateAgnelageCtl.text = _lambing.dateAgnelage!;
+      if (_lambing.observations != null)
+        _obsCtl.text = _lambing.observations!;
+      _adoption = Adoption.getAdoption(_lambing.adoption!);
+      _agnelage = Agnelage.getAgnelage(_lambing.qualite!);
     }
   }
 
@@ -272,7 +273,7 @@ class _LambingPageState extends State<LambingPage> {
     String sexe = (_lambing.lambs[index].sex == Sex.male) ?"Male" : "";
     sexe = (_lambing.lambs[index].sex == Sex.femelle) ?"Femelle" : sexe;
     return ListTile(
-      leading: Text(_lambing.lambs[index].marquageProvisoire),
+      leading: (_lambing.lambs[index].marquageProvisoire == null) ? null : Text(_lambing.lambs[index].marquageProvisoire!),
       title: Text(sexe) ,
       subtitle: (_lambing.lambs[index].allaitement != null) ? Text(_lambing.lambs[index].allaitement.libelle): Text("Allaitement non spécifié"), // Text(_lambs[index].marquageProvisoire),
       trailing:  _buildTrailing(_lambing.lambs[index]),);
@@ -284,15 +285,15 @@ class _LambingPageState extends State<LambingPage> {
     if (lamb.numBoucle != null )
       return Column(
         children: <Widget>[
-          Text(lamb.numBoucle),
-          Text(lamb.numMarquage),
+          Text(lamb.numBoucle!),
+          Text(lamb.numMarquage!),
         ],
       );
 
     if (lamb.dateDeces != null)
       return Column(children: <Widget>[
-        Text(CauseMortExtension.getValue(lamb.motifDeces).name),
-        Text(lamb.dateDeces),
+        Text(CauseMortExtension.getValue(lamb.motifDeces!).name),
+        Text(lamb.dateDeces!),
       ],);
 
     return

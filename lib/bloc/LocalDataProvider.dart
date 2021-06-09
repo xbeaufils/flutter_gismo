@@ -355,7 +355,7 @@ class LocalDataProvider extends DataProvider{
         for (int j = 0; j < agneaux.length; j++) {
           LambModel lamb = LambModel.fromResult(agneaux[j]);
           if (lamb.idDevenir != null) {
-            Bete ? devenu = await this._searchBete(lamb.idDevenir);
+            Bete ? devenu = await this._searchBete(lamb.idDevenir!);
             if (devenu != null) {
               lamb.numBoucle = devenu.numBoucle;
               lamb.numMarquage = devenu.numMarquage;
@@ -433,7 +433,7 @@ class LocalDataProvider extends DataProvider{
   Future<String> saveLamb(LambModel lamb ) async {
     Database db = await this.database;
     int res =   await db.update("agneaux", lamb.toJson(),
-        where: "id = ?", whereArgs: <int>[lamb.idBd]);
+        where: "id = ?", whereArgs: <int>[lamb.idBd!]);
     return "enregistrement modifié";
   }
 
@@ -520,12 +520,12 @@ class LocalDataProvider extends DataProvider{
     LambingModel ? agnelage = await this.searchLambing(lamb.idAgnelage);
     if (agnelage == null)
       return "Agnelage non trouvé";
-    bete.dateEntree = agnelage.dateAgnelage;
+    bete.dateEntree = agnelage.dateAgnelage!;
     int idBete = await db.insert(
         'bete', bete.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     lamb.idDevenir = idBete;
     db.update('agneaux', lamb.toBdJson(), where: "id = ?",
-        whereArgs: <int>[lamb.idBd]);
+        whereArgs: <int>[lamb.idBd!]);
     db.rawUpdate(
         'udpate traitement set beteId=? where lambId=?', [idBete, lamb.idBd]);
     db.rawUpdate(
@@ -604,7 +604,7 @@ class LocalDataProvider extends DataProvider{
       final Map<String, dynamic> data = new Map<String, dynamic>();
       data["dateDeces"] = date;
       data["motifDeces"] = motif;
-      db.update("agneaux", data, where: "id = ?", whereArgs: <int>[lamb.idBd]);
+      db.update("agneaux", data, where: "id = ?", whereArgs: <int>[lamb.idBd!]);
   }
 
   @override

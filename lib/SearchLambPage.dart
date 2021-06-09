@@ -95,7 +95,7 @@ class _SearchLambPageState extends State<SearchLambPage> {
                   title: Row(
                     children: <Widget>[
                       Expanded(child:
-                      Text(_filteredLambs[index].marquageProvisoire),
+                        (_filteredLambs[index].marquageProvisoire == null) ? Text(''): Text(_filteredLambs[index].marquageProvisoire!),
                       ),
                       IconButton(icon: new Icon(Icons.delete),
                           onPressed: () =>
@@ -125,10 +125,12 @@ class _SearchLambPageState extends State<SearchLambPage> {
     if (_searchText.isNotEmpty) {
       List<CompleteLambModel> tempList = <CompleteLambModel>[]; //new List();
       for (int i = 0; i < _filteredLambs.length; i++) {
-        if (_filteredLambs[i].marquageProvisoire.isNotEmpty) {
-          if (_filteredLambs[i].marquageProvisoire.toLowerCase().contains(
-              _searchText.toLowerCase())) {
-            tempList.add(_filteredLambs[i]);
+        if (_filteredLambs[i].marquageProvisoire != null) {
+          if (_filteredLambs[i].marquageProvisoire!.isNotEmpty) {
+            if (_filteredLambs[i].marquageProvisoire!.toLowerCase().contains(
+                _searchText.toLowerCase())) {
+              tempList.add(_filteredLambs[i]);
+            }
           }
         }
       }
@@ -142,7 +144,7 @@ class _SearchLambPageState extends State<SearchLambPage> {
           title: Row(
             children: <Widget>[
               Expanded( child:
-                Text( _filteredLambs[index].marquageProvisoire),
+          ( _filteredLambs[index].marquageProvisoire == null)? Container() : Text( _filteredLambs[index].marquageProvisoire!),
               ),
               IconButton( icon: new Icon(Icons.delete), onPressed: () => _showDialog(context, _filteredLambs[index])),
             ],),

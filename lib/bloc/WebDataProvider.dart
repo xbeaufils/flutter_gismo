@@ -48,7 +48,8 @@ class WebDataProvider extends DataProvider {
     //SharedPreferences prefs = await SharedPreferences.getInstance();
     //String token = prefs.getString("token");
     if (super.token != null)
-      options.headers.addAll({"Token": super.token});
+      //options.headers.addAll({"token": super.token});
+      options.headers["token"] = super.token;
     return handler.next(options);
     //return options;
   }

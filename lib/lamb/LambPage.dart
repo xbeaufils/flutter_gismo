@@ -158,7 +158,8 @@ class LambPageState extends State<LambPage> {
     _dropDownMenuItems = items;
     if (this.widget._lamb != null) {
       _currentAllaitement = this.widget._lamb!.allaitement;
-      this._marquageCtrl.text = this.widget._lamb!.marquageProvisoire;
+      if (this.widget._lamb!.marquageProvisoire != null )
+        this._marquageCtrl.text = this.widget._lamb!.marquageProvisoire!;
       this._sex = this.widget._lamb!.sex;
       this._sante = this.widget._lamb!.sante;
     }
