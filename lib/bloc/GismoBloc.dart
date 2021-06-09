@@ -87,7 +87,7 @@ class GismoBloc {
     return address;
   }
 
-  void saveBt(bool isBlueTooth, String address) {
+  void saveBt(bool isBlueTooth, String  ? address) {
     FlutterSecureStorage storage = new FlutterSecureStorage();
     storage.write(key: "bluetooth", value: isBlueTooth.toString());
     if (isBlueTooth)
@@ -198,6 +198,12 @@ class GismoBloc {
     return aProvider.login(user);
   }
 
+  Future<void> loginWeb(User user ) async {
+    _repository = new GismoRepository(this, RepositoryType.web);
+    this._currentUser = user;
+    this._currentUser = await (_repository?.dataProvider as WebDataProvider).login(user);
+  }
+
   String logout() {
     this._currentUser = new User(null, null);
     _currentUser?.setCheptel("00000000");
@@ -218,7 +224,7 @@ class GismoBloc {
   }
 
   Future<String> deleteLamb(LambModel lamb ) async {
-    return this._repository!.dataProvider.deleteLamb(lamb.idBd);
+    return this._repository!.dataProvider.deleteLamb(lamb.idBd!);
   }
 
   Future<List<LambingModel>> getLambs(int idBete) {
@@ -287,7 +293,7 @@ class GismoBloc {
       List<NoteModel> lstNotes = await this._repository!.dataProvider.getNec(bete);
       List<Pesee> lstPoids  = await this._repository!.dataProvider.getPesee(bete);
       List<EchographieModel> lstEcho = await this._repository!.dataProvider.getEcho(bete);
-      lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd, EventType.agnelage, lambing.dateAgnelage, lambing.lambs.length.toString()))});
+      lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd!, EventType.agnelage, lambing.dateAgnelage!, lambing.lambs.length.toString()))});
       lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement, traitement.debut, traitement.medicament))});
       lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd!, EventType.NEC, note.date, note.note.toString()))});
       lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id!, EventType.pesee, poids.datePesee, poids.poids.toString()))});
@@ -480,7 +486,7 @@ class GismoBloc {
   Future<String> savePeseeLamb(LambModel lamb, double poids, String date ) async {
     try {
       Pesee pesee = new Pesee();
-      pesee.lamb_id = lamb.idBd;
+      pesee.lamb_id = lamb.idBd!;
       pesee.datePesee = date;
       pesee.poids = poids;
       return this._repository!.dataProvider.savePesee(pesee);

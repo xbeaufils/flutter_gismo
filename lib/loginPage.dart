@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                             border:
                             OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                        ),
-                      new RaisedButton(key:null, onPressed:_saveConfig,
+                      new RaisedButton(key:null, onPressed:_loginWeb,
                           color: const Color(0xFFe0e0e0),
                           child:
                           new Text(
@@ -90,10 +90,10 @@ class _LoginPageState extends State<LoginPage> {
 
       );
   }
-  _saveConfig() async {
+  _loginWeb() async {
     try {
       User testUser  = User(_emailCtrl.text, _passwordCtrl.text);
-      User testedUser = await this._bloc.login(testUser);
+      await this._bloc.loginWeb(testUser);
       Navigator.pushNamed(context,'/welcome');
     }
     catch(e) {

@@ -16,15 +16,15 @@ class User {
   String ? get cheptel =>_cheptel;
   String ? get token =>_token;
 
-  void setCheptel(String cheptel) {
+  void setCheptel(String ? cheptel) {
     this._cheptel = cheptel;
   }
 
-  setToken(String value) {
+  setToken(String ? value) {
     _token = value;
   }
 
-  setEmail(String value) {
+  setEmail(String ? value) {
     _email = value;
   }
 
