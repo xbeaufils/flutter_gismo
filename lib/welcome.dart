@@ -60,17 +60,21 @@ class _WelcomePageState extends State<WelcomePage> {
 
   List<Widget> _getActionButton() {
     List<Widget> actionBtns = List.empty(growable: true);
-    actionBtns.add(
-        IconButton(
-          icon: Icon(Icons.edit),
-          onPressed: _choixBt,
-        ));
-    actionBtns.add(
-        IconButton(
-          icon: Icon(Icons.settings),
-        onPressed: _settingPressed,
-      ));
-
+    if (!kIsWeb) {
+    // if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
+        if (this._bloc.user!.subscribe!) {
+          actionBtns.add(
+              IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: _choixBt,
+              ));
+        actionBtns.add(
+            IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: _settingPressed,
+            ));
+      }
+    }
     return actionBtns;
   }
 
