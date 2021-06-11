@@ -284,11 +284,11 @@ class GismoBloc {
     try {
       List<Event> lstEvents = [];
       debug.log("get lambs", name: "GismoBloc::getEvents");
-      List<LambingModel> lstLambs = await this._repository!.dataProvider.getLambs(bete.idBd);
+      List<LambingModel> lstLambs = await this._repository!.dataProvider.getLambs(bete.idBd!);
       debug.log("get traitements", name: "GismoBloc::getEvents");
       List<TraitementModel> lstTraitement = await this._repository!.dataProvider.getTraitements(bete);
       debug.log("get lots", name: "GismoBloc::getEvents");
-      List<Affectation> lstAffect = await this._repository!.dataProvider.getAffectationForBete(bete.idBd);
+      List<Affectation> lstAffect = await this._repository!.dataProvider.getAffectationForBete(bete.idBd!);
       debug.log("get nec", name: "GismoBloc::getEvents");
       List<NoteModel> lstNotes = await this._repository!.dataProvider.getNec(bete);
       List<Pesee> lstPoids  = await this._repository!.dataProvider.getPesee(bete);
@@ -457,7 +457,7 @@ class GismoBloc {
       NoteModel note = new NoteModel();
       note.note = nec.note;
       note.date = date;
-      note.idBete = bete.idBd;
+      note.idBete = bete.idBd!;
       return await this._repository!.dataProvider.saveNec(note);
 
     }

@@ -271,7 +271,8 @@ class LambPageState extends State<LambPage> {
           builder: (context) => BouclagePage(lamb, this.widget._bloc)),
     );
     this.widget._bloc.boucler(lamb,bete);
-    lamb.idDevenir = bete.idBd;
+    if (bete.idBd != null)
+      lamb.idDevenir = bete.idBd;
     lamb.numBoucle = bete.numBoucle;
     lamb.numMarquage = bete.numMarquage;
     Navigator

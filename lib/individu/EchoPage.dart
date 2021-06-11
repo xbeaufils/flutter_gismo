@@ -222,7 +222,7 @@ class EchoPageState extends State<EchoPage> {
     });
     if (this.widget._currentEcho == null)
       this.widget._currentEcho = new EchographieModel();
-    this.widget._currentEcho!.bete_id = this.widget._bete.idBd;
+    this.widget._currentEcho!.bete_id = this.widget._bete.idBd!;
     this.widget._currentEcho!.dateEcho = _dateEchoCtl.text;
     this.widget._currentEcho!.nombre = _nombre;
     if (_dateSaillieCtl.text.isNotEmpty)

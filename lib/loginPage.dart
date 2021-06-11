@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/User.dart';
-import 'package:flutter_gismo/welcome.dart';
 
 class LoginPage extends StatefulWidget {
   final GismoBloc _bloc;

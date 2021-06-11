@@ -254,7 +254,7 @@ class _LambingPageState extends State<LambingPage> {
   void initState() {
     super.initState();
     if (this.widget._currentLambing == null) {
-      _lambing = new LambingModel(this.widget._mere!.idBd);
+      _lambing = new LambingModel(this.widget._mere!.idBd!);
       _dateAgnelageCtl.text = df.format(selectedDate);
       _adoption = Adoption.level0;
       _agnelage = Agnelage.level0;
