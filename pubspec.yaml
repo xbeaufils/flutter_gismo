@@ -11,7 +11,7 @@ description: Gismo application.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.0.0+6
+version: 2.1.0+6
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -72,7 +72,6 @@ flutter:
     - assets/Lot_entree.png
     - assets/Lot_sortie.png
     - assets/brebis.png
-    - assets/chevre.png
     - assets/lamb.png
     - assets/etat_corporel.png
     - assets/syringe.png
@@ -97,11 +96,6 @@ flutter:
     - assets/female.png
     - assets/jumping_lambs.png
     - assets/sheep_lamb.png
-    - assets/chevre.png
-    - assets/chevre_chevreau.png
-    - assets/chevreau.png
-    - assets/lot_chevre.png
-    - assets/amalthe.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
