@@ -43,7 +43,7 @@ class Bete  {
     return data;
   }
 
-  int get idBd => _idBd!;
+  int ? get idBd => _idBd;
   String get numBoucle =>_numBoucle;
   String get numMarquage =>_numMarquage!;
   String ? get nom =>_nom;
@@ -81,7 +81,7 @@ class Bete  {
     _nom = value;
   }
 
-  set idBd(int value) {
+  set idBd(int ? value) {
     _idBd = value;
   }
 

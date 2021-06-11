@@ -315,7 +315,7 @@ class LocalDataProvider extends DataProvider{
   Future<String> saveBete(Bete bete) async {
     Database db = await this.database;
     int res =   await db.update("bete", bete.toJson(),
-        where: "id = ?", whereArgs: <int>[bete.idBd]);
+        where: "id = ?", whereArgs: <int>[bete.idBd!]);
     return res.toString() + " enregistrement modifié";
   }
 
@@ -490,7 +490,7 @@ class LocalDataProvider extends DataProvider{
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data["motifSortie"] = motif;
     data["dateSortie"] = date;
-    batch.update("bete", data , where: "id = ?", whereArgs: <int>[bete.idBd]);
+    batch.update("bete", data , where: "id = ?", whereArgs: <int>[bete.idBd!]);
   }
 
   @override
@@ -782,7 +782,7 @@ class LocalDataProvider extends DataProvider{
     try {
       Affectation affect = new Affectation();
       affect.lotId = lot.idb!;
-      affect.brebisId = bete.idBd;
+      affect.brebisId = bete.idBd!;
       if (dateEntree != null)
         if (dateEntree.isNotEmpty)
           affect.dateEntree = dateEntree;

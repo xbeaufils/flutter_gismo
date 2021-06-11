@@ -14,15 +14,15 @@ GismoBloc gismoBloc= new GismoBloc();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))
+  if ( ! kIsWeb)
+  // if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))
     Admob.initialize(testDeviceIds: ['CDB1827517618849EC4C60C7389786D9']);
   gismoBloc = new GismoBloc();
   Environnement.init( "https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api");
-  //await gismoBloc.init();
-  //bool isLogged = false; //gismoBloc.isLogged();
-  String nextPage = '/login';
-  if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))
-    nextPage='/splash';
+  String nextPage = '/splash';
+  if (kIsWeb)
+    //if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))
+    nextPage='/login';
   final GismoApp gismoApp = new GismoApp(gismoBloc,
     initialRoute: nextPage, //isLogged ? '/welcome' : '/config',
   );

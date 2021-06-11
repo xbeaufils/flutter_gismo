@@ -129,7 +129,7 @@ class _BouclagePageState extends State<BouclagePage> {
           }
           if (snapshot.connectionState == ConnectionState.waiting)
             return  Container();
-          if (! snapshot.data )
+          if (! snapshot.hasData )
             return Container();
           List<Widget> status = [];
           switch (_bluetoothState ) {
