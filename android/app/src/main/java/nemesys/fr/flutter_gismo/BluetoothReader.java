@@ -7,6 +7,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import io.flutter.BuildConfig;
 import io.sentry.Sentry;
@@ -17,7 +18,7 @@ public class BluetoothReader extends Thread {
     private BluetoothSocket mmSocket;
     private Handler mHandler;
     private final static String TAG = "BluetoothRead" ;
-    protected volatile boolean reading = true;
+    private boolean reading = true;
 
     public BluetoothReader(BluetoothSocket socket, Handler handler) {
         Log.d(BluetoothReader.TAG, "create BluetoothRead: " );
@@ -47,15 +48,40 @@ public class BluetoothReader extends Thread {
 
     public void run() {
         Log.i(BluetoothReader.TAG, "[ConnectedThread:run]");
-        byte[] buffer = new byte[1024];
+        reading = true;
+        ArrayList<Integer> arr_byte = new ArrayList<>();
+        //byte[] buffer = new byte[1024];
         while (reading) {
-            try {
-                int bytes = this.mmInStream.read(buffer); // TODO : Gérer le carriage return 0D
-                this.mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ, new String(buffer, 0, bytes)).sendToTarget();
-                if (bytes > 0) {
-                    this.mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ_RAW, new String(buffer, 0, bytes) /*Arrays.copyOf(buffer, bytes)*/).sendToTarget();
-                    //return;
+             try {
+                int data = this.mmInStream.read();
+                Log.d(TAG, "run: " + data);
+                if (data != 10) {
+                    if (data == 13) {
+                        byte[] buffer = new byte[arr_byte.size()];
+                        for (int i = 0; i < arr_byte.size(); i++) {
+                            buffer[i] = arr_byte.get(i).byteValue();
+                        }
+                        this.mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ, new String(buffer, 0, arr_byte.size())).sendToTarget();
+                        //BluetoothService.this.mHandler.obtainMessage(2, buffer.length, -1, buffer).sendToTarget();
+                        arr_byte = new ArrayList<>();
+                        //reading = false;
+                    } else {
+                        if (data > 16)
+                        arr_byte.add(Integer.valueOf(data));
+                    }
                 }
+                else {
+                    reading = false;
+                }
+                /*
+                int bytes = this.mmInStream.read(buffer); // TODO : Gérer le carriage return 0D
+
+                Log.d("BluetoothReader.TAG", "buffer " + new String(buffer, 0, bytes));
+                //this.mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ, new String(buffer, 0, bytes)).sendToTarget();
+                if (bytes > 0) {
+                    this.mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ_RAW, new String(buffer, 0, bytes) ).sendToTarget();
+                    //return;
+                }*/
             } catch (IOException e) {
                 Log.e(BluetoothReader.TAG, "[ConnectedThead:run] disconnected", e);
                 Sentry.captureException(e);
@@ -64,6 +90,7 @@ public class BluetoothReader extends Thread {
                 return;
             }
         }
+        Log.d(TAG, "run: End of run : reading = " + reading);
     }
 
     public void write(byte[] buffer) {
@@ -80,7 +107,7 @@ public class BluetoothReader extends Thread {
     public void cancel() {
         reading = false;
         try {
-            if (! BuildConfig.DEBUG)
+            //if (! BuildConfig.DEBUG)
                 this.mmSocket.close();
         } catch (IOException e) {
             Sentry.captureException(e);
