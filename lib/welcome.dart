@@ -68,12 +68,13 @@ class _WelcomePageState extends State<WelcomePage> {
                 icon: Icon(Icons.edit),
                 onPressed: _choixBt,
               ));
+        }
         actionBtns.add(
             IconButton(
               icon: Icon(Icons.settings),
               onPressed: _settingPressed,
             ));
-      }
+
     }
     return actionBtns;
   }
