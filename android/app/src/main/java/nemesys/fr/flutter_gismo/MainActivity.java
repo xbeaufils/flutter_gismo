@@ -185,11 +185,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
 
         @Override
         public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-            /*if (this.btHandlerThread != null)
-                this.btHandlerThread.quit();
-            this.btHandlerThread = new BluetoothHandlerThread("bluetooth");
-            this.btHandlerThread.start();*/
-            if (call.method.contentEquals("readBlueTooth")) {
+             if (call.method.contentEquals("readBlueTooth")) {
                 String address = (String) call.argument("address");
                 BluetoothHandler handler = new BluetoothHandler(btHandlerThread.getLooper());
                 runBluetooth = new BluetoothRun(address, handler);
@@ -275,31 +271,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         protected void onLooperPrepared() {
             //initHandler();
         }
-/*
-        private String address;
-        private Handler handler;
-        private BluetoothSerial bluetooth;
 
-        @Override
-        public void run() {
-            Log.d("BluetoothRun", "debut");
-            MainActivity.this.latch = new CountDownLatch(1);
-            dataState = DataState.WAITING;
-            bluetooth = new BluetoothSerial(this.handler);
-            bluetooth.connect(this.address);
-            boolean completed = false;
-            try {
-                completed = latch.await(10, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                Sentry.captureException(e);
-            }
-            Log.d("BluetoothRun", "End " + completed);
-            if (completed)
-                dataState = DataState.AVAILABLE;
-            else
-                dataState = DataState.NONE;
-        }*/
     }
 
     public class BluetoothRun extends  Thread {
@@ -325,22 +297,15 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         public void cancel() {
             if (reader != null)
                 reader.cancel();
-            latch.countDown();
+            //latch.countDown();
         }
 
         public void connect() {
             BluetoothSocket tmp = null;
-            //this.mSocketType = secure ? "Secure" : "Insecure";
-            //if (! BuildConfig.DEBUG) {
             try {
-              //  if (secure) {
-                    tmp = mmDevice.createRfcommSocketToServiceRecord( BluetoothSerial.UUID_SPP);
-               /* } else {
-                    tmp = mmDevice.createInsecureRfcommSocketToServiceRecord(BluetoothSerial.UUID_SPP);
-                }*/
+                tmp = mmDevice.createRfcommSocketToServiceRecord( BluetoothSerial.UUID_SPP);
             } catch (IOException e) {
                 Log.e(BluetoothRun.TAG, "Socket create() failed", e);
-                //sendLog("[ConnectThread::ConnectThread] Socket Type: " + this.mSocketType + "create() failed" + this.mSocketType);
                 Sentry.captureException(e);
             }
             //}
@@ -349,40 +314,16 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                 stateBluetooth = MainActivity.State.NONE;
                 return;
             }
-            //if ( ! BuildConfig.DEBUG) {
             this.mAdapter.cancelDiscovery();
             try {
                 Log.i(BluetoothRun.TAG, "Connecting to socket...");
                 this.mmSocket.connect();
                 Log.i(BluetoothRun.TAG, "Connected");
                 stateBluetooth = MainActivity.State.CONNECTED;
-                //BluetoothSerial.this.setState(BluetoothSerial.STATE_CONNECTED);
-                reader = new BluetoothReader(this.mmSocket, this.handler);
-                reader.start();
             } catch (IOException e) {
                 Log.e(BluetoothRun.TAG, e.toString());
                 Sentry.captureException(e);
-                /*
-                try {
-                    Log.i(BluetoothRun.TAG, "Trying fallback...");
-                    this.mmSocket = (BluetoothSocket) this.mmDevice.getClass().getMethod("createRfcommSocket", new Class[]{Integer.TYPE}).invoke(this.mmDevice, new Object[]{1});
-                    this.mmSocket.connect();
-                    this.setState(BluetoothSerial.STATE_CONNECTED);
-                    Log.i(BluetoothRun.TAG, "Connected");
-                } catch (Exception e2) {
-                    Log.e(BluetoothRun.TAG, "Couldn't establish a Bluetooth connection.");
-                    Sentry.captureException(e);
-                    try {
-                        this.mmSocket.close();
-                    } catch (IOException e3) {
-                        Log.e(BluetoothRun.TAG, "unable to close() " + this.mSocketType + " socket during connection failure", e3);
-                        Sentry.captureException(e);
-                    }
-                    BluetoothSerial.this.connectionFailed();
-                    return;
-                }*/
             }
-           // BluetoothSerial.this.connected(this.mmSocket, this.mmDevice, this.mSocketType);
         }
 
         @Override
@@ -390,20 +331,22 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
             Log.d("BluetoothRun", "debut");
             MainActivity.this.latch = new CountDownLatch(1);
             dataState = DataState.WAITING;
-            //bluetooth = new BluetoothSerial(this.handler);
-            //bluetooth.connect(this.address);
             this.connect();
             boolean completed = false;
             try {
-//                Log.d(TAG, "run: Wait start " + LocalTime.now().toString());
+                HandlerThread  btHandlerThread = new HandlerThread("read");
+                btHandlerThread.start();
+                BluetoothHandler handler = new BluetoothHandler(btHandlerThread.getLooper());
+                reader = new BluetoothReader(this.mmSocket, handler);
+                handler.post(reader);
                 completed = latch.await(10, TimeUnit.SECONDS);
 //                Log.d(TAG, "run: Wait end " + LocalTime.now().toString());
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 completed  = false;
                 Sentry.captureException(e);
             }
-            Log.d("BluetoothRun", "End " + completed);
+            Log.d("BluetoothRun", "End : completed = " + completed);
             if (completed)
                 dataState = DataState.AVAILABLE;
             else
@@ -446,8 +389,10 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                     break;
                 case BluetoothState.MESSAGE_READ:
                     dataBluetoooth = (String) msg.obj;
+                    Log.d(TAG, "handleMessage: data " + dataBluetoooth);
                     dataState = DataState.AVAILABLE;
-                    MainActivity.this.latch.countDown();
+ //                   MainActivity.this.latch.countDown();
+ //                   Log.d(TAG, "handleMessage: countDown = " + MainActivity.this.latch.getCount());
                     break;
                 case BluetoothState.MESSAGE_DEVICE_NAME:
                     Log.i(TAG, msg.getData().getString(BluetoothState.DEVICE_NAME));
