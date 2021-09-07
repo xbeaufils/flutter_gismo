@@ -78,7 +78,7 @@ public class BluetoothConnect extends  Thread{
         //dataState = MainActivity.DataState.WAITING;
         boolean completed = false;
         while (connecting.get()) {
-            CountDownLatch latch = new CountDownLatch(1);
+            CountDownLatch latch = new CountDownLatch(10);
             this.connect();
             try {
                 HandlerThread btHandlerThread = new HandlerThread("read");
