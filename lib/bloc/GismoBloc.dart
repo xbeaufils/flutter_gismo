@@ -96,8 +96,29 @@ class GismoBloc {
       storage.delete(key: "address");
   }
 
-  Stream<BluetoothState> streamBluetooth() async* {
+  Stream<BluetoothState> streamConnectBluetooth() async* {
+    BluetoothState state;
     FlutterSecureStorage storage = new FlutterSecureStorage();
+    String address = await storage.read(key: "address");
+    try {
+      String status = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth", { 'address': address});
+      debug.log("Connect status " + status);
+      Map<String, dynamic> map = json.decode(status);
+      yield  state = BluetoothState.fromResult(json.decode(status));
+    } on PlatformException catch(e) {
+      debug.log("Erreur ", error: e );
+    }
+  }
+
+  Stream <BluetoothState> streamReadBluetooth() async* {
+    BluetoothState state;
+    String status = await BLUETOOTH_CHANNEL.invokeMethod("dataBlueTooth");
+    debug.log("read status " + status);
+    yield  state = BluetoothState.fromResult(json.decode(status));
+  }
+
+  Stream<BluetoothState> streamBluetooth() async* {
+    BluetoothState state;   FlutterSecureStorage storage = new FlutterSecureStorage();
     String address = await storage.read(key: "address");
     try {
       String status = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth", { 'address': address});

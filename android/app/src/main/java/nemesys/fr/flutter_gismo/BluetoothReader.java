@@ -2,12 +2,16 @@ package nemesys.fr.flutter_gismo;
 
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.flutter.BuildConfig;
 import io.sentry.Sentry;
@@ -18,7 +22,7 @@ public class BluetoothReader extends Thread {
     private BluetoothSocket mmSocket;
     private Handler mHandler;
     private final static String TAG = "BluetoothRead" ;
-    private boolean reading = true;
+    private AtomicBoolean reading = new AtomicBoolean(true);
 
     public BluetoothReader(BluetoothSocket socket, Handler handler) {
         Log.d(BluetoothReader.TAG, "create BluetoothRead: " );
@@ -48,10 +52,10 @@ public class BluetoothReader extends Thread {
 
     public void run() {
         Log.i(BluetoothReader.TAG, "[ConnectedThread:run]");
-        reading = true;
+        reading.set( true );
         ArrayList<Integer> arr_byte = new ArrayList<>();
         //byte[] buffer = new byte[1024];
-        while (reading) {
+        while (reading.get()) {
              try {
                 int data = this.mmInStream.read();
                 Log.d(TAG, "run: " + data);
@@ -61,7 +65,7 @@ public class BluetoothReader extends Thread {
                         for (int i = 0; i < arr_byte.size(); i++) {
                             buffer[i] = arr_byte.get(i).byteValue();
                         }
-                        this.mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ, new String(buffer, 0, arr_byte.size())).sendToTarget();
+                        this.mHandler.obtainMessage(BluetoothMessage.READ.ordinal(), new String(buffer, 0, arr_byte.size())).sendToTarget();
                         //BluetoothService.this.mHandler.obtainMessage(2, buffer.length, -1, buffer).sendToTarget();
                         arr_byte = new ArrayList<>();
                         //reading = false;
@@ -70,27 +74,13 @@ public class BluetoothReader extends Thread {
                         arr_byte.add(Integer.valueOf(data));
                     }
                 }
-                else {
-                    reading = false;
-                }
-                /*
-                int bytes = this.mmInStream.read(buffer); // TODO : Gérer le carriage return 0D
-
-                Log.d("BluetoothReader.TAG", "buffer " + new String(buffer, 0, bytes));
-                //this.mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ, new String(buffer, 0, bytes)).sendToTarget();
-                if (bytes > 0) {
-                    this.mHandler.obtainMessage(BluetoothSerial.MESSAGE_READ_RAW, new String(buffer, 0, bytes) ).sendToTarget();
-                    //return;
-                }*/
             } catch (IOException e) {
                 Log.e(BluetoothReader.TAG, "[ConnectedThead:run] disconnected", e);
                 Sentry.captureException(e);
-                //BluetoothSerial.this.connectionLost();
-                //BluetoothSerial.this.start();
                 return;
             }
         }
-        Log.d(TAG, "run: End of run : reading = " + reading);
+        Log.d(TAG, "run: End of run : reading = " + reading.get());
     }
 
     public void write(byte[] buffer) {
@@ -105,7 +95,7 @@ public class BluetoothReader extends Thread {
     }
 
     public void cancel() {
-        reading = false;
+        reading.set( false );
         try {
             //if (! BuildConfig.DEBUG)
                 this.mmSocket.close();

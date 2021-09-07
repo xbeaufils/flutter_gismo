@@ -1,9 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/model/DeviceModel.dart';
+import 'package:sentry/sentry.dart';
 
 class BluetoothPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -18,10 +22,15 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GismoBloc _bloc;
   static const  BLUETOOTH_CHANNEL = const MethodChannel('nemesys.rfid.bluetooth');
+  late Stream<BluetoothState> _bluetoothStream;
+  late StreamSubscription<BluetoothState> _bluetoothSubscription;
+
+  String _bluetoothState ="NONE";
 
   _BluetoothPagePageState(this._bloc);
   String ? _preferredAddress;
   bool _isBluetooth = false;
+  bool _isConnected = false;
   @override
   void initState()  {
     this._bloc.configIsBt().then((isBluetooth) => {
@@ -51,7 +60,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
                 ),
                 Switch(
                   value: _isBluetooth,
-                  onChanged: (value) {switched(value);},
+                  onChanged: (value) {_switched(value);},
                 ),
               ])),
               Expanded(
@@ -78,14 +87,23 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
             itemBuilder: (context, index) {
               DeviceModel device = deviceSnap.data[index];
               return Card( child:
-                RadioListTile(
-                  title: Text(device.name),
-                  subtitle: Text(device.address),
-                  value: device.address,
-                  groupValue: _preferredAddress,
-                  onChanged: (String ? value) {_changeAddress(value!);
-                  }),);
-              },
+                  Row(children: [
+                    Flexible(child:
+                    RadioListTile(
+                      title: Text(device.name),
+                      subtitle: Text(device.address),
+                      value: device.address,
+                      groupValue: _preferredAddress,
+                      onChanged: (String ? value) {_changeAddress(value!);
+                      })),
+                    (device.address == _preferredAddress) ?
+                    Switch(
+                      value: this._isConnected,
+                      onChanged: (value) {_startBlueTooth(value);},
+                    ): Container(),
+                  ],)
+              );
+            },
           );
         },
       future: _getDeviceList(),);
@@ -99,11 +117,43 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
     return lstDevice;
   }
 
-  void switched(value) {
+  void _startBlueTooth(value) {
+    this._isConnected = value;
+    setState(() {
+        this._isConnected = value;
+    });
+    if (! this._isConnected) {
+      this._bloc.stopBluetooth();
+      return;
+    }
+    try {
+      this._bluetoothStream = this.widget._bloc.streamConnectBluetooth();
+      this._bluetoothSubscription = this._bluetoothStream.listen((BluetoothState event) {
+
+      //})
+      //this._bluetoothSubscription = this.widget._bloc.streamBluetooth().listen(
+      //        (BluetoothState event) {
+            if (_bluetoothState != event.status)
+              setState(() {
+                _bluetoothState = event.status;
+                if (event.status == 'AVAILABLE') {
+                }
+              });
+      });
+    } on Exception catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      debug.log(e.toString());
+    }
+  }
+
+  void _switched(value) {
     this.setState(() {
       this._isBluetooth = value;
       this._bloc.saveBt(_isBluetooth, _preferredAddress);
     });
+    if (this._isBluetooth == false) {
+      this._bloc.stopBluetooth();
+    }
   }
 
   void _changeAddress(String value) {
@@ -111,6 +161,12 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
       _preferredAddress = value;
     });
     this._bloc.saveBt(_isBluetooth, _preferredAddress);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    this._bluetoothSubscription.cancel();
   }
 
 }
