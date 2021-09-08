@@ -72,7 +72,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   @override
   void dispose() {
     PLATFORM_CHANNEL.invokeMethod<String>('stop');
-    //this._bloc.stopBluetooth();
+    this._bloc.stopReadBluetooth();
     this._bluetoothSubscription.cancel();
     super.dispose();
   }
@@ -166,9 +166,9 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   Future<String> _startService() async{
     try {
       if ( await this._bloc.configIsBt()) {
-        this._bluetoothStream = this.widget._bloc.streamReadBluetooth();
+        //this._bluetoothStream = this.widget._bloc.streamReadBluetooth();
         //this._bluetoothStream.listen((BluetoothState event) { })
-        this._bluetoothSubscription = this.widget._bloc.streamBluetooth().listen(
+        this._bluetoothSubscription = this.widget._bloc.streamReadBluetooth().listen(
                 (BluetoothState event) {
                   if (_bluetoothState != event.status)
                     setState(() {
