@@ -127,13 +127,9 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
       return;
     }
     try {
-      this._bluetoothStream = this.widget._bloc.streamConnectBluetooth();
+      this._bluetoothStream = this._bloc.streamConnectBluetooth();
       this._bluetoothSubscription = this._bluetoothStream.listen((BluetoothState event) {
-
-      //})
-      //this._bluetoothSubscription = this.widget._bloc.streamBluetooth().listen(
-      //        (BluetoothState event) {
-            if (_bluetoothState != event.status)
+         if (_bluetoothState != event.status)
               setState(() {
                 _bluetoothState = event.status;
                 if (event.status == 'AVAILABLE') {
