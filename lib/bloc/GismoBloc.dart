@@ -101,7 +101,7 @@ class GismoBloc {
     FlutterSecureStorage storage = new FlutterSecureStorage();
     String address = await storage.read(key: "address");
     try {
-      String status = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth", { 'address': address});
+      String status = await BLUETOOTH_CHANNEL.invokeMethod("connectBlueTooth", { 'address': address});
       debug.log("Connect status " + status);
       Map<String, dynamic> map = json.decode(status);
       yield  state = BluetoothState.fromResult(json.decode(status));
@@ -112,13 +112,17 @@ class GismoBloc {
 
   Stream <BluetoothState> streamReadBluetooth() async* {
     BluetoothState state;
-    String status = await BLUETOOTH_CHANNEL.invokeMethod("dataBlueTooth");
+    FlutterSecureStorage storage = new FlutterSecureStorage();
+    String address = await storage.read(key: "address");
+    String status = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth", { 'address': address});
+    status = await BLUETOOTH_CHANNEL.invokeMethod("dataBlueTooth");
     debug.log("read status " + status);
     yield  state = BluetoothState.fromResult(json.decode(status));
   }
 
   Stream<BluetoothState> streamBluetooth() async* {
-    BluetoothState state;   FlutterSecureStorage storage = new FlutterSecureStorage();
+    BluetoothState state;
+    FlutterSecureStorage storage = new FlutterSecureStorage();
     String address = await storage.read(key: "address");
     try {
       String status = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth", { 'address': address});
@@ -148,6 +152,9 @@ class GismoBloc {
 
   void stopBluetooth() {
     BLUETOOTH_CHANNEL.invokeMethod("stopBlueTooth");
+  }
+  void stopReadBluetooth() {
+    BLUETOOTH_CHANNEL.invokeMethod("stopReadBlueTooth");
   }
 
   Future<String> init() async {
