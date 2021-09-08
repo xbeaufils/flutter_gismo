@@ -88,126 +88,11 @@ class _ParcellePageState extends State<ParcellePage> {
       ),
       body:
       _mapBoxView()
-      //_InAppWebView()
-      //_mapBoxView()
-    );
-  }
-/*
-  Widget _leaflet() {
-    return new FlutterMap(
-      options: new MapOptions(
-        center: new LatLng(45.2618, 5.7348),
-        zoom: 13.0,
-      ),
-      layers: [
-        new TileLayerOptions(
-          urlTemplate: //"https://api.tiles.mapbox.com/v4/"
-              //"{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
-            //"https://wxs.ign.fr/{ignKey}/geoportail/wmts",
-            "https://wxs.ign.fr/{ignKey}/geoportail/wmts?"
-            "service=WMTS"
-            "&request=GetTile"
-            "&version=1.0.0"
-                "&layer=CADASTRALPARCELS.PARCELS"
-                "&style=bdparcellaire_o"
-                "&tilematrixSet=PM"
-                "&format=image/png"
-                "&height=256"
-                "&width=256"
-                "&tilematrix=16"
-                "&tilerow=23508"
-                "&tilecol=33815",
-        additionalOptions: {
-           'ignKey': 'mv1g555wk9ot6na1nux9u7go',
-          'debug': 'true',
-            'layer': 'ORTHOIMAGERY.ORTHOPHOTOS',
-          },
-        ),
-        new MarkerLayerOptions(
-          markers: [
-            new Marker(
-              width: 80.0,
-              height: 80.0,
-              point: new LatLng(45.2618, 5.7348),
-              builder: (ctx) =>
-              new Container(
-                child: new FlutterLogo(),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
+     );
   }
 
- */
 
-  Widget _webView() {
-    /*
-    new FutureBuilder(
-        future: _getLocation(),
-        builder:  (BuildContext context, AsyncSnapshot<LocationData> snapshot) {
-          if (! snapshot.hasData)
-            return Container();
-          LocationData loc = snapshot.data;
-          String url = "https://cadastre.data.gouv.fr/map?style=ortho#15/" +loc.latitude.toString() + "/"+loc.longitude.toString();
-          debug.log("Location " + url);
-          return WebView(
-            debuggingEnabled: true,
-            javascriptMode: JavascriptMode.unrestricted,
-            initialUrl: url,
-            onWebViewCreated: (WebViewController webViewController) {
-              //_controller.complete(webViewController);
-            },
-          );
-        }
-      //floatingActionButton: _bookmarkButton(),
-    );
-
-     */
-    return Container();
-  }
-
-  Widget _InAppWebView() { /*
-    return Container(child:
-          Column(children: <Widget>[
-            Expanded(
-              child: InAppWebView(
-              initialUrl: "https://cadastre.data.gouv.fr/map?style=ortho#14.87/45.26433/5.7097",
-              initialHeaders: {},
-              initialOptions: InAppWebViewWidgetOptions(
-                inAppWebViewOptions:
-                   InAppWebViewOptions(
-                      javaScriptEnabled: true,
-                      debuggingEnabled: true,
-                  )
-              ),
-              onWebViewCreated: (InAppWebViewController controller) {
-                webView = controller;
-              },
-              onLoadStart: (InAppWebViewController controller, String url) {
-                setState(() {
-                  this.url = url;
-                });
-              },
-              onLoadStop: (InAppWebViewController controller, String url) async {
-                setState(() {
-                  this.url = url;
-                });
-              },
-              onProgressChanged: (InAppWebViewController controller, int progress) {
-                setState(() {
-                  this.progress = progress / 100;
-                });
-              },
-            ))
-        ],)
-    );
-    */
-    return Container();
-  }
-
-  Widget _mapBoxView() {
+   Widget _mapBoxView() {
     //MapboxMap map = new MapboxMap(initialCameraPosition: null);
     _mapBox =  MapboxMap(
       accessToken: 'pk.eyJ1IjoieGJlYXUiLCJhIjoiY2s4anVjamdwMGVsdDNucDlwZ2I0bGJwNSJ9.lc21my1ozaQZ2-EriDSY5w',
@@ -317,6 +202,7 @@ class _ParcellePageState extends State<ParcellePage> {
 
   @override
   void initState() {
+    super.initState();
   }
 
   List<LatLng> _buildList(List coordinates) {
