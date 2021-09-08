@@ -190,7 +190,7 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Widget _buildButton(String title, String imageName, Function() press) {
-    return Container(
+    return /*Container(
       decoration: new BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -203,18 +203,32 @@ class _WelcomePageState extends State<WelcomePage> {
         color: Colors.white,
         borderRadius: new BorderRadius.circular(20.0),
       ),
+
       margin: const EdgeInsets.all(4.0),
       padding: const EdgeInsets.all(4.0),
-      child: new TextButton(
-      //shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
+      child:*/ new TextButton(
+        style: textButtonStyle,
         onPressed: press,
         child: new Column(
           children: <Widget>[
             new Image.asset(imageName),
             new Text(title)
           ],
-      )));
+      ));
   }
+
+  final ButtonStyle textButtonStyle = TextButton.styleFrom(
+    backgroundColor: Colors.white,
+    minimumSize: Size(100, 88),
+    padding: const EdgeInsets.all(4.0),
+    //padding: EdgeInsets.symmetric(horizontal: 16),
+    shadowColor:  Colors.grey.withOpacity(0.5),
+    elevation: 5,
+    shape: const RoundedRectangleBorder(
+      //side: BorderSide(color: Colors.red),
+      borderRadius: BorderRadius.all(Radius.circular(20)),
+    ),
+  );
 
   @override
   void initState() {}
