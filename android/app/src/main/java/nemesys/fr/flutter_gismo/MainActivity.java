@@ -192,12 +192,13 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
             }
             else if (call.method.contentEquals("readBlueTooth")) {
                 BluetoothHandler handler = new BluetoothHandler(btHandlerThread.getLooper());
-                reader = new BluetoothReader(null, handler);
+                reader = new BluetoothReader(bluetoothConnect.getSocket(), handler);
                 //runBluetooth = new BluetoothRun(address, handler);
                 handler.post(reader);
                 result.success("{ \"status\" : \"STARTED\"}");
                 //address = "08:DF:1F:A8:3D:7E";
-            } else if (call.method.contentEquals("dataBlueTooth")) {
+            }
+            else if (call.method.contentEquals("dataBlueTooth")) {
                 switch (stateData) {
                     case  AVAILABLE :
                         result.success("{\"status\": \"AVAILABLE\", \"data\" : \"" + dataBluetoooth + "\"}");
@@ -217,7 +218,20 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                         break;
                 }
 
-            } else if (call.method.contentEquals("listBlueTooth")) {
+            }
+            else if (call.method.contentEquals("stopBlueTooth")) {
+                if (this.bluetoothConnect != null)
+                    this.bluetoothConnect.cancel();
+                /*
+                if (this.runBluetooth != null)
+                    this.runBluetooth.cancel();
+                 */
+            }
+            else if (call.method.contentEquals("stopReadBlueTooth")){
+                if (this.reader != null)
+                    this.reader.cancel();
+            }
+            else if (call.method.contentEquals("listBlueTooth")) {
                 BluetoothSerial bluetooth = new BluetoothSerial(null);
                 List<BluetoothDevice> devices = bluetooth.getBondedDevices();
                 JSONArray devicesJson = new JSONArray();
@@ -233,12 +247,6 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                     }
                 }
                 result.success(devicesJson.toString());
-            }
-            else if (call.method.contentEquals("stopBlueTooth")) {
-                if (this.bluetoothConnect != null)
-                    this.bluetoothConnect.cancel();
-                if (this.runBluetooth != null)
-                    this.runBluetooth.cancel();
             }
         }
     }

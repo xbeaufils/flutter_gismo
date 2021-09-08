@@ -26,6 +26,11 @@ public class BluetoothConnect extends  Thread{
 
     BluetoothReader reader;
     private BluetoothDevice mmDevice;
+
+    public BluetoothSocket getSocket() {
+        return mmSocket;
+    }
+
     private BluetoothSocket mmSocket;
 
     public BluetoothConnect(String address, Handler handlerStatus) {
@@ -36,10 +41,15 @@ public class BluetoothConnect extends  Thread{
     }
 
     public void cancel() {
-        this.connecting.set(false);
-        if (reader != null)
-            reader.cancel();
-        //latch.countDown();
+        try {
+            this.mmSocket.close();
+            this.connecting.set(false);
+            if (reader != null)
+                reader.cancel();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Sentry.captureException(e);
+        }      //latch.countDown();
     }
 
     public void connect() {
@@ -74,13 +84,14 @@ public class BluetoothConnect extends  Thread{
     public void run() {
         Log.d("BluetoothRun", "debut");
         //MainActivity.this.latch = new CountDownLatch(1);
-        handlerStatus.obtainMessage(BluetoothMessage.DATA_CHANGE.ordinal(), MainActivity.DataState.WAITING.ordinal()).sendToTarget();
+        //handlerStatus.obtainMessage(BluetoothMessage.DATA_CHANGE.ordinal(), MainActivity.DataState.WAITING.ordinal()).sendToTarget();
         //dataState = MainActivity.DataState.WAITING;
         boolean completed = false;
         while (connecting.get()) {
-            CountDownLatch latch = new CountDownLatch(1);
             this.connect();
+/*          CountDownLatch latch = new CountDownLatch(1);
             try {
+
                 HandlerThread btHandlerThread = new HandlerThread("read");
                 btHandlerThread.start();
                 MainActivity.BluetoothHandler handler = new MainActivity.BluetoothHandler(btHandlerThread.getLooper());
@@ -93,12 +104,13 @@ public class BluetoothConnect extends  Thread{
                 completed = false;
                 Sentry.captureException(e);
             }
+            */
         }
         Log.d(BluetoothConnect.TAG, "End : completed = " + completed);
         //if (completed)
         //    dataState = DataState.AVAILABLE;
         //else
-        handlerStatus.obtainMessage(BluetoothMessage.DATA_CHANGE.ordinal(), MainActivity.DataState.NONE.ordinal()).sendToTarget();
+        //handlerStatus.obtainMessage(BluetoothMessage.DATA_CHANGE.ordinal(), MainActivity.DataState.NONE.ordinal()).sendToTarget();
         //dataState = MainActivity.DataState.NONE;
     }
 
