@@ -55,6 +55,7 @@ public class BluetoothReader extends Thread {
         reading.set( true );
         ArrayList<Integer> arr_byte = new ArrayList<>();
         //byte[] buffer = new byte[1024];
+        this.mHandler.obtainMessage(BluetoothMessage.STATE_CHANGE.ordinal(), MainActivity.State.LISTEN.ordinal() ).sendToTarget();
         while (reading.get()) {
              try {
                 int data = this.mmInStream.read();
