@@ -42,7 +42,8 @@ public class BluetoothConnect extends  Thread{
 
     public void cancel() {
         try {
-            this.mmSocket.close();
+            if (this.mmSocket != null)
+                this.mmSocket.close();
             this.connecting.set(false);
             if (reader != null)
                 reader.cancel();
@@ -63,6 +64,7 @@ public class BluetoothConnect extends  Thread{
         //}
         this.mmSocket = tmp;
         if (this.mmSocket == null) {
+            Log.d(BluetoothConnect.TAG, "Socket is null");
             handlerStatus.obtainMessage(BluetoothMessage.STATE_CHANGE.ordinal(), MainActivity.State.NONE.ordinal()).sendToTarget();
             //stateBluetooth = MainActivity.State.NONE;
             return;
@@ -72,7 +74,7 @@ public class BluetoothConnect extends  Thread{
             Log.i(BluetoothConnect.TAG, "Connecting to socket...");
             this.mmSocket.connect();
             Log.i(BluetoothConnect.TAG, "Connected");
-            handlerStatus.obtainMessage(BluetoothMessage.STATE_CHANGE.ordinal(), MainActivity.State.CONNECTED.ordinal()).sendToTarget();
+            handlerStatus.obtainMessage(BluetoothMessage.STATE_CHANGE.ordinal(), MainActivity.State.CONNECTED.ordinal(), -1, null).sendToTarget();
             //stateBluetooth = MainActivity.State.CONNECTED;
         } catch (IOException e) {
             Log.e(BluetoothConnect.TAG, e.toString());
@@ -83,35 +85,8 @@ public class BluetoothConnect extends  Thread{
     @Override
     public void run() {
         Log.d("BluetoothRun", "debut");
-        //MainActivity.this.latch = new CountDownLatch(1);
-        //handlerStatus.obtainMessage(BluetoothMessage.DATA_CHANGE.ordinal(), MainActivity.DataState.WAITING.ordinal()).sendToTarget();
-        //dataState = MainActivity.DataState.WAITING;
-        boolean completed = false;
-        while (connecting.get()) {
-            this.connect();
-/*          CountDownLatch latch = new CountDownLatch(1);
-            try {
-
-                HandlerThread btHandlerThread = new HandlerThread("read");
-                btHandlerThread.start();
-                MainActivity.BluetoothHandler handler = new MainActivity.BluetoothHandler(btHandlerThread.getLooper());
-                reader = new BluetoothReader(this.mmSocket, handler);
-                handler.post(reader);
-                latch.await();//10, TimeUnit.SECONDS);
-//                Log.d(TAG, "run: Wait end " + LocalTime.now().toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-                completed = false;
-                Sentry.captureException(e);
-            }
-            */
-        }
-        Log.d(BluetoothConnect.TAG, "End : completed = " + completed);
-        //if (completed)
-        //    dataState = DataState.AVAILABLE;
-        //else
-        //handlerStatus.obtainMessage(BluetoothMessage.DATA_CHANGE.ordinal(), MainActivity.DataState.NONE.ordinal()).sendToTarget();
-        //dataState = MainActivity.DataState.NONE;
+        this.connect();
+        Log.d(BluetoothConnect.TAG, "End ");
     }
 
     public List<BluetoothDevice> getBondedDevices() {

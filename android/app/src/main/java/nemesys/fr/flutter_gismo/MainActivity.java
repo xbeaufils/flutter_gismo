@@ -171,7 +171,9 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
 
     public class MethodChannelHdlBlueTooth implements   MethodChannel.MethodCallHandler {
         //BluetoothHandlerThread btHandlerThread = new BluetoothHandlerThread("bluetooth");
-        HandlerThread  btHandlerThread = new HandlerThread("bluetooth");
+        HandlerThread  btHandlerThread = new HandlerThread("bluetoothConnect");
+        HandlerThread  btReadHandlerThread = new HandlerThread("bluetoothRead");
+
         BluetoothRun runBluetooth;
         BluetoothConnect bluetoothConnect;
         BluetoothReader reader;
@@ -179,6 +181,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         public MethodChannelHdlBlueTooth() {
             //this.btHandlerThread = new BluetoothHandlerThread("bluetooth");
             this.btHandlerThread.start();
+            this.btReadHandlerThread.start();
         }
 
         @Override
@@ -187,7 +190,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                 String address = (String) call.argument("address");
                 BluetoothHandler handler = new BluetoothHandler(btHandlerThread.getLooper());
                 bluetoothConnect = new BluetoothConnect(address, handler);
-                handler.post(runBluetooth);
+                handler.post(bluetoothConnect);
                 result.success("{ \"status\" : \"STARTED\"}");
             }
             else if (call.method.contentEquals("readBlueTooth")) {
@@ -197,7 +200,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                     if (bluetoothConnect.getSocket() == null)
                         result.success("{ \"status\" : \"NONE\"}");
                     else {
-                        BluetoothHandler handler = new BluetoothHandler(btHandlerThread.getLooper());
+                        BluetoothHandler handler = new BluetoothHandler(btReadHandlerThread.getLooper());
                         reader = new BluetoothReader(bluetoothConnect.getSocket(), handler);
                         //runBluetooth = new BluetoothRun(address, handler);
                         handler.post(reader);
@@ -423,6 +426,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                     String errorMessage = bundle.getString("TOAST");
                     return;
                 default:
+                    Log.d(TAG, "handleMessage: Unknown " + msg.what);
                     return;
             }
         }
