@@ -58,28 +58,33 @@ public class BluetoothReader extends Thread {
         this.mHandler.obtainMessage(BluetoothMessage.STATE_CHANGE.ordinal(), MainActivity.State.LISTEN.ordinal() ).sendToTarget();
         while (reading.get()) {
              try {
-                int data = this.mmInStream.read();
-                Log.d(TAG, "run: " + data);
-                if (data != 10) {
-                    if (data == 13) {
-                        byte[] buffer = new byte[arr_byte.size()];
-                        for (int i = 0; i < arr_byte.size(); i++) {
-                            buffer[i] = arr_byte.get(i).byteValue();
-                        }
-                        this.mHandler.obtainMessage(BluetoothMessage.READ.ordinal(), new String(buffer, 0, arr_byte.size())).sendToTarget();
-                        //BluetoothService.this.mHandler.obtainMessage(2, buffer.length, -1, buffer).sendToTarget();
-                        arr_byte = new ArrayList<>();
-                        //reading = false;
-                    } else {
-                        if (data > 16)
-                        arr_byte.add(Integer.valueOf(data));
-                    }
-                }
+                 Thread.sleep(500);
+                 if (this.mmInStream.available() > 0 ) {
+                     int data = this.mmInStream.read();
+                     Log.d(TAG, "run: " + data);
+                     if (data != 10) {
+                         if (data == 13) {
+                             byte[] buffer = new byte[arr_byte.size()];
+                             for (int i = 0; i < arr_byte.size(); i++) {
+                                 buffer[i] = arr_byte.get(i).byteValue();
+                             }
+                             this.mHandler.obtainMessage(BluetoothMessage.READ.ordinal(), new String(buffer, 0, arr_byte.size())).sendToTarget();
+                             //BluetoothService.this.mHandler.obtainMessage(2, buffer.length, -1, buffer).sendToTarget();
+                             arr_byte = new ArrayList<>();
+                             //reading = false;
+                         } else {
+                             if (data > 16)
+                                 arr_byte.add(Integer.valueOf(data));
+                         }
+                     }
+                 }
             } catch (IOException e) {
                 Log.e(BluetoothReader.TAG, "[ConnectedThead:run] disconnected", e);
                 Sentry.captureException(e);
                 return;
-            }
+            } catch (InterruptedException e) {
+                 e.printStackTrace();
+             }
         }
         Log.d(TAG, "run: End of run : reading = " + reading.get());
     }
