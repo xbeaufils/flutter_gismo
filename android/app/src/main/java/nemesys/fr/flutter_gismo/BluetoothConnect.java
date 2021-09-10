@@ -37,6 +37,7 @@ public class BluetoothConnect extends  Thread{
         this.address = address;
         this.handlerStatus = handlerStatus;
         mmDevice = this.mAdapter.getRemoteDevice(address);
+        Log.d(TAG, "Connect: " + mmDevice.getName());
         this.deviceName = mmDevice.getName();
     }
 
@@ -84,7 +85,7 @@ public class BluetoothConnect extends  Thread{
 
     @Override
     public void run() {
-        Log.d("BluetoothRun", "debut");
+        Log.d(BluetoothConnect.TAG, "debut");
         this.connect();
         Log.d(BluetoothConnect.TAG, "End ");
     }
