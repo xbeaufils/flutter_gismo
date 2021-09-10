@@ -23,7 +23,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   final GismoBloc _bloc;
   static const  BLUETOOTH_CHANNEL = const MethodChannel('nemesys.rfid.bluetooth');
   late Stream<BluetoothState> _bluetoothStream;
-  late StreamSubscription<BluetoothState> _bluetoothSubscription;
+  StreamSubscription<BluetoothState> ? _bluetoothSubscription;
 
   String _bluetoothState ="NONE";
 
@@ -162,7 +162,8 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   @override
   void dispose() {
     super.dispose();
-    this._bluetoothSubscription.cancel();
+    if (this._bluetoothSubscription != null)
+      this._bluetoothSubscription?.cancel();
   }
 
 }

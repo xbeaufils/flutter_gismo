@@ -188,24 +188,30 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
             if (call.method.contentEquals("connectBlueTooth")) {
                 String address = (String) call.argument("address");
-                BluetoothHandler handler = new BluetoothHandler(btHandlerThread.getLooper());
+                // BluetoothHandler handler = new BluetoothHandler(btHandlerThread.getLooper());
+                BluetoothHandler handler = new BluetoothHandler();
                 bluetoothConnect = new BluetoothConnect(address, handler);
-                handler.post(bluetoothConnect);
+                bluetoothConnect.start();
+                //handler.post(bluetoothConnect);
                 result.success("{ \"status\" : \"STARTED\"}");
             }
             else if (call.method.contentEquals("readBlueTooth")) {
                 if (bluetoothConnect == null)
                     result.success("{ \"status\" : \"NONE\"}");
-                else
-                    if (bluetoothConnect.getSocket() == null)
-                        result.success("{ \"status\" : \"NONE\"}");
-                    else {
-                        BluetoothHandler handler = new BluetoothHandler(btReadHandlerThread.getLooper());
+                else if (bluetoothConnect.getSocket() == null)
+                    result.success("{ \"status\" : \"NONE\"}");
+                else {
+                    if (bluetoothConnect.getSocket().isConnected()) {
+                        //BluetoothHandler handler = new BluetoothHandler(btReadHandlerThread.getLooper());
+                        BluetoothHandler handler = new BluetoothHandler();
                         reader = new BluetoothReader(bluetoothConnect.getSocket(), handler);
+                        reader.start();
                         //runBluetooth = new BluetoothRun(address, handler);
-                        handler.post(reader);
+                        //handler.post(reader);
                         result.success("{ \"status\" : \"STARTED\"}");
-                    }
+                    } else result.success("{ \"status\" : \"NONE\"}");
+
+                }
                 //address = "08:DF:1F:A8:3D:7E";
             }
             else if (call.method.contentEquals("dataBlueTooth")) {
@@ -399,6 +405,9 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
     public class BluetoothHandler extends Handler {
         public BluetoothHandler(Looper looper) {
             super(looper);
+        }
+        public BluetoothHandler() {
+            super();
         }
 
         //= new Handler(getLooper()) {

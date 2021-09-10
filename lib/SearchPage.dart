@@ -39,8 +39,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   List<Bete> _betes = <Bete>[]; //new List();
   List<Bete> _filteredBetes = <Bete>[]; //new List();
 
-  late Stream _bluetoothStream;
-  late StreamSubscription<BluetoothState> _bluetoothSubscription;
+  late Stream<BluetoothState> _bluetoothStream;
+  StreamSubscription<BluetoothState> ? _bluetoothSubscription;
   String _bluetoothState ="NONE";
   bool _rfidPresent = false;
   Icon _searchIcon = new Icon(Icons.search);
@@ -73,7 +73,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   void dispose() {
     PLATFORM_CHANNEL.invokeMethod<String>('stop');
     this._bloc.stopReadBluetooth();
-    this._bluetoothSubscription.cancel();
+    if (this._bluetoothSubscription != null)
+      this._bluetoothSubscription?.cancel();
     super.dispose();
   }
 
@@ -166,10 +167,11 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   Future<String> _startService() async{
     try {
       if ( await this._bloc.configIsBt()) {
-        //this._bluetoothStream = this.widget._bloc.streamReadBluetooth();
-        //this._bluetoothStream.listen((BluetoothState event) { })
-        this._bluetoothSubscription = this.widget._bloc.streamReadBluetooth().listen(
+        this._bluetoothStream = this.widget._bloc.streamReadBluetooth();
+        this._bluetoothStream.listen(
+        //this._bluetoothSubscription = this.widget._bloc.streamReadBluetooth().listen(
                 (BluetoothState event) {
+                  debug.log("Status " + event.status, name: "_SearchPageState::_startService");
                   if (_bluetoothState != event.status)
                     setState(() {
                     _bluetoothState = event.status;

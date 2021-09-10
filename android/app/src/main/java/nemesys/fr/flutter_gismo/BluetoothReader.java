@@ -58,7 +58,6 @@ public class BluetoothReader extends Thread {
         this.mHandler.obtainMessage(BluetoothMessage.STATE_CHANGE.ordinal(), MainActivity.State.LISTEN.ordinal() ).sendToTarget();
         while (reading.get()) {
              try {
-                 Thread.sleep(500);
                  if (this.mmInStream.available() > 0 ) {
                      int data = this.mmInStream.read();
                      Log.d(TAG, "run: " + data);
@@ -78,7 +77,9 @@ public class BluetoothReader extends Thread {
                          }
                      }
                  }
-            } catch (IOException e) {
+                 else
+                     Thread.sleep(500);
+             } catch (IOException e) {
                 Log.e(BluetoothReader.TAG, "[ConnectedThead:run] disconnected", e);
                 Sentry.captureException(e);
                 return;

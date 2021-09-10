@@ -103,7 +103,6 @@ class GismoBloc {
     try {
       String status = await BLUETOOTH_CHANNEL.invokeMethod("connectBlueTooth", { 'address': address});
       debug.log("Connect status " + status);
-      Map<String, dynamic> map = json.decode(status);
       yield  state = BluetoothState.fromResult(json.decode(status));
     } on PlatformException catch(e) {
       debug.log("Erreur ", error: e );
@@ -114,10 +113,20 @@ class GismoBloc {
     BluetoothState state;
     FlutterSecureStorage storage = new FlutterSecureStorage();
     String address = await storage.read(key: "address");
+    debug.log("read data status " + address, name: "GismoBloc::streamReadBluetooth");
     String status = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth", { 'address': address});
-    status = await BLUETOOTH_CHANNEL.invokeMethod("dataBlueTooth");
-    debug.log("read status " + status);
-    yield  state = BluetoothState.fromResult(json.decode(status));
+    debug.log("read status " + status, name: "GismoBloc::streamReadBluetooth");
+
+    int i = 0;
+    while (i < 20) {
+      status = await BLUETOOTH_CHANNEL.invokeMethod("dataBlueTooth");
+      await Future.delayed(Duration(seconds: 1));
+      debug.log("data status " + status, name: "GismoBloc::streamReadBluetooth");
+      yield  state = BluetoothState.fromResult(json.decode(status));
+      if ( state.status == 'NONE' || state.status == 'AVAILABLE')
+        i = 100; // Sortie du while
+      i++;
+    }
   }
 
   Stream<BluetoothState> streamBluetooth() async* {
