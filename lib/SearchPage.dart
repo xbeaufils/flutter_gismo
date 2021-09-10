@@ -170,7 +170,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         BluetoothState _bluetoothState =  await this._bloc.startReadBluetooth();
         debug.log("Start status " + _bluetoothState.status, name: "_SearchPageState::_startService");
         this._bluetoothStream = this.widget._bloc.streamReadBluetooth();
-        this._bluetoothStream.listen(
+        this._bluetoothSubscription = this._bluetoothStream.listen(
         //this._bluetoothSubscription = this.widget._bloc.streamReadBluetooth().listen(
                 (BluetoothState event) {
                   debug.log("Status " + event.status, name: "_SearchPageState::_startService");
