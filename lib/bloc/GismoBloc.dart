@@ -19,6 +19,7 @@ import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
+import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/model/User.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -102,7 +103,7 @@ class GismoBloc {
     String address = await storage.read(key: "address");
     try {
       String status = await BLUETOOTH_CHANNEL.invokeMethod("connectBlueTooth", { 'address': address});
-      debug.log("Connect status " + status);
+      debug.log("Connect status " + status, name: "streamConnectBluetooth");
       yield  state = BluetoothState.fromResult(json.decode(status));
     } on PlatformException catch(e) {
       debug.log("Erreur ", error: e );
@@ -121,14 +122,6 @@ class GismoBloc {
   }
 
   Stream <BluetoothState> streamReadBluetooth() async* {
-    /*
-    BluetoothState state;
-    FlutterSecureStorage storage = new FlutterSecureStorage();
-    String address = await storage.read(key: "address");
-    debug.log("read data status " + address, name: "GismoBloc::streamReadBluetooth");
-    String status = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth", { 'address': address});
-    debug.log("read status " + status, name: "GismoBloc::streamReadBluetooth");
-   */
     String status;
     BluetoothState state;
     int i = 0;
@@ -170,6 +163,16 @@ class GismoBloc {
       await BLUETOOTH_CHANNEL.invokeMethod("stopBlueTooth");
     } on PlatformException catch(e) {
       debug.log("Erreur ", error: e );
+    }
+  }
+
+  Stream<StatusBlueTooth> streamStatusBluetooth() async* {
+    StatusBlueTooth state;
+    while (true) {
+      String strStatus = await BLUETOOTH_CHANNEL.invokeMethod("stateBlueTooth");
+      debug.log("status " + strStatus, name: "streamStatusBluetooth");
+      await Future.delayed(Duration(milliseconds: 500));
+      yield state = StatusBlueTooth.fromResult(json.decode(strStatus));
     }
   }
 
