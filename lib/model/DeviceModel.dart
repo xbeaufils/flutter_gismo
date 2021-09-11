@@ -9,6 +9,13 @@ class DeviceModel {
 
   late String _address;
   late String _id;
+  late bool _connected;
+
+  bool get connected => _connected;
+
+  set connected(bool value) {
+    _connected = value;
+  }
 
   String get address => _address;
 
@@ -22,10 +29,13 @@ class DeviceModel {
     _id = value;
   }
 
+
+
   DeviceModel.fromResult(result) {
     _id= result["idBd"] ;
     _address = result["address"];
     _name = result["name"];
+    _connected = result["connected"];
   }
 
   Map<String, dynamic> toJson() {
@@ -33,6 +43,7 @@ class DeviceModel {
     data["id"] = _id ;
     data["address"] = _address;
     data["name"] = _name;
+    data["connected"] = _connected;
     return data;
   }
 }

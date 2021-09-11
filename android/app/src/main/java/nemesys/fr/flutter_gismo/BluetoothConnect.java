@@ -96,4 +96,10 @@ public class BluetoothConnect extends  Thread{
         return lstDevices;
     }
 
+    public static boolean checkState(BluetoothConnect connection) {
+        if (connection != null)
+            if (connection.getSocket() != null)
+                return connection.getSocket().isConnected();
+        return false;
+    }
 }

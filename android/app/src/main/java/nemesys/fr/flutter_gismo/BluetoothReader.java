@@ -26,18 +26,10 @@ public class BluetoothReader extends Thread {
 
     public BluetoothReader(BluetoothSocket socket, Handler handler) {
         Log.d(BluetoothReader.TAG, "create BluetoothRead: " );
-        /*if ( socket.isConnected())
-            throw  new IOException("Socket not connected");*/
         this.mHandler = handler;
         this.mmSocket = socket;
         InputStream tmpIn = null;
         OutputStream tmpOut = null;
-       /* if (BuildConfig.DEBUG) {
-            byte[] initialArray = {0x32,0x35,0x30, 0x30, 0x33,0x30,0x30,0x34,0x30,0x33, 0x34,0x30,0x30,0x32,0x30 };
-            tmpIn = new MockInputStream(initialArray);
-            tmpOut = new MockOutputStream();
-        }
-        else {*/
         try {
             tmpIn = socket.getInputStream();
             tmpOut = socket.getOutputStream();
@@ -51,7 +43,7 @@ public class BluetoothReader extends Thread {
     }
 
     public void run() {
-        Log.i(BluetoothReader.TAG, "[ConnectedThread:run]");
+        Log.i(BluetoothReader.TAG, "run");
         reading.set( true );
         ArrayList<Integer> arr_byte = new ArrayList<>();
         //byte[] buffer = new byte[1024];
@@ -68,9 +60,7 @@ public class BluetoothReader extends Thread {
                                  buffer[i] = arr_byte.get(i).byteValue();
                              }
                              this.mHandler.obtainMessage(BluetoothMessage.READ.ordinal(), new String(buffer, 0, arr_byte.size())).sendToTarget();
-                             //BluetoothService.this.mHandler.obtainMessage(2, buffer.length, -1, buffer).sendToTarget();
-                             arr_byte = new ArrayList<>();
-                             //reading = false;
+                              arr_byte = new ArrayList<>();
                          } else {
                              if (data > 16)
                                  arr_byte.add(Integer.valueOf(data));
@@ -94,7 +84,6 @@ public class BluetoothReader extends Thread {
         try {
             this.mmOutStream.write(buffer);
             this.mHandler.obtainMessage(BluetoothSerial.MESSAGE_WRITE, -1, -1, buffer).sendToTarget();
-            //BluetoothSerial.this.stop();
         } catch (IOException e) {
             Log.e(BluetoothReader.TAG, "Exception during write", e);
             Sentry.captureException(e);
@@ -103,12 +92,5 @@ public class BluetoothReader extends Thread {
 
     public void cancel() {
         reading.set( false );
-        try {
-            //if (! BuildConfig.DEBUG)
-                this.mmSocket.close();
-        } catch (IOException e) {
-            Sentry.captureException(e);
-            Log.e(BluetoothReader.TAG, "close() of connect socket failed", e);
-        }
     }
 }
