@@ -1,8 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:flutter_gismo/BluetoothWidget.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
@@ -38,6 +39,10 @@ class _BetePageState extends State<BetePage> {
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
   bool _rfidPresent = false;
   String _bluetoothState ="NONE";
+
+  late Stream<BluetoothState> _bluetoothStream;
+  StreamSubscription<BluetoothState> ? _bluetoothSubscription;
+
   _BetePageState(this._bloc, this._bete);
 
   Widget _statusBluetoothBar() {
@@ -299,17 +304,20 @@ class _BetePageState extends State<BetePage> {
   Future<String> _startService() async{
     try {
       if ( await this._bloc.configIsBt()) {
-        //this._bluetoothStream.listen((BluetoothState event) { })
-        this.widget._bloc.streamBluetooth().listen(
+        debug.log("Start service ", name: "_BetePageState::_startService");
+        BluetoothState _bluetoothState =  await this._bloc.startReadBluetooth();
+        debug.log("Start status " + _bluetoothState.status, name: "_BetePageState::_startService");
+        this._bluetoothStream = this.widget._bloc.streamReadBluetooth();
+        this._bluetoothSubscription = this._bluetoothStream.listen(
+        //this.widget._bloc.streamBluetooth().listen(
                 (BluetoothState event) {
-                  if (_bluetoothState != event.status)
+                  if (this._bluetoothState != event.status)
                     setState(() {
-                      _bluetoothState = event.status;
+                      this._bluetoothState = event.status;
                       if (event.status == 'AVAILABLE') {
                         String _foundBoucle = event.data;
                         if (_foundBoucle.length > 15)
                           _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
-
                         _numBoucleCtrl.text = _foundBoucle.substring(_foundBoucle.length - 5);
                         _numMarquageCtrl.text = _foundBoucle.substring(0, _foundBoucle.length - 5);
                       }
@@ -331,7 +339,9 @@ class _BetePageState extends State<BetePage> {
     // other dispose methods
     _numBoucleCtrl.dispose();
     _numMarquageCtrl.dispose();
-    this._bloc.stopBluetooth();
+    this._bloc.stopReadBluetooth();
+    if (this._bluetoothSubscription != null)
+      this._bluetoothSubscription?.cancel();
     super.dispose();
   }
 

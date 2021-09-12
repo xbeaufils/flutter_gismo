@@ -56,7 +56,7 @@ public class BluetoothConnect extends  Thread{
 
     public void connect() {
         BluetoothSocket tmp = null;
-        try {
+         try {
             tmp = mmDevice.createRfcommSocketToServiceRecord( BluetoothSerial.UUID_SPP);
         } catch (IOException e) {
             Log.e(BluetoothConnect.TAG, "Socket create() failed", e);
@@ -86,6 +86,7 @@ public class BluetoothConnect extends  Thread{
     @Override
     public void run() {
         Log.d(BluetoothConnect.TAG, "debut");
+        handlerStatus.obtainMessage(BluetoothMessage.STATE_CHANGE.ordinal(), MainActivity.State.CONNECTING.ordinal(), -1, null).sendToTarget();
         this.connect();
         Log.d(BluetoothConnect.TAG, "End ");
     }

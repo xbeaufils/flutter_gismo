@@ -56,22 +56,48 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
           title: new Text('Connexion BlueTooth'),
         ),
       body:
-            Column(children: [
-              Card( child:
-              Row(children: <Widget>[
-                Expanded(
+        Column(children: [
+          Card( child:
+            Row(children: <Widget>[
+              Expanded(
                     child: Text("Lecteur Bluetooth")
-                ),
-                Switch(
+              ),
+              Switch(
                   value: _isBluetooth,
                   onChanged: (value) {_switched(value);},
-                ),
-              ])),
-              Expanded(
-                  child: _buildBody()
               ),
-            ],)
+          ])),
+          Expanded(
+              child: _buildBody()
+          ),
+        ],),
+        floatingActionButton: this._buildButton()
+    );
+  }
 
+  Widget _buildButton() {
+    return FutureBuilder(
+      builder: (context, AsyncSnapshot deviceSnap) {
+        if (deviceSnap.connectionState == ConnectionState.none &&
+            deviceSnap.hasData == null) {
+          return Container();
+        }
+        if (deviceSnap.data == null)
+          return Container();
+        if (_selectedDevice == null)
+          return Container();
+        if (_selectedDevice!.connected)
+          return FloatingActionButton(
+              child: Icon(Icons.bluetooth_disabled),
+              backgroundColor: Colors.red,
+              onPressed: () {_startBlueTooth(false); });
+        return
+          FloatingActionButton(
+              child: Icon(Icons.bluetooth_connected),
+              backgroundColor: Colors.green,
+              onPressed: () {_startBlueTooth(true);}) ;
+      },
+      future: _getDeviceList()
     );
   }
 
@@ -81,7 +107,6 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
         builder: (context, AsyncSnapshot deviceSnap) {
           if (deviceSnap.connectionState == ConnectionState.none &&
               deviceSnap.hasData == null) {
-            //print('project snapshot data is: ${projectSnap.data}');
             return Container();
           }
           if (deviceSnap.data == null)
@@ -102,11 +127,6 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
                       groupValue: _preferredAddress,
                       onChanged: (String ? value) {_changeAddress(value!);
                       })),
-                    (device.address == _preferredAddress) ?
-                    Switch(
-                      value: (_selectedDevice == null)? false: _selectedDevice!.connected,
-                      onChanged: (value) {_startBlueTooth(value);},
-                    ): Container(),
                   ],)
               );
             },
@@ -161,7 +181,6 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
       Sentry.captureException(e, stackTrace : stackTrace);
       debug.log(e.toString());
     }
-
   }
 
   void _switched(value) {
@@ -176,6 +195,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   }
 
   void _changeAddress(String value) {
+    this._startBlueTooth(false);
     setState(() {
       _preferredAddress = value;
       if (this._lstDevice != null)
@@ -192,6 +212,8 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
     super.dispose();
     if (this._bluetoothSubscription != null)
       this._bluetoothSubscription?.cancel();
+    if (this._bluetoothStatusSubscription != null)
+      this._bluetoothStatusSubscription!.cancel();
   }
 
 }
