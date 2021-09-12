@@ -214,12 +214,14 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                         break;
                     case WAITING:
                         result.success("{\"status\": \"WAITING\"}");
+                        stateData = DataState.WAITING;
                         break;
                     case ERROR:
                         result.error("Error", "Error", "Error");
                          break;
                     case NONE:
                         result.success("{\"status\": \"NONE\"}");
+                        stateData = DataState.NONE;
                         break;
                 }
 
@@ -227,6 +229,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
             else if (call.method.contentEquals("stopBlueTooth")) {
                 if (this.bluetoothConnect != null)
                     this.bluetoothConnect.cancel();
+                stateBluetooth = State.NONE;
             }
             else if (call.method.contentEquals("stopReadBlueTooth")){
                 if (this.reader != null)
