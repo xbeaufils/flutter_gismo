@@ -8,13 +8,13 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/flavor/FlavorCaprin.dart';
 import 'package:sentry/sentry.dart';
 
-GismoBloc gismoBloc;
+GismoBloc gismoBloc= new GismoBloc();
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Admob.initialize(testDeviceIds: ['CDB1827517618849EC4C60C7389786D9']);
-  gismoBloc = new GismoBloc(new FlavorCaprin());
+  gismoBloc = new GismoBloc(/*new FlavorCaprin()*/);
   Environnement.init( "http://10.0.2.2:8080/gismoWeb/bd", "http://192.168.0.212:8080/gismoApp/api");
   //await gismoBloc.init();
   //bool isLogged = false; //gismoBloc.isLogged();
