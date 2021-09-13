@@ -1,0 +1,23 @@
+{
+    "name": "Gismo",
+    "short_name": "Gismo",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0175C2",
+    "theme_color": "#0175C2",
+    "description": "Logiciel de gestion de troupeau ovin",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/favicon-196.png",
+            "sizes": "196x196",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/aws.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
