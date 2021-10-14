@@ -1,7 +1,10 @@
 
 import 'dart:async';
+import 'dart:convert';
 
-import 'package:dio/dio.dart';
+import 'package:flutter_gismo/bloc/GismoHttp.dart';
+import 'package:http/http.dart' as http;
+//import 'package:dio/dio.dart';
 import 'package:flutter_gismo/Environnement.dart';
 import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
@@ -23,12 +26,15 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 
 
 class WebDataProvider extends DataProvider {
+  /*
   static BaseOptions options = new BaseOptions(
     baseUrl: Environnement.getUrlTarget(),
     connectTimeout: 5000,
     receiveTimeout: 3000,
   );
   final Dio _dio = new Dio(options);
+*/
+  final GismoHttp _gismoHttp = new GismoHttp();
 
   WebDataProvider(GismoBloc bloc) : super(bloc) {
     //_dio.interceptors.add(LogInterceptor(responseBody: false));
@@ -61,15 +67,16 @@ class WebDataProvider extends DataProvider {
 
   Future<User> auth(User user) async {
     try {
-      final response = await _dio.post( Environnement.getUrlTarget() + '/user/auth', data: user.toMap());
+      //final response = await _dio.post( Environnement.getUrlTarget() + '/user/auth', data: user.toMap());
+      final response = await _gismoHttp.doPost( '/user/auth',  user.toMap());
       debug.log("Send authentication", name: "WebDataProvider::auth");
-      if (response.data['error']) {
-        throw (response.data['message']);
+      if (response.error) {
+        throw (response.message);
       }
       else {
-        user.setCheptel(response.data['result']["cheptel"]);
+        user.setCheptel(response.result["cheptel"]);
       }
-    } on DioError catch (e) {
+    }  catch (e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
     debug.log("User is $user.cheptel", name: "WebDataProvider::auth");
@@ -78,59 +85,49 @@ class WebDataProvider extends DataProvider {
 
   Future<String> saveLambing(LambingModel lambing ) async {
     try {
-      final response = await _dio.post('/lamb/add', data: lambing.toJson());
-      if (response.data['error']) {
-        throw (response.data['message']);
-      }
-      else {
-        return response.data['message'];
-      }
+      final response = await _gismoHttp.doPost('/lamb/add',lambing.toJson());
+      return response;
     }
-    on DioError catch ( e) {
-      debug.log("Error " + e.message);
-      return "Error " + e.message;
+    catch ( e) {
+      debug.log("Error " + e.toString());
+      return "Error " + e.toString();
     }
   }
 
    Future<String> saveLamb(LambModel lamb ) async {
     try {
-      final response = await _dio.post('/lamb/save', data: lamb.toJson());
-      if (response.data['error']) {
-        throw (response.data['message']);
-      }
-      else {
-        return response.data['message'];
-      }
+      final response = await _gismoHttp.doPost('/lamb/save', lamb.toJson());
+      return response;
     }
-    on DioError catch ( e) {
-      debug.log("Error " + e.message);
-      return "Error " + e.message;
+    catch ( e) {
+      debug.log("Error " + e.toString());
+      return "Error " + e.toString();
     }
   }
 
   Future<String> deleteLamb(int idBd ) async {
     try {
-      final response = await _dio.get('/lamb/del/' + idBd.toString());
-      if (response.data['error']) {
-        throw (response.data['message']);
+      final response = await _gismoHttp.doGet('/lamb/del/' + idBd.toString());
+      if (response['error']) {
+        throw (response['message']);
       }
       else {
-        return response.data['message'];
+        return response['message'];
       }
     }
-    on DioError catch ( e) {
-      debug.log("Error " + e.message);
-      return "Error " + e.message;
+    catch ( e) {
+      debug.log("Error " + e.toString());
+      return "Error " + e.toString();
     }
   }
 
 
   Future<List<Bete>> getBetes(String cheptel) async {
-    final response = await _dio.get(
+    final response = await _gismoHttp.doGet(
         '/bete/searchAll?cheptel=' + cheptel);
     List<Bete> tempList = [];
-    for (int i = 0; i < response.data.length; i++) {
-      tempList.add(new Bete.fromResult(response.data[i]));
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new Bete.fromResult(response[i]));
     }
     return tempList;
   }
@@ -142,16 +139,11 @@ class WebDataProvider extends DataProvider {
     else
       action = "update";
     try {
-      final response = await _dio.post(
+      final response = await _gismoHttp.doPost(
           '/bete/' + action,
-          data: bete.toJson());
-      if (response.data['error']) {
-        throw (response.data['error']);
-      }
-      else {
-        return response.data['message'];
-      }
-    } on DioError catch ( e) {
+          bete.toJson());
+        return response;
+    } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     } on TypeError catch( e) {
       throw ("Oulala" +  Environnement.getUrlTarget());
@@ -162,11 +154,11 @@ class WebDataProvider extends DataProvider {
   @override
   Future<Bete> getMere(Bete bete) async {
     try {
-      final response = await _dio.get(
+      final response = await _gismoHttp.doGet(
           '/bete/mere/' + bete.idBd.toString());
-      Bete mere = new Bete.fromResult(response.data);
+      Bete mere = new Bete.fromResult(response);
       return mere;
-    } on DioError catch ( e) {
+    } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
@@ -181,7 +173,7 @@ class WebDataProvider extends DataProvider {
       user.setCheptel (response.data['result']["cheptel"]);
       user.setToken(response.data['result']["token"]);
       user.subscribe = true;
-    } on DioError catch ( e) {
+    } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
     return user;
@@ -189,22 +181,23 @@ class WebDataProvider extends DataProvider {
 
   @override
   Future<List<LambingModel>> getLambs(int idBete) async {
-    final response = await _dio.get(
+    final response = await _gismoHttp.doGet(
         '/lamb/searchAll?idMere=' + idBete.toString());
     List<LambingModel> tempList = [];
-    for (int i = 0; i < response.data.length; i++) {
-      tempList.add(new LambingModel.fromResult(response.data[i]));
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new LambingModel.fromResult(response[i]));
     }
     return tempList;
   }
 
   @override
   Future<List<CompleteLambModel>> getAllLambs(String cheptel) async {
-    final response = await _dio.get(
+    //final response = await _dio.get(
+    final response = await _gismoHttp.doGet(
         '/lamb/cheptel/' + cheptel);
     List<CompleteLambModel> tempList = [];
-    for (int i = 0; i < response.data.length; i++) {
-      tempList.add(new CompleteLambModel.fromResult(response.data[i]));
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new CompleteLambModel.fromResult(response[i]));
     }
     return tempList;
   }
@@ -216,15 +209,10 @@ class WebDataProvider extends DataProvider {
     data['dateSortie'] = date;
     data['lstBete'] = lstBete.map((bete) => bete.toJson()).toList();
     try {
-      final response = await _dio.post(
-      '/bete/sortie', data: data);
-      if (response.data['error']) {
-        throw (response.data['error']);
-      }
-      else {
-        return response.data['message'];
-      }
-    } on DioError catch ( e) {
+      final response = await _gismoHttp.doPost(
+        '/bete/sortie', data);
+      return response;
+    } catch ( e) {
         throw ("Erreur de connection à " +  Environnement.getUrlTarget());
       }
     }
@@ -237,15 +225,10 @@ class WebDataProvider extends DataProvider {
     data['dateEntree'] = date;
     data['lstBete'] = lstBete.map((bete) => bete.toJson()).toList();
     try {
-      final response = await _dio.post(
-          '/bete/entree', data: data);
-      if (response.data['error']) {
-        throw (response.data['error']);
-      }
-      else {
-        return response.data['message'];
-      }
-    } on DioError catch ( e) {
+      final response = await _gismoHttp.doPost(
+          '/bete/entree', data);
+        return response;
+    } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
@@ -254,15 +237,10 @@ class WebDataProvider extends DataProvider {
   Future<String> saveTraitement(TraitementModel traitement) async {
     final Map<String, dynamic> data = traitement.toJson();
     try {
-      final response = await _dio.post(
-          '/traitement/add', data: data);
-      if (response.data['error']) {
-        throw (response.data['error']);
-      }
-      else {
-        return response.data['message'];
-      }
-    } on DioError catch ( e) {
+      final response = await _gismoHttp.doPost(
+          '/traitement/add', data);
+      return response;
+    } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
@@ -272,21 +250,16 @@ class WebDataProvider extends DataProvider {
     TraitementCollectif col = new TraitementCollectif(traitement, betes);
     final Map<String, dynamic> data = col.toJson();
     try {
-      final response = await _dio.post(
-          '/traitement/collectif', data: data);
-      if (response.data['error']) {
-        throw (response.data['error']);
-      }
-      else {
-        return response.data['message'];
-      }
-    } on DioError catch ( e) {
+      final response = await _gismoHttp.doPost(
+          '/traitement/collectif', data);
+      return response;
+    } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
   @override
   Future<List<TraitementModel>> getTraitements(Bete bete) async {
-    final response = await _dio.get(
+    final response = await _gismoHttp.doGet(
         '/traitement/get?idBete=' + bete.idBd.toString());
     List<TraitementModel> tempList = [];
     for (int i = 0; i < response.data.length; i++) {
@@ -297,7 +270,7 @@ class WebDataProvider extends DataProvider {
 
   @override
   Future<List<TraitementModel>> getTraitementsForLamb(LambModel lamb) async {
-    final response = await _dio.get(
+    final response = await _gismoHttp.doGet(
         '/traitement/lamb/' + lamb.idBd.toString());
     List<TraitementModel> tempList = [];
     for (int i = 0; i < response.data.length; i++) {
@@ -310,15 +283,10 @@ class WebDataProvider extends DataProvider {
   @override
   Future<String> deleteTraitement(int idBd) async {
     try {
-      final response = await _dio.get('/traitement/del/' + idBd.toString());
-      if (response.data['error']) {
-        throw (response.data['message']);
-      }
-      else {
-        return response.data['message'];
-      }
+      final response = await _gismoHttp.doGet('/traitement/del/' + idBd.toString());
+      return response;
     }
-    on DioError catch ( e) {
+    catch ( e) {
       debug.log("Error " + e.message);
       return "Error " + e.message;
     }
@@ -326,7 +294,7 @@ class WebDataProvider extends DataProvider {
 
   @override
   Future<TraitementModel> searchTraitement(int idBd) async {
-    final response = await _dio.get(
+    final response = await _gismoHttp.doGet(
         '/traitement/search?idBd=' + idBd.toString());
     return new TraitementModel.fromResult(response.data);
   }
@@ -337,15 +305,10 @@ class WebDataProvider extends DataProvider {
     data["lamb"] = lamb.toJson();
     data["bete"] = bete.toJson();
     try {
-      final response = await _dio.post(
-          '/lamb/boucle', data: data);
-      if (response.data['error']) {
-        throw (response.data['error']);
-      }
-      else {
-        return response.data['message'];
-      }
-    } on DioError catch ( e) {
+      final response = await _gismoHttp.doPost(
+          '/lamb/boucle',  data);
+      return response;
+    } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
@@ -353,9 +316,9 @@ class WebDataProvider extends DataProvider {
 
   @override
   Future<LambingModel> searchLambing(int idBd) async {
-    final response = await _dio.get(
+    final response = await _gismoHttp.doGet(
         '/lamb/search?idBd=' + idBd.toString());
-    return new LambingModel.fromResult(response.data);
+    return new LambingModel.fromResult(response);
   }
 
   @override
@@ -365,15 +328,10 @@ class WebDataProvider extends DataProvider {
     data["dateDeces"] = date;
     data["motifDeces"] = motif;
     try {
-      final response = await _dio.post(
-          '/lamb/mort', data: data);
-      if (response.data['error']) {
-        throw (response.data['error']);
-      }
-      else {
-        return response.data['message'];
-      }
-    } on DioError catch ( e) {
+      final response = await _gismoHttp.doPost(
+          '/lamb/mort',  data);
+      return response;
+    } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
@@ -381,26 +339,21 @@ class WebDataProvider extends DataProvider {
   @override
   Future<String> saveNec(NoteModel note) async {
     try {
-      final response = await _dio.post(
-          '/nec/new', data: note.toJson());
-      if (response.data['error']) {
-        throw (response.data['error']);
-      }
-      else {
-        return response.data['message'];
-      }
-    } on DioError catch ( e) {
+      final response = await _gismoHttp.doPost(
+          '/nec/new', note.toJson());
+      return response;
+    }catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
 
   @override
   Future<List<NoteModel>> getNec(Bete bete) async {
-    final response = await _dio.get(
+    final response = await _gismoHttp.doGet(
         '/nec/get?idBete=' + bete.idBd.toString());
     List<NoteModel> tempList = List.empty(growable: true);
-    for (int i = 0; i < response.data.length; i++) {
-      tempList.add(new NoteModel.fromResult(response.data[i]));
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new NoteModel.fromResult(response[i]));
     }
     return tempList;
   }
@@ -408,37 +361,32 @@ class WebDataProvider extends DataProvider {
   @override
   Future<String> savePesee(Pesee pesee) async {
     try {
-      final response = await _dio.post(
-          '/poids/new', data: pesee.toJson());
-      if (response.data['error']) {
-        throw (response.data['error']);
-      }
-      else {
-        return response.data['message'];
-      }
-    } on DioError catch ( e) {
+      final response = await _gismoHttp.doPost(
+          '/poids/new',  pesee.toJson());
+      return response;
+    } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
 
   @override
   Future<List<Pesee>> getPesee(Bete bete) async {
-    final response = await _dio.get(
+    final response = await _gismoHttp.doGet(
         '/poids/get/' + bete.idBd.toString());
     List<Pesee> tempList = List.empty(growable: true);
-    for (int i = 0; i < response.data.length; i++) {
-      tempList.add(new Pesee.fromResult(response.data[i]));
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new Pesee.fromResult(response[i]));
     }
     return tempList;
   }
 
   @override
   Future<List<Pesee>> getPeseeForLamb(LambModel lamb) async {
-    final response = await _dio.get(
+    final response = await _gismoHttp.doGet(
         '/poids/lamb/' + lamb.idBd.toString());
     List<Pesee> tempList = List.empty(growable: true);
-    for (int i = 0; i < response.data.length; i++) {
-      tempList.add(new Pesee.fromResult(response.data[i]));
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new Pesee.fromResult(response[i]));
     }
     return tempList;
   }
@@ -446,15 +394,10 @@ class WebDataProvider extends DataProvider {
   @override
   Future<String> deletePesee(int idBd) async {
     try {
-      final response = await _dio.get('/poids/del/' + idBd.toString());
-      if (response.data['error']) {
-        throw (response.data['message']);
-      }
-      else {
-        return response.data['message'];
-      }
+      final response = await _gismoHttp.doGet('/poids/del/' + idBd.toString());
+      return response;
     }
-    on DioError catch ( e) {
+    catch ( e) {
       debug.log("Error " + e.message);
       return "Error " + e.message;
     }
@@ -463,66 +406,61 @@ class WebDataProvider extends DataProvider {
   @override
   Future<String> saveEcho(EchographieModel echo) async {
     try {
-      final response = await _dio.post(
-          '/echo/new', data: echo.toJson());
-      if (response.data['error']) {
-        throw (response.data['error']);
-      }
-      else {
-        return response.data['message'];
-      }
-    } on DioError catch ( e) {
+      final response = await _gismoHttp.doPost(
+          '/echo/new', echo.toJson());
+      return response;
+    }  catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
 
   @override
   Future<List<EchographieModel>> getEcho(Bete bete) async {
-    final response = await _dio.get(
+    final response = await _gismoHttp.doGet(
         '/echo/get/' + bete.idBd.toString());
     List<EchographieModel> tempList = [];
-    for (int i = 0; i < response.data.length; i++) {
-      tempList.add(new EchographieModel.fromResult(response.data[i]));
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new EchographieModel.fromResult(response[i]));
     }
     return tempList;
   }
 
   @override
   Future<EchographieModel> searchEcho(int idBd) async {
-    final response = await _dio.get(
+    final response = await _gismoHttp.doGet(
         '/echo/search/' + idBd.toString());
-    return new EchographieModel.fromResult(response.data);
+    return new EchographieModel.fromResult(response);
   }
 
   @override
   Future<List<LotModel>> getLots(String cheptel) async {
-    final response = await _dio.get(
+    final response = await _gismoHttp.doGet(
         '/lot/getAll/' + cheptel);
     List<LotModel> tempList =[];
-    for (int i = 0; i < response.data.length; i++) {
-      tempList.add(new LotModel.fromResult(response.data[i]));
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new LotModel.fromResult(response[i]));
     }
     return tempList;
   }
 
   @override
   Future<List<Affectation>> getBeliersForLot(int idLot) async {
-    final response = await _dio.get(
+    final response = await _gismoHttp.doGet(
         '/lot/getBeliers/' + idLot.toString());
     List<Affectation> tempList = [];
-    for (int i = 0; i < response.data.length; i++) {
-      tempList.add(new Affectation.fromResult(response.data[i]));
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new Affectation.fromResult(response[i]));
     }
     return tempList;
   }
 
   @override
   Future<List<Affectation>> getBrebisForLot(int idLot) async {
-    final response = await _dio.get(
+    final response = await _gismoHttp.doGet(
         '/lot/getBrebis/' + idLot.toString());
     List<Affectation> tempList = [];
-    for (int i = 0; i < response.data.length; i++) {
-      tempList.add(new Affectation.fromResult(response.data[i]));
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new Affectation.fromResult(response[i]));
     }
     return tempList;
   }
@@ -530,15 +468,10 @@ class WebDataProvider extends DataProvider {
   @override
   Future<String> remove(Affectation affect) async {
       try {
-        final response = await _dio.post(
-            '/lot/del', data: affect.toJson());
-        if (response.data['error']) {
-          throw (response.data['error']);
-        }
-        else {
-          return response.data['message'];
-        }
-      } on DioError catch ( e) {
+        final response = await _gismoHttp.doPost(
+            '/lot/del', affect.toJson());
+        return response;
+      } catch ( e) {
         throw ("Erreur de connection à " +  Environnement.getUrlTarget());
       }
   }
@@ -550,10 +483,10 @@ class WebDataProvider extends DataProvider {
     data["brebisId"] = bete.idBd;
     data["dateEntree"] = dateEntree;
     try {
-      final response = await _dio.post(
-          '/lot/add', data: data);
-         return response.data['message'];
-    } on DioError catch ( e) {
+      final response = await _gismoHttp.doPost(
+          '/lot/add', data);
+         return response;
+    } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
 
@@ -562,15 +495,15 @@ class WebDataProvider extends DataProvider {
   @override
   Future<LotModel> saveLot(LotModel lot) async{
     try {
-      final response = await _dio.post(
-          '/lot/create', data: lot.toJson());
+      final response = await _gismoHttp.doPost(
+          '/lot/create', lot.toJson());
       if (response.data['error']) {
         throw (response.data['error']);
       }
       else {
         return LotModel.fromResult(response.data['result']);
       }
-    } on DioError catch ( e) {
+    } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
@@ -578,11 +511,11 @@ class WebDataProvider extends DataProvider {
   @override
   Future<List<Affectation>> getAffectationForBete(int idBete) async {
     try {
-      final response = await _dio.get(
+      final response = await _gismoHttp.doGet(
           '/lot/bete/' + idBete.toString());
       List<Affectation> tempList = [];
-      for (int i = 0; i < response.data.length; i++) {
-        tempList.add(new Affectation.fromResult(response.data[i]));
+      for (int i = 0; i < response.length; i++) {
+        tempList.add(new Affectation.fromResult(response[i]));
       }
       return tempList;
     }
@@ -595,11 +528,11 @@ class WebDataProvider extends DataProvider {
   @override
   Future<List<Bete>> getBeliers() async {
     try {
-      final response = await _dio.get(
+      final response = await _gismoHttp.doGet(
           '/bete/getBeliers/');
       List<Bete> tempList = [];
-      for (int i = 0; i < response.data.length; i++) {
-        tempList.add(new Bete.fromResult(response.data[i]));
+      for (int i = 0; i < response.length; i++) {
+        tempList.add(new Bete.fromResult(response[i]));
       }
       return tempList;
     }
@@ -611,80 +544,80 @@ class WebDataProvider extends DataProvider {
 
   @override
   Future<List<Bete>> getBrebis() async {
-    final response = await _dio.get(
+    final response = await _gismoHttp.doGet(
         '/bete/getBrebis/');
     List<Bete> tempList = [];
-    for (int i = 0; i < response.data.length; i++) {
-      tempList.add(new Bete.fromResult(response.data[i]));
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new Bete.fromResult(response[i]));
     }
     return tempList;
   }
 
   Future<String> getCadastre(LocationData myPosition) async {
     try {
-      final response = await _dio.post(
-          '/map/cadastre', data: {
+      final response = await _gismoHttp.doPost(
+          '/map/cadastre',  {
             'lattitude': myPosition.latitude,
             'longitude': myPosition.longitude
       });
-        String cadastre =  response.data;
+        String cadastre =  response;
         return cadastre;
-    } on DioError catch ( e) {
+    }  catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
 
   Future<String> getParcelle(LatLng touchPosition) async {
     try {
-      final response = await _dio.post(
-          '/map/parcelle', data: {
+      final response = await _gismoHttp.doPost(
+          '/map/parcelle', {
         'lattitude': touchPosition.latitude,
         'longitude': touchPosition.longitude
       });
       String cadastre =  response.data;
       return cadastre;
-    } on DioError catch ( e) {
+    } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
 
   Future<List<Parcelle>> getParcelles() async {
     try {
-      final response = await _dio.get(
+      final response = await _gismoHttp.doGet(
           '/map/parcelles/');
       List<Parcelle> parcelles = [];
-      for (int i = 0; i < response.data.length; i++) {
-        parcelles.add(Parcelle.fromResult(response.data[i]));
+      for (int i = 0; i < response.length; i++) {
+        parcelles.add(Parcelle.fromResult(response[i]));
       }
       return parcelles;
-    } on DioError catch ( e) {
+    } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
   Future<Pature> getPature(String idu) async {
     try {
-      final response = await _dio.get(
+      final response = await _gismoHttp.doGet(
           '/paturage/' + idu);
-      if( response.data.length>0) {
-        Pature pature = Pature.fromResult(response.data);
+      if( response.length>0) {
+        Pature pature = Pature.fromResult(response);
         return pature;
       }
       throw ("Pature non trouvée");
-    } on DioError catch ( e) {
+    }  catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
   Future<String> savePature(Pature pature) async {
     try {
-      final response = await _dio.post(
-          '/paturage/save', data: pature.toJson());
+      final response = await _gismoHttp.doPost(
+          '/paturage/save', pature.toJson());
       if (response.data['error']) {
         throw (response.data['error']);
       }
       else {
         return response.data['message'];
       }
-    } on DioError catch ( e) {
+    } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
 
