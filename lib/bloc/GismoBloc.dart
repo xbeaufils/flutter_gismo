@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:admob_flutter/admob_flutter.dart';
-import 'package:dio/dio.dart';
+//import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Exception/EventException.dart';
 import 'package:flutter_gismo/bloc/GismoRepository.dart';
@@ -234,7 +234,7 @@ class GismoBloc {
      return _currentUser?.subscribe ;
   }
 
-   final dio = new Dio();
+   //final dio = new Dio();
 
   User ? get user => _currentUser;
   void setUser(User ? user) {

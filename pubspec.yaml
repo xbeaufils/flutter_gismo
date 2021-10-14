@@ -25,8 +25,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   # cupertino_icons: ^0.1.2
 
-  dio: ^4.0.0 #latest version
- # http: ^0.12.0+2
+  #dio: ^3.0.6 # regression ^4.0.0 #latest version
+  http: ^0.13.3
   intl: ^0.17.0
   #shared_preferences: ^0.5.6
   sqflite:
@@ -43,7 +43,7 @@ dependencies:
   #rts500plugin:
   #  path: ../rts500_plugin/
   sentry: ^5.0.0
-  #">=3.0.0 <4.0.0"
+  #sentry: ">=3.0.0 <4.0.0"
   admob_flutter:
   facebook_audience_network: ^0.7.1
 
