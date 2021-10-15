@@ -47,7 +47,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
-    flavorDimensions "app"
+  /*  flavorDimensions "app"
     productFlavors {
         ovin {
             dimension "app"
@@ -62,7 +62,7 @@ android {
             versionCode flutterVersionCode.toInteger()
             versionName flutterVersionName
         }
-    }
+    }*/
     signingConfigs {
         release {
             keyAlias keystoreProperties['keyAlias']
