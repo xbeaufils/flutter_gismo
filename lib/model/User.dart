@@ -32,13 +32,15 @@ class User {
   //User(this._cheptel);
 
   toMap() {
-    return {
-      //"User" : {
-        "email" : _email,
-        "password": _password,
-        "cheptel" : _cheptel,
-        "token" : _token
-      //}
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (_email != null)
+      data['email'] = _email;
+    if (_password != null)
+      data['password'] = _password;
+    if (_cheptel != null)
+      data['cheptel'] = _cheptel;
+    if ( _token != null)
+      data['token'] = _token;
+    return data;
   }
 }

@@ -1,13 +1,16 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
+//import 'package:dio/dio.dart';
 import 'package:flutter_gismo/Environnement.dart';
+import 'package:flutter_gismo/bloc/GismoHttp.dart';
 import 'package:flutter_gismo/model/User.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
 
-  final dio = new Dio();
+  late GismoHttp _gismoHttp; // = new GismoHttp(super.token);
+
+  //final dio = new Dio();
   // Login+
  /* Future<User> isLogged() async {
 
@@ -32,17 +35,13 @@ class AuthService {
     return prefs.setString("cheptel", cheptel);
   }
 */
+
   Future<User> login(User user) async {
     try {
-      final response = await dio.post(
-          Environnement.getUrlTarget() + '/user/login', data: user.toMap());
-      if (response.data['error']) {
-        throw (response.data['message']);
-      }
-      else {
-        user.setCheptel(response.data['result']["cheptel"]);
-      }
-    } on DioError catch (  e) {
+      final response = await _gismoHttp.doPostResult(
+          Environnement.getUrlTarget() + '/user/login', user.toMap());
+        user.setCheptel(response["cheptel"]);
+    } catch (e) {
         throw ("Erreur de connection à " + Environnement.getUrlTarget());
     }
     return user;

@@ -22,7 +22,7 @@ void main() async {
     );
   }
   gismoBloc = new GismoBloc();
-  Environnement.init( "http://10.0.2.2:8080/gismoWeb/bd", "http://192.168.1.90:8080/gismoApp/api");
+  Environnement.init( "http://10.0.2.2:8080/gismoWeb/bd", "http://192.168.0.212:8080/gismoApp/api");
   String nextPage = '/splash';
   if (kIsWeb)
     //if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))

@@ -194,6 +194,7 @@ class GismoBloc {
         this._currentUser = new User(null, null);
         _currentUser!.setCheptel("00000000");
         _currentUser!.subscribe = false;
+        _currentUser!.setToken("Nothing");
         _repository = new GismoRepository(this, RepositoryType.local);
         debug.log("Mode autonome", name: "GismoBloc::init");
         // Ajout des pubs

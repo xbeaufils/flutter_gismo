@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
+//import 'package:dio/dio.dart';
 import 'package:flutter_gismo/Environnement.dart';
 import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/bloc/GismoHttp.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/EchographieModel.dart';
@@ -22,16 +23,18 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:developer' as debug;
 
 class LocalDataProvider extends DataProvider{
+  late GismoHttp _gismoHttp; // = new GismoHttp(super.token);
 
   // only have a single app-wide reference to the database
   static Database ? _database;
+  /*
   static BaseOptions options = new BaseOptions(
     baseUrl: Environnement.getUrlWebTarget(),
     connectTimeout: 5000,
     receiveTimeout: 3000,
   );
   final Dio _dio = new Dio(options);
-
+  */
   LocalDataProvider(GismoBloc bloc) : super(bloc);
 
   Future<Database> get database async {
@@ -140,8 +143,8 @@ class LocalDataProvider extends DataProvider{
     maps = await database.rawQuery("select count(*) as nb from NEC");
     report.nec = maps[0]['nb'];
     try {
-      final response = await _dio.post(
-          '/send', data: report.toJson());
+      final response = await _gismoHttp.doPost(
+          '/send', report.toJson());
     }
     catch(e,stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
