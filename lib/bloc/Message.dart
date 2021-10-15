@@ -1,11 +1,11 @@
 class Message {
   late bool error;
   late String message;
-  Map ? result;
+  late Map result;
 
   Message(Map map) {
     error = map['error'];
-    message = map['message'];
-    result = map['result'];
+    message = (map['message'] != null) ? map['message']: "";
+    result = (map['result'] != null) ? map['result']: Map();
   }
 }
