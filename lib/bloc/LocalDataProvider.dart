@@ -759,7 +759,7 @@ class LocalDataProvider extends DataProvider{
   @override
   Future<String> remove(Affectation affect) async{
     Database db = await this.database;
-    db.update("affectation", affect.toJson(), where: "id = ?", whereArgs: <int>[affect.idAffectation]);
+    db.update("affectation", affect.toJson(), where: "id = ?", whereArgs: <int>[affect.idAffectation!]);
     return "Suppression OK";
   }
 

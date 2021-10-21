@@ -1,5 +1,5 @@
 class Affectation {
-  late int idAffectation;
+  int ? idAffectation;
   late String numBoucle;
   late String numMarquage;
   late int brebisId;
