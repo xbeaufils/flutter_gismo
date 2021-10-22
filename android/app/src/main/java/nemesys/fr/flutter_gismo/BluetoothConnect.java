@@ -80,6 +80,7 @@ public class BluetoothConnect extends  Thread{
         } catch (IOException e) {
             Log.e(BluetoothConnect.TAG, e.toString());
             Sentry.captureException(e);
+            handlerStatus.obtainMessage(BluetoothMessage.STATE_CHANGE.ordinal(), MainActivity.State.ERROR.ordinal(), -1, null).sendToTarget();
         }
     }
 

@@ -264,7 +264,8 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         NONE,
         LISTEN,
         CONNECTING,
-        CONNECTED;
+        CONNECTED,
+        ERROR;
 
         public static State getEnum(int i ) {
             for (State state : State.values()) {

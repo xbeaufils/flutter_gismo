@@ -172,6 +172,10 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
         case "LISTEN":
         case "CONNECTED" :
           return Switch(value: true, onChanged: (value) { _switchBluetooth(value, device.address); } );
+        case "ERROR":
+          this._stopBluetoothStream();
+           return Switch(value: false, onChanged: (value) { _switchBluetooth(value, device.address); } );
+
       }
     }
     return Container(width: 10,);
@@ -224,20 +228,26 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
         setState(() {
           _bluetoothState = event.status;
           if (event.status == 'STARTED') {
-            debug.log("Change coonected " + value.toString(),  name: "_startBlueTooth");
+            debug.log("Change connected " + value.toString(),  name: "_startBlueTooth");
             this._selectedDevice!.connected = value;
           }
         });
       });
       _bluetoothStatusSubscription = this._bloc.streamStatusBluetooth().listen((event) {
         debug.log("status " + event.toString(), name: "streamStatusBluetooth");
-        if (event.connect == 'CONNECTED') {
+        if (_bluetoothState  !=  event.connect) {
+          _bluetoothState = event.connect;
           setState(() {
-            this._selectedDevice!.connected = true;
+            if (event.connect == 'CONNECTED') {
+              this._selectedDevice!.connected = true;
+            //this._bluetoothStatusSubscription!.cancel();
+            }
           });
-          this._bluetoothStatusSubscription!.cancel();
+          if (this._bluetoothState == "ERROR")
+            ScaffoldMessenger.of(context).showSnackBar(new SnackBar(content: Text("Erreur bluetooth"),));
         }
       });
+
     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       debug.log(e.toString());
