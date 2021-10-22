@@ -764,6 +764,14 @@ class LocalDataProvider extends DataProvider{
   }
 
   @override
+  Future<String> deleteAffectation(Affectation affect) async {
+    Database db = await this.database;
+    int res =   await db.delete("affectation",
+        where: "id = ?", whereArgs: <int>[affect.idAffectation!]);
+    return "Suppression OK";
+  }
+
+  @override
   Future<LotModel ?> saveLot(LotModel lot) async {
     try {
       Database db = await this.database;

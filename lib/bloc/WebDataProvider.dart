@@ -468,6 +468,24 @@ class WebDataProvider extends DataProvider {
   }
 
   @override
+  Future<String> deleteAffectation(Affectation affect) async {
+    try {
+      final response = await _gismoHttp.doGet(
+          '/lot/delete/'+ affect.idAffectation!.toString());
+      if (response['error']) {
+        throw (response['message']);
+      }
+      else {
+        return response['message'];
+      }
+    }
+    catch ( e) {
+      debug.log("Error " + e.toString());
+      return "Error " + e.toString();
+    }
+  }
+
+  @override
   Future<String> addBete(LotModel lot, Bete bete, String dateEntree) async {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data["lotId"] = lot.idb;

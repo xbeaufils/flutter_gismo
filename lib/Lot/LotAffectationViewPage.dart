@@ -268,25 +268,30 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
        return //Card(child:
         ListTile(
             title:
-            Row(children: <Widget>[
-              Text(bete.numBoucle,
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              SizedBox(width: 20,),
-              Text(bete.numMarquage,
-                style: TextStyle(fontStyle: FontStyle.italic),)
-            ],),
+              Row(children: <Widget>[
+                Text(bete.numBoucle,
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(width: 20,),
+                Text(bete.numMarquage,
+                  style: TextStyle(fontStyle: FontStyle.italic),)
+              ],),
             subtitle:
-            Column(children: <Widget>[
-              bete.dateEntree == null ? Text(
-                  this.widget._currentLot.dateDebutLutte!) : Text(
-                "Entrée le : " + bete.dateEntree,),
-              SizedBox(width: 20,),
-              bete.dateSortie == null ? Text(
-                  this.widget._currentLot.dateFinLutte!) : Text(
-                  "Sortie le : " + bete.dateSortie)
-            ], ),
-            trailing: IconButton(
-              icon: Icon(Icons.launch), onPressed: () => { _removeBete(bete)},)
+              Column(children: <Widget>[
+                bete.dateEntree == null ? Text(
+                    this.widget._currentLot.dateDebutLutte!) : Text(
+                  "Entrée le : " + bete.dateEntree,),
+                SizedBox(width: 20,),
+                bete.dateSortie == null ? Text(
+                    this.widget._currentLot.dateFinLutte!) : Text(
+                    "Sortie le : " + bete.dateSortie)
+              ], ),
+            trailing:
+            Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(icon: Icon(Icons.delete), onPressed: () => { _showDialog(context, bete) } ),
+                  IconButton(icon: Icon(Icons.launch), onPressed: () => { _removeBete(bete)},)
+        ])
         );
       }
     );
@@ -393,6 +398,54 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
 
   Future<List<Affectation>> _getBrebis(int idLot)  {
     return this._bloc.getBrebisForLot(idLot);
+  }
+
+  Future _showDialog(BuildContext context, Affectation affect) {
+    String message ="Voulez vous supprimer ";
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Suppression"),
+          content: Text(
+              message),
+          actions: [
+            _cancelButton(),
+            _deleteButton(affect),
+          ],
+        );
+      },
+    );
+  }
+  // set up the buttons
+
+  Widget _cancelButton() {
+    return TextButton(
+      child: Text("Annuler"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget _deleteButton(Affectation affectation) {
+    return TextButton(
+      child: Text("Supprimer"),
+      onPressed: () {
+          _deleteAffectation(affectation);
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  void _deleteAffectation(Affectation event) async {
+    String message = await this.widget._bloc.deleteAffectation(event);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    /*_scaffoldKey.currentState
+        .showSnackBar(SnackBar(content: Text(message)));*/
+    setState(() {
+
+    });
   }
 
   Future<String?> _showDateDialog(BuildContext context, String title, String helpMessage, String label) async {

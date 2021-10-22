@@ -97,10 +97,10 @@ class GismoBloc {
       storage.delete(key: "address");
   }
 
-  Stream<BluetoothState> streamConnectBluetooth() async* {
+  Stream<BluetoothState> streamConnectBluetooth(String address) async* {
     BluetoothState state;
-    FlutterSecureStorage storage = new FlutterSecureStorage();
-    String address = await storage.read(key: "address");
+    /*FlutterSecureStorage storage = new FlutterSecureStorage();
+    String address = await storage.read(key: "address");*/
     try {
       String status = await BLUETOOTH_CHANNEL.invokeMethod("connectBlueTooth", { 'address': address});
       debug.log("Connect status " + status, name: "streamConnectBluetooth");
@@ -590,6 +590,10 @@ class GismoBloc {
   Future<String> removeFromLot(Affectation affect, String dateSortie) {
     affect.dateSortie = dateSortie;
     return this._repository!.dataProvider.remove(affect);
+  }
+
+  Future<String> deleteAffectation(Affectation affect) {
+    return this._repository!.dataProvider.deleteAffectation(affect);
   }
 
   Future<List<Affectation>> getAffectations(int idBete) {

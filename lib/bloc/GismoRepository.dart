@@ -224,4 +224,10 @@ class DummyDataProvider extends DataProvider {
   Future<String> saveLamb(LambModel lambing) {
     throw RepositoryTypeException("Type de repository inconnue");
   }
+
+  @override
+  Future<String> deleteAffectation(Affectation affect) {
+    // TODO: implement deleteAffectation
+    throw UnimplementedError();
+  }
 }

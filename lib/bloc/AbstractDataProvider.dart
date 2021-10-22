@@ -62,4 +62,5 @@ abstract class DataProvider {
   Future<List<Bete>>getBeliers();
   Future<String> remove(Affectation affect);
   Future<String> addBete(LotModel lot, Bete bete, String dateEntree);
+  Future<String> deleteAffectation(Affectation affect);
 }
