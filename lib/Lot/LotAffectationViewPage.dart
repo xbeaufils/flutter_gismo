@@ -269,21 +269,21 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
         ListTile(
             title:
               Row(children: <Widget>[
-                Text(bete.numBoucle,
+                Text(bete.numBoucle!,
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 SizedBox(width: 20,),
-                Text(bete.numMarquage,
+                Text(bete.numMarquage!,
                   style: TextStyle(fontStyle: FontStyle.italic),)
               ],),
             subtitle:
               Column(children: <Widget>[
                 bete.dateEntree == null ? Text(
                     this.widget._currentLot.dateDebutLutte!) : Text(
-                  "Entrée le : " + bete.dateEntree,),
+                  "Entrée le : " + bete.dateEntree!,),
                 SizedBox(width: 20,),
                 bete.dateSortie == null ? Text(
                     this.widget._currentLot.dateFinLutte!) : Text(
-                    "Sortie le : " + bete.dateSortie)
+                    "Sortie le : " + bete.dateSortie!)
               ], ),
             trailing:
             Row(

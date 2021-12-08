@@ -1,12 +1,12 @@
 class Affectation {
   int ? idAffectation;
-  late String numBoucle;
-  late String numMarquage;
+  String ? numBoucle;
+  String ? numMarquage;
   late int brebisId;
   late int lotId;
-  late String lotName;
-  late String dateEntree;
-  late String dateSortie;
+  String ? lotName;
+  String ? dateEntree;
+  String ? dateSortie;
 
   Affectation();
 
@@ -38,12 +38,12 @@ class Affectation {
     dateEntree = result["dateEntree"];
     if (dateEntree == null)
       dateEntree = result["dateDebutLutte"];
-    else if (dateEntree.isEmpty)
+    else if (dateEntree!.isEmpty)
       dateEntree = result["dateDebutLutte"];
     dateSortie = result["dateSortie"];
     if (dateSortie == null)
       dateSortie = result["dateFinLutte"];
-    else if (dateSortie.isEmpty)
+    else if (dateSortie!.isEmpty)
       dateSortie = result["dateFinLutte"];
   }
 }

@@ -395,8 +395,8 @@ class GismoBloc {
 
   List<Event> _makeEventforAffectation(Affectation affect) {
     List<Event> lstEvents = [];
-    lstEvents.add(new Event.name(affect.idAffectation!, EventType.entreeLot, affect.dateEntree, affect.lotName));
-    lstEvents.add(new Event.name(affect.idAffectation!, EventType.sortieLot, affect.dateSortie, affect.lotName));
+    lstEvents.add(new Event.name(affect.idAffectation!, EventType.entreeLot, (affect.dateEntree !=null) ?affect.dateEntree!: "", affect.lotName!));
+    lstEvents.add(new Event.name(affect.idAffectation!, EventType.sortieLot, (affect.dateSortie!=null)?affect.dateSortie!:"", affect.lotName!));
     return lstEvents;
   }
 

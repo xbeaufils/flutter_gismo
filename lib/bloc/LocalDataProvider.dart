@@ -35,7 +35,10 @@ class LocalDataProvider extends DataProvider{
   );
   final Dio _dio = new Dio(options);
   */
-  LocalDataProvider(GismoBloc bloc) : super(bloc);
+  LocalDataProvider(GismoBloc bloc) : super(bloc) {
+    _gismoHttp = new GismoHttp(bloc);
+  }
+
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -143,7 +146,7 @@ class LocalDataProvider extends DataProvider{
     maps = await database.rawQuery("select count(*) as nb from NEC");
     report.nec = maps[0]['nb'];
     try {
-      final response = await _gismoHttp.doPost(
+      final response = await _gismoHttp.doPostSimple(
           '/send', report.toJson());
     }
     catch(e,stackTrace) {
@@ -745,7 +748,7 @@ class LocalDataProvider extends DataProvider{
   Future<List<Affectation>> getBrebisForLot(int idLot) async {
     Database db = await this.database;
     List<Map<String, dynamic>> maps = await db.rawQuery(
-        'Select affectation.idBd, bete.numBoucle, bete.numMarquage, affectation.dateEntree, affectation.dateSortie '
+        'Select affectation.idBd, affectation.lotId, affectation.brebisId, bete.numBoucle, bete.numMarquage, affectation.dateEntree, affectation.dateSortie '
             'from affectation INNER JOIN bete ON affectation.brebisId = bete.id '
             'where lotId = ' + idLot.toString()
             + " AND bete.sex = 'femelle' ");
@@ -759,7 +762,10 @@ class LocalDataProvider extends DataProvider{
   @override
   Future<String> remove(Affectation affect) async{
     Database db = await this.database;
-    db.update("affectation", affect.toJson(), where: "id = ?", whereArgs: <int>[affect.idAffectation!]);
+    Map<String, dynamic> dataDb = new Map.from(affect.toJson());
+    dataDb.remove("numBoucle");
+    dataDb.remove("numMarquage");
+    db.update("affectation", dataDb, where: "idBd = ?", whereArgs: <int>[affect.idAffectation!]);
     return "Suppression OK";
   }
 
@@ -767,7 +773,7 @@ class LocalDataProvider extends DataProvider{
   Future<String> deleteAffectation(Affectation affect) async {
     Database db = await this.database;
     int res =   await db.delete("affectation",
-        where: "id = ?", whereArgs: <int>[affect.idAffectation!]);
+        where: "idBd = ?", whereArgs: <int>[affect.idAffectation!]);
     return "Suppression OK";
   }
 
