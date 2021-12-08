@@ -24,8 +24,19 @@ class GismoHttp  {
     return response.body;
   }
 
-  Future<String> doPost(String url, Object body) async {
-    var response = await http.post(Uri.parse(Environnement.getUrlTarget() + url), headers: _getHeaders() ,body: body);
+  Future<String> doPostSimple(String url, Object body) async {
+    var response = await http.post(Uri.parse(Environnement.getUrlTarget() + url),
+        headers: _getHeaders() ,
+      body: jsonEncode(body));
+    return response.body;
+  }
+
+
+  Future<String> doPostMessage(String url, Object body) async {
+    var response = await http.post(
+        Uri.parse(Environnement.getUrlTarget() + url),
+        headers: _getHeaders() ,
+        body: jsonEncode(body) );
     Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
     if (msg.error) {
       throw (msg.error);
@@ -40,7 +51,8 @@ class GismoHttp  {
     String errorMessage ="";
     try {
       var response = await http.post(
-          Uri.parse(Environnement.getUrlTarget() + url), headers: _getHeaders(),
+          Uri.parse(Environnement.getUrlTarget() + url),
+          headers: _getHeaders(),
           body: jsonEncode(body));
       Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
       if (msg.error) {

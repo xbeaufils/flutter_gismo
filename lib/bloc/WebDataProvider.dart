@@ -81,7 +81,7 @@ class WebDataProvider extends DataProvider {
 
   Future<String> saveLambing(LambingModel lambing ) async {
     try {
-      final response = await _gismoHttp.doPost('/lamb/add',lambing.toJson());
+      final response = await _gismoHttp.doPostMessage('/lamb/add',lambing.toJson());
       return response;
     }
     catch ( e) {
@@ -92,7 +92,7 @@ class WebDataProvider extends DataProvider {
 
    Future<String> saveLamb(LambModel lamb ) async {
     try {
-      final response = await _gismoHttp.doPost('/lamb/save', lamb.toJson());
+      final response = await _gismoHttp.doPostMessage('/lamb/save', lamb.toJson());
       return response;
     }
     catch ( e) {
@@ -135,7 +135,7 @@ class WebDataProvider extends DataProvider {
     else
       action = "update";
     try {
-      final response = await _gismoHttp.doPost(
+      final response = await _gismoHttp.doPostMessage(
           '/bete/' + action,
           bete.toJson());
         return response;
@@ -200,7 +200,7 @@ class WebDataProvider extends DataProvider {
     data['dateSortie'] = date;
     data['lstBete'] = lstBete.map((bete) => bete.toJson()).toList();
     try {
-      final response = await _gismoHttp.doPost(
+      final response = await _gismoHttp.doPostMessage(
         '/bete/sortie', data);
       return response;
     } catch ( e) {
@@ -216,7 +216,7 @@ class WebDataProvider extends DataProvider {
     data['dateEntree'] = date;
     data['lstBete'] = lstBete.map((bete) => bete.toJson()).toList();
     try {
-      final response = await _gismoHttp.doPost(
+      final response = await _gismoHttp.doPostMessage(
           '/bete/entree', data);
         return response;
     } catch ( e) {
@@ -228,7 +228,7 @@ class WebDataProvider extends DataProvider {
   Future<String> saveTraitement(TraitementModel traitement) async {
     final Map<String, dynamic> data = traitement.toJson();
     try {
-      final response = await _gismoHttp.doPost(
+      final response = await _gismoHttp.doPostMessage(
           '/traitement/add', data);
       return response;
     } catch ( e) {
@@ -241,7 +241,7 @@ class WebDataProvider extends DataProvider {
     TraitementCollectif col = new TraitementCollectif(traitement, betes);
     final Map<String, dynamic> data = col.toJson();
     try {
-      final response = await _gismoHttp.doPost(
+      final response = await _gismoHttp.doPostMessage(
           '/traitement/collectif', data);
       return response;
     } catch ( e) {
@@ -296,7 +296,7 @@ class WebDataProvider extends DataProvider {
     data["lamb"] = lamb.toJson();
     data["bete"] = bete.toJson();
     try {
-      final response = await _gismoHttp.doPost(
+      final response = await _gismoHttp.doPostMessage(
           '/lamb/boucle',  data);
       return response;
     } catch ( e) {
@@ -319,7 +319,7 @@ class WebDataProvider extends DataProvider {
     data["dateDeces"] = date;
     data["motifDeces"] = motif;
     try {
-      final response = await _gismoHttp.doPost(
+      final response = await _gismoHttp.doPostMessage(
           '/lamb/mort',  data);
       return response;
     } catch ( e) {
@@ -330,7 +330,7 @@ class WebDataProvider extends DataProvider {
   @override
   Future<String> saveNec(NoteModel note) async {
     try {
-      final response = await _gismoHttp.doPost(
+      final response = await _gismoHttp.doPostMessage(
           '/nec/new', note.toJson());
       return response;
     }catch ( e) {
@@ -352,7 +352,7 @@ class WebDataProvider extends DataProvider {
   @override
   Future<String> savePesee(Pesee pesee) async {
     try {
-      final response = await _gismoHttp.doPost(
+      final response = await _gismoHttp.doPostMessage(
           '/poids/new',  pesee.toJson());
       return response;
     } catch ( e) {
@@ -397,7 +397,7 @@ class WebDataProvider extends DataProvider {
   @override
   Future<String> saveEcho(EchographieModel echo) async {
     try {
-      final response = await _gismoHttp.doPost(
+      final response = await _gismoHttp.doPostMessage(
           '/echo/new', echo.toJson());
       return response;
     }  catch ( e) {
@@ -459,7 +459,7 @@ class WebDataProvider extends DataProvider {
   @override
   Future<String> remove(Affectation affect) async {
       try {
-        final response = await _gismoHttp.doPost(
+        final response = await _gismoHttp.doPostMessage(
             '/lot/del', affect.toJson());
         return response;
       } catch ( e) {
@@ -492,7 +492,7 @@ class WebDataProvider extends DataProvider {
     data["brebisId"] = bete.idBd;
     data["dateEntree"] = dateEntree;
     try {
-      final response = await _gismoHttp.doPost(
+      final response = await _gismoHttp.doPostMessage(
           '/lot/add', data);
          return response;
     } catch ( e) {
@@ -613,7 +613,7 @@ class WebDataProvider extends DataProvider {
   }
   Future<String> savePature(Pature pature) async {
     try {
-      final response = await _gismoHttp.doPost(
+      final response = await _gismoHttp.doPostMessage(
           '/paturage/save', pature.toJson());
         return response;
     } catch ( e) {
