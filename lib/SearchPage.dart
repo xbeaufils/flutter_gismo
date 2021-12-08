@@ -225,6 +225,14 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       }
       _filteredBetes = tempList;
     }
+    if (_filteredBetes.isEmpty) {
+      return Center( child:
+        ListTile(
+          leading: Icon(Icons.info_outline),
+          title: Text('Liste vide'),
+          subtitle: Text("Pour saisir l'effectif, veuillez faire une entrée depuis l'écran principal."),
+      ),);
+    }
     return ListView.builder(
       itemCount: _betes == null ? 0 : _filteredBetes.length,
       itemBuilder: (BuildContext context, int index) {
