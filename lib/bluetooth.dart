@@ -51,7 +51,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightGreen,
+      //backgroundColor: Colors.lightGreen,
       key: _scaffoldKey,
       appBar: new AppBar(
           title: new Text('Connexion BlueTooth'),
@@ -80,7 +80,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
                     trailing: this._stateButton(device),
                     onTap: () => this._selectDevice( device ),
                     selected:  (this._isDeviceSelected(device)),
-                    selectedTileColor: Colors.lightGreenAccent,
+                    selectedTileColor: Colors.lightGreen[100],
                   ),
                 ),
               ],)
