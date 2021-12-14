@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_gismo/Environnement.dart';
@@ -20,29 +21,51 @@ class GismoHttp  {
   }
 
   Future<String> doPostParcelle(String url, Object body) async {
-    var response = await http.post(Uri.parse(Environnement.getUrlTarget() + url), headers: _getHeaders() ,body: body);
-    return response.body;
+    try {
+      var response = await http.post(Uri.parse(Environnement.getUrlTarget() + url), headers: _getHeaders() ,body: body).timeout(Duration(seconds: 10));
+      return response.body;
+    } on TimeoutException catch (e) {
+      throw (e);
+    } on Error catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      throw(e);
+    }
   }
 
   Future<String> doPostSimple(String url, Object body) async {
-    var response = await http.post(Uri.parse(Environnement.getUrlTarget() + url),
-        headers: _getHeaders() ,
-      body: jsonEncode(body));
-    return response.body;
+    try {
+      var response = await http.post(Uri.parse(Environnement.getUrlTarget() + url),
+          headers: _getHeaders() ,
+        body: jsonEncode(body)).timeout(Duration(seconds: 10));
+      return response.body;
+    } on TimeoutException catch (e) {
+      throw (e);
+    } on Error catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      throw (e);
+    }
   }
 
 
   Future<String> doPostMessage(String url, Object body) async {
-    var response = await http.post(
-        Uri.parse(Environnement.getUrlTarget() + url),
-        headers: _getHeaders() ,
-        body: jsonEncode(body) );
-    Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
-    if (msg.error) {
-      throw (msg.error);
-    }
-    else {
-      return msg.message;
+    //Message msg = Message();
+    try {
+      var response = await http.post(
+          Uri.parse(Environnement.getUrlTarget() + url),
+          headers: _getHeaders(),
+          body: jsonEncode(body)).timeout(Duration(seconds: 5) ).timeout(Duration(seconds: 10));
+      Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
+      if (msg.error) {
+        throw (msg.error);
+      }
+      else {
+        return msg.message;
+      }
+    } on TimeoutException catch (e) {
+        throw (e);
+    } on Error catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      throw (e);
     }
     //return msg;
   }
@@ -53,7 +76,7 @@ class GismoHttp  {
       var response = await http.post(
           Uri.parse(Environnement.getUrlTarget() + url),
           headers: _getHeaders(),
-          body: jsonEncode(body));
+          body: jsonEncode(body)).timeout(Duration(seconds: 10));
       Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
       if (msg.error) {
         errorMessage = msg.message;
@@ -61,20 +84,37 @@ class GismoHttp  {
       else {
         return msg.result;
       }
-    }catch (e, stackTrace) {
+    } on TimeoutException catch (e) {
+      throw (e);
+    } on Error catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
+      throw(e);
     }
     throw Exception(errorMessage);
   }
 
   Future<Map<String, dynamic> > doGet(String url) async {
-     var response = await http.get(Uri.parse(Environnement.getUrlTarget() + url), headers: _getHeaders() );
+    try {
+     var response = await http.get(Uri.parse(Environnement.getUrlTarget() + url), headers: _getHeaders() ).timeout(Duration(seconds: 10));
      return jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+    } on TimeoutException catch (e) {
+      throw (e);
+    } on Error catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      throw(e);
+    }
   }
 
   Future<List > doGetList(String url) async {
-    var response = await http.get(Uri.parse(Environnement.getUrlTarget() + url), headers: _getHeaders() );
-    return jsonDecode(utf8.decode(response.bodyBytes)) as List;
+    try {
+      var response = await http.get(Uri.parse(Environnement.getUrlTarget() + url), headers: _getHeaders() );
+      return jsonDecode(utf8.decode(response.bodyBytes)) as List;
+    } on TimeoutException catch (e) {
+      throw (e);
+    } on Error catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      throw(e);
+    }
   }
 
 }

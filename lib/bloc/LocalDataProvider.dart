@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-//import 'package:dio/dio.dart';
-import 'package:flutter_gismo/Environnement.dart';
 import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/bloc/GismoHttp.dart';
@@ -315,6 +313,18 @@ class LocalDataProvider extends DataProvider{
       return null;
     }
     return Bete.fromResult(futureMaps[0]);
+  }
+
+  @override
+  Future<bool> checkBete(Bete bete) async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> futureMaps = await db.query('bete' ,where: 'numBoucle = ? and numMarquage = ? and cheptel = ?',
+        whereArgs: [bete.numBoucle, bete.numMarquage, bete.cheptel]);
+    if (futureMaps.length == 0) {
+      debug.log("Bete non trouvéé " , name: "LocalDataProvider::searchBete");
+      return false;
+    }
+    return true;
   }
 
   @override

@@ -336,6 +336,10 @@ class GismoBloc {
     return this._repository!.dataProvider.saveBete(bete);
   }
 
+  Future<bool> checkBete(Bete bete) {
+    return this._repository!.dataProvider.checkBete(bete);
+  }
+
   Future<List<Event>> getEvents(Bete bete) async {
     try {
       List<Event> lstEvents = [];

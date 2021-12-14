@@ -22,7 +22,7 @@ class BetePage extends StatefulWidget {
 
 class _BetePageState extends State<BetePage> {
   final GismoBloc _bloc;
-  DateTime selectedDate = DateTime.now();
+  DateTime _selectedDate = DateTime.now();
   final df = new DateFormat('dd/MM/yyyy');
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -232,27 +232,38 @@ class _BetePageState extends State<BetePage> {
   void _save() async {
     _formKey.currentState!.save();
     if (_numBoucleCtrl.text == null) {
-      this.badSaving("Numéro de boucle absent");
+      this._badSaving("Numéro de boucle absent");
       return;
     }
     if (_numBoucleCtrl.text.isEmpty){
-      this.badSaving("Numéro de boucle absent");
+      this._badSaving("Numéro de boucle absent");
       return;
     }
     if (_numMarquageCtrl.text == null){
-      this.badSaving("Numéro de marquage absent");
+      this._badSaving("Numéro de marquage absent");
       return;
     }
     if (_numMarquageCtrl.text.isEmpty){
-      this.badSaving("Numéro de marquage absent");
+      this._badSaving("Numéro de marquage absent");
       return;
     }
     if (_sex == null){
-      this.badSaving("Sexe absent");
+      this._badSaving("Sexe absent");
       return;
     }
-    if (_bete == null)
-      _bete = new Bete(null, _numBoucleCtrl.text, _numMarquageCtrl.text,_nom, _obs, _dateEntreCtrl.text, _sex!, _motif);
+    bool _existant = false;
+    if (_bete == null) {
+      _bete = new Bete(
+          null,
+          _numBoucleCtrl.text,
+          _numMarquageCtrl.text,
+          _nom,
+          _obs,
+          _dateEntreCtrl.text,
+          _sex!,
+          _motif);
+      _existant = await _bloc.checkBete(_bete!);
+    }
     else {
       _bete!.numBoucle = _numBoucleCtrl.text;
       _bete!.numMarquage = _numMarquageCtrl.text;
@@ -260,20 +271,26 @@ class _BetePageState extends State<BetePage> {
       _bete!.observations = _obs!;
       _bete!.dateEntree =  _dateEntreCtrl.text;
       _bete!.sex = _sex!;
-      _bete!.motifEntree = _motif!;
-      _bloc.saveBete(_bete!);
+      if (_motif != null)
+        _bete!.motifEntree = _motif!;
+      _existant = await _bloc.checkBete(_bete!);
+      if (! _existant)
+        _bloc.saveBete(_bete!);
     }
 
-    Navigator
+    if (! _existant)
+      Navigator
         .of(context)
         .pop(_bete);
+    else
+      _badSaving("Numero de boucle déja présent");
   }
 
-  void goodSaving(String message) {
+  void _goodSaving(String message) {
     Navigator.pop(context, message);
   }
 
-  void badSaving(String message) {
+  void _badSaving(String message) {
     final snackBar = SnackBar(
       content: Text(message),
     );
@@ -287,7 +304,7 @@ class _BetePageState extends State<BetePage> {
     super.initState();
     //this.btWidget = new BluetoothWidget(this.widget._bloc);
     if (_bete == null )
-      _dateEntreCtrl.text = df.format(selectedDate);
+      _dateEntreCtrl.text = df.format(_selectedDate);
     else {
       _dateEntreCtrl.text = _bete!.dateEntree;
       _numBoucleCtrl.text = _bete!.numBoucle;

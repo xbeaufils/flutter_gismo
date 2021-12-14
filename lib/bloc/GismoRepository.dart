@@ -230,4 +230,10 @@ class DummyDataProvider extends DataProvider {
     // TODO: implement deleteAffectation
     throw UnimplementedError();
   }
+
+  @override
+  Future<bool> checkBete(Bete bete) {
+    // TODO: implement checkBete
+    throw RepositoryTypeException("Type de repository inconnue");
+  }
 }

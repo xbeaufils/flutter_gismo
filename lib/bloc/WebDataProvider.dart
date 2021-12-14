@@ -146,6 +146,19 @@ class WebDataProvider extends DataProvider {
 
 
   @override
+  Future<bool> checkBete(Bete bete) async {
+    try {
+      final response = await _gismoHttp.doPostResult(
+          '/bete/check' ,
+          bete.toJson());
+      return response["value"];
+    } catch ( e) {
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+
+  }
+
+  @override
   Future<Bete> getMere(Bete bete) async {
     try {
       final response = await _gismoHttp.doGet(

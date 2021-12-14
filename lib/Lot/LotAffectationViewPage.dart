@@ -77,17 +77,6 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
     );
   }
 
-  Widget _getTitle() {
-    switch (_currentView) {
-      case View.fiche :
-        return  new Text( currentLot.codeLotLutte! );
-      case View.ewe :
-        return new Text(_nbBrebis.toString());
-      case View.ram :
-        return new Text(_nbBeliers.toString());
-    }
-  }
-
   void _changePage(int index) {
     if (this.widget._currentLot.idb == null ) {
       final snackBar = SnackBar(
