@@ -144,7 +144,7 @@ class LocalDataProvider extends DataProvider{
     maps = await database.rawQuery("select count(*) as nb from NEC");
     report.nec = maps[0]['nb'];
     try {
-      final response = await _gismoHttp.doPostSimple(
+      final response = await _gismoHttp.doPostWeb(
           '/send', report.toJson());
     }
     catch(e,stackTrace) {

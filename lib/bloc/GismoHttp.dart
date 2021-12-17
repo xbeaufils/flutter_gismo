@@ -32,9 +32,9 @@ class GismoHttp  {
     }
   }
 
-  Future<String> doPostSimple(String url, Object body) async {
+  Future<String> doPostWeb(String url, Object body) async {
     try {
-      var response = await http.post(Uri.parse(Environnement.getUrlTarget() + url),
+      var response = await http.post(Uri.parse(Environnement.getUrlWebTarget() + url),
           headers: _getHeaders() ,
         body: jsonEncode(body)).timeout(Duration(seconds: 10));
       return response.body;
