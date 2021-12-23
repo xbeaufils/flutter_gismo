@@ -318,8 +318,8 @@ class LocalDataProvider extends DataProvider{
   @override
   Future<bool> checkBete(Bete bete) async {
     Database db = await this.database;
-    List<Map<String, dynamic>> futureMaps = await db.query('bete' ,where: 'numBoucle = ? and numMarquage = ? and cheptel = ?',
-        whereArgs: [bete.numBoucle, bete.numMarquage, bete.cheptel]);
+    List<Map<String, dynamic>> futureMaps = await db.query('bete' ,where: 'numBoucle = ? and numMarquage = ?',
+        whereArgs: [bete.numBoucle, bete.numMarquage]);
     if (futureMaps.length == 0) {
       debug.log("Bete non trouvéé " , name: "LocalDataProvider::searchBete");
       return false;
