@@ -5,7 +5,10 @@ import 'package:facebook_audience_network/ad/ad_banner.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:sentry/sentry.dart';
 //import 'package:flutter_gismo/main.dart';
+
+import 'dart:developer' as debug;
 
 class WelcomePage extends StatefulWidget {
   GismoBloc _bloc;
@@ -175,7 +178,23 @@ class _WelcomePageState extends State<WelcomePage> {
         Card(child:
           FacebookBannerAd(
             placementId: '212596486937356_212596826937322',
-            bannerSize: BannerSize.STANDARD,),
+            bannerSize: BannerSize.STANDARD,
+              listener: (result, value) {
+                switch (result) {
+                  case BannerAdResult.ERROR:
+                    debug.log("Error: $value", name: "Welcome");
+                    break;
+                  case BannerAdResult.LOADED:
+                    debug.log("Loaded: $value", name: "Welcome");
+                    break;
+                  case BannerAdResult.CLICKED:
+                    debug.log("Clicked: $value", name: "Welcome");
+                    break;
+                  case BannerAdResult.LOGGING_IMPRESSION:
+                    debug.log("Logging Impression: $value", name: "Welcome");
+                    break;
+                }}
+              ),
           );
     }
     return Container();

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:admob_flutter/admob_flutter.dart';
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 //import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Exception/EventException.dart';
@@ -199,6 +200,7 @@ class GismoBloc {
         debug.log("Mode autonome", name: "GismoBloc::init");
         // Ajout des pubs
         Admob.initialize();
+        FacebookAudienceNetwork.init();
         if (Platform.isIOS) {
           await Admob.requestTrackingAuthorization();
         }
