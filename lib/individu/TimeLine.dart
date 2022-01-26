@@ -51,7 +51,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
                   trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: _openIdentityDialog, ),)
                 ,),
               _getMere(),
-            _getEvents(),
+              Expanded(child: _getEvents()),
           ],),
     );
   }
