@@ -1,6 +1,8 @@
 
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:flutter_gismo/Exception/EventException.dart';
 import 'package:flutter_gismo/bloc/GismoHttp.dart';
 //import 'package:dio/dio.dart';
 import 'package:flutter_gismo/Environnement.dart';
@@ -14,6 +16,7 @@ import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
+import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/model/User.dart';
 
@@ -408,6 +411,33 @@ class WebDataProvider extends DataProvider {
   }
 
   @override
+  Future<String> saveSaillie(SaillieModel saillie) async{
+    try {
+      final response = await _gismoHttp.doPostMessage(
+          '/saillie/new',  saillie.toJson());
+      return response;
+    } catch ( e) {
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+  }
+  @override
+  Future<List<SaillieModel>> getSaillies(Bete bete) async {
+    String ? sex;
+    if (bete.sex == Sex.male)
+      sex = "male";
+    else
+      sex = "femelle";
+    final response = await _gismoHttp.doGetList(
+        '/saillie/'+ sex + '/' + bete.idBd.toString());
+    List<SaillieModel> tempList = List.empty(growable: true);
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new SaillieModel.fromResult(response[i]));
+    }
+    return tempList;
+    //throw RepositoryTypeException("Not implemented");
+  }
+
+  @override
   Future<String> saveEcho(EchographieModel echo) async {
     try {
       final response = await _gismoHttp.doPostMessage(
@@ -573,10 +603,10 @@ class WebDataProvider extends DataProvider {
   Future<String> getCadastre(LocationData myPosition) async {
     try {
       final response = await _gismoHttp.doPostParcelle(
-          '/map/cadastre',  {
+          '/map/cadastre', jsonEncode({
             'lattitude': myPosition.latitude,
             'longitude': myPosition.longitude
-      });
+      }));
         String cadastre =  response;
         return cadastre;
     }  catch ( e) {
@@ -587,10 +617,10 @@ class WebDataProvider extends DataProvider {
   Future<String> getParcelle(LatLng touchPosition) async {
     try {
       final response = await _gismoHttp.doPostParcelle(
-          '/map/parcelle', {
+          '/map/parcelle', jsonEncode({
         'lattitude': touchPosition.latitude,
         'longitude': touchPosition.longitude
-      });
+      }));
       String cadastre =  response;
       return cadastre;
     } catch ( e) {

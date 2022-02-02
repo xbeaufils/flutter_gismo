@@ -11,6 +11,7 @@ import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
+import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 
 enum RepositoryType {web, local}
@@ -110,6 +111,16 @@ class DummyDataProvider extends DataProvider {
 
   @override
   Future<String> saveEcho(EchographieModel echo) {
+    throw RepositoryTypeException("Type de repository inconnue");
+  }
+
+  @override
+  Future<String> saveSaillie(SaillieModel echo) {
+    throw RepositoryTypeException("Type de repository inconnue");
+  }
+
+  @override
+  Future<List<SaillieModel>> getSaillies(Bete bete) {
     throw RepositoryTypeException("Type de repository inconnue");
   }
 

@@ -106,9 +106,8 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
               leading: _getImageType(event.type),
               title: Text(event.eventName),
               subtitle: Text(event.date),
-              trailing: IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _searchEvent(event), )
+              trailing:IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _searchEvent(event), ),
             );
-
           },
         );
       },
@@ -176,24 +175,20 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
     switch (type) {
       case EventType.traitement :
         return new Image.asset("assets/syringe.png");
-        break;
       case EventType.agnelage :
         return new Image.asset("assets/lamb.png");
-        break;
       case EventType.NEC:
         return new Image.asset("assets/etat_corporel.png");
-        break;
       case EventType.entreeLot:
         return new Image.asset("assets/Lot_entree.png");
-        break;
       case EventType.sortieLot:
         return new Image.asset("assets/Lot_sortie.png");
-        break;
       case EventType.pesee:
         return new Image.asset("assets/peseur.png");
-        break;
       case EventType.echo:
         return new Image.asset("assets/ultrasound.png");
+      case EventType.saillie:
+        return new Image.asset("assets/saillie.png");
       case EventType.entree:
       case EventType.sortie:
      }

@@ -6,6 +6,7 @@ import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
+import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 
 abstract class DataProvider {
@@ -50,6 +51,9 @@ abstract class DataProvider {
   Future<String> saveEcho(EchographieModel echo);
   Future<EchographieModel?> searchEcho(int idBd);
   Future<List<EchographieModel>> getEcho(Bete bete);
+  //  Saillie
+  Future<String> saveSaillie(SaillieModel saillie);
+  Future<List<SaillieModel>> getSaillies(Bete bete);
   // Note etat corporel
   Future<String> saveNec(NoteModel node);
   Future<List<NoteModel>> getNec(Bete bete);

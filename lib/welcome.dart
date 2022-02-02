@@ -5,8 +5,6 @@ import 'package:facebook_audience_network/ad/ad_banner.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:sentry/sentry.dart';
-//import 'package:flutter_gismo/main.dart';
 
 import 'dart:developer' as debug;
 
@@ -52,10 +50,6 @@ class _WelcomePageState extends State<WelcomePage> {
           new Padding(
             padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
           ),
-          /*
-          Icon(Icons.notifications),
-          Text(message),
-           */
         ],
       ),
     );
@@ -109,9 +103,9 @@ class _WelcomePageState extends State<WelcomePage> {
                     alignment: MainAxisAlignment.spaceEvenly,
                     buttonMinWidth: 90.0,
                     children: <Widget>[
-                      _buildButton("Parcelles", "assets/parcelles.png", _parcellePressed),
                       _buildButton("Lot", "assets/Lot.png",_lotPressed),
                       _buildButton("Individu", "assets/brebis.png", _individuPressed),
+                      _buildButton("Agneaux", 'assets/jumping_lambs.png', _lambPressed),
                     ]))),
               Card(
                 child:  SingleChildScrollView (
@@ -121,9 +115,9 @@ class _WelcomePageState extends State<WelcomePage> {
                     alignment: MainAxisAlignment.spaceEvenly,
                     buttonMinWidth: 90.0,
                     children: <Widget>[
+                      _buildButton("Saillie", "assets/saillie.png", _sailliePressed),
                       _buildButton("Echographie", 'assets/ultrasound.png', _echoPressed),
                       _buildButton("Agnelage", 'assets/lamb.png', _lambingPressed),
-                      _buildButton("Agneaux", 'assets/jumping_lambs.png', _lambPressed),
                     ]))),
               Card(
                 child: SingleChildScrollView (
@@ -147,6 +141,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     children: <Widget>[
                       _buildButton("Entree", "assets/home.png", _entreePressed), // Entrée
                       _buildButton("Sortie", "assets/Truck.png", _sortiePressed),
+                      _buildButton("Parcelles", "assets/parcelles.png", _parcellePressed),
                     //  _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
                     ]))),
               this._getAdmobAdvice(),
@@ -210,23 +205,7 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Widget _buildButton(String title, String imageName, Function() press) {
-    return /*Container(
-      decoration: new BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: Offset(0, 3), // changes position of shadow
-          ),
-        ],
-        color: Colors.white,
-        borderRadius: new BorderRadius.circular(20.0),
-      ),
-
-      margin: const EdgeInsets.all(4.0),
-      padding: const EdgeInsets.all(4.0),
-      child:*/ new TextButton(
+    return new TextButton(
         style: textButtonStyle,
         onPressed: press,
         child: new Column(
@@ -275,17 +254,6 @@ class _WelcomePageState extends State<WelcomePage> {
   void _individuPressed() {
     Navigator.pushNamed(context, '/search');
   }
-/*
-  void _logoutPressed() {
-    Navigator.pushNamed(context, '/config');
-
-    String message = _bloc.logout();
-    setState(() {
-      this.widget._message = message;
-    });
-
-  }
- */
 
   void _sortiePressed() {
     Future<dynamic>  message = Navigator.pushNamed(context, '/sortie')  ;
@@ -311,7 +279,6 @@ class _WelcomePageState extends State<WelcomePage> {
       content: Text(message),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    //_scaffoldKey.currentState!.showSnackBar(snackBar);
   }
 
   void _traitementPressed() {
@@ -340,6 +307,10 @@ class _WelcomePageState extends State<WelcomePage> {
 
   void _lotPressed() {
     Navigator.pushNamed(context, '/lot');
+  }
+
+  void _sailliePressed() {
+    Navigator.pushNamed(context, '/saillie');
   }
 
   void _choixBt() {

@@ -8,6 +8,7 @@ import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/individu/NECPage.dart';
 import 'package:flutter_gismo/individu/PeseePage.dart';
+import 'package:flutter_gismo/individu/SailliePage.dart';
 import 'package:flutter_gismo/individu/TimeLine.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
@@ -238,7 +239,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       itemBuilder: (BuildContext context, int index) {
         return new ListTile(
           title: Text( _filteredBetes[index].numBoucle),
-          subtitle: Text(_filteredBetes[index].numMarquage),
+          subtitle: Text(_filteredBetes[index].numMarquage ),
           onTap: () => selectBete(_filteredBetes[index]),
         );
       },
@@ -255,7 +256,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         page = SanitairePage(this._bloc, bete, null);
         break;
       case GismoPage.individu:
-        //page = FicheBetePage(bete);
         page = TimeLinePage(_bloc, bete);
         break;
       case GismoPage.etat_corporel:
@@ -267,8 +267,12 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       case GismoPage.echo:
         page = EchoPage(this._bloc, bete);
         break;
+      case GismoPage.saillie:
+        page = SailliePage(_bloc, bete);
+        break;
       case GismoPage.sortie:
       case GismoPage.lot:
+      case GismoPage.sailliePere:
         page = null;
         break;
     }

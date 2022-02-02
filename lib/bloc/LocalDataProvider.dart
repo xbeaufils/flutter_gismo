@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter_gismo/Exception/EventException.dart';
 import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/bloc/GismoHttp.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/ReportModel.dart';
+import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:path/path.dart';
 import 'package:sentry/sentry.dart';
@@ -65,56 +67,29 @@ class LocalDataProvider extends DataProvider{
             _createTableAffectation(db);
             _createTablePesee(db);
             _createTableEcho(db);
+            _createTableSaillie(db);
           },
          onUpgrade:(db, oldVersion, newVersion) {
           if (oldVersion < 2) {
             this._migrate1to2(db);
-            //this._migrate2to3(db);
-            //this._migrate3to4(db);
-            //this._migrate4to5(db);
-            //this._migrate5to6(db);
-            //this._migrate6to7(db);
-            //this._migrate7to8(db);
-            //this._migrate8to9(db);
           }
           if (oldVersion < 3) {
             this._migrate2to3(db);
-            //this._migrate3to4(db);
-            //this._migrate4to5(db);
-            //this._migrate5to6(db);
-            //this._migrate6to7(db);
-            //this._migrate7to8(db);
-            //this._migrate8to9(db);
           }
           if (oldVersion < 4) {
             this._migrate3to4(db);
-            //this._migrate4to5(db);
-            //this._migrate5to6(db);
-            //this._migrate6to7(db);
-            //this._migrate7to8(db);
-            //this._migrate8to9(db);
           }
           if (oldVersion < 5) {
             this._migrate4to5(db);
-            //this._migrate5to6(db);
-            //this._migrate6to7(db);
-            //this._migrate7to8(db);
-            //this._migrate8to9(db);
           }
           if (oldVersion < 6) {
             this._migrate5to6(db);
-            //this._migrate6to7(db);
-            //this._migrate7to8(db);
-            //this._migrate8to9(db);
           }
           if (oldVersion < 7) {
             this._migrate6to7(db);
-            //this._migrate7to8(db);
-            //this._migrate8to9(db);
           }
           if (oldVersion <8) {
             this._migrate7to8(db);
-            //this._migrate8to9(db);
           }
           if (oldVersion < 9) {
             this._migrate8to9(db);
@@ -122,10 +97,12 @@ class LocalDataProvider extends DataProvider{
           if (oldVersion < 10) {
             this._migrate9to10(db);
           }
+          if (oldVersion < 11 )
+            this._migrate10to11(db);
          },
         // Set the version. This executes the onCreate function and provides a
         // path to perform database upgrades and downgrades.
-        version:10,
+        version:11,
     );
     Report report = new Report();
     report.cheptel = super.cheptel!;
@@ -192,6 +169,9 @@ class LocalDataProvider extends DataProvider{
     db.execute("TABLE `agnelage` ADD COLUMN `observations` TEXT ");
     db.execute("ALTER TABLE 'agneaux' ADD COLUMN `sante` TEXT");
     db.execute("UPDATE 'agneaux' set sante='VIVANT' where sante IS NULL");
+  }
+  void _migrate10to11(Database db) {
+    _createTableSaillie(db);
   }
 
   void _createTableAgnelage(Database db) {
@@ -290,6 +270,15 @@ class LocalDataProvider extends DataProvider{
         "bete_id INTEGER)");
   }
 
+  void _createTableSaillie(Database db) {
+    db.execute("CREATE TABLE `saillie` ("
+        "`idBd` INTEGER NOT NULL,"
+        "`dateSaillie` TEXT NULL DEFAULT NULL,"
+        "`idMere` INTEGER NULL DEFAULT NULL,"
+        "`idPere` INTEGER NULL DEFAULT NULL,"
+        " PRIMARY KEY('idBd'))");
+
+  }
   @override
   Future<List<Bete>> getBetes(String cheptel) async {
     Database db = await this.database;
@@ -694,6 +683,56 @@ class LocalDataProvider extends DataProvider{
     return "Suppression effectuée";
   }
 
+  @override
+  Future<String> saveSaillie(SaillieModel saillie) async {
+    try {
+      Database db = await this.database;
+      await db.insert('saillie', saillie.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
+      return "Enregistrement de la saillie";
+    }
+    catch(e,stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
+    }
+    return "Erreur d'enregistrement";
+  }
+
+  @override
+  Future<List<SaillieModel>> getSaillies(Bete bete) async {
+    List<SaillieModel> tempList = [];
+    String sqlCritere;
+    if (bete.sex == Sex.male)
+      sqlCritere = 'and idPere=?';
+    else
+      sqlCritere = 'and idMere=?';
+    try {
+      Database db = await this.database;
+      List<Map<String, dynamic>> saillies  = await db.rawQuery(
+          'select saillie.*,'
+          'mere.numBoucle as numBoucleMere, mere.numMarquage as numMarquageMere,'
+          'pere.numBoucle as numBouclePere, pere.numMarquage as numMarquagePere '
+          'from saillie '
+          'cross join bete mere '
+          'cross join bete pere '
+          'where saillie.idMere = mere.id '
+          'and saillie.idPere = pere.id '
+          + sqlCritere,
+          [bete.idBd!]);
+      for (int j = 0; j < saillies.length; j++) {
+        SaillieModel lamb = SaillieModel.fromResult(saillies[j]);
+        tempList.add(lamb);
+      }
+    } catch (e,stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
+    }
+    return tempList;
+  }
+  /*
+  Future List<Map<String, dynamic>> _getSaillieForFemale () {
+
+  }
+*/
   @override
   Future<String> saveEcho(EchographieModel echo) async {
     try {

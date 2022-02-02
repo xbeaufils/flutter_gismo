@@ -14,7 +14,7 @@ import 'package:flutter_gismo/traitement/selectionTraitement.dart';
 import 'package:flutter_gismo/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-enum GismoPage {lamb, sanitaire, etat_corporel, individu, sortie, lot, pesee, echo  }
+enum GismoPage {lamb, sanitaire, etat_corporel, individu, sortie, lot, pesee, echo, saillie, sailliePere  }
 
 class GismoApp extends StatelessWidget {
   final String initialRoute;
@@ -68,6 +68,7 @@ class GismoApp extends StatelessWidget {
         '/parcelle' : (context) =>ParcellePage(this._bloc),
         '/config' : (context) =>ConfigPage(this._bloc),
         '/bluetooth' : (context) =>BluetoothPage(this._bloc),
+        '/saillie' : (context) => SearchPage(this._bloc,GismoPage.saillie),
       },
     );
   }

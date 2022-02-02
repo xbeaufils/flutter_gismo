@@ -20,6 +20,7 @@ import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
+import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/model/User.dart';
@@ -355,12 +356,22 @@ class GismoBloc {
       List<NoteModel> lstNotes = await this._repository!.dataProvider.getNec(bete);
       List<Pesee> lstPoids  = await this._repository!.dataProvider.getPesee(bete);
       List<EchographieModel> lstEcho = await this._repository!.dataProvider.getEcho(bete);
+      List<SaillieModel> lstSaillie = await this._repository!.dataProvider.getSaillies(bete);
       lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd!, EventType.agnelage, lambing.dateAgnelage!, lambing.lambs.length.toString()))});
       lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement, traitement.debut, traitement.medicament))});
       lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd!, EventType.NEC, note.date, note.note.toString()))});
       lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id!, EventType.pesee, poids.datePesee, poids.poids.toString()))});
       lstAffect.forEach( (affect) => {lstEvents.addAll ( _makeEventforAffectation(affect) )});
       lstEcho.forEach((echo) {lstEvents.add(new Event.name(echo.idBd!, EventType.echo, echo.dateEcho, echo.nombre.toString())); });
+      lstSaillie.forEach((saillie) {
+        String numBoucleConjoint;
+        if (bete.sex == Sex.male)
+          numBoucleConjoint = saillie.numBoucleMere!;
+        else
+          numBoucleConjoint = saillie.numBouclePere!;
+        lstEvents.add(new Event.name(saillie.idBd!, EventType.saillie, saillie.dateSaillie!, numBoucleConjoint));
+
+      });
       lstEvents.sort((a, b) =>  _compareDate(a, b));
       return lstEvents;
     }
@@ -567,6 +578,16 @@ class GismoBloc {
     catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       //this.reportError(e, stackTrace);
+      return "Une erreur et survenue";
+    }
+  }
+
+  Future<String> saveSaillie(SaillieModel saillie) async {
+    try {
+      return this._repository!.dataProvider.saveSaillie(saillie);
+    }
+    catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
       return "Une erreur et survenue";
     }
   }
