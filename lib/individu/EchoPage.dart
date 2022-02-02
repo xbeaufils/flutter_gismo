@@ -19,12 +19,10 @@ class EchoPage extends StatefulWidget {
 class EchoPageState extends State<EchoPage> {
   final GismoBloc _bloc;
   EchoPageState(this._bloc);
-  //double _pesee = 0.0;
   TextEditingController _dateEchoCtl = TextEditingController();
   TextEditingController _dateSaillieCtl = TextEditingController();
   TextEditingController _dateAgnelageCtl = TextEditingController();
 
-  //TextEditingController _nombreCtl = TextEditingController();
   int _nombre = 0;
 
   final _df = new DateFormat('dd/MM/yyyy');
@@ -103,7 +101,7 @@ class EchoPageState extends State<EchoPage> {
                   ),
                 ),
               ]),
-                new Row(
+            new Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     new Radio(
