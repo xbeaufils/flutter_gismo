@@ -635,6 +635,14 @@ class GismoBloc {
     return this._repository!.dataProvider.getBeliers();
   }
 
+  Future<List<Bete>> getSaillieBeliers(LambingModel lambing) {
+    return this._repository!.dataProvider.getSaillieBeliers(lambing);
+  }
+
+  Future<List<Bete>> getLotBeliers(LambingModel lambing) {
+    return this._repository!.dataProvider.getLotBeliers(lambing);
+  }
+
   Future<String> getCadastre(LocationData myPosition) async {
     if (this._repository!.dataProvider is WebDataProvider) {
        String cadastre = await (this._repository!.dataProvider as WebDataProvider).getCadastre(myPosition);

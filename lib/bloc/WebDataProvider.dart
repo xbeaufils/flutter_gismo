@@ -82,6 +82,41 @@ class WebDataProvider extends DataProvider {
     return user;
   }
 
+  @override
+  Future<List<Bete>> getSaillieBeliers(LambingModel lambing) async {
+    try {
+      final response = await _gismoHttp.doPostResult('/lamb/male/saillie',lambing.toJson());
+      List<Bete> tempList = [];
+      //tempList = response['beliers'];
+      for (int i = 0; i < response['beliers'].length; i++) {
+        tempList.add(new Bete.fromResult(response['beliers'][i]));
+      }
+      return tempList;
+    }
+    catch ( e) {
+      debug.log("Error " + e.toString());
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+
+  }
+
+  @override
+  Future<List<Bete>> getLotBeliers(LambingModel lambing) async {
+    try {
+      final response = await _gismoHttp.doPostResult('/lamb/male/lot',lambing.toJson());
+      List<Bete> tempList = [];
+      for (int i = 0; i < response.length; i++) {
+        tempList.add(new Bete.fromResult(response[i]));
+      }
+      return tempList;
+    }
+    catch ( e) {
+      debug.log("Error " + e.toString());
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+
+  }
+
   Future<String> saveLambing(LambingModel lambing ) async {
     try {
       final response = await _gismoHttp.doPostMessage('/lamb/add',lambing.toJson());
@@ -664,4 +699,6 @@ class WebDataProvider extends DataProvider {
     }
 
   }
+
+
 }

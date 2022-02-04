@@ -9,6 +9,10 @@ class LambingModel {
   late int _idMere;
   String ? _numBoucleMere;
   String ? _numMarquageMere;
+  int ? idPere;
+  String ? numBouclePere;
+  String ? numMarquagePere;
+
   int ? _qualite;
   int ? _adoption;
   String ? _observations;
@@ -110,6 +114,7 @@ class LambingModel {
     data["observations"] = this._observations;
     return data;
   }
+
 
 /*
   toJson() {

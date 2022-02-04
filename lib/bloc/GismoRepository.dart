@@ -247,4 +247,16 @@ class DummyDataProvider extends DataProvider {
     // TODO: implement checkBete
     throw RepositoryTypeException("Type de repository inconnue");
   }
+
+  @override
+  Future<List<Bete>> getLotBeliers(LambingModel lambing) {
+    // TODO: implement getLotBeliers
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Bete>> getSaillieBeliers(LambingModel lambing) {
+    // TODO: implement getSaillieBeliers
+    throw UnimplementedError();
+  }
 }

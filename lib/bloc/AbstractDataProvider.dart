@@ -28,6 +28,9 @@ abstract class DataProvider {
   Future<List<LambingModel>> getLambs(int idBete) ;
   Future<String> boucler(LambModel lamb, Bete bete);
   Future<void> mort(LambModel lamb, String motif, String date);
+  Future<List<Bete>> getSaillieBeliers(LambingModel lambing);
+  Future<List<Bete>> getLotBeliers(LambingModel lambing);
+
   // Bete
   Future<List<Bete>> getBetes(String cheptel) ;
   Future<String> saveBete(Bete bete);

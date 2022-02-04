@@ -408,6 +408,16 @@ class LocalDataProvider extends DataProvider{
   }
 
   @override
+  Future<List<Bete>> getSaillieBeliers(LambingModel lambing) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Bete>> getLotBeliers(LambingModel lambing) {
+    throw UnimplementedError();
+  }
+
+  @override
   Future<String> saveLambing(LambingModel lambing ) async {
     Database db = await this.database;
     db.transaction((txn) async {
@@ -424,8 +434,8 @@ class LocalDataProvider extends DataProvider{
         'agnelage',
         lambing.toBdJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
-
   }
+
 
   Future<int> _saveLamb(LambModel lamb,Transaction tx, int idAgnelage) {
     lamb.idAgnelage = idAgnelage;
@@ -433,8 +443,8 @@ class LocalDataProvider extends DataProvider{
         'agneaux',
         lamb.toBdJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
-
   }
+
   Future<String> saveLamb(LambModel lamb ) async {
     Database db = await this.database;
     int res =   await db.update("agneaux", lamb.toJson(),
@@ -981,5 +991,7 @@ class LocalDataProvider extends DataProvider{
     }
     //mapBase['betes'].
   }
+
+
 }
 

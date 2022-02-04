@@ -8,6 +8,7 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/Adoption.dart';
 import 'package:flutter_gismo/lamb/AgnelageQualityPage.dart';
 import 'package:flutter_gismo/lamb/LambPage.dart';
+import 'package:flutter_gismo/lamb/SearchPerePage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/AdoptionQualite.dart';
 import 'package:flutter_gismo/model/AgnelageQualite.dart';
@@ -49,6 +50,12 @@ class _LambingPageState extends State<LambingPage> {
 
   @override
   Widget build(BuildContext context) {
+    subtitle: (_lambing.numMarquagePere==null)? Text(""):Text(_lambing.numMarquagePere!),
+    String identifPere = "";
+    if (_lambing.numBouclePere==null ||_lambing.numMarquagePere==null)  {
+
+    }
+
     return new Scaffold(
       appBar: new AppBar(
         title: (this.widget._mere != null) ? 
@@ -134,6 +141,35 @@ class _LambingPageState extends State<LambingPage> {
                     }
                   ),
                 ),
+                Card(child:
+                  ListTile(
+                      title: (_lambing.numBouclePere==null)? Text(""): Text(_lambing.numBouclePere!) ,
+                      subtitle: (_lambing.numMarquagePere==null)? Text(""):Text(_lambing.numMarquagePere!),
+                      trailing: (_lambing.idPere == null ) ?
+                      IconButton(icon: Icon(Icons.search), onPressed: () => _addPere(), ):
+                      IconButton(icon: Icon(Icons.close), onPressed: () => _removePere(), ),
+                  )),
+               /* Card(child:
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(
+                            child:TextField(decoration:
+                              InputDecoration(
+                                labelText: 'Mâle',
+                                hintText: 'Père inconnu'),
+                            readOnly: true,)),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Image.asset("assets/Lot.png"),),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Image.asset("assets/saillie.png"),),
+                          IconButton(
+                          onPressed: () {},
+                          icon: Image.asset("assets/ram_actif.png"),),
+                      ]),
+                ),*/
                 SizedBox(
                   height: 200,
                   child: this._lambList() //LambsPage(this._lambing.lambs, _dateAgnelageCtl.text)
@@ -179,6 +215,21 @@ class _LambingPageState extends State<LambingPage> {
       _lambing.lambs.add(newLamb);
       //_lambs.add(newLamb);
     });
+  }
+  void _addPere() {
+    this._lambing.setDateAgnelage( _dateAgnelageCtl.text );
+    var navigationResult = Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SearchPerePage(this._bloc, this._lambing),
+      ),
+    );
+    navigationResult.then( (message) {if (message != null) debug.log(message);} );
+
+  }
+
+  _removePere() {
+
   }
 
   Future _openAddEntryDialog() async {
