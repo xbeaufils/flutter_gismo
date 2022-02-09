@@ -51,6 +51,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
                   trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: _openIdentityDialog, ),)
                 ,),
               _getMere(),
+              _getPere(),
               Expanded(child: _getEvents()),
           ],),
     );
@@ -77,6 +78,24 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
         future: this._bloc.getMere(_bete),
     );
   }
+
+  Widget _getPere() {
+    return FutureBuilder(
+      builder: (context, AsyncSnapshot pere){
+        if (pere.data == null)
+          return Container();
+        return Card(
+          child: ListTile(
+              leading: Image.asset("assets/belier.png"),
+              title: Text(pere.data.numBoucle + " " + pere.data.numMarquage),
+              subtitle: Text(pere.data.dateEntree),
+              trailing: IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _viewMere(pere.data), )),
+        );
+      },
+      future: this._bloc.getPere(_bete),
+    );
+  }
+
 
   Future _openIdentityDialog() async {
     Bete ? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(

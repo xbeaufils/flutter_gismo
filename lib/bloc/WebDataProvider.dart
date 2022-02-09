@@ -94,7 +94,7 @@ class WebDataProvider extends DataProvider {
       return tempList;
     }
     catch ( e) {
-      debug.log("Error " + e.toString());
+      debug.log("Error " + e.toString(), name: "WebDataProvider::getSaillieBeliers");
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
 
@@ -105,13 +105,13 @@ class WebDataProvider extends DataProvider {
     try {
       final response = await _gismoHttp.doPostResult('/lamb/male/lot',lambing.toJson());
       List<Bete> tempList = [];
-      for (int i = 0; i < response.length; i++) {
-        tempList.add(new Bete.fromResult(response[i]));
+      for (int i = 0; i < response['beliers'].length; i++) {
+        tempList.add(new Bete.fromResult(response['beliers'][i]));
       }
       return tempList;
     }
     catch ( e) {
-      debug.log("Error " + e.toString());
+      debug.log("Error " + e.toString(), name: "WebDataProvider::getLotBeliers");
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
 
@@ -208,6 +208,17 @@ class WebDataProvider extends DataProvider {
     }
   }
 
+  @override
+  Future<Bete> getPere(Bete bete) async {
+    try {
+      final response = await _gismoHttp.doGet(
+          '/bete/pere/' + bete.idBd.toString());
+      Bete pere = new Bete.fromResult(response);
+      return pere;
+    } catch ( e) {
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+  }
   Future<User> login(User user) async {
     try {
       final response = await _gismoHttp.doPostResult(

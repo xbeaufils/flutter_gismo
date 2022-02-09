@@ -240,13 +240,13 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         return new ListTile(
           title: Text( _filteredBetes[index].numBoucle),
           subtitle: Text(_filteredBetes[index].numMarquage ),
-          onTap: () => selectBete(_filteredBetes[index]),
+          onTap: () => _selectBete(_filteredBetes[index]),
         );
       },
     );
   }
 
-  void selectBete(Bete bete) {
+  void _selectBete(Bete bete) {
     var page;
     switch (this.widget.nextPage) {
       case GismoPage.lamb:

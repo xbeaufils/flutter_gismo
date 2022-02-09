@@ -50,11 +50,7 @@ class _LambingPageState extends State<LambingPage> {
 
   @override
   Widget build(BuildContext context) {
-    subtitle: (_lambing.numMarquagePere==null)? Text(""):Text(_lambing.numMarquagePere!),
-    String identifPere = "";
-    if (_lambing.numBouclePere==null ||_lambing.numMarquagePere==null)  {
 
-    }
 
     return new Scaffold(
       appBar: new AppBar(
@@ -141,14 +137,7 @@ class _LambingPageState extends State<LambingPage> {
                     }
                   ),
                 ),
-                Card(child:
-                  ListTile(
-                      title: (_lambing.numBouclePere==null)? Text(""): Text(_lambing.numBouclePere!) ,
-                      subtitle: (_lambing.numMarquagePere==null)? Text(""):Text(_lambing.numMarquagePere!),
-                      trailing: (_lambing.idPere == null ) ?
-                      IconButton(icon: Icon(Icons.search), onPressed: () => _addPere(), ):
-                      IconButton(icon: Icon(Icons.close), onPressed: () => _removePere(), ),
-                  )),
+                Card(child: this._buildPereWidget()),
                /* Card(child:
                       Row(
                         mainAxisSize: MainAxisSize.min,
@@ -172,16 +161,17 @@ class _LambingPageState extends State<LambingPage> {
                 ),*/
                 SizedBox(
                   height: 200,
-                  child: this._lambList() //LambsPage(this._lambing.lambs, _dateAgnelageCtl.text)
+                  child: this._lambList(), //LambsPage(this._lambing.lambs, _dateAgnelageCtl.text)
                 ),
                  new Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    new RaisedButton(key:null,
+                    new ElevatedButton(key:null,
                         onPressed:saveLambing,
-                        color: Colors.lightGreen[700],
+                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.lightGreen[700])),
+                        //color: Colors.lightGreen[700],
                         child:
                           new Text(
                           "Valider l'agnelage",
@@ -216,19 +206,46 @@ class _LambingPageState extends State<LambingPage> {
       //_lambs.add(newLamb);
     });
   }
-  void _addPere() {
+
+  Widget _buildPereWidget() {
+    if (this._bloc.isLogged() == null)
+      return Container();
+    if ( ! this._bloc.isLogged()!)
+      return Container();
+    String identifPere = "";
+    if (_lambing.numBouclePere!=null ||_lambing.numMarquagePere!=null)  {
+      identifPere = _lambing.numBouclePere! + " " + _lambing.numMarquagePere!;
+    }
+    return ListTile(
+      title: Text("Père") ,
+      subtitle: Text(identifPere),
+      trailing: (_lambing.idPere == null ) ?
+      IconButton(icon: Icon(Icons.search), onPressed: () => _addPere(), ):
+      IconButton(icon: Icon(Icons.close), onPressed: () => _removePere(), ),);
+  }
+
+  void _addPere() async {
     this._lambing.setDateAgnelage( _dateAgnelageCtl.text );
-    var navigationResult = Navigator.push(
+    Bete ? pere = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => SearchPerePage(this._bloc, this._lambing),
       ),
-    );
-    navigationResult.then( (message) {if (message != null) debug.log(message);} );
-
+    ) as Bete;
+    if (pere != null)
+     setState(() {
+       _lambing.numBouclePere=  pere.numBoucle;
+       _lambing.numMarquagePere = pere.numMarquage;
+       _lambing.idPere = pere.idBd;
+     });
   }
 
-  _removePere() {
+  void _removePere() {
+    setState(() {
+      _lambing.numBouclePere=  null;
+      _lambing.numMarquagePere = null;
+      _lambing.idPere = null;
+    });
 
   }
 

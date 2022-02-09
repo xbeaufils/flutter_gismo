@@ -21,7 +21,7 @@ class _SearchPerePageState  extends State<SearchPerePage> {
   final LambingModel _lambing;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   int _curIndex=0;
-  late View _currentView = View.saillie;
+  late View _currentView = View.lot;
 
   _SearchPerePageState(this._bloc, this._lambing);
 
@@ -76,6 +76,14 @@ class _SearchPerePageState  extends State<SearchPerePage> {
           return Center(child:CircularProgressIndicator());
         if (belierSnap.data == null)
           return Container();
+        if (belierSnap.data!.length == 0)
+          return Center( child:
+          ListTile(
+            leading: Icon(Icons.info_outline),
+            title: Text('Liste vide'),
+            subtitle: Text("Pas de bélier trouvé avec les critères choisis"),
+          ),);
+
         return ListView.builder(
             itemCount: belierSnap.data!.length,
             itemBuilder: (context, index) {
@@ -87,8 +95,8 @@ class _SearchPerePageState  extends State<SearchPerePage> {
                           style: TextStyle(fontWeight: FontWeight.bold)),
                     subtitle :
                       Text(bete.numMarquage,
-                        style: TextStyle(fontStyle: FontStyle.italic),)
-
+                        style: TextStyle(fontStyle: FontStyle.italic),),
+                    onTap: () => _selectBete(bete),
                 );
             }
         );},
@@ -107,4 +115,9 @@ class _SearchPerePageState  extends State<SearchPerePage> {
     }
   }
 
+  void _selectBete(Bete bete) {
+    Navigator
+        .of(context)
+        .pop(bete);
+  }
 }

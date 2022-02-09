@@ -80,6 +80,9 @@ class LambingModel {
     _qualite = result["qualite"];
     _adoption = result["adoption"];
     _observations = result["observations"];
+    idPere = result["pere_id"];
+    numBouclePere = result["numBouclePere"];
+    numMarquagePere = result["numMarquagePere"];
     if (result['agneaux'] != null) {
       if (result['agneaux'].length > 0) {
         this._lambs = [];
@@ -99,6 +102,7 @@ class LambingModel {
     data["qualite"] = this._qualite;
     data["adoption"] = this._adoption;
     data["observations"] = this._observations;
+    data["pere_id"] = this.idPere;
     data["agneaux"] = this._lambs.map((lamb) => lamb.toJson()).toList();
     return data;
   }

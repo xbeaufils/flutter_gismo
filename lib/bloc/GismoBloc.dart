@@ -447,6 +447,10 @@ class GismoBloc {
     return this._repository!.dataProvider.getMere(bete);
   }
 
+  Future<Bete?> getPere(Bete bete) {
+      return this._repository!.dataProvider.getPere(bete);
+  }
+
   Future<String> saveConfig(bool isSubscribe, String email, String password) async {
     try {
       final storage = new FlutterSecureStorage();

@@ -27,14 +27,7 @@ class LocalDataProvider extends DataProvider{
 
   // only have a single app-wide reference to the database
   static Database ? _database;
-  /*
-  static BaseOptions options = new BaseOptions(
-    baseUrl: Environnement.getUrlWebTarget(),
-    connectTimeout: 5000,
-    receiveTimeout: 3000,
-  );
-  final Dio _dio = new Dio(options);
-  */
+
   LocalDataProvider(GismoBloc bloc) : super(bloc) {
     _gismoHttp = new GismoHttp(bloc);
   }
@@ -49,7 +42,6 @@ class LocalDataProvider extends DataProvider{
 
   Future<Database> _init() async{
     // Open the database and store the reference.
-    //await deleteDatabase(join(await getDatabasesPath(), 'gismo_database.db'));
     Sqflite.setDebugModeOn(true);
 //    Directory documentsDirectory = await getApplicationDocumentsDirectory();
     Database database =  await openDatabase(
@@ -104,6 +96,39 @@ class LocalDataProvider extends DataProvider{
         // path to perform database upgrades and downgrades.
         version:11,
     );
+    this._sendReport(database);
+    /*
+    Report report = new Report();
+    report.cheptel = super.cheptel!;
+    List<Map<String, dynamic>> maps = await database.rawQuery("select count(*) as nb from bete");
+    report.betes = maps[0]['nb'];
+    maps = await database.rawQuery("select count(*) as nb from lot");
+    report.lots = maps[0]['nb'];
+    maps = await database.rawQuery("select count(*) as nb from affectation");
+    report.affectations = maps[0]['nb'];
+    maps = await database.rawQuery("select count(*) as nb from traitement");
+    report.traitements = maps[0]['nb'];
+    maps = await database.rawQuery("select count(*) as nb from agneaux");
+    report.agneaux = maps[0]['nb'];
+    maps = await database.rawQuery("select count(*) as nb from agnelage");
+    report.agnelages = maps[0]['nb'];
+    maps = await database.rawQuery("select count(*) as nb from NEC");
+    report.nec = maps[0]['nb'];
+    try {
+      final response = await _gismoHttp.doPostWeb(
+          '/send', report.toJson());
+    }
+    catch(e,stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
+      debug.log("message"  , name: "LocalDataProvider::_init");
+    }*/
+    // finally {
+      return database;
+    //}
+  }
+
+  void _sendReport(Database database ) async {
     Report report = new Report();
     report.cheptel = super.cheptel!;
     List<Map<String, dynamic>> maps = await database.rawQuery("select count(*) as nb from bete");
@@ -129,9 +154,7 @@ class LocalDataProvider extends DataProvider{
       //super.bloc.reportError(e, stackTrace);
       debug.log("message"  , name: "LocalDataProvider::_init");
     }
-    finally {
-      return database;
-    }
+
   }
 
   void _migrate1to2(Database db) {
@@ -260,6 +283,7 @@ class LocalDataProvider extends DataProvider{
         "`voie` TEXT,"
         "`ordonnance` TEXT)",);
   }
+
   void _createTableEcho(Database db) {
     db.execute("create table Echo ("
         "id INTEGER PRIMARY KEY NOT NULL, "
@@ -279,6 +303,7 @@ class LocalDataProvider extends DataProvider{
         " PRIMARY KEY('idBd'))");
 
   }
+
   @override
   Future<List<Bete>> getBetes(String cheptel) async {
     Database db = await this.database;
@@ -344,6 +369,12 @@ class LocalDataProvider extends DataProvider{
       //super.bloc.reportError(e, stackTrace);
       throw (e);
     }
+  }
+
+  Future<Bete?> getPere(Bete bete) async {
+    Bete? pereNull;
+    return pereNull;
+    throw UnimplementedError();
   }
 
   @override
