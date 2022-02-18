@@ -8,9 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/parcelle/PaturagePage.dart';
+import 'package:geolocator/geolocator.dart';
 
-import 'package:location/location.dart';
+//import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:sentry/sentry.dart';
 
 class ParcellePage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -61,20 +63,34 @@ class _ParcellePageState extends State<ParcellePage> {
   Line ? _selectedLine;
   List<Parcelle?> _myParcelles=[];
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+    /*
+    Geolocator
+     */
+  final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
+  StreamSubscription<Position>? _positionStreamSubscription;
+  StreamSubscription<ServiceStatus>? _serviceStatusStreamSubscription;
+  bool _positionStreamStarted = false;
+  Position ? _lastPosition;
   /*
   MapBox
    */
   MapboxMapController ? _mapController;
   MapboxMap ? _mapBox;
 
+
+
   void _onMapCreated(MapboxMapController controller) {
     _mapController = controller;
      //mapController.addLine(options);
-    _getLocation().then( (location) => { _drawParcelles(location) })
+    _getLocation()
+        .then( (location) => { _drawParcelles(location) })
         .catchError((error, stackTrace) {
-        // error is SecondError
-        debug.log("outer: $error", name:"_ParcellePageState::_onMapCreated");
-        }   );
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar( content: Text(error)));
+          // error is SecondError
+          Sentry.captureException(error, stackTrace : stackTrace);
+          debug.log("outer: $error", name:"_ParcellePageState::_onMapCreated");
+        });
 
   }
 
@@ -100,21 +116,32 @@ class _ParcellePageState extends State<ParcellePage> {
       onMapClick: _onMapClick,
       //cameraTargetBounds: ,
       myLocationEnabled: true,
-        styleString: MapboxStyles.SATELLITE,
-        initialCameraPosition: const CameraPosition(target: LatLng(45.26, 5.73), zoom: 14),
+      styleString: MapboxStyles.SATELLITE,
+      initialCameraPosition: const CameraPosition(target: LatLng(45.26, 5.73), zoom: 14),
     );
     return _mapBox!;
   }
 
-  void _drawParcelles(LocationData ? location) async {
+  void _drawParcelles( Position /*LocationData*/ ? location) async {
     if (location == null)
       return;
+    double distance = 0;
+    if (_lastPosition != null) {
+      distance = _geolocatorPlatform.distanceBetween(
+          _lastPosition!.latitude, _lastPosition!.longitude, location.latitude,
+          location.longitude);
+      debug.log("bearing " + distance.toString());
+      this._showMessage("bearing is " + distance.toString() );
+    }
+
     debug.log("" + location.toString(), name: "_ParcellePageState::_drawParcelles" );
+
     _mapController!.moveCamera(CameraUpdate.newCameraPosition(
       new CameraPosition(
         target: LatLng(location.latitude, location.longitude),
         zoom: 14.0,
       ),));
+    return;
     _myParcelles =  await _bloc.getParcelles();
     //Map<String, dynamic> parcellesJson =  jsonDecode(parcelles);
     String cadastreStr = await _bloc.getCadastre(location);
@@ -196,13 +223,25 @@ class _ParcellePageState extends State<ParcellePage> {
       ),
     );
   }
+
   void _updateSelectedLine(LineOptions changes) {
-    _mapController!.updateLine(_selectedLine, changes);
+    _mapController!.updateLine(_selectedLine!, changes);
   }
 
   @override
   void initState() {
     super.initState();
+    final positionStream = _geolocatorPlatform.getPositionStream();
+    _positionStreamSubscription = positionStream.handleError((error) {
+      _positionStreamSubscription?.cancel();
+      _positionStreamSubscription = null;
+    }).listen((position) =>
+        _drawParcelles(position) );
+      /*_updatePositionList(
+      _PositionItemType.position,
+      position.toString(),
+      ));*/
+    //_positionStreamSubscription?.pause();
   }
 
   List<LatLng> _buildList(List coordinates) {
@@ -219,20 +258,64 @@ class _ParcellePageState extends State<ParcellePage> {
     return new LatLng(lat, lng);
   }
 
-  Future<LocationData?> _getLocation() async{
-    Location location = new Location();
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+  Future<Position ?> _getLocation() async{
+    /*Location Position location = new Position();
 
-    _serviceEnabled = await location.serviceEnabled();
+    PermissionStatus _permissionGranted;
+    */
+    bool _serviceEnabled;
+    LocationPermission permission;
+    //_serviceEnabled = await location.serviceEnabled();
+    _serviceEnabled = await _geolocatorPlatform.isLocationServiceEnabled();
+    if (!_serviceEnabled) {
+      throw ("Service de localisation indeisponible");
+    }
     debug.log("Service enabled " + _serviceEnabled.toString(), name:"_ParcellePageState::_getLocation");
+    permission = await _geolocatorPlatform.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await _geolocatorPlatform.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        throw ("Permission de localisation refusée");
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      throw ("Permission de localisation refusée");
+    }
+    /*
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
       if (!_serviceEnabled) {
         return null;
       }
-    }
+    }*/
+    try {
+      _lastPosition = await _geolocatorPlatform.getLastKnownPosition();
+      if (_lastPosition != null)
+        debug.log("Last Known Lat " + _lastPosition!.latitude.toString() + " Long " + _lastPosition!.longitude.toString() , name: "_ParcellePageState::_getLocation" );
 
+      /*
+      final position = await _geolocatorPlatform.getCurrentPosition( locationSettings:
+        AndroidSettings(
+          forceLocationManager: true,
+      ));
+
+      if (position != null)
+        debug.log(" Lat " + position.latitude.toString() + " Long " + position.longitude.toString() , name: "_ParcellePageState::_getLocation" );
+      return position;*/
+    }
+    catch(e, stackTrace) {
+      debug.log("Execption " + e.toString(), name:"_ParcellePageState::_getLocation");
+      debug.log("Stacktrace " + stackTrace.toString(), name:"_ParcellePageState::_getLocation");
+    }
+    return _lastPosition;
+    /*
     _permissionGranted = await location.hasPermission();
     debug.log("permission Granted " + _permissionGranted.toString(), name:"_ParcellePageState::_getLocation");
 
@@ -243,7 +326,7 @@ class _ParcellePageState extends State<ParcellePage> {
       }
     }
     debug.log("permission  " + _permissionGranted.toString(), name:"_ParcellePageState::_getLocation");
-    return location.getLocation();
+    return location.getLocation();*/
   }
 
 

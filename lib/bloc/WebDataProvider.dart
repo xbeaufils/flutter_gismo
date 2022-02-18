@@ -19,10 +19,11 @@ import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/model/User.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'dart:developer' as debug;
 
-import 'package:location/location.dart';
+//import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 
@@ -158,7 +159,7 @@ class WebDataProvider extends DataProvider {
 
   Future<List<Bete>> getBetes(String cheptel) async {
     final response = await _gismoHttp.doGetList(
-        '/bete/searchAll?cheptel=' + cheptel);
+        '/bete/cheptel/' + cheptel);
     List<Bete> tempList = [];
     for (int i = 0; i < response.length; i++) {
       tempList.add(new Bete.fromResult(response[i]));
@@ -197,10 +198,12 @@ class WebDataProvider extends DataProvider {
   }
 
   @override
-  Future<Bete> getMere(Bete bete) async {
+  Future<Bete?>  getMere(Bete bete) async {
     try {
       final response = await _gismoHttp.doGet(
           '/bete/mere/' + bete.idBd.toString());
+      if (response.length ==0)
+        return null;
       Bete mere = new Bete.fromResult(response);
       return mere;
     } catch ( e) {
@@ -209,10 +212,12 @@ class WebDataProvider extends DataProvider {
   }
 
   @override
-  Future<Bete> getPere(Bete bete) async {
+  Future<Bete?> getPere(Bete bete) async {
     try {
       final response = await _gismoHttp.doGet(
           '/bete/pere/' + bete.idBd.toString());
+      if (response.length ==0)
+        return null;
       Bete pere = new Bete.fromResult(response);
       return pere;
     } catch ( e) {
@@ -646,7 +651,7 @@ class WebDataProvider extends DataProvider {
     return tempList;
   }
 
-  Future<String> getCadastre(LocationData myPosition) async {
+  Future<String> getCadastre(Position /*LocationData*/ myPosition) async {
     try {
       final response = await _gismoHttp.doPostParcelle(
           '/map/cadastre', jsonEncode({

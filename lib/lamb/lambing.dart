@@ -1,8 +1,11 @@
 import 'dart:io';
 
-import 'package:admob_flutter/admob_flutter.dart';
+//import 'package:admob_flutter/admob_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_gismo/Gismo.dart';
+import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 
 import 'package:flutter_gismo/lamb/Adoption.dart';
@@ -14,6 +17,7 @@ import 'package:flutter_gismo/model/AdoptionQualite.dart';
 import 'package:flutter_gismo/model/AgnelageQualite.dart';
 import 'package:flutter_gismo/model/CauseMort.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer' as debug;
 
@@ -34,6 +38,7 @@ class _LambingPageState extends State<LambingPage> {
   final GismoBloc _bloc;
   late LambingModel _lambing;
   //List<LambModel> _lambs;
+  BannerAd ? _adBanner;
 
   DateTime selectedDate = DateTime.now();
   final df = new DateFormat('dd/MM/yyyy');
@@ -67,14 +72,7 @@ class _LambingPageState extends State<LambingPage> {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                (this._bloc.isLogged()!) ?
-                Container():
-                AdmobBanner(
-                  adUnitId: _getBannerAdUnitId(),
-                  adSize: AdmobBannerSize.BANNER,),
-                //ca-app-pub-9699928438497749/4514368033
-                new Card(child:
-                   TextFormField(
+                TextFormField(
                       keyboardType: TextInputType.datetime,
                       controller: _dateAgnelageCtl,
                       decoration: InputDecoration(
@@ -105,70 +103,41 @@ class _LambingPageState extends State<LambingPage> {
                                   _dateAgnelageCtl.text = df.format(date);
                                 });
                               }
-                            })
-                ),
-                new Card(
-                  child:
-                    new ListTile(
-                      title: Text("Qualité d'agnelage") ,
-                      subtitle: Text(_agnelage.key.toString() + " : " +_agnelage.value),
-                      trailing: new IconButton(onPressed: _openAgnelageDialog, icon: new Icon(Icons.create)),),
-                ),
-                new Card(
-                  child:
-                  new ListTile(
-                    title: Text("Qualité adoption") ,
-                    subtitle: Text(_adoption.key.toString() + " : " +_adoption.value),
-                    trailing: new IconButton(onPressed: _openAdoptionDialog, icon: new Icon(Icons.create)),),
-                ),
-                Card(child:
-                  TextFormField(
-                    controller: _obsCtl,
-                    decoration: InputDecoration(
-                          labelText: 'Observations',
-                          hintText: 'Obs',
-                          border: OutlineInputBorder(),
-                          enabledBorder: OutlineInputBorder()),
-                    maxLines: 3,
-                    onSaved: (value) {
-                      setState(() {
+                            }),
+                ListTile(
+                  title: Text("Qualité d'agnelage") ,
+                  subtitle: Text(_agnelage.key.toString() + " : " +_agnelage.value),
+                  trailing: new IconButton(onPressed: _openAgnelageDialog, icon: new Icon(Icons.create)),),
+                ListTile(
+                  title: Text("Qualité adoption") ,
+                  subtitle: Text(_adoption.key.toString() + " : " +_adoption.value),
+                  trailing: new IconButton(onPressed: _openAdoptionDialog, icon: new Icon(Icons.create)),),
+                TextFormField(
+                  controller: _obsCtl,
+                  decoration: InputDecoration(
+                  labelText: 'Observations',
+                  hintText: 'Obs',
+                  border: OutlineInputBorder(),
+                  enabledBorder: OutlineInputBorder()),
+                  maxLines: 3,
+                  onSaved: (value) {
+                    setState(() {
                           _obsCtl.text = value!;
-                      });
-                    }
-                  ),
+                    });
+                  }
                 ),
-                Card(child: this._buildPereWidget()),
-               /* Card(child:
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                            child:TextField(decoration:
-                              InputDecoration(
-                                labelText: 'Mâle',
-                                hintText: 'Père inconnu'),
-                            readOnly: true,)),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Image.asset("assets/Lot.png"),),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Image.asset("assets/saillie.png"),),
-                          IconButton(
-                          onPressed: () {},
-                          icon: Image.asset("assets/ram_actif.png"),),
-                      ]),
-                ),*/
+                this._buildPereWidget(),
                 SizedBox(
                   height: 200,
                   child: this._lambList(), //LambsPage(this._lambing.lambs, _dateAgnelageCtl.text)
                 ),
-                 new Row(
+                 /*new Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    new ElevatedButton(key:null,
+                  children: <Widget>[*/
+                ButtonBar(alignment: MainAxisAlignment.start,
+                    children : [ ElevatedButton(key:null,
                         onPressed:saveLambing,
                         style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.lightGreen[700])),
                         //color: Colors.lightGreen[700],
@@ -179,7 +148,8 @@ class _LambingPageState extends State<LambingPage> {
                     )
                   ]
                 ),
-
+                (this._bloc.isLogged()!) ?
+                Container():_getAdmobAdvice(),
             ],),
           ) ,
       floatingActionButton: (this._lambing.idBd == null)?
@@ -189,6 +159,21 @@ class _LambingPageState extends State<LambingPage> {
         child: new Icon(Icons.add),
       ): null,
     );
+  }
+
+  Widget _getAdmobAdvice() {
+    if (this._bloc.isLogged() ! ) {
+      return Container();
+    }
+    if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
+      return Card(
+          child:
+          Container(
+              height:  this._adBanner!.size.height.toDouble(),
+              width:  this._adBanner!.size.width.toDouble(),
+              child: AdWidget(ad:  this._adBanner!)));
+    }
+    return Container();
   }
 
   String _getBannerAdUnitId() {
@@ -208,10 +193,6 @@ class _LambingPageState extends State<LambingPage> {
   }
 
   Widget _buildPereWidget() {
-    if (this._bloc.isLogged() == null)
-      return Container();
-    if ( ! this._bloc.isLogged()!)
-      return Container();
     String identifPere = "";
     if (_lambing.numBouclePere!=null ||_lambing.numMarquagePere!=null)  {
       identifPere = _lambing.numBouclePere! + " " + _lambing.numMarquagePere!;
@@ -226,18 +207,39 @@ class _LambingPageState extends State<LambingPage> {
 
   void _addPere() async {
     this._lambing.setDateAgnelage( _dateAgnelageCtl.text );
-    Bete ? pere = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SearchPerePage(this._bloc, this._lambing),
-      ),
-    ) as Bete;
+    Bete ? pere;
+    if (this._bloc.isLogged() != null) {
+      if (this._bloc.isLogged()!) {
+        pere = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SearchPerePage(this._bloc, this._lambing),
+          ),
+        ) as Bete;
+      }
+      else
+        pere = await this._searchPere();
+    }
+    else
+      pere = await this._searchPere();
     if (pere != null)
      setState(() {
-       _lambing.numBouclePere=  pere.numBoucle;
-       _lambing.numMarquagePere = pere.numMarquage;
-       _lambing.idPere = pere.idBd;
+       _lambing.numBouclePere=  (pere == null)?null:pere.numBoucle;
+       _lambing.numMarquagePere = pere!.numMarquage;
+       _lambing.idPere = (pere == null)?null:pere.idBd;
      });
+  }
+
+  Future<Bete ?> _searchPere() async {
+    Bete ? pere = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
+        builder: (BuildContext context) {
+          SearchPage search = new SearchPage(this._bloc, GismoPage.sailliePere);
+          search.searchSex = Sex.male;
+          return search;
+        },
+        fullscreenDialog: true
+    ));
+    return pere;
   }
 
   void _removePere() {
@@ -246,7 +248,6 @@ class _LambingPageState extends State<LambingPage> {
       _lambing.numMarquagePere = null;
       _lambing.idPere = null;
     });
-
   }
 
   Future _openAddEntryDialog() async {
@@ -335,6 +336,19 @@ class _LambingPageState extends State<LambingPage> {
       _adoption = Adoption.getAdoption(_lambing.adoption!);
       _agnelage = Agnelage.getAgnelage(_lambing.qualite!);
     }
+    this._adBanner = BannerAd(
+      adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener(),
+    );
+    this._adBanner!.load();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    this._adBanner!.dispose();
   }
 
   Widget _buildLambItem(BuildContext context, int index) {

@@ -96,6 +96,8 @@ class GismoHttp  {
   Future<Map<String, dynamic> > doGet(String url) async {
     try {
      var response = await http.get(Uri.parse(Environnement.getUrlTarget() + url), headers: _getHeaders() ).timeout(Duration(seconds: 10));
+     if (response.bodyBytes.lengthInBytes == 0)
+       return jsonDecode("{}");
      return jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
     } on TimeoutException catch (e) {
       throw (e);

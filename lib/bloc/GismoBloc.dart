@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:admob_flutter/admob_flutter.dart';
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+//import 'package:admob_flutter/admob_flutter.dart';
+//import 'package:facebook_audience_network/facebook_audience_network.dart';
 //import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Exception/EventException.dart';
@@ -25,8 +25,9 @@ import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/model/User.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
+//import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -200,10 +201,10 @@ class GismoBloc {
         _repository = new GismoRepository(this, RepositoryType.local);
         debug.log("Mode autonome", name: "GismoBloc::init");
         // Ajout des pubs
-        Admob.initialize();
-        FacebookAudienceNetwork.init();
+        //Admob.initialize();
+        //FacebookAudienceNetwork.init();
         if (Platform.isIOS) {
-          await Admob.requestTrackingAuthorization();
+          //await Admob.requestTrackingAuthorization();
         }
         return "Mode autonome";
       }
@@ -647,7 +648,7 @@ class GismoBloc {
     return this._repository!.dataProvider.getLotBeliers(lambing);
   }
 
-  Future<String> getCadastre(LocationData myPosition) async {
+  Future<String> getCadastre(Position myPosition) async {
     if (this._repository!.dataProvider is WebDataProvider) {
        String cadastre = await (this._repository!.dataProvider as WebDataProvider).getCadastre(myPosition);
        return cadastre;
@@ -693,8 +694,8 @@ class GismoBloc {
      DateTime date = DateTime.now();
      String databasePath = await getDatabasesPath();
      String databaseFile = join(databasePath , 'gismo_database.db');
-     final Directory extDir = await getExternalStorageDirectory();
-     Directory backupdir =  Directory(extDir.path + '/backup');
+     final Directory ? extDir = await getExternalStorageDirectory();
+     Directory backupdir =  Directory(extDir!.path + '/backup');
      if ( ! backupdir.existsSync() )
        backupdir.createSync();
      String backupFile = join(backupdir.path, 'gismo_database_'+ df.format(date) + '.json');
@@ -706,8 +707,8 @@ class GismoBloc {
    }
 
    void deleleteBackup(String filename) async {
-     final Directory extDir = await getExternalStorageDirectory();
-     Directory backupdir =  Directory(extDir.path + '/backup');
+     final Directory ? extDir = await getExternalStorageDirectory();
+     Directory backupdir =  Directory(extDir!.path + '/backup');
      if ( backupdir.existsSync() ) {
        String backupFile = join(backupdir.path, filename);
         File(backupFile).deleteSync();
@@ -715,8 +716,8 @@ class GismoBloc {
    }
 
   void restoreBackup(String filename) async {
-    final Directory extDir = await getExternalStorageDirectory();
-    Directory backupdir =  Directory(extDir.path + '/backup');
+    final Directory ? extDir = await getExternalStorageDirectory();
+    Directory backupdir =  Directory(extDir!.path + '/backup');
     if ( backupdir.existsSync() ) {
       String backupFile = join(backupdir.path, filename);
       await (this._repository!.dataProvider as LocalDataProvider).restoreBd(backupFile);

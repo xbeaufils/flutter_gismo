@@ -116,6 +116,7 @@ class LambingModel {
     data["qualite"] = this._qualite;
     data["adoption"] = this._adoption;
     data["observations"] = this._observations;
+    data["pere_id"] = this.idPere;
     return data;
   }
 

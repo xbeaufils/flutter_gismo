@@ -91,10 +91,12 @@ class LocalDataProvider extends DataProvider{
           }
           if (oldVersion < 11 )
             this._migrate10to11(db);
-         },
+         // if (oldVersion < 12 )
+         //   this._migrate11to12(db);
+        },
         // Set the version. This executes the onCreate function and provides a
         // path to perform database upgrades and downgrades.
-        version:11,
+        version:12,
     );
     this._sendReport(database);
     /*
@@ -189,14 +191,14 @@ class LocalDataProvider extends DataProvider{
     db.execute("ALTER TABLE 'bete' ADD COLUMN `observations` TEXT");
   }
   void _migrate9to10(Database db) {
-    db.execute("TABLE `agnelage` ADD COLUMN `observations` TEXT ");
+    db.execute("ALTER TABLE `agnelage` ADD COLUMN `observations` TEXT ");
     db.execute("ALTER TABLE 'agneaux' ADD COLUMN `sante` TEXT");
     db.execute("UPDATE 'agneaux' set sante='VIVANT' where sante IS NULL");
   }
   void _migrate10to11(Database db) {
     _createTableSaillie(db);
+    db.execute("ALTER TABLE `agnelage` ADD COLUMN `pere_id` INTEGER NULL DEFAULT NULL");
   }
-
   void _createTableAgnelage(Database db) {
     db.execute("CREATE TABLE `agnelage` ( "
         "`id` INTEGER PRIMARY KEY,"
@@ -204,7 +206,8 @@ class LocalDataProvider extends DataProvider{
         "`observations` TEXT,"
         "`adoption` INTEGER NULL DEFAULT NULL,"
         "`qualite` INTEGER NULL DEFAULT NULL,"
-        "`mere_id` INTEGER)");
+        "`mere_id` INTEGER,"
+        "`pere_id` INTEGER NULL DEFAULT NULL)");
   }
   void _createTableAgneaux(Database db) {
     db.execute("CREATE TABLE `agneaux` ( "
@@ -372,9 +375,28 @@ class LocalDataProvider extends DataProvider{
   }
 
   Future<Bete?> getPere(Bete bete) async {
-    Bete? pereNull;
-    return pereNull;
-    throw UnimplementedError();
+    try {
+      Database db = await this.database;
+      List<Map<String, dynamic>> agneaux = await db.query(
+          'agneaux', where: 'devenir_id = ?', whereArgs: [bete.idBd]);
+      if (agneaux.isEmpty)
+        return null;
+      LambModel agneau = new LambModel.fromResult(agneaux[0]);
+      final List<Map<String, dynamic>> agnelages = await db.query(
+          'agnelage', where: 'id = ?', whereArgs: [ agneau.idAgnelage]);
+      if (agnelages.isEmpty)
+        return null;
+      LambingModel agnelage = new LambingModel.fromResult(agnelages[0]);
+      if (agnelage.idPere != null) {
+        Bete ? pere = await this._searchBete(agnelage.idPere!);
+        return pere;
+      }
+      return null;
+    } catch (e,stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
+      throw (e);
+    }
   }
 
   @override

@@ -1,11 +1,13 @@
 import 'dart:io';
 
-import 'package:admob_flutter/admob_flutter.dart';
+//import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 
 class EntreePage extends StatefulWidget {
@@ -112,10 +114,10 @@ class _EntreePageState extends State<EntreePage> {
             color: Colors.lightGreen[700],
             onPressed: _saveEntree),
           (this._bloc.isLogged()!) ?
-            Container():
-            AdmobBanner(
-              adUnitId: _getBannerAdUnitId(),
-              adSize: AdmobBannerSize.BANNER,),
+            Container():_getAdmobAdvice()
+           /* AdmobBanner(
+              adUnitId: _getBannerAdUnitId()!,
+              adSize: AdmobBannerSize.BANNER,),*/
 
           ]
 
@@ -126,6 +128,28 @@ class _EntreePageState extends State<EntreePage> {
         child: new Icon(Icons.add),
       ),
     );
+  }
+  Widget _getAdmobAdvice() {
+    if (this._bloc.isLogged() ! ) {
+      return Container();
+    }
+    BannerAd myBanner = BannerAd(
+      adUnitId: _getBannerAdUnitId()!, //'<ad unit ID>',
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener(),
+    );
+    myBanner.load();
+    final AdWidget adWidget = AdWidget(ad: myBanner);
+    if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
+      return
+        Card(child: adWidget
+          /* AdmobBanner(
+          adUnitId: _getBannerAdUnitId(),
+          adSize: AdmobBannerSize.BANNER,),*/
+        );
+    }
+    return Container();
   }
 
   String ? _getBannerAdUnitId() {

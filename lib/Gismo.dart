@@ -42,6 +42,7 @@ class GismoApp extends StatelessWidget {
         //const TranslationsDelegate(),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: [
         const Locale('en', ''),

@@ -164,12 +164,14 @@ class _ConfigPageState extends State<ConfigPage> {
     );
   }
   
-  Future<List<FileSystemEntity>> _getFiles() async {
+  Future<List<FileSystemEntity>?>  _getFiles() async {
     /*
     var permission = Permission.storage;
     final PermissionStatus status = await permission.request();
      */
-    final Directory extDir = await getExternalStorageDirectory();
+    final Directory ? extDir = await getExternalStorageDirectory();
+    if (extDir == null)
+      return null;
     final Directory backupDir = Directory(extDir.path + '/backup');
     if (! backupDir.existsSync())
       return [];
