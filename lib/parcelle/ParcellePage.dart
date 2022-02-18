@@ -71,6 +71,7 @@ class _ParcellePageState extends State<ParcellePage> {
   StreamSubscription<ServiceStatus>? _serviceStatusStreamSubscription;
   bool _positionStreamStarted = false;
   Position ? _lastPosition;
+  LatLng ? _currentPosition;
   /*
   MapBox
    */
@@ -81,7 +82,9 @@ class _ParcellePageState extends State<ParcellePage> {
 
   void _onMapCreated(MapboxMapController controller) {
     _mapController = controller;
-     //mapController.addLine(options);
+    debug.log("Map created" , name: "_ParcellePageState::_onMapCreated" );
+    //mapController.addLine(options);
+    /*
     _getLocation()
         .then( (location) => { _drawParcelles(location) })
         .catchError((error, stackTrace) {
@@ -91,9 +94,14 @@ class _ParcellePageState extends State<ParcellePage> {
           Sentry.captureException(error, stackTrace : stackTrace);
           debug.log("outer: $error", name:"_ParcellePageState::_onMapCreated");
         });
-
+     */
   }
 
+  void _onUserLocationUpdated(UserLocation location) {
+    this._drawParcelles(location.position);
+    //location.position.latitude
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,14 +125,16 @@ class _ParcellePageState extends State<ParcellePage> {
       //cameraTargetBounds: ,
       myLocationEnabled: true,
       styleString: MapboxStyles.SATELLITE,
+      onUserLocationUpdated: _onUserLocationUpdated,
       initialCameraPosition: const CameraPosition(target: LatLng(45.26, 5.73), zoom: 14),
     );
     return _mapBox!;
   }
 
-  void _drawParcelles( Position /*LocationData*/ ? location) async {
+  void _drawParcelles( /*Position*/ /*LocationData*/ LatLng ? location) async {
     if (location == null)
       return;
+    /*
     double distance = 0;
     if (_lastPosition != null) {
       distance = _geolocatorPlatform.distanceBetween(
@@ -133,15 +143,16 @@ class _ParcellePageState extends State<ParcellePage> {
       debug.log("bearing " + distance.toString());
       this._showMessage("bearing is " + distance.toString() );
     }
-
+    */
     debug.log("" + location.toString(), name: "_ParcellePageState::_drawParcelles" );
-
+    if (this._currentPosition != null)
+      return;
+    this._currentPosition = location;
     _mapController!.moveCamera(CameraUpdate.newCameraPosition(
       new CameraPosition(
         target: LatLng(location.latitude, location.longitude),
         zoom: 14.0,
       ),));
-    return;
     _myParcelles =  await _bloc.getParcelles();
     //Map<String, dynamic> parcellesJson =  jsonDecode(parcelles);
     String cadastreStr = await _bloc.getCadastre(location);
@@ -231,12 +242,14 @@ class _ParcellePageState extends State<ParcellePage> {
   @override
   void initState() {
     super.initState();
+    /*
     final positionStream = _geolocatorPlatform.getPositionStream();
     _positionStreamSubscription = positionStream.handleError((error) {
       _positionStreamSubscription?.cancel();
       _positionStreamSubscription = null;
     }).listen((position) =>
         _drawParcelles(position) );
+     */
       /*_updatePositionList(
       _PositionItemType.position,
       position.toString(),

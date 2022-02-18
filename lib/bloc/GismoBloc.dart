@@ -648,7 +648,7 @@ class GismoBloc {
     return this._repository!.dataProvider.getLotBeliers(lambing);
   }
 
-  Future<String> getCadastre(Position myPosition) async {
+  Future<String> getCadastre(LatLng /*Position*/ myPosition) async {
     if (this._repository!.dataProvider is WebDataProvider) {
        String cadastre = await (this._repository!.dataProvider as WebDataProvider).getCadastre(myPosition);
        return cadastre;

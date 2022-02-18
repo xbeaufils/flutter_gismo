@@ -651,7 +651,7 @@ class WebDataProvider extends DataProvider {
     return tempList;
   }
 
-  Future<String> getCadastre(Position /*LocationData*/ myPosition) async {
+  Future<String> getCadastre( LatLng /*Position*/ /*LocationData*/ myPosition) async {
     try {
       final response = await _gismoHttp.doPostParcelle(
           '/map/cadastre', jsonEncode({
