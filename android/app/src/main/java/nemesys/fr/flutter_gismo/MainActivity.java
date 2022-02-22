@@ -112,6 +112,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
     @Override
     public void onCreate(Bundle  bundle) {
         super.onCreate(bundle);
+
         new MethodChannel(getFlutterEngine().getDartExecutor().getBinaryMessenger(), CHANNEL_RT610)
                 .setMethodCallHandler(this::onMethodCall);
         new MethodChannelBlueTooth(getFlutterEngine().getDartExecutor().getBinaryMessenger(), CHANNEL_BLUETOOTH);
@@ -169,10 +170,15 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         BluetoothReader reader;
 
         public MethodChannelHdlBlueTooth() {
+            Log.d(TAG, "MethodChannelHdlBlueTooth: constructor");
         }
 
         @Override
         public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
+            if (this.isConnected())
+                stateBluetooth =  State.CONNECTED;
+            else
+                stateBluetooth = State.NONE;
             if (call.method.contentEquals("stateBlueTooth")) {
                 result.success("{\"connect\" : \"" +stateBluetooth + "\", \"data\" : \"" + stateData + "\"}");
             }
@@ -210,7 +216,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                 switch (stateData) {
                     case  AVAILABLE :
                         result.success("{\"status\": \"AVAILABLE\", \"data\" : \"" + dataBluetoooth + "\"}");
-                        stateData = DataState.NONE;
+                        stateData = DataState.WAITING;
                         break;
                     case WAITING:
                         result.success("{\"status\": \"WAITING\"}");
@@ -242,8 +248,10 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                 boolean checkConnection = BluetoothConnect.checkState(bluetoothConnect);
                 for (BluetoothDevice device : devices) {
                     boolean connected = false;
-                    if (checkConnection && bluetoothConnect.deviceName.equalsIgnoreCase(device.getName()))
+                    if (checkConnection && bluetoothConnect.deviceName.equalsIgnoreCase(device.getName())) {
                         connected = true;
+                        stateBluetooth = State.CONNECTED;
+                    }
                     try {
                         JSONObject deviceJson = new JSONObject();
                         deviceJson.put("address", device.getAddress());
@@ -258,7 +266,20 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                 result.success(devicesJson.toString());
             }
         }
+
+        private boolean isConnected() {
+            if (bluetoothConnect == null) {
+                Log.d(TAG, "onMethodCall: bluetoothConnect is null");
+                return false;
+            }
+            if (bluetoothConnect.getSocket() == null) {
+                Log.d(TAG, "onMethodCall: socket is null");
+                return false;
+            }
+            return bluetoothConnect.getSocket().isConnected();
+        }
     }
+
 
     public enum State {
         NONE,
@@ -292,7 +313,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
     }
 
     String dataBluetoooth;
-    State stateBluetooth;
+    State stateBluetooth = State.NONE;
     DataState stateData = DataState.NONE;
 
     public class BluetoothHandler extends Handler {
