@@ -137,7 +137,10 @@ class GismoBloc {
         debug.log("Mode autonome", name: "GismoBloc::init");
         // Ajout des pubs
         //Admob.initialize();
-        FacebookAudienceNetwork.init();
+        FacebookAudienceNetwork.init(
+          testingId: "a77955ee-3304-4635-be65-81029b0f5201",
+          iOSAdvertiserTrackingEnabled: true,
+        );
         if (Platform.isIOS) {
           //await Admob.requestTrackingAuthorization();
         }

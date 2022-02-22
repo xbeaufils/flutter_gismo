@@ -4,13 +4,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-//import 'package:admob_flutter/admob_flutter.dart';
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Environnement.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 //import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/io_client.dart';
 import 'package:sentry/sentry.dart';
@@ -79,8 +78,8 @@ void main() async {
   if ( ! kIsWeb) {
     // if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))
     WidgetsFlutterBinding.ensureInitialized();
-    MobileAds.instance.initialize();
-    //Admob.initialize(testDeviceIds: ['CDB1827517618849EC4C60C7389786D9']);
+    //MobileAds.instance.initialize();
+    Admob.initialize(testDeviceIds: ['CDB1827517618849EC4C60C7389786D9']);
   }
   gismoBloc = new GismoBloc();
   Environnement.init( "https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api");

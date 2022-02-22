@@ -1,6 +1,7 @@
 import 'dart:io';
 
 //import 'package:admob_flutter/admob_flutter.dart';
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -131,12 +132,7 @@ class _LambingPageState extends State<LambingPage> {
                   height: 200,
                   child: this._lambList(), //LambsPage(this._lambing.lambs, _dateAgnelageCtl.text)
                 ),
-                 /*new Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[*/
-                ButtonBar(alignment: MainAxisAlignment.start,
+                 ButtonBar(alignment: MainAxisAlignment.start,
                     children : [ ElevatedButton(key:null,
                         onPressed:saveLambing,
                         style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.lightGreen[700])),
@@ -164,15 +160,18 @@ class _LambingPageState extends State<LambingPage> {
   Widget _getAdmobAdvice() {
     if (this._bloc.isLogged() ! ) {
       return Container();
-    }/*
+    }
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
-      return Card(
+      return  AdmobBanner(
+        adUnitId: this._getBannerAdUnitId(),
+        adSize: AdmobBannerSize.BANNER,);
+        /*Card(
           child:
           Container(
               height:  this._adBanner!.size.height.toDouble(),
               width:  this._adBanner!.size.width.toDouble(),
-              child: AdWidget(ad:  this._adBanner!)));
-    }*/
+              child: AdWidget(ad:  this._adBanner!)));*/
+    }
     return Container();
   }
 

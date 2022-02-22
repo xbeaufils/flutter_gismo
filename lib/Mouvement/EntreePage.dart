@@ -1,13 +1,12 @@
 import 'dart:io';
 
-//import 'package:admob_flutter/admob_flutter.dart';
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-//import 'package:google_mobile_ads/google_mobile_ads.dart';
 //import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 
@@ -135,16 +134,19 @@ class _EntreePageState extends State<EntreePage> {
     if (this._bloc.isLogged() ! ) {
       return Container();
     }
-    /*
+
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
       return
         Card(child:
-          Container(
+        AdmobBanner(
+          adUnitId: _getBannerAdUnitId()!,
+          adSize: AdmobBannerSize.BANNER,)
+         /* Container(
             height:  this._adBanner!.size.height.toDouble(),
             width:  this._adBanner!.size.width.toDouble(),
-            child: AdWidget(ad:  this._adBanner!)));
+            child: AdWidget(ad:  this._adBanner!))*/);
 
-    }*/
+    }
     return Container();
   }
 
