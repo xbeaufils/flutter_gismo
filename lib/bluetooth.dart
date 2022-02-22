@@ -4,6 +4,7 @@ import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gismo/bloc/BluetoothBloc.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/model/DeviceModel.dart';
@@ -27,26 +28,17 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   StreamSubscription<BluetoothState> ? _bluetoothSubscription;
   StreamSubscription<StatusBlueTooth> ? _bluetoothStatusSubscription;
 
-  String _bluetoothState ="NONE";
+  BluetoothBloc _btBloc = new BluetoothBloc();
+
+  String _bluetoothState = BluetoothBloc.NONE;
 
   _BluetoothPagePageState(this._bloc);
-  String ? _preferredAddress;
-  bool _isBluetooth = false;
-  bool _isConnected = false;
   DeviceModel ? _selectedDevice;
   List<DeviceModel> ? _lstDevice;
 
   @override
-  void initState()  {/*
-    this._bloc.configIsBt().then((isBluetooth) => {
-      this._isBluetooth = isBluetooth,
-
-      if (isBluetooth) {
-        this._bloc.configBt().then((value) => { _changeAddress(value)})
-      }
-
-    }); */
-  }
+  void initState()  {
+   }
 
   @override
   Widget build(BuildContext context) {
@@ -91,71 +83,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
         future: _getDeviceList(),)
     );
   }
-/*
-  Widget _buildButton() {
-    return FutureBuilder(
-      builder: (context, AsyncSnapshot deviceSnap) {
-        if (deviceSnap.connectionState == ConnectionState.none &&
-            deviceSnap.hasData == null) {
-          return Container();
-        }
-        if (deviceSnap.data == null)
-          return Container();
-        if (_selectedDevice == null)
-          return Container();
-        if (_selectedDevice!.connected)
-          return FloatingActionButton(
-              child: Icon(Icons.bluetooth_disabled),
-              backgroundColor: Colors.red,
-              onPressed: () {_startBlueTooth(false); });
-        return
-          FloatingActionButton(
-              child: Icon(Icons.bluetooth_connected),
-              backgroundColor: Colors.green,
-              onPressed: () {_startBlueTooth(true);}) ;
-      },
-      future: _getDeviceList()
-    );
-  }
- */
 
-/*
-  Widget _buildBody() {
-    if (_isBluetooth)
-    return FutureBuilder(
-        builder: (context, AsyncSnapshot deviceSnap) {
-          if (deviceSnap.connectionState == ConnectionState.none &&
-              deviceSnap.hasData == null) {
-            return Container();
-          }
-          if (deviceSnap.data == null)
-            return Container();
-          return ListView.builder(
-            itemCount: deviceSnap.data.length,
-            itemBuilder: (context, index) {
-              DeviceModel device = deviceSnap.data[index];
-              if (device.address == _preferredAddress )
-                _selectedDevice=device;
-              return Card( child:
-                  Row(children: [
-                    Flexible(child:
-                    RadioListTile(
-                      title: Text(device.name),
-                      subtitle: Text(device.address),
-                      value: device.address,
-                      groupValue: _preferredAddress,
-                      onChanged: (String ? value) {_changeAddress(value!);
-                      })),
-                  ],)
-              );
-            },
-          );
-        },
-      future: _getDeviceList(),);
-    else
-      return Container();
-  }
-*/
   bool _isDeviceSelected(DeviceModel device) {
     if (this._selectedDevice == null)
       return false;
@@ -165,16 +93,22 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   Widget _stateButton(DeviceModel device) {
     if ( this._isDeviceSelected(device)) {
       switch( this._bluetoothState) {
-        case "NONE":
-          return Switch(value: false, onChanged: (value) { _switchBluetooth(value, device.address); } );
-        case "CONNECTING":
+        case BluetoothBloc.NONE:
+          return Switch(value: false, onChanged: (value) { _startBlueTooth(value);
+              //_switchBluetooth(value, device.address);
+          } );
+        case BluetoothBloc.CONNECTING:
           return CircularProgressIndicator();
-        case "LISTEN":
-        case "CONNECTED" :
-          return Switch(value: true, onChanged: (value) { _switchBluetooth(value, device.address); } );
-        case "ERROR":
+        case BluetoothBloc.LISTEN:
+        case BluetoothBloc.CONNECTED :
+          return Switch(value: true, onChanged: (value) { _startBlueTooth(value);
+          //_switchBluetooth(value, device.address);
+          } );
+        case BluetoothBloc.ERROR:
           this._stopBluetoothStream();
-           return Switch(value: false, onChanged: (value) { _switchBluetooth(value, device.address); } );
+           return Switch(value: false, onChanged: (value) { _startBlueTooth(value);
+           //_switchBluetooth(value, device.address);
+           } );
 
       }
     }
@@ -186,13 +120,37 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
     String response = await BLUETOOTH_CHANNEL.invokeMethod("listBlueTooth");
     this._lstDevice = ( jsonDecode(response) as List).map( (i) => DeviceModel.fromResult(i)).toList();
     List<DeviceModel> lstReturnDevice = this._lstDevice!;
+    //this._preferredAddress = await this._bloc.configBt();
+    this._lstDevice!.forEach((device) => {
+      if (device.connected )
+        this._selectedDevice = device
+    });
+    if (_selectedDevice != null)
+      try {
+        _bluetoothStatusSubscription = this._btBloc.streamStatusBluetooth().listen((event) {
+          if (_bluetoothState  !=  event.connect) {
+            _bluetoothState = event.connect;
+            setState(() {
+              if (event.connect == BluetoothBloc.CONNECTED) {
+                this._selectedDevice!.connected = true;
+                //this._bluetoothStatusSubscription!.cancel();
+              }
+            });
+            if (this._bluetoothState == BluetoothBloc.ERROR )
+              ScaffoldMessenger.of(context).showSnackBar(new SnackBar(content: Text("Erreur bluetooth"),));
+          }
+        });
+      } on Exception catch (e, stackTrace) {
+        Sentry.captureException(e, stackTrace : stackTrace);
+        debug.log(e.toString());
+      }
     return lstReturnDevice;
   }
 
   void _switchBluetooth(bool on, String address) {
     this._startBlueTooth(on);
     if (on) {
-      _preferredAddress = address;
+      //_preferredAddress = address;
     }
     else {
       // TODO : Stop bluetooth
@@ -207,32 +165,26 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   }
 
   void _startBlueTooth(value) {
-    /*
-    if (this._selectedDevice != null)
-      this._selectedDevice!.connected = value;
-     */
-    /*
-    setState(() {
-        this._isConnected = value;
-    });
-     */
     if (! value) {
       this._stopBluetoothStream();
       this._bloc.stopBluetooth();
+      setState(() {
+        this._selectedDevice!.connected = false;
+      });
       return;
     }
-
     try {
       this._bluetoothStream = this._bloc.streamConnectBluetooth(this._selectedDevice!.address);
       this._bluetoothSubscription = this._bluetoothStream.listen((BluetoothState event) {
         setState(() {
           _bluetoothState = event.status;
-          if (event.status == 'STARTED') {
+          if (event.status == BluetoothBloc.STARTED) {
             debug.log("Change connected " + value.toString(),  name: "_startBlueTooth");
             this._selectedDevice!.connected = value;
           }
         });
       });
+      /*
       _bluetoothStatusSubscription = this._bloc.streamStatusBluetooth().listen((event) {
         debug.log("status " + event.toString(), name: "streamStatusBluetooth");
         if (_bluetoothState  !=  event.connect) {
@@ -247,38 +199,13 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
             ScaffoldMessenger.of(context).showSnackBar(new SnackBar(content: Text("Erreur bluetooth"),));
         }
       });
-
+    */
     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       debug.log(e.toString());
     }
   }
-/*
-  void _switched(value) {
-    this.setState(() {
-      this._isBluetooth = value;
-      this._bloc.saveBt(_isBluetooth, _preferredAddress);
-    });
-    if (this._isBluetooth == false) {
-      _selectedDevice = null;
-      this._bloc.stopBluetooth();
-    }
-  }
-*/
-  /*
-  void _changeAddress(String value) {
-    this._startBlueTooth(false);
-    setState(() {
-      _preferredAddress = value;
-      if (this._lstDevice != null)
-      for (DeviceModel device in this._lstDevice!) {
-        if (device.address == value)
-          this._selectedDevice = device;
-      }
-    });
-    this._bloc.saveBt(_isBluetooth, _preferredAddress);
-  }
-*/
+
   @override
   void dispose() {
     super.dispose();
@@ -288,7 +215,11 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   void _stopBluetoothStream()  {
     if (this._bluetoothSubscription != null)
       this._bluetoothSubscription?.cancel();
-    if (this._bluetoothStatusSubscription != null)
+    if (this._bluetoothStatusSubscription != null) {
       this._bluetoothStatusSubscription!.cancel();
+      this._btBloc.stopStream();
+    }
    }
+
+
 }

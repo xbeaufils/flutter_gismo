@@ -5,6 +5,7 @@ import 'dart:developer' as debug;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Gismo.dart';
+import 'package:flutter_gismo/bloc/BluetoothBloc.dart';
 import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/individu/NECPage.dart';
 import 'package:flutter_gismo/individu/PeseePage.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
+import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
 import 'package:sentry/sentry.dart';
 
@@ -43,6 +45,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   late Stream<BluetoothState> _bluetoothStream;
   StreamSubscription<BluetoothState> ? _bluetoothSubscription;
   String _bluetoothState ="NONE";
+  final BluetoothBloc _btBloc= new BluetoothBloc();
   bool _rfidPresent = false;
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text( 'Recherche boucle' );
@@ -98,33 +101,21 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   Widget _statusBluetoothBar()  {
     if ( ! this._bloc.isLogged()!)
       return Container();
-    return FutureBuilder(
-        future: this._bloc.configIsBt(),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.none &&
-            snapshot.hasData == null) {
-            return Container();
-          }
-          if (snapshot.connectionState == ConnectionState.waiting)
-            return Container();
-          if (! snapshot.hasData )
-            return Container();
-          List<Widget> status = <Widget>[]; //new List();
-          switch (_bluetoothState) {
-            case "NONE":
-              status.add(Icon(Icons.bluetooth));
-              status.add(Text("Non connecté"));
-              break;
-            case "WAITING":
-              status.add(Icon(Icons.bluetooth));
-              status.add(Expanded(child: LinearProgressIndicator(),));
-              break;
-            case "AVAILABLE":
-              status.add(Icon(Icons.bluetooth));
-              status.add(Text("Données reçues"));
-          }
-          return Row(children: status,);
-        });
+    List<Widget> status = <Widget>[]; //new List();
+    switch (_bluetoothState) {
+      case "NONE":
+        status.add(Icon(Icons.bluetooth));
+        status.add(Text("Non connecté"));
+        break;
+      case "WAITING":
+        status.add(Icon(Icons.bluetooth));
+        status.add(Expanded(child: LinearProgressIndicator(),));
+        break;
+      case "AVAILABLE":
+        status.add(Icon(Icons.bluetooth));
+        status.add(Text("Données reçues"));
+    }
+    return Row(children: status,);
   }
 
   Widget _buildRfid() {
@@ -167,32 +158,31 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   Future<String> _startService() async{
     try {
-      if ( await this._bloc.configIsBt()) {
-        debug.log("Start service ", name: "_SearchPageState::_startService");
-        BluetoothState _bluetoothState =  await this._bloc.startReadBluetooth();
-        debug.log("Start status " + _bluetoothState.status, name: "_SearchPageState::_startService");
-        this._bluetoothStream = this.widget._bloc.streamReadBluetooth();
+      debug.log("Start service ", name: "_SearchPageState::_startService");
+      BluetoothState _bluetoothState =  await this._bloc.startReadBluetooth();
+      debug.log("Start status " + _bluetoothState.status, name: "_SearchPageState::_startService");
+      if (_bluetoothState.status == BluetoothBloc.CONNECTED
+      || _bluetoothState.status == BluetoothBloc.STARTED)
+        this._bluetoothStream = this._btBloc.streamReadBluetooth();
         this._bluetoothSubscription = this._bluetoothStream.listen(
-        //this._bluetoothSubscription = this.widget._bloc.streamReadBluetooth().listen(
-                (BluetoothState event) {
-                  debug.log("Status " + event.status, name: "_SearchPageState::_startService");
-                  if (this._bluetoothState != event.status)
-                    setState(() {
-                    this._bluetoothState = event.status;
-                    if (event.status == 'AVAILABLE') {
-                      String _foundBoucle = event.data;
-                      if (_foundBoucle.length > 15)
-                        _foundBoucle =
-                            _foundBoucle.substring(_foundBoucle.length - 15);
-                      _foundBoucle =
-                          _foundBoucle.substring(_foundBoucle.length - 5);
-                      _searchText = _foundBoucle;
-                      _filter.text = _foundBoucle;
-                      _searchPressed();
-                    }
-                  });
-                });
-      }
+          (BluetoothState event) {
+            debug.log("Status " + event.status, name: "_SearchPageState::_startService");
+            if (this._bluetoothState != event.status)
+              setState(() {
+                this._bluetoothState = event.status;
+                if (event.status == 'AVAILABLE') {
+                  String _foundBoucle = event.data;
+                  if (_foundBoucle.length > 15)
+                    _foundBoucle =
+                        _foundBoucle.substring(_foundBoucle.length - 15);
+                  _foundBoucle =
+                      _foundBoucle.substring(_foundBoucle.length - 5);
+                  _searchText = _foundBoucle;
+                  _filter.text = _foundBoucle;
+                  _searchPressed();
+                }
+            });
+          });
     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       debug.log(e.toString());
@@ -205,7 +195,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   AppBar _buildBar(BuildContext context) {
     return new AppBar(
       centerTitle: true,
-       title: _appBarTitle,
+      title: _appBarTitle,
       actions: <Widget>[
         IconButton(
             icon: const Icon(Icons.search),
@@ -348,13 +338,11 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     fillList(lstBetes);
    }
 
-   void fillList(List<Bete> lstBetes) {
+  void fillList(List<Bete> lstBetes) {
     setState(() {
       _betes = lstBetes;
       //names.shuffle();
       _filteredBetes = _betes;
     });
-
   }
-
 }

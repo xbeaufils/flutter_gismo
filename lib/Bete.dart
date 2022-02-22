@@ -4,6 +4,7 @@ import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gismo/bloc/BluetoothBloc.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
@@ -39,7 +40,7 @@ class _BetePageState extends State<BetePage> {
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
   bool _rfidPresent = false;
   String _bluetoothState ="NONE";
-
+  final BluetoothBloc _btBloc = new BluetoothBloc();
   late Stream<BluetoothState> _bluetoothStream;
   StreamSubscription<BluetoothState> ? _bluetoothSubscription;
 
@@ -47,7 +48,7 @@ class _BetePageState extends State<BetePage> {
 
   Widget _statusBluetoothBar() {
     if (! this._bloc.isLogged()!)
-      return Container();
+      return Container();/*
     return FutureBuilder(
         future: this._bloc.configIsBt(),
         builder: (context, AsyncSnapshot snapshot) {
@@ -57,7 +58,7 @@ class _BetePageState extends State<BetePage> {
           if (snapshot.connectionState == ConnectionState.waiting)
             return Center(child: CircularProgressIndicator(),);
           if (! snapshot.hasData )
-            return Container();
+            return Container();*/
           List<Widget> status = [];
           switch (_bluetoothState ) {
             case "NONE":
@@ -73,7 +74,7 @@ class _BetePageState extends State<BetePage> {
               status.add(Text("Données reçues"));
           }
           return Row(children: status,);
-    });
+   // });
   }
 
   @override
@@ -320,12 +321,14 @@ class _BetePageState extends State<BetePage> {
 
   Future<String> _startService() async{
     try {
-      if ( await this._bloc.configIsBt()) {
+      //if ( await this._bloc.configIsBt()) {
         debug.log("Start service ", name: "_BetePageState::_startService");
         BluetoothState _bluetoothState =  await this._bloc.startReadBluetooth();
         debug.log("Start status " + _bluetoothState.status, name: "_BetePageState::_startService");
-        this._bluetoothStream = this.widget._bloc.streamReadBluetooth();
-        this._bluetoothSubscription = this._bluetoothStream.listen(
+        if (_bluetoothState.status == BluetoothBloc.CONNECTED
+            || _bluetoothState.status == BluetoothBloc.STARTED) {
+          this._bluetoothStream = this._btBloc.streamReadBluetooth();
+          this._bluetoothSubscription = this._bluetoothStream.listen(
         //this.widget._bloc.streamBluetooth().listen(
                 (BluetoothState event) {
                   if (this._bluetoothState != event.status)
@@ -357,6 +360,7 @@ class _BetePageState extends State<BetePage> {
     _numBoucleCtrl.dispose();
     _numMarquageCtrl.dispose();
     this._bloc.stopReadBluetooth();
+    this._btBloc.stopStream();
     if (this._bluetoothSubscription != null)
       this._bluetoothSubscription?.cancel();
     super.dispose();

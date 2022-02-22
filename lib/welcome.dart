@@ -1,7 +1,6 @@
 import 'dart:io';
 
 //import 'package:admob_flutter/admob_flutter.dart';
-//import 'package:facebook_audience_network/ad/ad_banner.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +9,8 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'dart:developer' as debug;
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+
+
 
 class WelcomePage extends StatefulWidget {
   GismoBloc _bloc;
@@ -148,13 +149,13 @@ class _WelcomePageState extends State<WelcomePage> {
                       _buildButton("Parcelles", "assets/parcelles.png", _parcellePressed),
                     //  _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
                     ]))),
-              this._getAdmobAdvice(),
+              //this._getAdmobAdvice(),
               this._getFacebookAdvice(),
             ]));
   }
 
   Widget _getAdmobAdvice() {
-    if (this._bloc.isLogged() ! ) {
+ /*   if (this._bloc.isLogged() ! ) {
       return Container();
     }
      if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
@@ -164,7 +165,7 @@ class _WelcomePageState extends State<WelcomePage> {
             height:  this._adBanner!.size.height.toDouble(),
             width:  this._adBanner!.size.width.toDouble(),
             child: AdWidget(ad:  this._adBanner!)));
-    }
+    }*/
 //adWidget;
        /* AdmobBanner(
           adUnitId: _getBannerAdUnitId(),
@@ -180,12 +181,13 @@ class _WelcomePageState extends State<WelcomePage> {
     }
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
       return
-        Card(child:
+        //Card(child:
           FacebookBannerAd(
             placementId: '212596486937356_212596826937322',
             bannerSize: BannerSize.STANDARD,
+            keepAlive: true,
             listener: (result, value) {}
-          ),
+        //  ),
         );
     }
     return Container();
@@ -227,13 +229,14 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   void initState() {
+/*
     this._adBanner = BannerAd(
       adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
       size: AdSize.banner,
       request: AdRequest(),
       listener: BannerAdListener(),
     );
-    this._adBanner!.load();
+    this._adBanner!.load();*/
     FacebookAudienceNetwork.init(
       testingId: "a77955ee-3304-4635-be65-81029b0f5201",
       iOSAdvertiserTrackingEnabled: true,
@@ -244,7 +247,7 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   void dispose() {
     super.dispose();
-    this._adBanner!.dispose();
+    //this._adBanner!.dispose();
   }
 
   void _parcellePressed() {

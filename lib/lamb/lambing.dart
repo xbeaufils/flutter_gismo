@@ -17,7 +17,7 @@ import 'package:flutter_gismo/model/AdoptionQualite.dart';
 import 'package:flutter_gismo/model/AgnelageQualite.dart';
 import 'package:flutter_gismo/model/CauseMort.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer' as debug;
 
@@ -38,7 +38,7 @@ class _LambingPageState extends State<LambingPage> {
   final GismoBloc _bloc;
   late LambingModel _lambing;
   //List<LambModel> _lambs;
-  BannerAd ? _adBanner;
+  //BannerAd ? _adBanner;
 
   DateTime selectedDate = DateTime.now();
   final df = new DateFormat('dd/MM/yyyy');
@@ -164,7 +164,7 @@ class _LambingPageState extends State<LambingPage> {
   Widget _getAdmobAdvice() {
     if (this._bloc.isLogged() ! ) {
       return Container();
-    }
+    }/*
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
       return Card(
           child:
@@ -172,7 +172,7 @@ class _LambingPageState extends State<LambingPage> {
               height:  this._adBanner!.size.height.toDouble(),
               width:  this._adBanner!.size.width.toDouble(),
               child: AdWidget(ad:  this._adBanner!)));
-    }
+    }*/
     return Container();
   }
 
@@ -335,7 +335,7 @@ class _LambingPageState extends State<LambingPage> {
         _obsCtl.text = _lambing.observations!;
       _adoption = Adoption.getAdoption(_lambing.adoption!);
       _agnelage = Agnelage.getAgnelage(_lambing.qualite!);
-    }
+    }/*
     this._adBanner = BannerAd(
       adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
       size: AdSize.banner,
@@ -343,12 +343,13 @@ class _LambingPageState extends State<LambingPage> {
       listener: BannerAdListener(),
     );
     this._adBanner!.load();
+    */
   }
 
   @override
   void dispose() {
     super.dispose();
-    this._adBanner!.dispose();
+    //this._adBanner!.dispose();
   }
 
   Widget _buildLambItem(BuildContext context, int index) {

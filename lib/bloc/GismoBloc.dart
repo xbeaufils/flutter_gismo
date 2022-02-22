@@ -5,6 +5,7 @@ import 'dart:io';
 //import 'package:admob_flutter/admob_flutter.dart';
 //import 'package:facebook_audience_network/facebook_audience_network.dart';
 //import 'package:dio/dio.dart';
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Exception/EventException.dart';
 import 'package:flutter_gismo/bloc/GismoRepository.dart';
@@ -45,10 +46,6 @@ class GismoBloc {
   GismoRepository ? _repository;
   static const  BLUETOOTH_CHANNEL = const MethodChannel('nemesys.rfid.bluetooth');
 
-  //final _sentry = SentryClient(dsn:  "https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553");
-
-  //get sentry => _sentry;
-
   GismoBloc();
   /*
   Gestion des exceptions avec sentry
@@ -57,12 +54,10 @@ class GismoBloc {
   bool get isInDebugMode {
     // Assume you're in production mode.
     bool inDebugMode = false;
-
     // Assert expressions are only evaluated during development. They are ignored
     // in production. Therefore, this code only sets `inDebugMode` to true
     // in a development environment.
     assert(inDebugMode = true);
-
     return inDebugMode;
   }
 
@@ -78,19 +73,14 @@ class GismoBloc {
     }
   }
 
-  Future<bool> configIsBt() async {
-    FlutterSecureStorage storage = new FlutterSecureStorage();
-    String bluetooth = await storage.read(key: "bluetooth");
-    bool isBluetooth = (bluetooth == 'true') ?  true : false;
-    return isBluetooth;
-  }
-
+/*
   Future<String> configBt() async {
     FlutterSecureStorage storage = new FlutterSecureStorage();
     String address = await storage.read(key: "address");
     return address;
   }
-
+ */
+/*
   void saveBt(bool isBlueTooth, String  ? address) {
     FlutterSecureStorage storage = new FlutterSecureStorage();
     storage.write(key: "bluetooth", value: isBlueTooth.toString());
@@ -99,7 +89,7 @@ class GismoBloc {
     else
       storage.delete(key: "address");
   }
-
+*/
   Stream<BluetoothState> streamConnectBluetooth(String address) async* {
     BluetoothState state;
     /*FlutterSecureStorage storage = new FlutterSecureStorage();
@@ -115,68 +105,13 @@ class GismoBloc {
 
   Future<BluetoothState> startReadBluetooth() async {
     BluetoothState state;
-    FlutterSecureStorage storage = new FlutterSecureStorage();
-    String address = await storage.read(key: "address");
-    debug.log("read data status " + address, name: "GismoBloc::startReadBluetooth");
-    String status = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth", { 'address': address});
+    //FlutterSecureStorage storage = new FlutterSecureStorage();
+    //String address = await storage.read(key: "address");
+    //debug.log("read data status " + address, name: "GismoBloc::startReadBluetooth");
+    String status = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth" ); //, { 'address': address});
     debug.log("read status " + status, name: "GismoBloc::startReadBluetooth");
     state = BluetoothState.fromResult(json.decode(status));
     return state;
-  }
-
-  Stream <BluetoothState> streamReadBluetooth() async* {
-    String status;
-    BluetoothState state;
-    int i = 0;
-    while (i < 20) {
-      status = await BLUETOOTH_CHANNEL.invokeMethod("dataBlueTooth");
-      await Future.delayed(Duration(seconds: 1));
-      debug.log("data status " + status, name: "GismoBloc::streamReadBluetooth");
-      yield  state = BluetoothState.fromResult(json.decode(status));
-      if ( state.status == 'NONE' || state.status == 'AVAILABLE')
-        i = 100; // Sortie du while
-      i++;
-    }
-  }
-
-  Stream<BluetoothState> streamBluetooth() async* {
-    BluetoothState state;
-    FlutterSecureStorage storage = new FlutterSecureStorage();
-    String address = await storage.read(key: "address");
-    try {
-      String status = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth", { 'address': address});
-      Map<String, dynamic> map = json.decode(status);
-      int i = 0;
-      while (i < 20) {
-        await Future.delayed(Duration(seconds: 1));
-        status = await BLUETOOTH_CHANNEL.invokeMethod("dataBlueTooth");
-        status = status.replaceAll("\n", "");
-        status = status.replaceAll("\r", "");
-       //map = json.decode(status);
-        /* For DEBUG
-        if (i == 3)
-          status = "{\"status\": \"AVAILABLE\", \"data\": \"250021511330484\" }"; */
-        debug.log("Status Bloc" + status);
-        BluetoothState state;
-        yield  state = BluetoothState.fromResult(json.decode(status));
-        if ( state.status == 'NONE' || state.status == 'AVAILABLE')
-          i = 100; // Sortie du while
-        i++;
-      }
-      await BLUETOOTH_CHANNEL.invokeMethod("stopBlueTooth");
-    } on PlatformException catch(e) {
-      debug.log("Erreur ", error: e );
-    }
-  }
-
-  Stream<StatusBlueTooth> streamStatusBluetooth() async* {
-    StatusBlueTooth state;
-    while (true) {
-      String strStatus = await BLUETOOTH_CHANNEL.invokeMethod("stateBlueTooth");
-      debug.log("status " + strStatus, name: "streamStatusBluetooth");
-      await Future.delayed(Duration(milliseconds: 500));
-      yield state = StatusBlueTooth.fromResult(json.decode(strStatus));
-    }
   }
 
   void stopBluetooth() {
@@ -202,7 +137,7 @@ class GismoBloc {
         debug.log("Mode autonome", name: "GismoBloc::init");
         // Ajout des pubs
         //Admob.initialize();
-        //FacebookAudienceNetwork.init();
+        FacebookAudienceNetwork.init();
         if (Platform.isIOS) {
           //await Admob.requestTrackingAuthorization();
         }

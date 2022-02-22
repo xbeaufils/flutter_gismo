@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gismo/bloc/BluetoothBloc.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
@@ -29,6 +31,7 @@ class _BouclagePageState extends State<BouclagePage> {
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
   bool _rfidPresent = false;
   String _bluetoothState ="NONE";
+  final BluetoothBloc _btBloc= new BluetoothBloc();
 
 
   //String _numBoucle;
@@ -121,32 +124,21 @@ class _BouclagePageState extends State<BouclagePage> {
   Widget _statusBluetoothBar() {
     if (! this._bloc.isLogged()!)
       return Container();
-    return FutureBuilder(
-        future: this._bloc.configIsBt(),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.none && snapshot.hasData == null) {
-            return Container();
-          }
-          if (snapshot.connectionState == ConnectionState.waiting)
-            return  Container();
-          if (! snapshot.hasData )
-            return Container();
-          List<Widget> status = [];
-          switch (_bluetoothState ) {
-            case "NONE":
-              status.add(Icon(Icons.bluetooth));
-              status.add(Text("Non connecté"));
-              break;
-            case "WAITING":
-              status.add(Icon(Icons.bluetooth));
-              status.add( Expanded( child: LinearProgressIndicator(),) );
-              break;
-            case "AVAILABLE":
-              status.add(Icon(Icons.bluetooth));
-              status.add(Text("Données reçues"));
-          }
-          return Row(children: status,);
-        });
+    List<Widget> status = [];
+    switch (_bluetoothState ) {
+      case "NONE":
+        status.add(Icon(Icons.bluetooth));
+        status.add(Text("Non connecté"));
+        break;
+      case "WAITING":
+        status.add(Icon(Icons.bluetooth));
+        status.add( Expanded( child: LinearProgressIndicator(),) );
+        break;
+      case "AVAILABLE":
+        status.add(Icon(Icons.bluetooth));
+        status.add(Text("Données reçues"));
+    }
+    return Row(children: status,);
   }
 
   void _readRFID() async {
@@ -175,9 +167,9 @@ class _BouclagePageState extends State<BouclagePage> {
   void dispose() {
     _numBoucleCtrl.dispose();
     _numMarquageCtrl.dispose();
-    this.widget._bloc.stopBluetooth();
+    this.widget._bloc.stopReadBluetooth();
+    this._btBloc.stopStream();
     super.dispose();
-
   }
 
   void _createBete() async {
@@ -206,23 +198,25 @@ class _BouclagePageState extends State<BouclagePage> {
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
     //_scaffoldKey.currentState.showSnackBar(snackBar);
-
   }
 
   Future<String> _startService() async{
     try {
-      if ( await this._bloc.configIsBt()) {
+      debug.log("Start service ", name: "_BouclagePageState::_startService");
+      BluetoothState _bluetoothState =  await this._bloc.startReadBluetooth();
+      debug.log("Start status " + _bluetoothState.status, name: "_BouclagePageState::_startService");
+      if (_bluetoothState.status == BluetoothBloc.CONNECTED
+          || _bluetoothState.status == BluetoothBloc.STARTED) {
         //this._bluetoothStream.listen((BluetoothState event) { })
-        this.widget._bloc.streamBluetooth().listen(
+        this._btBloc.streamReadBluetooth().listen(
                 (BluetoothState event) {
-                  if (_bluetoothState != event.status)
+                  if (this._bluetoothState != event.status)
               setState(() {
-                _bluetoothState = event.status;
+                this._bluetoothState = event.status;
                 if (event.status == 'AVAILABLE') {
                   String _foundBoucle = event.data;
                   if (_foundBoucle.length > 15)
                     _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
-
                   _numBoucleCtrl.text = _foundBoucle.substring(_foundBoucle.length - 5);
                   _numMarquageCtrl.text = _foundBoucle.substring(0, _foundBoucle.length - 5);
                 }
