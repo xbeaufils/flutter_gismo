@@ -77,27 +77,25 @@ class _PaturagePageState extends State<PaturagePage> {
                     },
                   ),
                 )
-              ]
-
-            ),
+              ]),
           ),
           new Card(
             child: new FutureBuilder<List<LotModel>>(
                 future: this.widget._bloc.getLots(),
                 builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.hasError) {
-                    return new Container();
-                  } else if (!snapshot.hasData) {
+                    return Container();
+                  }
+                  if (!snapshot.hasData) {
                     return CircularProgressIndicator();
                   }
-                  return DropdownButton<int>(
+                  return DropdownButton(
                     hint: Text('Lot en paturage'),
-                    items: snapshot.data
-                        .map((lot) => DropdownMenuItem<int>(
-                            child: Text(lot.codeLotLutte),
-                            value: lot.idb,
-                          )
-                        ).toList(),
+                    items: snapshot.data.map <DropdownMenuItem<int>>((LotModel lot) {
+                      return DropdownMenuItem(
+                        child: Text( ( lot.codeLotLutte==null)?"": lot.codeLotLutte! ),
+                        value: lot.idb,);
+                    }).toList(),
                     value: _currentLot,
                     onChanged: (int ? value) {
                       setState(() {

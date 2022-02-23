@@ -84,17 +84,17 @@ class _ParcellePageState extends State<ParcellePage> {
     _mapController = controller;
     debug.log("Map created" , name: "_ParcellePageState::_onMapCreated" );
     //mapController.addLine(options);
-    /*
+
     _getLocation()
-        .then( (location) => { _drawParcelles(location) })
+        .then( (location) => { });/*_drawParcelles(location) })
         .catchError((error, stackTrace) {
           ScaffoldMessenger.of(context).showSnackBar(
               SnackBar( content: Text(error)));
           // error is SecondError
           Sentry.captureException(error, stackTrace : stackTrace);
           debug.log("outer: $error", name:"_ParcellePageState::_onMapCreated");
-        });
-     */
+        });*/
+
   }
 
   void _onUserLocationUpdated(UserLocation location) {
