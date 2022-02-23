@@ -26,7 +26,7 @@ import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/model/User.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:geolocator/geolocator.dart';
+//import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 //import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';

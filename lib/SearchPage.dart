@@ -42,7 +42,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   List<Bete> _betes = <Bete>[]; //new List();
   List<Bete> _filteredBetes = <Bete>[]; //new List();
 
-  late Stream<BluetoothState> _bluetoothStream;
+  Stream<BluetoothState> ? _bluetoothStream;
   StreamSubscription<BluetoothState> ? _bluetoothSubscription;
   String _bluetoothState ="NONE";
   final BluetoothBloc _btBloc= new BluetoothBloc();
@@ -162,27 +162,29 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       BluetoothState _bluetoothState =  await this._bloc.startReadBluetooth();
       debug.log("Start status " + _bluetoothState.status, name: "_SearchPageState::_startService");
       if (_bluetoothState.status == BluetoothBloc.CONNECTED
-      || _bluetoothState.status == BluetoothBloc.STARTED)
+      || _bluetoothState.status == BluetoothBloc.STARTED) {
         this._bluetoothStream = this._btBloc.streamReadBluetooth();
-        this._bluetoothSubscription = this._bluetoothStream.listen(
-          (BluetoothState event) {
-            debug.log("Status " + event.status, name: "_SearchPageState::_startService");
-            if (this._bluetoothState != event.status)
-              setState(() {
-                this._bluetoothState = event.status;
-                if (event.status == 'AVAILABLE') {
-                  String _foundBoucle = event.data;
-                  if (_foundBoucle.length > 15)
+        this._bluetoothSubscription = this._bluetoothStream!.listen(
+                (BluetoothState event) {
+              debug.log("Status " + event.status,
+                  name: "_SearchPageState::_startService");
+              if (this._bluetoothState != event.status)
+                setState(() {
+                  this._bluetoothState = event.status;
+                  if (event.status == 'AVAILABLE') {
+                    String _foundBoucle = event.data;
+                    if (_foundBoucle.length > 15)
+                      _foundBoucle =
+                          _foundBoucle.substring(_foundBoucle.length - 15);
                     _foundBoucle =
-                        _foundBoucle.substring(_foundBoucle.length - 15);
-                  _foundBoucle =
-                      _foundBoucle.substring(_foundBoucle.length - 5);
-                  _searchText = _foundBoucle;
-                  _filter.text = _foundBoucle;
-                  _searchPressed();
-                }
+                        _foundBoucle.substring(_foundBoucle.length - 5);
+                    _searchText = _foundBoucle;
+                    _filter.text = _foundBoucle;
+                    _searchPressed();
+                  }
+                });
             });
-          });
+      }
     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       debug.log(e.toString());

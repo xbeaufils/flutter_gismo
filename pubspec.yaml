@@ -37,7 +37,7 @@ dependencies:
   flutter_secure_storage: ^3.3.5
   #webview_flutter: ^0.3.19+8
   #location: ^4.1.1
-  geolocator: ^8.1.1
+  # geolocator: ^8.1.1
   #flutter_map:
   #flutter_inappwebview:
   mapbox_gl: ^0.15.0
