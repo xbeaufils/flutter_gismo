@@ -523,10 +523,17 @@ class LocalDataProvider extends DataProvider{
       return null;
     }
     LambingModel current = new LambingModel.fromResult(futureMaps[0]);
+    if (current.idPere != null) {
+      Bete ? pere = await this._searchBete(current.idPere!);
+      if (pere != null) {
+        current.numMarquagePere = pere.numMarquage;
+        current.numBouclePere = pere.numBoucle;
+      }
+    }
     Bete ? mere = await this._searchBete(current.idMere);
     if (mere != null) {
       current.numMarquageMere = mere.numMarquage;
-    current.numBoucleMere = mere.numBoucle;
+      current.numBoucleMere = mere.numBoucle;
     }
     current.lambs = [];
     List<Map<String, dynamic>> agneaux = await db.query('agneaux',where: 'agnelage_id = ?', whereArgs: [current.idBd]);
