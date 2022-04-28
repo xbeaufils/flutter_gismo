@@ -11,7 +11,7 @@ description: Gismo application.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.2.0+11
+version: 2.2.1+12
 
 environment:
   sdk: ">=2.15.0 <3.0.0"
@@ -25,26 +25,18 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   # cupertino_icons: ^0.1.2
 
-  #dio: ^3.0.6 # regression ^4.0.0 #latest version
   http: ^0.13.3
   intl: ^0.17.0
-  #shared_preferences: ^0.5.6
   sqflite:
- # path:
- # permission_handler: ^5.0.1+1
- # downloads_path_provider: ^0.1.0
+  permission_handler: ^9.2.0
   path_provider: ^2.0.9
   flutter_secure_storage: ^3.3.5
-  #webview_flutter: ^0.3.19+8
   #location: ^4.1.1
   # geolocator: ^8.1.1
-  #flutter_map:
-  #flutter_inappwebview:
   mapbox_gl: ^0.15.0
   #rts500plugin:
   #  path: ../rts500_plugin/
   sentry: ^5.0.0
-  #sentry: ">=3.0.0 <4.0.0"
   #google_mobile_ads: ^1.1.0
   admob_flutter: 2.0.0
   facebook_audience_network: ^1.0.1
