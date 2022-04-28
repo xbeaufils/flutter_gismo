@@ -32,6 +32,7 @@ import io.sentry.Sentry;
 
 public class MainActivity extends FlutterActivity  implements  MethodChannel.MethodCallHandler, PluginRegistry.PluginRegistrantCallback{
     private static final String CHANNEL_RT610 = "nemesys.rfid.RT610";
+    private static final String CHANNEL_GPS = "nemesys.GPS";
     private static final String CHANNEL_BLUETOOTH = "nemesys.rfid.bluetooth";
 
     public Context context;
@@ -116,6 +117,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         new MethodChannel(getFlutterEngine().getDartExecutor().getBinaryMessenger(), CHANNEL_RT610)
                 .setMethodCallHandler(this::onMethodCall);
         new MethodChannelBlueTooth(getFlutterEngine().getDartExecutor().getBinaryMessenger(), CHANNEL_BLUETOOTH);
+        new LocationMethod(getFlutterEngine().getDartExecutor().getBinaryMessenger(), CHANNEL_GPS, this.getContext());
         Intent intent = getIntent();
         intent.getAction();
         intent.getType();
