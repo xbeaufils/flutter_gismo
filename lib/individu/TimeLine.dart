@@ -125,7 +125,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
               leading: _getImageType(event.type),
               title: Text(event.eventName),
               subtitle: Text(event.date),
-              trailing:IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _searchEvent(event), ),
+              trailing:this._eventButton(event),
             );
           },
         );
@@ -174,6 +174,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       },
     );
   }
+  
   // set up the buttons
   Widget _cancelButton() {
     return TextButton(
