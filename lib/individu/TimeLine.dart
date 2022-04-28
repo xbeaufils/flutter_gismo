@@ -197,12 +197,6 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   }
 
   void _deleteEvent(Event event) async {
-    switch (event.type) {
-      case EventType.saillie:
-      case EventType.NEC:
-      case EventType.pesee:
-      default:
-    }
     String message = await this.widget._bloc.deleteEvent(event);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
     /*_scaffoldKey.currentState
