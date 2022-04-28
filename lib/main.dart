@@ -28,6 +28,7 @@ void main() async {
   /// added to SecurityContext.
   /// Wrapped in try catch in case the certificate is already trusted by
   /// device/os, which will cause an exception to be thrown.
+  /*
   HttpClient customHttpClient({String cert}) {
     SecurityContext context = SecurityContext.defaultContext;
 
@@ -52,26 +53,28 @@ void main() async {
 
     return httpClient;
   }
-
+  */
   /// Use package:http Client with our custom dart:io HttpClient with added
   /// LetsEncrypt trusted certificate
+  /*
   http.Client createLEClient() {
     IOClient ioClient;
     ioClient = IOClient(customHttpClient(cert: ISRG_X1));
     return ioClient;
   }
-
+  */
   /// Example using a custom package:http Client
   /// that will work with devices missing LetsEncrypt
   /// ISRG Root X1 certificates, like old Android 7 devices.
   //test('HTTP client to LetsEncrypt SSL website', () async {
-  const sslUrl = 'https://valid-isrgrootx1.letsencrypt.org/';
-    http.Client _client = createLEClient();
-    http.Response _response = await _client.get(Uri.parse(sslUrl) );
-    print(_response.body);
-    //expect(_response.statusCode, 200);
-  //});
+
   /*
+  const sslUrl = 'https://valid-isrgrootx1.letsencrypt.org/';
+  http.Client _client = createLEClient();
+  http.Response _response = await _client.get(Uri.parse(sslUrl) );
+  print(_response.body);
+   */
+   /*
   Fin certificat
    */
   WidgetsFlutterBinding.ensureInitialized();
