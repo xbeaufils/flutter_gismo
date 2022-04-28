@@ -134,6 +134,83 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
     );
   }
 
+  Widget _eventButton(Event event) {
+    switch (event.type) {
+      case EventType.agnelage :
+      case EventType.traitement:
+      case EventType.echo:
+        return IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _searchEvent(event), );
+        break;
+      case EventType.saillie:
+      case EventType.NEC:
+      case EventType.pesee:
+        return IconButton(icon: Icon(Icons.delete), onPressed: () => _showDialog(context, event), );
+
+      default:
+    }
+    return Container();
+  }
+
+  Future _showDialog(BuildContext context, Event event) {
+    String message ="Voulez vous supprimer ";
+    if (event.type == EventType.NEC)
+      message += "cette note d'Etat corp ?";
+    if (event.type == EventType.saillie)
+      message += "cette saillie ?";
+    if (event.type == EventType.pesee)
+      message += "cette pesée ?";
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Suppression"),
+          content: Text(
+              message),
+          actions: [
+            _cancelButton(),
+            _continueButton(event),
+          ],
+        );
+      },
+    );
+  }
+  // set up the buttons
+  Widget _cancelButton() {
+    return TextButton(
+      child: Text("Annuler"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget _continueButton(Event event) {
+    return TextButton(
+      child: Text("Continuer"),
+      onPressed: () {
+        if (event.type == EventType.pesee || event.type == EventType.NEC || event.type == EventType.saillie)
+          _deleteEvent(event);
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  void _deleteEvent(Event event) async {
+    switch (event.type) {
+      case EventType.saillie:
+      case EventType.NEC:
+      case EventType.pesee:
+      default:
+    }
+    String message = await this.widget._bloc.deleteEvent(event);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    /*_scaffoldKey.currentState
+        .showSnackBar(SnackBar(content: Text(message)));*/
+    setState(() {
+
+    });
+  }
+
   void _searchEvent(Event event) {
     switch (event.type) {
       case EventType.agnelage :
@@ -145,6 +222,9 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       case EventType.echo:
         _bloc.searchEcho(event.idBd).then( (echo) => { _editEcho(echo!)});
         break;
+      case EventType.saillie:
+      case EventType.NEC:
+      case EventType.pesee:
        default:
     }
   }

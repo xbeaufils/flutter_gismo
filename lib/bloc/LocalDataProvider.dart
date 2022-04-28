@@ -701,6 +701,14 @@ class LocalDataProvider extends DataProvider{
   }
 
   @override
+  Future<String> deleteNec(int idBd) async {
+    Database db = await this.database;
+    int res =   await db.delete("NEC",
+        where: "id = ?", whereArgs: <int>[idBd]);
+    return "Suppression effectuée";
+  }
+
+  @override
   Future<String> savePesee(Pesee note) async {
     try {
       Database db = await this.database;
@@ -759,6 +767,15 @@ class LocalDataProvider extends DataProvider{
     }
     return "Erreur d'enregistrement";
   }
+
+  @override
+  Future<String> deleteSaillie(int idBd) async {
+    Database db = await this.database;
+    int res =   await db.delete("saillie",
+        where: "id = ?", whereArgs: <int>[idBd]);
+    return "Suppression effectuée";
+  }
+
 
   @override
   Future<List<SaillieModel>> getSaillies(Bete bete) async {

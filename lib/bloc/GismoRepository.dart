@@ -100,6 +100,11 @@ class DummyDataProvider extends DataProvider {
   }
 
   @override
+  Future<String> deleteNec(int idBd) {
+    throw RepositoryTypeException("Type de repository inconnue");
+  }
+
+  @override
   Future<List<EchographieModel>> getEcho(Bete bete) {
     throw RepositoryTypeException("Type de repository inconnue");
   }
@@ -121,6 +126,11 @@ class DummyDataProvider extends DataProvider {
 
   @override
   Future<List<SaillieModel>> getSaillies(Bete bete) {
+    throw RepositoryTypeException("Type de repository inconnue");
+  }
+
+  @override
+  Future<String> deleteSaillie(int idBd) {
     throw RepositoryTypeException("Type de repository inconnue");
   }
 

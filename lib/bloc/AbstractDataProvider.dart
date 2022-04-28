@@ -58,9 +58,11 @@ abstract class DataProvider {
   //  Saillie
   Future<String> saveSaillie(SaillieModel saillie);
   Future<List<SaillieModel>> getSaillies(Bete bete);
+  Future<String> deleteSaillie(int idBd);
   // Note etat corporel
   Future<String> saveNec(NoteModel node);
   Future<List<NoteModel>> getNec(Bete bete);
+  Future<String> deleteNec(int idBd);
   // Lots
   Future<List<LotModel>> getLots(String cheptel) ;
   Future<LotModel?> saveLot(LotModel lot);

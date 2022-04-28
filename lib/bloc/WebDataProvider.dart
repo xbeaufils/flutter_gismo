@@ -417,6 +417,23 @@ class WebDataProvider extends DataProvider {
   }
 
   @override
+  Future<String> deleteNec(int idBd) async {
+    try {
+      final response = await _gismoHttp.doGet('/nec/del/' + idBd.toString());
+      if (response['error']) {
+        throw (response['message']);
+      }
+      else {
+        return response['message'];
+      }
+    }
+    catch ( e) {
+      debug.log("Error " + e.toString());
+      return "Error " + e.toString();
+    }
+  }
+
+  @override
   Future<String> savePesee(Pesee pesee) async {
     try {
       final response = await _gismoHttp.doPostMessage(
@@ -453,7 +470,12 @@ class WebDataProvider extends DataProvider {
   Future<String> deletePesee(int idBd) async {
     try {
       final response = await _gismoHttp.doGet('/poids/del/' + idBd.toString());
-      return response['message'];
+      if (response['error']) {
+        throw (response['message']);
+      }
+      else {
+        return response['message'];
+      }
     }
     catch ( e) {
       debug.log("Error " + e.toString());
@@ -486,6 +508,23 @@ class WebDataProvider extends DataProvider {
     }
     return tempList;
     //throw RepositoryTypeException("Not implemented");
+  }
+
+  @override
+  Future<String> deleteSaillie(int idBd) async {
+    try {
+      final response = await _gismoHttp.doGet('/saillie/del/' + idBd.toString());
+      if (response['error']) {
+        throw (response['message']);
+      }
+      else {
+        return response['message'];
+      }
+    }
+    catch ( e) {
+      debug.log("Error " + e.toString());
+      return "Error " + e.toString();
+    }
   }
 
   @override
