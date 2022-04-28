@@ -346,8 +346,11 @@ class GismoBloc {
         message = await this._repository!.dataProvider.deleteTraitement(event.idBd);
         break;
       case EventType.NEC:
+        message = await this._repository!.dataProvider.deleteNec(event.idBd);
+        break;
       case EventType.saillie:
-
+        message = await this._repository!.dataProvider.deleteSaillie(event.idBd);
+        break;
     }
     return message;
   }

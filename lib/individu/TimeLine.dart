@@ -134,7 +134,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
     );
   }
 
-  Widget _eventButton(Event event) {
+  Widget ? _eventButton(Event event) {
     switch (event.type) {
       case EventType.agnelage :
       case EventType.traitement:
@@ -148,7 +148,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
 
       default:
     }
-    return Container();
+    return null;
   }
 
   Future _showDialog(BuildContext context, Event event) {
