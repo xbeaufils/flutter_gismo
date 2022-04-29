@@ -47,7 +47,6 @@ public class LocationMethod extends MethodChannel {
             locationManager = (LocationManager) this.mContext.getSystemService(Context.LOCATION_SERVICE);
 
             if (call.method.contentEquals("startLocation")) {
-                int permission = ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION);
                 if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                         && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     result.error("NoRight", "Autorisez l'acces au GPS", null);
@@ -57,6 +56,7 @@ public class LocationMethod extends MethodChannel {
                             LocationManager.GPS_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, myTrack);
+                    loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                     result.success("Localisation en cours");
                 }
             }
@@ -65,8 +65,15 @@ public class LocationMethod extends MethodChannel {
                     Log.d(TAG, "onMethodCall::getLocation Latitude" + loc.getLatitude() + " Long " + loc.getLongitude() );
                     result.success("{\"Latitude\" : \"" + loc.getLatitude() + "\", \"Longitude\" : \"" + loc.getLongitude() + "\"}");
                 }
-                else
-                    result.error("NoLocation", "Non localisation", null);
+                else {
+                    loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    if (loc != null){
+                        Log.d(TAG, "onMethodCall::getLocation Latitude" + loc.getLatitude() + " Long " + loc.getLongitude() );
+                        result.success("{\"Latitude\" : \"" + loc.getLatitude() + "\", \"Longitude\" : \"" + loc.getLongitude() + "\"}");
+                    }
+                    else
+                        result.error("NoLocation", "Non localisation", null);
+                }
             }
             if (call.method.contentEquals("stopLocation")) {
                 locationManager.removeUpdates(myTrack);

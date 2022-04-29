@@ -143,18 +143,18 @@ class _ParcellePageState extends State<ParcellePage> {
   Future<LatLng ?> _retrieveParcelles( LatLng ? location) async {
     if (location == null)
       return null;
-    this._showStatus("Recherche des parcelles");
+    //this._showStatus("Recherche des parcelles");
     _myParcelles =  await _bloc.getParcelles();
-    this._showStatus("Recherche du cadastre");
+    //this._showStatus("Recherche du cadastre");
     String cadastreStr = await _bloc.getCadastre(location);
     Map<String, dynamic> cadastreJson =  jsonDecode(cadastreStr);
     featuresJson = cadastreJson['features'];
     return location;
   }
 
-  void _drawParcelles( LatLng ? location) async {
+  Future<LatLng ?>  _drawParcelles( LatLng ? location) async {
     if (location == null)
-      return;
+      return location;
     debug.log("" + location.toString(), name: "_ParcellePageState::_drawParcelles" );
     _mapController!.moveCamera(CameraUpdate.newCameraPosition(
       new CameraPosition(
@@ -162,9 +162,7 @@ class _ParcellePageState extends State<ParcellePage> {
         zoom: 14.0,
       ),));
     featuresJson.forEach((feature) => _drawParcelle(feature));
-    setState(() {
-      this._locationProgress = false;
-    });
+    return location;
   }
 
   void _onMapClick(Point<double> pt, LatLng coord) async {
@@ -226,6 +224,18 @@ class _ParcellePageState extends State<ParcellePage> {
     ));
   }
 
+  void _showMap(LatLng location) async {
+    debug.log("En attente des parcelles", name: "_ParcellePageState::_showMap");
+    this._showStatus("En attente des parcelles");
+    await this._retrieveParcelles(location);
+    debug.log("Affichage du cadastre", name: "_ParcellePageState::_showMap");
+    this._showStatus("Affichage du cadastre");
+    await this._drawParcelles(location);
+    setState(() {
+      this._locationProgress = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -238,6 +248,11 @@ class _ParcellePageState extends State<ParcellePage> {
     this._locationStream = this._locBloc.streamLocation();
     this._locationSubscription = this._locationStream.listen( (LocationResult result) {
       if (result.result) {
+        this._curentPosition = result.location!;
+        this._locBloc.stopStream();
+        this._locationSubscription!.cancel();
+        this._showMap(result.location!);
+        /*
         this._showStatus("En attente des parcelles");
         this._retrieveParcelles(result.location).then((location)=> {
           this._drawParcelles(location)
@@ -245,13 +260,10 @@ class _ParcellePageState extends State<ParcellePage> {
         this._curentPosition = result.location;
         this._locBloc.stopStream();
         this._locationSubscription!.cancel();
+         */
       }
       else
         this._showStatus("En attente de coordonnées");
     });
   }
-
-
-
-
 }
