@@ -5,15 +5,12 @@ import 'dart:developer' as debug;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/bloc/LocationBloc.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/parcelle/PaturagePage.dart';
 
 import 'package:mapbox_gl/mapbox_gl.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:sentry/sentry.dart';
 
 class ParcellePage extends StatefulWidget {
   final GismoBloc _bloc;
