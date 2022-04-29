@@ -60,20 +60,21 @@ class _LotPageState extends State<LotPage> {
           return CircularProgressIndicator();
         return ListView.builder(
           shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
           itemCount: lotSnap.data.length,
           itemBuilder: (context, index) {
             LotModel lot = lotSnap.data[index];
-            return Column(
-              children: <Widget>[
+            return //Column(
+              //children: <Widget>[
                 Card(child:
                     ListTile(
                       title: Text(lot.codeLotLutte!),
                       subtitle: Text(lot.dateDebutLutte!),
                       trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () => _viewDetails(lot), )
                     )
-                )
-                ],
-            );
+                );
+                //],
+            //);
           },
         );
       },
