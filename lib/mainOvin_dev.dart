@@ -19,7 +19,7 @@ void main() async {
     );*/
   }
   gismoBloc = new GismoBloc();
-  Environnement.init( "http://10.0.2.2:8080/gismoWeb/bd", "http://192.168.0.24:8080/gismoApp/api");
+  Environnement.init( "http://10.0.2.2:8080/gismoWeb/bd", "http://192.168.0.212:8080/gismoApp/api");
   String nextPage = '/splash';
   if (kIsWeb)
     nextPage='/login';
