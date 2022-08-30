@@ -14,6 +14,7 @@ import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
+import 'package:flutter_gismo/model/NoteModel.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
@@ -688,6 +689,14 @@ class WebDataProvider extends DataProvider {
       tempList.add(new Bete.fromResult(response[i]));
     }
     return tempList;
+  }
+  // Notes
+  Future<List<Note>> getNotes(String cheptel) {
+    throw UnimplementedError();
+  }
+
+  Future<Note?> saveNote(Note note) {
+    throw UnimplementedError();
   }
 
   Future<String> getCadastre( LatLng /*Position*/ /*LocationData*/ myPosition) async {

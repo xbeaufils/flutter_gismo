@@ -19,6 +19,7 @@ import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
+import 'package:flutter_gismo/model/NoteModel.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
@@ -590,6 +591,14 @@ class GismoBloc {
 
   Future<List<Bete>> getLotBeliers(LambingModel lambing) {
     return this._repository!.dataProvider.getLotBeliers(lambing);
+  }
+  // Notes
+  Future<List<Note>> getNotes() {
+    return this._repository!.dataProvider.getNotes(_currentUser!.cheptel!);
+  }
+
+  Future<Note?> saveNote(Note note) {
+    return this._repository!.dataProvider.saveNote(note);
   }
 
   Future<String> getCadastre(LatLng /*Position*/ myPosition) async {

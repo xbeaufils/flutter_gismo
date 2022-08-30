@@ -12,6 +12,7 @@ import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
+import 'package:flutter_gismo/model/NoteModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/ReportModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
@@ -1002,6 +1003,14 @@ class LocalDataProvider extends DataProvider{
       tempList.add(new Bete.fromResult(maps[i]));
     }
      return tempList;
+  }
+  // Notes
+  Future<List<Note>> getNotes(String cheptel) {
+    throw UnimplementedError();
+  }
+
+  Future<Note?> saveNote(Note note) {
+    throw UnimplementedError();
   }
 
   Future<String> backupBd() async {
