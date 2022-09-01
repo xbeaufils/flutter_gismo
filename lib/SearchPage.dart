@@ -15,7 +15,7 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
-import 'package:flutter_gismo/model/StatusBluetooth.dart';
+import 'package:flutter_gismo/note/NotePage.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
 import 'package:sentry/sentry.dart';
 
@@ -261,6 +261,9 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         break;
       case GismoPage.saillie:
         page = SailliePage(_bloc, bete);
+        break;
+      case GismoPage.note:
+        page = NotePage(_bloc, bete);
         break;
       case GismoPage.sortie:
       case GismoPage.lot:

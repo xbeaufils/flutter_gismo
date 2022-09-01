@@ -76,7 +76,7 @@ abstract class DataProvider {
   Future<String> addBete(LotModel lot, Bete bete, String dateEntree);
   Future<String> deleteAffectation(Affectation affect);
   // Notes
-  Future<List<Note>> getNotes(String cheptel) ;
-  Future<Note?> saveNote(Note note);
+  Future<List<NoteTextuelModel>> getNotes(String cheptel) ;
+  Future<String> saveNote(NoteTextuelModel note);
 
 }

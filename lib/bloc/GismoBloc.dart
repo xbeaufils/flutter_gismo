@@ -593,11 +593,11 @@ class GismoBloc {
     return this._repository!.dataProvider.getLotBeliers(lambing);
   }
   // Notes
-  Future<List<Note>> getNotes() {
+  Future<List<NoteTextuelModel>> getNotes() {
     return this._repository!.dataProvider.getNotes(_currentUser!.cheptel!);
   }
 
-  Future<Note?> saveNote(Note note) {
+  Future<String> saveNote(NoteTextuelModel note) {
     return this._repository!.dataProvider.saveNote(note);
   }
 

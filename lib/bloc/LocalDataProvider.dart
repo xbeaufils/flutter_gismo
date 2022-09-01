@@ -61,6 +61,7 @@ class LocalDataProvider extends DataProvider{
             _createTablePesee(db);
             _createTableEcho(db);
             _createTableSaillie(db);
+            _createTableNote(db);
           },
          onUpgrade:(db, oldVersion, newVersion) {
           if (oldVersion < 2) {
@@ -92,12 +93,15 @@ class LocalDataProvider extends DataProvider{
           }
           if (oldVersion < 11 )
             this._migrate10to11(db);
-         // if (oldVersion < 12 )
-         //   this._migrate11to12(db);
+          if (oldVersion < 12 )
+            this._migrate11to12(db);
+          if (oldVersion < 13 )
+            this._migrate12to13(db);
+
         },
         // Set the version. This executes the onCreate function and provides a
         // path to perform database upgrades and downgrades.
-        version:12,
+        version:13,
     );
     this._sendReport(database);
     /*
@@ -200,6 +204,12 @@ class LocalDataProvider extends DataProvider{
     _createTableSaillie(db);
     db.execute("ALTER TABLE `agnelage` ADD COLUMN `pere_id` INTEGER NULL DEFAULT NULL");
   }
+  void _migrate11to12(Database db) {
+  }
+  void _migrate12to13(Database db) {
+    _createTableNote(db);
+  }
+
   void _createTableAgnelage(Database db) {
     db.execute("CREATE TABLE `agnelage` ( "
         "`id` INTEGER PRIMARY KEY,"
@@ -306,6 +316,15 @@ class LocalDataProvider extends DataProvider{
         "`idPere` INTEGER NULL DEFAULT NULL,"
         " PRIMARY KEY('idBd'))");
 
+  }
+  void _createTableNote(Database db) {
+    db.execute("CREATE TABLE `note` ("
+        "`id` INTEGER NOT NULL,"
+        "`debut` TEXT NULL DEFAULT NULL,"
+        "`fin` TEXT NULL DEFAULT NULL,"
+        "`note` TEXT NULL DEFAULT NULL,"
+        "`bete_id` INTEGER NULL DEFAULT NULL,"
+        "PRIMARY KEY (`id`))");
   }
 
   @override
@@ -1005,12 +1024,33 @@ class LocalDataProvider extends DataProvider{
      return tempList;
   }
   // Notes
-  Future<List<Note>> getNotes(String cheptel) {
-    throw UnimplementedError();
+  Future<List<NoteTextuelModel>> getNotes(String cheptel) async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> maps  = await db.rawQuery(
+        'SELECT _note.*, _bete.numBoucle, _bete.numMarquage '
+        'FROM note _note inner join bete _bete on _note.bete_id = _bete.id '
+        'where _bete.cheptel= ?',
+        [cheptel]);
+    List<NoteTextuelModel> tempList = [];
+    for (int i = 0; i < maps.length; i++) {
+      tempList.add(new NoteTextuelModel.fromResult(maps[i]));
+    }
+    return tempList;
   }
 
-  Future<Note?> saveNote(Note note) {
-    throw UnimplementedError();
+  Future<String> saveNote(NoteTextuelModel note) async {
+    try {
+      Database db = await this.database;
+      await db.insert("note", note.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+      return " Enregistrement effectué";
+    }
+    catch(e,stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
+      debug.log("Error", error: e);
+      return "Erreur d'enregistrement";
+    }
   }
 
   Future<String> backupBd() async {

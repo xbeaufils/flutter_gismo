@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/Gismo.dart';
+import 'package:flutter_gismo/SearchPage.dart';
 
 import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/menu/MenuPage.dart';
 import 'package:flutter_gismo/model/NoteModel.dart';
 import 'package:sentry/sentry.dart';
 
-class NotePage extends StatefulWidget {
+class NoteListPage extends StatefulWidget {
   GismoBloc _bloc;
-  String ? _message;
 
-  NotePage(this._bloc, this._message, {Key ? key}) : super(key: key);
+
+  NoteListPage(this._bloc, {Key ? key}) : super(key: key);
 
   @override
-  _NotePageState createState() => new _NotePageState(_bloc);
+  _NoteListPageState createState() => new _NoteListPageState(_bloc);
 }
 
-class _NotePageState extends State<NotePage> {
+class _NoteListPageState extends State<NoteListPage> {
   final GismoBloc _bloc;
 
-  _NotePageState(this._bloc);
+  _NoteListPageState(this._bloc);
 
   @override
   Widget build(BuildContext context) {
@@ -42,15 +45,11 @@ class _NotePageState extends State<NotePage> {
       ),
     floatingActionButton:
       FloatingActionButton(
-          onPressed: _createLot,
+          onPressed: _createNote,
           backgroundColor: Colors.lightGreen[700],
           child: Icon(Icons.add),),
-    drawer: Drawer(
-    // Add a ListView to the drawer. This ensures the user can scroll
-    // through the options in the drawer if there isn't enough vertical
-    // space to fit everything.
-      child: ListView()
-    ));
+    drawer: GismoDrawer(this._bloc)
+    );
   }
 
    Widget _listNoteWidget() {
@@ -67,33 +66,32 @@ class _NotePageState extends State<NotePage> {
     );
   }
 
-  Future<List<Note>> _getNotes()  {
+  Future<List<NoteTextuelModel>> _getNotes()  {
     return this._bloc.getNotes();
   }
 
-  void _createLot(){
-    /*
+  void _createNote(){
+
     var navigationResult = Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => LotAffectationViewPage(this._bloc, new LotModel()),
+        builder: (context) => SearchPage(this._bloc, GismoPage.note),
       ),
     );
     navigationResult.then( (message) {if (message != null) debug.log(message);} );
-  */
   }
 }
 
 class NotesList extends StatefulWidget {
-  final List<Note> notes;
+  final List<NoteTextuelModel> notes;
   const NotesList({Key? key, required this.notes}) : super(key: key);
   @override
   State<NotesList> createState() => _NotesListState(notes: notes);
 }
 
 class _NotesListState extends State<NotesList> {
-  final List<Note> _notes;
-  _NotesListState({required List<Note> notes}) : _notes = notes;
+  final List<NoteTextuelModel> _notes;
+  _NotesListState({required List<NoteTextuelModel> notes}) : _notes = notes;
   @override
   Widget build(BuildContext context) {
     return ExpansionPanelList(
@@ -102,7 +100,7 @@ class _NotesListState extends State<NotesList> {
           _notes[index].isExpanded = !isExpanded;
         });
       },
-      children: _notes.map<ExpansionPanel>((Note note) {
+      children: _notes.map<ExpansionPanel>((NoteTextuelModel note) {
         return ExpansionPanel(
           headerBuilder: (BuildContext context, bool isExpanded) {
             return ListTile(

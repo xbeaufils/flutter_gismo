@@ -9,12 +9,13 @@ import 'package:flutter_gismo/SplashScreen.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/bluetooth.dart';
 import 'package:flutter_gismo/loginPage.dart';
+import 'package:flutter_gismo/note/Notes.dart';
 import 'package:flutter_gismo/parcelle/ParcellePage.dart';
 import 'package:flutter_gismo/traitement/selectionTraitement.dart';
 import 'package:flutter_gismo/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-enum GismoPage {lamb, sanitaire, etat_corporel, individu, sortie, lot, pesee, echo, saillie, sailliePere  }
+enum GismoPage {lamb, sanitaire, etat_corporel, individu, sortie, lot, pesee, echo, saillie, sailliePere, note  }
 
 class GismoApp extends StatelessWidget {
   final String initialRoute;
@@ -54,6 +55,7 @@ class GismoApp extends StatelessWidget {
         // When navigating to the "/" route, build the FirstScreen widget.
        // '/config':(context) => ConfigPage(this._bloc),
         '/welcome': (context) => WelcomePage(this._bloc, null),
+        '/note' : (context) => NoteListPage(this._bloc),
         '/login': (context) => LoginPage(this._bloc),
         '/nec': (context) => SearchPage(this._bloc, GismoPage.etat_corporel),
         '/pesee': (context) => SearchPage(this._bloc, GismoPage.pesee),

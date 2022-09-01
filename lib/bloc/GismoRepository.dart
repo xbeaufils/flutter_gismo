@@ -275,11 +275,11 @@ class DummyDataProvider extends DataProvider {
     throw UnimplementedError();
   }
   // Notes
-  Future<List<Note>> getNotes(String cheptel) {
+  Future<List<NoteTextuelModel>> getNotes(String cheptel) {
     throw UnimplementedError();
   }
 
-  Future<Note?> saveNote(Note note) {
+  Future<String> saveNote(NoteTextuelModel note) {
     throw UnimplementedError();
   }
 

@@ -8,6 +8,8 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 
 import 'dart:developer' as debug;
 
+import 'package:flutter_gismo/menu/MenuPage.dart';
+
 //import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 
@@ -94,7 +96,7 @@ class _WelcomePageState extends State<WelcomePage> {
               new Text('Gismo ' + _bloc.user!.cheptel!):
               new Text('Erreur de connexion'),
             // N'affiche pas la touche back (qui revient à la SplashScreen
-            automaticallyImplyLeading: false,
+            automaticallyImplyLeading: true,
             actions: _getActionButton(),
             ),
         bottomNavigationBar: this._getFacebookAdvice(),
@@ -152,7 +154,8 @@ class _WelcomePageState extends State<WelcomePage> {
                     ]))),
              this._getAdmobAdvice(),
               //this._getFacebookAdvice(),
-            ]));
+            ]),
+        drawer: GismoDrawer(_bloc),);
   }
 
   Widget _getAdmobAdvice() {
