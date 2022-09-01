@@ -106,6 +106,7 @@ class NotePageState extends State<NotePage> {
             ])),
             TextFormField(
                 keyboardType: TextInputType.multiline,
+                maxLines: 3,
                 controller: _noteCtl,
                 decoration: InputDecoration(
                     labelText: "Note",
