@@ -129,7 +129,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       return Container();
   }
 
-
   void _readRFID() async {
     try {
       String response = await PLATFORM_CHANNEL.invokeMethod("startRead");

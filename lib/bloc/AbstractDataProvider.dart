@@ -78,5 +78,5 @@ abstract class DataProvider {
   // Notes
   Future<List<NoteTextuelModel>> getNotes(String cheptel) ;
   Future<String> saveNote(NoteTextuelModel note);
-
+  Future<String> delete(NoteTextuelModel note) ;
 }

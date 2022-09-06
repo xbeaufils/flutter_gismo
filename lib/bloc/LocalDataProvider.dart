@@ -322,6 +322,7 @@ class LocalDataProvider extends DataProvider{
         "`id` INTEGER NOT NULL,"
         "`debut` TEXT NULL DEFAULT NULL,"
         "`fin` TEXT NULL DEFAULT NULL,"
+        "`classe` TEXT NULL DEFAULT NULL,"
         "`note` TEXT NULL DEFAULT NULL,"
         "`bete_id` INTEGER NULL DEFAULT NULL,"
         "PRIMARY KEY (`id`))");
@@ -1052,6 +1053,15 @@ class LocalDataProvider extends DataProvider{
       return "Erreur d'enregistrement";
     }
   }
+
+  @override
+  Future<String> delete(NoteTextuelModel note) async {
+      Database db = await this.database;
+      int res =   await db.delete("note",
+          where: "id = ?", whereArgs: <int>[note.id!]);
+      return "Suppression effectuée";
+  }
+
 
   Future<String> backupBd() async {
     String databasePath = await getDatabasesPath();

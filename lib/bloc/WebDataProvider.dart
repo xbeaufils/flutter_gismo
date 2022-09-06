@@ -699,6 +699,24 @@ class WebDataProvider extends DataProvider {
     throw UnimplementedError();
   }
 
+  @override
+  Future<String> delete(NoteTextuelModel note) async {
+     try {
+      final response = await _gismoHttp.doGet(
+          '/note/delete/'+ note.id!.toString());
+      if (response['error']) {
+        throw (response['message']);
+      }
+      else {
+        return response['message'];
+      }
+    }
+    catch ( e) {
+      debug.log("Error " + e.toString());
+      return "Error " + e.toString();
+    }
+  }
+
   Future<String> getCadastre( LatLng /*Position*/ /*LocationData*/ myPosition) async {
     try {
       final response = await _gismoHttp.doPostParcelle(
@@ -740,6 +758,7 @@ class WebDataProvider extends DataProvider {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
+
   Future<Pature> getPature(String idu) async {
     try {
       final response = await _gismoHttp.doGet(

@@ -283,4 +283,8 @@ class DummyDataProvider extends DataProvider {
     throw UnimplementedError();
   }
 
+  @override
+  Future<String> delete(NoteTextuelModel note) {
+    throw UnimplementedError();
+  }
 }
