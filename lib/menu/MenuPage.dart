@@ -20,7 +20,7 @@ class GismoDrawer extends StatelessWidget {
                 onTap:() { _homePressed(context);},
               ),
               ListTile(
-                title: Text("Notes"),
+                title: Text("Memos"),
                 leading: Icon(Icons.note),
                 onTap: () { _notePressed(context);},
               ),

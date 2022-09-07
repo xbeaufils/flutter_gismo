@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/NoteModel.dart';
+import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:intl/intl.dart';
 
-class NotePage extends StatefulWidget {
+class MemoPage extends StatefulWidget {
   final GismoBloc _bloc;
   late Bete _bete;
-  NoteTextuelModel ? _currentNote;
+  MemoModel ? _currentNote;
 
   @override
-  NotePageState createState() => NotePageState(this._bloc);
+  MemoPageState createState() => MemoPageState(this._bloc);
 
-  NotePage(this._bloc,this._bete);
-  NotePage.edit(this._bloc, this._currentNote) ;
+  MemoPage(this._bloc,this._bete);
+  MemoPage.edit(this._bloc, this._currentNote) ;
 }
 
-class NotePageState extends State<NotePage> {
+class MemoPageState extends State<MemoPage> {
   final GismoBloc _bloc;
-  NotePageState(this._bloc);
+  MemoPageState(this._bloc);
 
   TextEditingController _dateDebutCtl = TextEditingController();
   TextEditingController _dateFinCtl = TextEditingController();
   TextEditingController _noteCtl = TextEditingController();
-  NoteClasse  _classe = NoteClasse.INFO;
+  MemoClasse  _classe = MemoClasse.INFO;
 
   final _df = new DateFormat('dd/MM/yyyy');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -110,19 +110,19 @@ class NotePageState extends State<NotePage> {
               ])),
               Row(
                 children: [
-                  Radio(value: NoteClasse.ALERT, groupValue: _classe, onChanged: (NoteClasse ? value) {
+                  Radio(value: MemoClasse.ALERT, groupValue: _classe, onChanged: (MemoClasse ? value) {
                     setState(() {
                       _classe = value!;
                     });
                   }),
                   Icon(Icons.warning_amber_outlined),  Text(" Alerte"),Spacer(),
-                  Radio(value: NoteClasse.WARNING, groupValue: _classe, onChanged: (NoteClasse ? value) {
+                  Radio(value: MemoClasse.WARNING, groupValue: _classe, onChanged: (MemoClasse ? value) {
                     setState(() {
                       _classe = value!;
                     });
                   }),
                   Icon(Icons.error_outline),  Text(" Warning"),Spacer(),
-                  Radio(value: NoteClasse.INFO, groupValue: _classe, onChanged: (NoteClasse ? value) {
+                  Radio(value: MemoClasse.INFO, groupValue: _classe, onChanged: (MemoClasse ? value) {
                     setState(() {
                       _classe = value!;
                     });
@@ -199,7 +199,7 @@ class NotePageState extends State<NotePage> {
       _isSaving = true;
     });
     if (this.widget._currentNote == null)
-      this.widget._currentNote = new NoteTextuelModel();
+      this.widget._currentNote = new MemoModel();
     this.widget._currentNote!.debut = _dateDebutCtl.text;
     this.widget._currentNote!.fin = _dateFinCtl.text;
     this.widget._currentNote!.note = _noteCtl.text;

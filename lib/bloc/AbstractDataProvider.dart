@@ -5,7 +5,7 @@ import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
-import 'package:flutter_gismo/model/NoteModel.dart';
+import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
@@ -76,7 +76,8 @@ abstract class DataProvider {
   Future<String> addBete(LotModel lot, Bete bete, String dateEntree);
   Future<String> deleteAffectation(Affectation affect);
   // Notes
-  Future<List<NoteTextuelModel>> getNotes(String cheptel) ;
-  Future<String> saveNote(NoteTextuelModel note);
-  Future<String> delete(NoteTextuelModel note) ;
+  Future<List<MemoModel>> getCheptelMemos(String cheptel) ;
+  Future<List<MemoModel>> getMemos(Bete bete) ;
+  Future<String> saveMemo(MemoModel note);
+  Future<String> delete(MemoModel note) ;
 }

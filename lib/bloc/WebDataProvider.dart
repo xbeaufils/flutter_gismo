@@ -14,7 +14,7 @@ import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
-import 'package:flutter_gismo/model/NoteModel.dart';
+import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
@@ -691,19 +691,43 @@ class WebDataProvider extends DataProvider {
     return tempList;
   }
   // Notes
-  Future<List<NoteTextuelModel>> getNotes(String cheptel) {
-    throw UnimplementedError();
-  }
-
-  Future<String> saveNote(NoteTextuelModel note) {
-    throw UnimplementedError();
+  Future<List<MemoModel>> getCheptelMemos(String cheptel) async {
+    final response = await _gismoHttp.doGetList(
+        '/memo/active/' + cheptel);
+    List<MemoModel> tempList =[];
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new MemoModel.fromResult(response[i]));
+    }
+    return tempList;
   }
 
   @override
-  Future<String> delete(NoteTextuelModel note) async {
+  Future<List<MemoModel>> getMemos(Bete bete) async {
+    final response = await _gismoHttp.doGetList(
+        '/memo/get/' + bete.idBd.toString());
+    List<MemoModel> tempList =[];
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new MemoModel.fromResult(response[i]));
+    }
+    return tempList;
+
+  }
+
+  Future<String> saveMemo(MemoModel note) async {
+    try {
+      final response = await _gismoHttp.doPostMessage(
+          '/memo/new', note.toJson());
+      return response;
+    }  catch ( e) {
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+  }
+
+  @override
+  Future<String> delete(MemoModel note) async {
      try {
       final response = await _gismoHttp.doGet(
-          '/note/delete/'+ note.id!.toString());
+          '/memo/del/'+ note.id!.toString());
       if (response['error']) {
         throw (response['message']);
       }

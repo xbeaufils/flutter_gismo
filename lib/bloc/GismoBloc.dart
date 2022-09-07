@@ -19,7 +19,7 @@ import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
-import 'package:flutter_gismo/model/NoteModel.dart';
+import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
@@ -297,6 +297,7 @@ class GismoBloc {
       List<Pesee> lstPoids  = await this._repository!.dataProvider.getPesee(bete);
       List<EchographieModel> lstEcho = await this._repository!.dataProvider.getEcho(bete);
       List<SaillieModel> lstSaillie = await this._repository!.dataProvider.getSaillies(bete);
+      List<MemoModel> lstMemos = await this._repository!.dataProvider.getMemos(bete);
       lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd!, EventType.agnelage, lambing.dateAgnelage!, lambing.lambs.length.toString()))});
       lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement, traitement.debut, traitement.medicament))});
       lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd!, EventType.NEC, note.date, note.note.toString()))});
@@ -312,6 +313,7 @@ class GismoBloc {
         lstEvents.add(new Event.name(saillie.idBd!, EventType.saillie, saillie.dateSaillie!, numBoucleConjoint));
 
       });
+      lstMemos.forEach((note) {lstEvents.add(new Event.name(note.id!, EventType.memo, note.debut!, note.note!)); });
       lstEvents.sort((a, b) =>  _compareDate(a, b));
       return lstEvents;
     }
@@ -593,14 +595,21 @@ class GismoBloc {
     return this._repository!.dataProvider.getLotBeliers(lambing);
   }
   // Notes
-  Future<List<NoteTextuelModel>> getNotes() {
-    return this._repository!.dataProvider.getNotes(_currentUser!.cheptel!);
+  Future<List<MemoModel>> getCheptelNotes() {
+    return this._repository!.dataProvider.getCheptelMemos(_currentUser!.cheptel!);
+  }
+  Future<List<MemoModel>> getBeteNotes(Bete bete) {
+    return this._repository!.dataProvider.getMemos(bete);
   }
 
-  Future<String> saveNote(NoteTextuelModel note) {
-    return this._repository!.dataProvider.saveNote(note);
+  Future<String> saveNote(MemoModel note) {
+    return this._repository!.dataProvider.saveMemo(note);
   }
 
+  Future<String> deleteNote(MemoModel note) {
+    return this._repository!.dataProvider.saveMemo(note);
+  }
+  // Cadastre
   Future<String> getCadastre(LatLng /*Position*/ myPosition) async {
     if (this._repository!.dataProvider is WebDataProvider) {
        String cadastre = await (this._repository!.dataProvider as WebDataProvider).getCadastre(myPosition);

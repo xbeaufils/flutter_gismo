@@ -10,7 +10,7 @@ import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
-import 'package:flutter_gismo/model/NoteModel.dart';
+import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
@@ -275,16 +275,20 @@ class DummyDataProvider extends DataProvider {
     throw UnimplementedError();
   }
   // Notes
-  Future<List<NoteTextuelModel>> getNotes(String cheptel) {
+  Future<List<MemoModel>> getMemos(Bete bete) {
     throw UnimplementedError();
   }
 
-  Future<String> saveNote(NoteTextuelModel note) {
+  Future<List<MemoModel>> getCheptelMemos(String cheptel) {
+    throw UnimplementedError();
+  }
+
+  Future<String> saveMemo(MemoModel note) {
     throw UnimplementedError();
   }
 
   @override
-  Future<String> delete(NoteTextuelModel note) {
+  Future<String> delete(MemoModel note) {
     throw UnimplementedError();
   }
 }

@@ -1,21 +1,21 @@
 import 'dart:core';
 
-enum NoteClasse {ALERT, WARNING, INFO}
+enum MemoClasse {ALERT, WARNING, INFO}
 
-class NoteTextuelModel {
+class MemoModel {
   int ? id;
   int ? bete_id;
   String ? numBoucle;
   String ? numMarquage;
   String ? debut;
   String ? fin;
-  NoteClasse ? classe;
+  MemoClasse ? classe;
   String ? note;
   bool isExpanded=false;
 
-  NoteTextuelModel();
+  MemoModel();
 
-  NoteTextuelModel.fromResult(result) {
+  MemoModel.fromResult(result) {
     id = result["id"];
     debut = result["debut"];
     fin = result["fin"];
@@ -26,16 +26,16 @@ class NoteTextuelModel {
     bete_id = result["bete_id"];
     switch (result["classe"]) {
       case "ALERT":
-        classe = NoteClasse.ALERT;
+        classe = MemoClasse.ALERT;
         break;
       case "WARNING":
-        classe = NoteClasse.WARNING;
+        classe = MemoClasse.WARNING;
         break;
       case "INFO":
-        classe = NoteClasse.INFO;
+        classe = MemoClasse.INFO;
         break;
       default:
-        classe = NoteClasse.ALERT;
+        classe = MemoClasse.ALERT;
     }
 
   }
@@ -49,17 +49,17 @@ class NoteTextuelModel {
     data["note"] = note;
     data["bete_id"] = bete_id;
     switch (classe) {
-      case NoteClasse.ALERT:
-        data["classe"] = NoteClasse.ALERT.name  ;
+      case MemoClasse.ALERT:
+        data["classe"] = MemoClasse.ALERT.name  ;
         break;
-      case NoteClasse.WARNING:
-        data["classe"] = NoteClasse.WARNING.name;
+      case MemoClasse.WARNING:
+        data["classe"] = MemoClasse.WARNING.name;
         break;
-      case NoteClasse.INFO:
-        data["classe"] = NoteClasse.INFO.name;
+      case MemoClasse.INFO:
+        data["classe"] = MemoClasse.INFO.name;
         break;
       default:
-        classe = NoteClasse.ALERT;
+        classe = MemoClasse.ALERT;
     }
     return data;
   }

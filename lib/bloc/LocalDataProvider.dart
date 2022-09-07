@@ -12,7 +12,7 @@ import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
-import 'package:flutter_gismo/model/NoteModel.dart';
+import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/ReportModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
@@ -61,7 +61,7 @@ class LocalDataProvider extends DataProvider{
             _createTablePesee(db);
             _createTableEcho(db);
             _createTableSaillie(db);
-            _createTableNote(db);
+            _createTableMemo(db);
           },
          onUpgrade:(db, oldVersion, newVersion) {
           if (oldVersion < 2) {
@@ -207,7 +207,7 @@ class LocalDataProvider extends DataProvider{
   void _migrate11to12(Database db) {
   }
   void _migrate12to13(Database db) {
-    _createTableNote(db);
+    _createTableMemo(db);
   }
 
   void _createTableAgnelage(Database db) {
@@ -317,8 +317,8 @@ class LocalDataProvider extends DataProvider{
         " PRIMARY KEY('idBd'))");
 
   }
-  void _createTableNote(Database db) {
-    db.execute("CREATE TABLE `note` ("
+  void _createTableMemo(Database db) {
+    db.execute("CREATE TABLE `memo` ("
         "`id` INTEGER NOT NULL,"
         "`debut` TEXT NULL DEFAULT NULL,"
         "`fin` TEXT NULL DEFAULT NULL,"
@@ -1025,24 +1025,41 @@ class LocalDataProvider extends DataProvider{
      return tempList;
   }
   // Notes
-  Future<List<NoteTextuelModel>> getNotes(String cheptel) async {
+  Future<List<MemoModel>> getCheptelMemos(String cheptel) async {
     Database db = await this.database;
     List<Map<String, dynamic>> maps  = await db.rawQuery(
-        'SELECT _note.*, _bete.numBoucle, _bete.numMarquage '
-        'FROM note _note inner join bete _bete on _note.bete_id = _bete.id '
-        'where _bete.cheptel= ?',
+        'SELECT _memo.*, _bete.numBoucle, _bete.numMarquage '
+        'FROM memo _memo inner join bete _bete on _memo.bete_id = _bete.id '
+        'where _bete.cheptel= ?'
+        ' AND _memo.fin is null',
         [cheptel]);
-    List<NoteTextuelModel> tempList = [];
+    List<MemoModel> tempList = [];
     for (int i = 0; i < maps.length; i++) {
-      tempList.add(new NoteTextuelModel.fromResult(maps[i]));
+      tempList.add(new MemoModel.fromResult(maps[i]));
     }
     return tempList;
   }
 
-  Future<String> saveNote(NoteTextuelModel note) async {
+  @override
+  Future<List<MemoModel>> getMemos(Bete bete) async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> maps  = await db.rawQuery(
+        'SELECT _note.*, _bete.numBoucle, _bete.numMarquage '
+            'FROM memo _note inner join bete _bete on _note.bete_id = _bete.id '
+            'where _bete.id= ?',
+        [bete.idBd]);
+    List<MemoModel> tempList = [];
+    for (int i = 0; i < maps.length; i++) {
+      tempList.add(new MemoModel.fromResult(maps[i]));
+    }
+    return tempList;
+
+  }
+
+  Future<String> saveMemo(MemoModel note) async {
     try {
       Database db = await this.database;
-      await db.insert("note", note.toJson(),
+      await db.insert("memo", note.toJson(),
           conflictAlgorithm: ConflictAlgorithm.replace);
       return " Enregistrement effectué";
     }
@@ -1055,9 +1072,9 @@ class LocalDataProvider extends DataProvider{
   }
 
   @override
-  Future<String> delete(NoteTextuelModel note) async {
+  Future<String> delete(MemoModel note) async {
       Database db = await this.database;
-      int res =   await db.delete("note",
+      int res =   await db.delete("memo",
           where: "id = ?", whereArgs: <int>[note.id!]);
       return "Suppression effectuée";
   }
@@ -1077,6 +1094,7 @@ class LocalDataProvider extends DataProvider{
     mapBase['pesee'] =  await db.query('pesee');
     mapBase['traitement'] =  await db.query('traitement');
     mapBase['Echo'] =  await db.query('Echo');
+    mapBase['memo'] =  await db.query('memo');
     return jsonEncode(mapBase);
   }
 
@@ -1119,6 +1137,9 @@ class LocalDataProvider extends DataProvider{
       }
       for (var i = 0; i < mapBase["Echo"].length; i++) {
         db.insert('Echo', mapBase["Echo"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (var i = 0; i < mapBase["memo"].length; i++) {
+        db.insert('memo', mapBase["memo"][i], conflictAlgorithm: ConflictAlgorithm.replace);
       }
 
     }catch (e, stac) {
