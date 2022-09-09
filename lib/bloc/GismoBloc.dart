@@ -74,23 +74,6 @@ class GismoBloc {
     }
   }
 
-/*
-  Future<String> configBt() async {
-    FlutterSecureStorage storage = new FlutterSecureStorage();
-    String address = await storage.read(key: "address");
-    return address;
-  }
- */
-/*
-  void saveBt(bool isBlueTooth, String  ? address) {
-    FlutterSecureStorage storage = new FlutterSecureStorage();
-    storage.write(key: "bluetooth", value: isBlueTooth.toString());
-    if (isBlueTooth)
-      storage.write(key: "address", value: address);
-    else
-      storage.delete(key: "address");
-  }
-*/
   Stream<BluetoothState> streamConnectBluetooth(String address) async* {
     BluetoothState state;
     /*FlutterSecureStorage storage = new FlutterSecureStorage();
@@ -607,7 +590,7 @@ class GismoBloc {
   }
 
   Future<String> deleteNote(MemoModel note) {
-    return this._repository!.dataProvider.saveMemo(note);
+    return this._repository!.dataProvider.delete(note);
   }
   // Cadastre
   Future<String> getCadastre(LatLng /*Position*/ myPosition) async {

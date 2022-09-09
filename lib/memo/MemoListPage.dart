@@ -29,22 +29,9 @@ class _MemoListPageState extends State<MemoListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: (_bloc.user != null) ?
-          new Text('Gismo ' + _bloc.user!.cheptel!):
-         new Text('Erreur de connexion')),
-    body:
-      //SingleChildScrollView(
-      //  child:
-         /* new Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[*/
-              _listNoteWidget(),
-           // ]
-
-          //),
-      //),
+        appBar: AppBar(title: (new Text('Memos'))),
+    body: _listNoteWidget(),
+    floatingActionButtonLocation:FloatingActionButtonLocation.centerFloat,
     floatingActionButton:
       FloatingActionButton(
           onPressed: _createNote,
@@ -81,7 +68,11 @@ class _MemoListPageState extends State<MemoListPage> {
         builder: (context) => SearchPage(this._bloc, GismoPage.note),
       ),
     );
-    navigationResult.then( (message) {if (message != null) debug.log(message);} );
+    navigationResult.then( (message) {
+        setState(() {
+          if (message != null) debug.log(message);
+        });
+    } );
   }
 
   Widget _status(MemoModel note) {
@@ -91,7 +82,7 @@ class _MemoListPageState extends State<MemoListPage> {
       case MemoClasse.INFO :
         return const Icon(Icons.info_outlined);
       case MemoClasse.WARNING :
-        return const Icon(Icons.error);
+        return const Icon(Icons.error_outline);
     }
     return Container();
   }
@@ -121,7 +112,6 @@ class _MemoListPageState extends State<MemoListPage> {
           );
         }
     );
-
   }
 
   void _edit(MemoModel note) {
@@ -133,14 +123,19 @@ class _MemoListPageState extends State<MemoListPage> {
     );
 
     navigationResult.then((message) {
-      if (message != null)
-        _showMessage(message);
+      setState(() {
+        if (message != null)
+          _showMessage(message);
+      });
     });
   }
 
-  void _delete(MemoModel note) {
-    this._bloc.deleteNote(note);
+  void _delete(MemoModel note) async {
+    String message = await this._bloc.deleteNote(note);
+    this._showMessage(message);
   }
 
-  void _showMessage(String message) {}
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
 }

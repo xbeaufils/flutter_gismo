@@ -21,7 +21,6 @@ class MemoModel {
     fin = result["fin"];
     numBoucle = result["numBoucle"];
     numMarquage = result["numMarquage"];
-    //classe = result["classe"];
     note = result["note"];
     bete_id = result["bete_id"];
     switch (result["classe"]) {
@@ -44,7 +43,8 @@ class MemoModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data["id"] = id;
     data["debut"] = debut;
-    data["fin"] = fin;
+    if (fin != null)
+      data["fin"] = fin;
     data["classe"] = classe;
     data["note"] = note;
     data["bete_id"] = bete_id;

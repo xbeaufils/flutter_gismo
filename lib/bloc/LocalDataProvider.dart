@@ -104,35 +104,7 @@ class LocalDataProvider extends DataProvider{
         version:13,
     );
     this._sendReport(database);
-    /*
-    Report report = new Report();
-    report.cheptel = super.cheptel!;
-    List<Map<String, dynamic>> maps = await database.rawQuery("select count(*) as nb from bete");
-    report.betes = maps[0]['nb'];
-    maps = await database.rawQuery("select count(*) as nb from lot");
-    report.lots = maps[0]['nb'];
-    maps = await database.rawQuery("select count(*) as nb from affectation");
-    report.affectations = maps[0]['nb'];
-    maps = await database.rawQuery("select count(*) as nb from traitement");
-    report.traitements = maps[0]['nb'];
-    maps = await database.rawQuery("select count(*) as nb from agneaux");
-    report.agneaux = maps[0]['nb'];
-    maps = await database.rawQuery("select count(*) as nb from agnelage");
-    report.agnelages = maps[0]['nb'];
-    maps = await database.rawQuery("select count(*) as nb from NEC");
-    report.nec = maps[0]['nb'];
-    try {
-      final response = await _gismoHttp.doPostWeb(
-          '/send', report.toJson());
-    }
-    catch(e,stackTrace) {
-      Sentry.captureException(e, stackTrace : stackTrace);
-      //super.bloc.reportError(e, stackTrace);
-      debug.log("message"  , name: "LocalDataProvider::_init");
-    }*/
-    // finally {
-      return database;
-    //}
+    return database;
   }
 
   void _sendReport(Database database ) async {
@@ -332,7 +304,7 @@ class LocalDataProvider extends DataProvider{
   Future<List<Bete>> getBetes(String cheptel) async {
     Database db = await this.database;
     //deleteDatabase(join(await getDatabasesPath(), 'gismo_database.db'));
-    final Future<List<Map<String, dynamic>>> futureMaps = db.query('bete', where: 'cheptel = ? AND dateSortie IS NULL', whereArgs: [cheptel]);
+    final Future<List<Map<String, dynamic>>> futureMaps = db.query('bete', where: 'cheptel = ? AND dateSortie IS NULL', whereArgs: [cheptel], orderBy: 'numBoucle');
     //final Future<List<Map<String, dynamic>>> futureMaps = client.query('car', where: 'id = ?', whereArgs: [id]);
     //futureMaps.then(onValue)
     var maps = await futureMaps;
@@ -732,7 +704,7 @@ class LocalDataProvider extends DataProvider{
   Future<String> deleteNec(int idBd) async {
     Database db = await this.database;
     int res =   await db.delete("NEC",
-        where: "id = ?", whereArgs: <int>[idBd]);
+        where: "idBd = ?", whereArgs: <int>[idBd]);
     return "Suppression effectuée";
   }
 
@@ -741,7 +713,7 @@ class LocalDataProvider extends DataProvider{
     try {
       Database db = await this.database;
       await db.insert('pesee', note.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
-      return "Enregsitrement de la pesée";
+      return "Enregistrement de la pesée";
     }
     catch(e,stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
@@ -1030,13 +1002,13 @@ class LocalDataProvider extends DataProvider{
     List<Map<String, dynamic>> maps  = await db.rawQuery(
         'SELECT _memo.*, _bete.numBoucle, _bete.numMarquage '
         'FROM memo _memo inner join bete _bete on _memo.bete_id = _bete.id '
-        'where _bete.cheptel= ?'
-        ' AND _memo.fin is null',
+        'where _bete.cheptel= ? '
+        ' AND _memo.fin is null'
+        ,
         [cheptel]);
     List<MemoModel> tempList = [];
-    for (int i = 0; i < maps.length; i++) {
-      tempList.add(new MemoModel.fromResult(maps[i]));
-    }
+    maps.forEach((element) {
+      tempList.add(new MemoModel.fromResult(element)); });
     return tempList;
   }
 

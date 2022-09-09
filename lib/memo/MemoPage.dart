@@ -130,31 +130,6 @@ class MemoPageState extends State<MemoPage> {
                   Icon(Icons.info_outlined),  Text(" Info"),Spacer(),
                 ],
               ),
-              /*
-              Row(children: [
-                Expanded(child:
-                ListTile(
-                  leading: Radio(value: NoteClasse.ALERT, groupValue: _classe, onChanged: (NoteClasse ? value) {
-                    setState(() {
-                      _classe = value!;
-                    });
-                  }),
-                  title: Row( children: [  Icon(Icons.warning_amber_outlined),  Text(" Alerte"),Spacer(),],),
-                  //trailing: Icon(Icons.warning),),
-                  )
-                ),
-                Expanded(child:
-                ListTile(
-                  leading: Radio(value: NoteClasse.INFO, groupValue: _classe, onChanged: (NoteClasse ? value) {
-                    setState(() {
-                      _classe = value!;
-                    });
-                  }),
-                  title: Row( children: [   Icon(Icons.info), Text(" Info"),Spacer(),],),
-                  //trailing: Icon(Icons.info),),
-                ),
-                )
-              ],),*/
               TextFormField(
                   keyboardType: TextInputType.multiline,
                   maxLines: 3,
@@ -190,7 +165,15 @@ class MemoPageState extends State<MemoPage> {
   @override
   void initState() {
     super.initState();
-    _dateDebutCtl.text = _df.format(DateTime.now());
+    if (this.widget._currentNote == null)
+      _dateDebutCtl.text = _df.format(DateTime.now());
+    else {
+      _dateDebutCtl.text = this.widget._currentNote!.debut!;
+      if (this.widget._currentNote!.fin != null)
+        _dateFinCtl.text = this.widget._currentNote!.fin!;
+      _noteCtl.text = this.widget._currentNote!.note!;
+      this._classe = this.widget._currentNote!.classe!;
+    }
   }
 
   void _saveNote() async {
@@ -201,12 +184,16 @@ class MemoPageState extends State<MemoPage> {
     if (this.widget._currentNote == null)
       this.widget._currentNote = new MemoModel();
     this.widget._currentNote!.debut = _dateDebutCtl.text;
-    this.widget._currentNote!.fin = _dateFinCtl.text;
+    if (_dateFinCtl.text.isNotEmpty)
+      this.widget._currentNote!.fin = _dateFinCtl.text;
+    else
+      this.widget._currentNote!.fin = null;
     this.widget._currentNote!.note = _noteCtl.text;
-    this.widget._currentNote!.bete_id = this.widget._bete.idBd;
+    if (this.widget._currentNote!.bete_id == null)
+      this.widget._currentNote!.bete_id = this.widget._bete.idBd;
     this.widget._currentNote!.classe = this._classe;
-    if (this.widget._bete != null)
-      message = await this._bloc.saveNote(this.widget._currentNote!);
+    //if (this.widget._bete != null)
+    message = await this._bloc.saveNote(this.widget._currentNote!);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)))
         .closed
         .then((e) => {Navigator.of(context).pop()});
