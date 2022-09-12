@@ -106,7 +106,7 @@ class _MemoListPageState extends State<MemoListPage> {
                         onPressed: () => { _edit(_note) }),
                     IconButton(
                         icon: const Icon(Icons.delete),
-                        onPressed: () => { _delete(_note) }),
+                        onPressed: () => { _showDialog(context, _note) }),
                   ]),
             ),
           );
@@ -132,7 +132,47 @@ class _MemoListPageState extends State<MemoListPage> {
 
   void _delete(MemoModel note) async {
     String message = await this._bloc.deleteNote(note);
-    this._showMessage(message);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    setState(() {
+
+    });
+  }
+
+  Future _showDialog(BuildContext context, MemoModel note) {
+    String message ="Voulez vous supprimer ce mémo ?";
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Suppression"),
+          content: Text(
+              message),
+          actions: [
+            _cancelButton(),
+            _continueButton(note),
+          ],
+        );
+      },
+    );
+  }
+  // set up the buttons
+  Widget _cancelButton() {
+    return TextButton(
+      child: Text("Annuler"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget _continueButton(MemoModel event) {
+    return TextButton(
+      child: Text("Continuer"),
+      onPressed: () {
+          _delete(event);
+        Navigator.of(context).pop();
+      },
+    );
   }
 
   void _showMessage(String message) {

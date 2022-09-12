@@ -88,34 +88,34 @@ class _WelcomePageState extends State<WelcomePage> {
     return new Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.lightGreen,
-        persistentFooterButtons: <Widget>[
-          (this.widget._message==null)? Container():_getStatus(this.widget._message!),
-        ],
         appBar: new AppBar(
             title: (_bloc.user != null) ?
               new Text('Gismo ' + _bloc.user!.cheptel!):
               new Text('Erreur de connexion'),
             // N'affiche pas la touche back (qui revient à la SplashScreen
             automaticallyImplyLeading: true,
-            actions: _getActionButton(),
+            //actions: _getActionButton(),
             ),
         bottomNavigationBar: this._getFacebookAdvice(),
         body: ListView(
             scrollDirection: Axis.vertical,
             children: <Widget>[
               Card(
-                child: SingleChildScrollView (
-                  scrollDirection: Axis.horizontal,
-                  child : ButtonBar(
-                    mainAxisSize: MainAxisSize.max,
-                    alignment: MainAxisAlignment.spaceEvenly,
-                    buttonMinWidth: 90.0,
-                    children: <Widget>[
-                      _buildButton("Lot", "assets/Lot.png",_lotPressed),
-                      _buildButton("Individu", "assets/brebis.png", _individuPressed),
-                      _buildButton("Agneaux", 'assets/jumping_lambs.png', _lambPressed),
-                    ]))),
+                child: Center(
+                  child : SingleChildScrollView (
+                    scrollDirection: Axis.horizontal,
+                    child : ButtonBar(
+                      mainAxisSize: MainAxisSize.max,
+                      //alignment: MainAxisAlignment.spaceBetween,
+                        alignment: MainAxisAlignment.center,
+                      buttonMinWidth: 90.0,
+                      children: <Widget>[
+                        _buildButton("Lot", "assets/Lot.png",_lotPressed),
+                        _buildButton("Individu", "assets/brebis.png", _individuPressed),
+                        _buildButton("Agneaux", 'assets/jumping_lambs.png', _lambPressed),
+                      ])))),
               Card(
+                child: Center(
                 child:  SingleChildScrollView (
                   scrollDirection: Axis.horizontal,
                   child: ButtonBar(
@@ -126,8 +126,9 @@ class _WelcomePageState extends State<WelcomePage> {
                       _buildButton("Saillie", "assets/saillie.png", _sailliePressed),
                       _buildButton("Echographie", 'assets/ultrasound.png', _echoPressed),
                       _buildButton("Agnelage", 'assets/lamb.png', _lambingPressed),
-                    ]))),
+                    ])))),
               Card(
+                child: Center(
                 child: SingleChildScrollView (
                   scrollDirection: Axis.horizontal,
                   child: ButtonBar(
@@ -138,8 +139,9 @@ class _WelcomePageState extends State<WelcomePage> {
                       _buildButton("Traitement", "assets/syringe.png",_traitementPressed),
                       _buildButton("Etat corp.", "assets/etat_corporel.png", _necPressed), //Etat corporel
                       _buildButton("Poids", 'assets/peseur.png', _peseePressed), // Pesée
-                  ]))),
+                  ])))),
               Card(
+                child: Center(
                   child: SingleChildScrollView (
                   scrollDirection: Axis.horizontal,
                   child:
@@ -151,7 +153,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       _buildButton("Sortie", "assets/Truck.png", _sortiePressed),
                       _buildButton("Parcelles", "assets/parcelles.png", _parcellePressed),
                     //  _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
-                    ]))),
+                    ])))),
              this._getAdmobAdvice(),
               //this._getFacebookAdvice(),
             ]),
