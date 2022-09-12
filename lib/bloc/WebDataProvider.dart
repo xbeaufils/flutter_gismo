@@ -157,7 +157,6 @@ class WebDataProvider extends DataProvider {
     }
   }
 
-
   Future<List<Bete>> getBetes(String cheptel) async {
     final response = await _gismoHttp.doGetList(
         '/bete/cheptel/' + cheptel);
@@ -195,7 +194,6 @@ class WebDataProvider extends DataProvider {
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
-
   }
 
   @override
@@ -337,7 +335,6 @@ class WebDataProvider extends DataProvider {
     }
     return tempList;
   }
-
 
   @override
   Future<String> deleteTraitement(int idBd) async {
@@ -721,6 +718,12 @@ class WebDataProvider extends DataProvider {
     }  catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
+  }
+
+  Future<MemoModel?> searchMemo(int id) async {
+    final response = await _gismoHttp.doGet(
+        '/memp/search/' + id.toString());
+    return new MemoModel.fromResult(response);
   }
 
   @override

@@ -78,6 +78,7 @@ abstract class DataProvider {
   // Notes
   Future<List<MemoModel>> getCheptelMemos(String cheptel) ;
   Future<List<MemoModel>> getMemos(Bete bete) ;
+  Future<MemoModel?> searchMemo(int id) ;
   Future<String> saveMemo(MemoModel note);
   Future<String> delete(MemoModel note) ;
 }

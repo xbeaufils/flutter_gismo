@@ -1043,6 +1043,14 @@ class LocalDataProvider extends DataProvider{
     }
   }
 
+  Future<MemoModel?> searchMemo(int id) async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> futureMaps = await db.query('memo',where: 'id= ?', whereArgs: [id]);
+    if (futureMaps.length == 0)
+      return null;
+    return MemoModel.fromResult(futureMaps[0]);
+  }
+
   @override
   Future<String> delete(MemoModel note) async {
       Database db = await this.database;

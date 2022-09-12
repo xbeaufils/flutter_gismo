@@ -291,4 +291,8 @@ class DummyDataProvider extends DataProvider {
   Future<String> delete(MemoModel note) {
     throw UnimplementedError();
   }
+
+  Future<MemoModel> searchMemo(int id) {
+    throw UnimplementedError();
+  }
 }

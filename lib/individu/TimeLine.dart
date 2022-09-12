@@ -5,10 +5,12 @@ import 'package:flutter_gismo/Bete.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
+import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
 
@@ -144,7 +146,6 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       case EventType.NEC:
       case EventType.pesee:
         return IconButton(icon: Icon(Icons.delete), onPressed: () => _showDialog(context, event), );
-
       default:
     }
     return null;
@@ -216,6 +217,8 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       case EventType.echo:
         _bloc.searchEcho(event.idBd).then( (echo) => { _editEcho(echo!)});
         break;
+      case EventType.memo:
+        _bloc.searchEcho(event.idBd).then( (memo) => { _editMemo(memo!) });
       case EventType.saillie:
       case EventType.NEC:
       case EventType.pesee:
@@ -249,6 +252,16 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       context,
       MaterialPageRoute(
         builder: (context) => EchoPage.edit(_bloc, echo, _bete),
+      ),
+    );
+    navigationResult.then( (message) { if (message != null) _showMessage(message);} );
+  }
+
+  void _editMemo(MemoModel memo)  {
+    var navigationResult = Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MemoPage.edit(_bloc, memo),
       ),
     );
     navigationResult.then( (message) { if (message != null) _showMessage(message);} );
