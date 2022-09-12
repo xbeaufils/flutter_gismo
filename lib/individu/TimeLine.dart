@@ -140,6 +140,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       case EventType.agnelage :
       case EventType.traitement:
       case EventType.echo:
+      case EventType.memo:
         return IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _searchEvent(event), );
         break;
       case EventType.saillie:
@@ -218,7 +219,8 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
         _bloc.searchEcho(event.idBd).then( (echo) => { _editEcho(echo!)});
         break;
       case EventType.memo:
-        _bloc.searchEcho(event.idBd).then( (memo) => { _editMemo(memo!) });
+        _bloc.searchMemo(event.idBd).then( (memo) => { _editMemo(memo!) });
+        break;
       case EventType.saillie:
       case EventType.NEC:
       case EventType.pesee:

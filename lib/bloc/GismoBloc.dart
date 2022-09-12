@@ -592,8 +592,8 @@ class GismoBloc {
   Future<String> deleteNote(MemoModel note) {
     return this._repository!.dataProvider.delete(note);
   }
-  Future<EchographieModel?> searchMemo(int idBd) {
-    return this._repository!.dataProvider.searchEcho(idBd);
+  Future<MemoModel?> searchMemo(int idBd) {
+    return this._repository!.dataProvider.searchMemo(idBd);
   }
 
   // Cadastre
