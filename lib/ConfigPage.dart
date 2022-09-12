@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/menu/MenuPage.dart';
 import 'package:flutter_gismo/model/User.dart';
 
 import 'dart:developer' as debug;
@@ -212,33 +213,33 @@ class _ConfigPageState extends State<ConfigPage> {
 
   }
 
-Future _asyncConfirmDialog(BuildContext context) async {
-  return showDialog(
-    context: context,
-    barrierDismissible: false, // user must tap button for close dialog!
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Restauration de la BD'),
-        content: const Text(
-            'Les données actuelles seront remplacées.'),
-        actions: [
-          FlatButton(
-            child: const Text('Annuler'),
-            onPressed: () {
-              Navigator.of(context).pop(ConfirmAction.CANCEL);
-            },
-          ),
-          FlatButton(
-            child: const Text('Accepter'),
-            onPressed: () {
-              Navigator.of(context).pop(ConfirmAction.ACCEPT);
-            },
-          )
-        ],
-      );
-    },
-  );
-}
+  Future _asyncConfirmDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Restauration de la BD'),
+          content: const Text(
+              'Les données actuelles seront remplacées.'),
+          actions: [
+            FlatButton(
+              child: const Text('Annuler'),
+              onPressed: () {
+                Navigator.of(context).pop(ConfirmAction.CANCEL);
+              },
+            ),
+            FlatButton(
+              child: const Text('Accepter'),
+              onPressed: () {
+                Navigator.of(context).pop(ConfirmAction.ACCEPT);
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
 
   void _saveConfig() {
     //AuthService service = new AuthService();
@@ -298,8 +299,8 @@ Future _asyncConfirmDialog(BuildContext context) async {
                         child: _isSubscribed ? _loginPage(): _autonomePage(),
                       ),
                    ])
-          )
-    );
+          ),
+        drawer: GismoDrawer(_bloc),);
   }
 
   @override

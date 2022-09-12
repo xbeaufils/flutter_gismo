@@ -33,21 +33,26 @@ class GismoDrawer extends StatelessWidget {
                 leading: Icon(Icons.settings),
                 onTap:  () { _settingPressed(context);},
               ),
-              ListTile(
-                title: Text("Bluetooth"),
-                leading: Icon(Icons.edit),
-                onTap: () { _choixBt(context);},
-              ),
+              _showBlueTooth(context),
           ]),
     ]));
   }
 
+  Widget _showBlueTooth(BuildContext context) {
+    if (_bloc.user!.subscribe!)
+      return  ListTile(
+        title: Text("Bluetooth"),
+        leading: Icon(Icons.edit),
+        onTap: () { _choixBt(context);},
+      );
+    return Container();
+  }
   void _choixBt(BuildContext context) {
     Navigator.pushNamed(context, '/bluetooth');
   }
 
   void _settingPressed(BuildContext context) {
-    Navigator.pushNamed(context, '/config') ;
+    Navigator.pushReplacementNamed(context, '/config') ;
     /*
     message.then((message) {
       showMessage(message);
@@ -98,6 +103,5 @@ class GismoDrawer extends StatelessWidget {
         ),
       ),
     );
-
   }
 }
