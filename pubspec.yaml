@@ -33,7 +33,7 @@ dependencies:
   flutter_secure_storage: ^3.3.5
   #location: ^4.1.1
   # geolocator: ^8.1.1
-  mapbox_gl: ^0.15.0
+  mapbox_gl: ^0.16.0
   #rts500plugin:
   #  path: ../rts500_plugin/
   sentry: ^5.0.0

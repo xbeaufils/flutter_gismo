@@ -156,7 +156,7 @@ class _ParcellePageState extends State<ParcellePage> {
     _mapController!.moveCamera(CameraUpdate.newCameraPosition(
       new CameraPosition(
         target: LatLng(location.latitude, location.longitude),
-        zoom: 14.0,
+        zoom: 14,
       ),));
     featuresJson.forEach((feature) => _drawParcelle(feature));
     return location;
@@ -221,7 +221,7 @@ class _ParcellePageState extends State<ParcellePage> {
     ));
   }
 
-  void _showMap(LatLng location) async {
+  void _showMap(LatLng? location) async {
     debug.log("En attente des parcelles", name: "_ParcellePageState::_showMap");
     this._showStatus("En attente des parcelles");
     await this._retrieveParcelles(location);

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter_gismo/Environnement.dart';
+import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/bloc/Message.dart';
 import 'package:http/http.dart' as http;

@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:flutter_gismo/Exception/EventException.dart';
 import 'package:flutter_gismo/bloc/GismoHttp.dart';
 //import 'package:dio/dio.dart';
-import 'package:flutter_gismo/Environnement.dart';
+import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
