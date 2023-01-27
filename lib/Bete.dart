@@ -175,13 +175,14 @@ class _BetePageState extends State<BetePage> {
                         });
                       }
                   ),
-                  new RaisedButton(
+                  ElevatedButton (
+                  // RaisedButton(
                       child: new Text(
                         (_bete == null)?'Ajouter':'Enregistrer',
                         style: new TextStyle(color: Colors.white),
                       ),
                       onPressed: _save,
-                      color: Colors.lightGreen[700],
+                      //color: Colors.lightGreen[700],
                   ),
               ]
     )),

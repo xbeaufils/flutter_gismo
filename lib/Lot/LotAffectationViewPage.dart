@@ -189,8 +189,8 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
                       ]
 
                   ),
-                  RaisedButton(
-                      color: Colors.lightGreen[700],
+                  ElevatedButton(
+                      //color: Colors.lightGreen[700],
                       child: new Text("Enregistrer",style: TextStyle( color: Colors.white)),
                       onPressed: _save)
                 ])
@@ -475,14 +475,14 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
                   ],
                 ),
                 actions: <Widget>[
-                  FlatButton(
+                  TextButton(
                       onPressed: () {
                           setState(() {
                             _dateMvtCtl.text="";
                           });
                       },
                       child: Text("Effacer")),
-                  FlatButton(
+                  TextButton(
                     child: Text('Enregistrer'),
                     onPressed: () {
                       Navigator.of(context).pop(_dateMvtCtl.text);

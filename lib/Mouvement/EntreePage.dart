@@ -109,10 +109,10 @@ class _EntreePageState extends State<EntreePage> {
               )),
           Expanded(
             child: Sheeps(this._sheeps, this)),
-          RaisedButton(
+          ElevatedButton(
             child: Text('Enregistrer',
                 style: new TextStyle(color: Colors.white, ),),
-            color: Colors.lightGreen[700],
+            //color: Colors.lightGreen[700],
             onPressed: _saveEntree),
           (this._bloc.isLogged()!) ?
             Container():_getAdmobAdvice()

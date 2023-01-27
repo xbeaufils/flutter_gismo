@@ -69,8 +69,8 @@ class _LoginPageState extends State<LoginPage> {
                             border:
                             OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                        ),
-                      new RaisedButton(key:null, onPressed:_loginWeb,
-                          color: const Color(0xFFe0e0e0),
+                      new ElevatedButton(key:null, onPressed:_loginWeb,
+                          //color: const Color(0xFFe0e0e0),
                           child:
                           new Text(
                             "Connexion",
@@ -106,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
     final snackBar = SnackBar(
       content: Text(message),
     );
-    _scaffoldKey.currentState!.showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
 }

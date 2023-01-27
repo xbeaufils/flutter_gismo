@@ -116,10 +116,11 @@ class _MortPageState extends State<MortPage> {
 
                   ],
                 )),
-            RaisedButton(
+            ElevatedButton (
                 child: Text('Enregistrer',
                   style: new TextStyle(color: Colors.white, ),),
-                color: Colors.lightGreen[700],
+
+                // color: Colors.lightGreen[700],
                 onPressed: _saveDeath)
           ]
 

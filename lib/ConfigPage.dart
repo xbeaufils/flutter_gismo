@@ -95,8 +95,8 @@ class _ConfigPageState extends State<ConfigPage> {
                           border:
                           OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                     ),
-                    new RaisedButton(key:null, onPressed:_login,
-                        color: const Color(0xFFe0e0e0),
+                    new ElevatedButton(key:null, onPressed:_login,
+                        //color: const Color(0xFFe0e0e0),
                         child:
                         new Text(
                           "Connexion",
@@ -151,8 +151,8 @@ class _ConfigPageState extends State<ConfigPage> {
             },
             future: _getFiles(),
         ),
-      new RaisedButton(key:null, onPressed:_copyBD,
-          color: const Color(0xFFe0e0e0),
+      new ElevatedButton(key:null, onPressed:_copyBD,
+          //color: const Color(0xFFe0e0e0),
           child:
           new Text(
             "Copier la base de données",
@@ -223,13 +223,13 @@ class _ConfigPageState extends State<ConfigPage> {
           content: const Text(
               'Les données actuelles seront remplacées.'),
           actions: [
-            FlatButton(
+            TextButton(
               child: const Text('Annuler'),
               onPressed: () {
                 Navigator.of(context).pop(ConfirmAction.CANCEL);
               },
             ),
-            FlatButton(
+            TextButton(
               child: const Text('Accepter'),
               onPressed: () {
                 Navigator.of(context).pop(ConfirmAction.ACCEPT);
