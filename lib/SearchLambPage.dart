@@ -195,7 +195,7 @@ class _SearchLambPageState extends State<SearchLambPage> {
 
   // set up the buttons
   Widget _cancelButton() {
-    return FlatButton(
+    return TextButton(
       child: Text("Annuler"),
       onPressed: () {
         Navigator.of(context).pop();
@@ -204,7 +204,7 @@ class _SearchLambPageState extends State<SearchLambPage> {
   }
 
   Widget _continueButton(CompleteLambModel lamb) {
-    return FlatButton(
+    return TextButton(
       child: Text("Continuer"),
       onPressed: () {
         _deleteLamb(lamb);

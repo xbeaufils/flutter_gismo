@@ -71,10 +71,10 @@ class NECPageState extends State<NECPage> {
             _getNec(NEC.level4),
             _getNec(NEC.level5),
             (_isSaving) ? CircularProgressIndicator():
-              RaisedButton(
+              ElevatedButton(
                 child: Text('Enregistrer',
                   style: new TextStyle(color: Colors.white, ),),
-                color: Colors.lightGreen[700],
+                //color: Colors.lightGreen[700],
                 onPressed: _saveNote)
           ]),
 

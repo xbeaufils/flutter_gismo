@@ -112,8 +112,8 @@ class _PaturagePageState extends State<PaturagePage> {
                   direction: Axis.horizontal,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    new RaisedButton(key:null, onPressed:_save,
-                      color: Colors.lightGreen[700],
+                    new ElevatedButton(key:null, onPressed:_save,
+                      //color: Colors.lightGreen[700],
                       child: new Text("Enregistrer",style: TextStyle( color: Colors.white)),)
                   ]
               )

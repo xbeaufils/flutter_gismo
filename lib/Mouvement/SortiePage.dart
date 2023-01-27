@@ -102,8 +102,8 @@ class _SortiePageState extends State<SortiePage> {
               )),
           Expanded(
             child: Sheeps(this._sheeps, this)),
-            RaisedButton(
-                color: Colors.lightGreen[900],
+            ElevatedButton(
+                //color: Colors.lightGreen[900],
                 child: Text('Enregistrer',
                   style: new TextStyle(color: Colors.white, ),),
                 onPressed: _saveSortie)
