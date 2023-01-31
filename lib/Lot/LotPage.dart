@@ -79,16 +79,15 @@ class _LotPageState extends State<LotPage> {
     );
   }
 
-  void _viewDetails(LotModel lot ) {
-    var navigationResult = Navigator.push(
+  void _viewDetails(LotModel lot ) async {
+    String message = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => LotAffectationViewPage(this._bloc, lot),
+        builder: (context) => LotAffectationViewPage(this._bloc, lot ),
       ),
     );
-    navigationResult.then( (message) {if (message != null) debug.log(message);} );
     setState(() {
-
+      this._showMessage(message);
     });
   }
 
