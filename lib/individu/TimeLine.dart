@@ -246,7 +246,12 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
         builder: (context) => SanitairePage.edit(_bloc, traitement),
       ),
     );
-    navigationResult.then( (message) { if (message != null) _showMessage(message);} );
+    navigationResult.then( (message) {
+      if (message != null)
+        setState(() {
+          _showMessage(message);
+        });
+    } );
   }
 
   void _editEcho(EchographieModel  echo)  {
