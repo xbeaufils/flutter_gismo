@@ -64,17 +64,14 @@ class _LotPageState extends State<LotPage> {
           itemCount: lotSnap.data.length,
           itemBuilder: (context, index) {
             LotModel lot = lotSnap.data[index];
-            return //Column(
-              //children: <Widget>[
-                Card(child:
-                    ListTile(
-                      title: Text(lot.codeLotLutte!),
-                      subtitle: Text(lot.dateDebutLutte!),
-                      trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () => _viewDetails(lot), )
-                    )
-                );
-                //],
-            //);
+            return Card(child:
+              ListTile(
+                leading:  IconButton(icon: Icon(Icons.delete), onPressed: () =>  _showDialog(context, lot), ),
+                title: Text(lot.codeLotLutte!),
+                subtitle: Text(lot.dateDebutLutte!),
+                trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () => _viewDetails(lot), )
+              )
+            );
           },
         );
       },
@@ -90,7 +87,26 @@ class _LotPageState extends State<LotPage> {
       ),
     );
     navigationResult.then( (message) {if (message != null) debug.log(message);} );
+    setState(() {
+
+    });
   }
+
+  void _delete(LotModel lot) async {
+    var message  = await _bloc.deleteLot(lot);
+    setState(() {
+      this._showMessage(message);
+    });
+  }
+
+  void _showMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    //_scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
 
   Future<List<LotModel>> _getLots()  {
     return this._bloc.getLots();
@@ -104,7 +120,41 @@ class _LotPageState extends State<LotPage> {
       ),
     );
     navigationResult.then( (message) {if (message != null) debug.log(message);} );
+  }
 
+  Future _showDialog(BuildContext context, LotModel lot) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Suppression"),
+          content: Text(
+              "Voulez vous supprimer cet enregistrement ?"),
+          actions: [
+            _cancelButton(),
+            _continueButton(lot),
+          ],
+        );
+      },
+    );
+  }
+  Widget _cancelButton() {
+    return TextButton(
+      child: Text("Annuler"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget _continueButton(LotModel lot) {
+    return TextButton(
+      child: Text("Continuer"),
+      onPressed: () {
+        _delete(lot);
+        Navigator.of(context).pop();
+      },
+    );
   }
 
 }

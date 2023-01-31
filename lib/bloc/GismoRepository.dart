@@ -84,6 +84,9 @@ class DummyDataProvider extends DataProvider {
   Future<LotModel> saveLot(LotModel lot) {
     throw RepositoryTypeException("Type de repository inconnue");
   }
+  Future<String> deleteLot(LotModel lot) {
+    throw RepositoryTypeException("Type de repository inconnue");
+  }
 
   @override
   Future<List<LotModel>> getLots(String cheptel) {

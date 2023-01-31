@@ -26,6 +26,7 @@ import 'dart:developer' as debug;
 
 //import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:sentry/sentry.dart';
 
 
 class WebDataProvider extends DataProvider {
@@ -642,6 +643,20 @@ class WebDataProvider extends DataProvider {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
+
+  Future<String> deleteLot(LotModel lot) async {
+    try {
+      final response = await _gismoHttp.doDeleteMessage(
+          '/lot/suppress', lot.toJson());
+      return response;
+    }
+    catch (e, stacktrace) {
+      debug.log("Error", error: e);
+      Sentry.captureException(e, stackTrace : stacktrace);
+    }
+    return "Erreur de suppression";
+  }
+
 
   @override
   Future<List<Affectation>> getAffectationForBete(int idBete) async {

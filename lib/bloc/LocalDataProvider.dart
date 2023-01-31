@@ -334,7 +334,8 @@ class LocalDataProvider extends DataProvider{
       debug.log("Bete non trouvéé " , name: "LocalDataProvider::searchBete");
       return false;
     }
-    return true;
+    Bete beteBd = Bete.fromResult(futureMaps[0]);
+    return  (bete.idBd != beteBd.idBd);
   }
 
   @override
@@ -922,6 +923,27 @@ class LocalDataProvider extends DataProvider{
     }
     return null;
   }
+
+  Future<String> deleteLot(LotModel lot) async {
+    try {
+      List<Affectation> brebis = await this.getBrebisForLot(lot.idb!);
+      if (brebis.isNotEmpty)
+        return "Suppression impossible : des brebis ont des affectations";
+      List<Affectation> beliers = await this.getBeliersForLot(lot.idb!);
+      if (beliers.isNotEmpty)
+        return "Suppression impossible : des beliers ont des affectations";
+      Database db = await this.database;
+      int res =   await db.delete("lot",
+          where: "idBd = ?", whereArgs: <int>[lot.idb!]);
+      return "Suppression effectuée";
+    }
+    catch (e, stacktrace) {
+      debug.log("Error", error: e);
+      Sentry.captureException(e, stackTrace : stacktrace);
+    }
+    return "Erreur de suppression";
+  }
+
 
   @override
   Future<String> addBete(LotModel lot, Bete bete, String dateEntree) async {

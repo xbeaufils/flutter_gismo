@@ -237,6 +237,10 @@ class GismoBloc {
     return "OK";
   }
 
+  Future<String> deleteTraitement(int idBd) {
+    return this._repository!.dataProvider.deleteTraitement(idBd);
+  }
+
   Future<String> saveTraitement(TraitementModel traitement) {
     return this._repository!.dataProvider.saveTraitement(traitement);
   }
@@ -526,11 +530,15 @@ class GismoBloc {
       return "Une erreur et survenue";
     }
   }
-
+  // Lots
   Future<LotModel ?> saveLot(LotModel lot) async {
     lot.cheptel = this._currentUser!.cheptel!;
     LotModel ? newLot  = await this._repository!.dataProvider.saveLot(lot);
     return newLot;
+  }
+
+  Future<String> deleteLot(LotModel lot) {
+    return this._repository!.dataProvider.deleteLot(lot);
   }
 
   Future<List<LotModel>> getLots() {

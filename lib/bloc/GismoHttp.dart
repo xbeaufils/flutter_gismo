@@ -46,6 +46,27 @@ class GismoHttp  {
     }
   }
 
+  Future<String> doDeleteMessage(String url, Object body) async {
+    //Message msg = Message();
+    try {
+      var response = await http.delete(
+          Uri.parse(Environnement.getUrlTarget() + url),
+          headers: _getHeaders(),
+          body: jsonEncode(body)).timeout(Duration(seconds: 5) ).timeout(Duration(seconds: 10));
+      Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
+      if (msg.error) {
+        throw (msg.error);
+      }
+      else {
+        return msg.message;
+      }
+    } on TimeoutException catch (e) {
+      throw (e);
+    } on Error catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      throw (e);
+    }
+  }
 
   Future<String> doPostMessage(String url, Object body) async {
     //Message msg = Message();

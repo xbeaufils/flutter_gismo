@@ -219,8 +219,11 @@ class _SanitairePageState extends State<SanitairePage> {
                           direction: Axis.horizontal,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                          new RaisedButton(key:null, onPressed:_save,
-                              color: Colors.lightGreen[700],
+                            TextButton(
+                                onPressed: () => _showDialog(context),
+                                child: Text("Supprimer")),
+                          new ElevatedButton(key:null, onPressed:_save,
+                              //color: Colors.lightGreen[700],
                               child: new Text("Enregistrer",style: TextStyle( color: Colors.white)),)
                           ]
                         )
@@ -229,6 +232,51 @@ class _SanitairePageState extends State<SanitairePage> {
 
           )
     );
+  }
+  // set up the buttons
+  Widget _cancelButton() {
+    return TextButton(
+      child: Text("Annuler"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget _continueButton() {
+    return TextButton(
+      child: Text("Continuer"),
+      onPressed: () {
+        _delete();
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Future _showDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Suppression"),
+          content: Text(
+              "Voulez vous supprimer cet enregistrement ?"),
+          actions: [
+            _cancelButton(),
+            _continueButton(),
+          ],
+        );
+      },
+    );
+  }
+
+  void _delete () async {
+    if (this.widget._currentTraitement != null) {
+      var message  = await _bloc.deleteTraitement(this.widget._currentTraitement!.idBd!);
+      Navigator.pop(context, message);
+    }
+    else
+      Navigator.of(context).pop();
   }
 
   void _save() async {
