@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:admob_flutter/admob_flutter.dart';
+//import 'package:admob_flutter/admob_flutter.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/menu/MenuPage.dart';
 
-//import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 
 
@@ -29,59 +29,8 @@ class _WelcomePageState extends State<WelcomePage> {
   final GismoBloc _bloc;
 
   _WelcomePageState(this._bloc);
-  //BannerAd ? _adBanner;
+  BannerAd ? _adBanner;
 
-  Widget _getStatus(String message) {
-    if (message == null) message = "";
-    Icon iconConnexion = Icon(Icons.person);
-    Text userName = new Text("utilisateur local");
-    if (_bloc.user == null) {
-      iconConnexion = Icon(Icons.error_outline);
-      userName = new Text("Erreur utilisateur");
-    } else
-      if (_bloc.user!.subscribe == null) {
-        iconConnexion = Icon(Icons.error_outline);
-        userName = new Text("Erreur utilisateur");
-      } else {
-
-        if (_bloc.user!.subscribe!) {
-          iconConnexion = Icon(Icons.verified_user);
-          userName = new Text(_bloc.user!.email!);
-        }
-    }
-    return Card(
-      child: Row(
-        children: <Widget>[
-          iconConnexion,
-          userName,
-          new Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-          ),
-        ],
-      ),
-    );
-  }
-
-  List<Widget> _getActionButton() {
-    List<Widget> actionBtns = List.empty(growable: true);
-    if (!kIsWeb) {
-    // if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
-        if (this._bloc.user!.subscribe!) {
-          actionBtns.add(
-              IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: _choixBt,
-              ));
-        }
-        actionBtns.add(
-            IconButton(
-              icon: Icon(Icons.settings),
-              onPressed: _settingPressed,
-            ));
-
-    }
-    return actionBtns;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,10 +43,10 @@ class _WelcomePageState extends State<WelcomePage> {
               new Text('Erreur de connexion'),
             // N'affiche pas la touche back (qui revient à la SplashScreen
             automaticallyImplyLeading: true,
-            //actions: _getActionButton(),
-            ),
-        bottomNavigationBar: this._getFacebookAdvice(),
-        body: ListView(
+             ),
+//        bottomNavigationBar: this._navigationBar(),
+        body:
+          ListView(
             scrollDirection: Axis.vertical,
             children: <Widget>[
               Card(
@@ -154,8 +103,9 @@ class _WelcomePageState extends State<WelcomePage> {
                       _buildButton("Parcelles", "assets/parcelles.png", _parcellePressed),
                     //  _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
                     ])))),
-             this._getAdmobAdvice(),
-              //this._getFacebookAdvice(),
+
+              this._getAdmobAdvice(),
+              this._getFacebookAdvice(),
             ]),
         drawer: GismoDrawer(_bloc),);
   }
@@ -164,20 +114,19 @@ class _WelcomePageState extends State<WelcomePage> {
     if (this._bloc.isLogged() ! ) {
       return Container();
     }
-     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
+    if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
        return Card(
-         child:
-         /*        Container(
+         child: Container(
             height:  this._adBanner!.size.height.toDouble(),
             width:  this._adBanner!.size.width.toDouble(),
-            child: AdWidget(ad:  this._adBanner!)));*/
-//    }
-//adWidget;
+            child: AdWidget(ad:  this._adBanner!)));
+    }
+/*adWidget;
          AdmobBanner(
            adUnitId: _getBannerAdUnitId(),
            adSize: AdmobBannerSize.BANNER,),
        );
-     }
+     }*/
     return Container();
   }
 
@@ -203,7 +152,8 @@ class _WelcomePageState extends State<WelcomePage> {
     if (Platform.isIOS) {
       return 'ca-app-pub-9699928438497749/2969884909';
     } else if (Platform.isAndroid) {
-      return 'ca-app-pub-9699928438497749/5554017347';
+      return 'ca-app-pub-9699928438497749~5245883820';
+      //return 'ca-app-pub-9699928438497749/5554017347';
     }
     return "";
   }
@@ -235,18 +185,18 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   void initState() {
-/*
+
     this._adBanner = BannerAd(
       adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
       size: AdSize.banner,
       request: AdRequest(),
       listener: BannerAdListener(),
     );
-    this._adBanner!.load();*/
-/*   FacebookAudienceNetwork.init(
+    this._adBanner!.load();
+   FacebookAudienceNetwork.init(
       testingId: "a77955ee-3304-4635-be65-81029b0f5201",
       iOSAdvertiserTrackingEnabled: true,
-    );*/
+    );
 
   }
 
