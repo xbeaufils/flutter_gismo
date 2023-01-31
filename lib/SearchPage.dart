@@ -230,8 +230,10 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       itemCount: _betes == null ? 0 : _filteredBetes.length,
       itemBuilder: (BuildContext context, int index) {
         return new ListTile(
+          leading: (_filteredBetes[index].sex == Sex.male) ? ImageIcon(  AssetImage("assets/male.png")): ImageIcon(  AssetImage("assets/female.png")),
           title: Text( _filteredBetes[index].numBoucle),
           subtitle: Text(_filteredBetes[index].numMarquage ),
+          trailing: (_filteredBetes[index].nom != null) ? Text(_filteredBetes[index].nom! ) : SizedBox(width: 0,height: 0,),
           onTap: () => _selectBete(_filteredBetes[index]),
         );
       },
