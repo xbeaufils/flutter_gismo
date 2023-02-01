@@ -275,10 +275,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     }
 
     if (page  == null) {
-      Navigator
-          .of(context)
-          .pop(bete);
-
+      Navigator.of(context).pop(bete);
     }
     else {
       var navigationResult = Navigator.push(
