@@ -364,8 +364,8 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
     }
     currentLot.campagne = _campagneCtrl.text;
     this.widget._currentLot = (await this._bloc.saveLot(currentLot))!;
-    Navigator.pop(context, "Lot enregistré");
-    //this._showMessage("Lot enregistré");
+    //Navigator.pop(context, "Lot enregistré");
+    this._showMessage("Lot enregistré");
   }
 
   Future<List<Affectation>> _getBeliers(int idLot)  {

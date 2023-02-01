@@ -17,11 +17,6 @@ class LotPage extends StatefulWidget {
 class _LotPageState extends State<LotPage> {
   final GismoBloc _bloc;
   _LotPageState(this._bloc);
-  @override
-  void initState(){
-    super.initState();
-    //this.getData();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,10 +80,10 @@ class _LotPageState extends State<LotPage> {
       MaterialPageRoute(
         builder: (context) => LotAffectationViewPage(this._bloc, lot ),
       ),
+    ).whenComplete(() =>
+      setState(() {
+      })
     );
-    setState(() {
-      this._showMessage(message);
-    });
   }
 
   void _delete(LotModel lot) async {
@@ -118,7 +113,11 @@ class _LotPageState extends State<LotPage> {
         builder: (context) => LotAffectationViewPage(this._bloc, new LotModel()),
       ),
     );
-    navigationResult.then( (message) {if (message != null) debug.log(message);} );
+    navigationResult.then( (message) {
+      setState(() {
+        if (message != null) debug.log(message);
+      });
+    });
   }
 
   Future _showDialog(BuildContext context, LotModel lot) {
