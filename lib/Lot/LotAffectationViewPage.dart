@@ -31,8 +31,6 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
   TextEditingController _campagneCtrl = TextEditingController();
   final _df = new DateFormat('dd/MM/yyyy');
   int _curIndex=0;
-  int _nbBrebis = -1;
-  int _nbBeliers = -1;
   late View _currentView;
 
   LotModel get currentLot => this.widget._currentLot;
