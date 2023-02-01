@@ -121,12 +121,6 @@ class _WelcomePageState extends State<WelcomePage> {
             width:  this._adBanner!.size.width.toDouble(),
             child: AdWidget(ad:  this._adBanner!)));
     }
-/*adWidget;
-         AdmobBanner(
-           adUnitId: _getBannerAdUnitId(),
-           adSize: AdmobBannerSize.BANNER,),
-       );
-     }*/
     return Container();
   }
 
@@ -192,8 +186,9 @@ class _WelcomePageState extends State<WelcomePage> {
       request: AdRequest(),
       listener: BannerAdListener(),
     );
+    debug.log("Load Ad Banner");
     this._adBanner!.load();
-   FacebookAudienceNetwork.init(
+    FacebookAudienceNetwork.init(
       testingId: "a77955ee-3304-4635-be65-81029b0f5201",
       iOSAdvertiserTrackingEnabled: true,
     );

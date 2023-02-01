@@ -13,7 +13,6 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/flavor/Flavor.dart';
 import 'package:flutter_gismo/flavor/FlavorOvin.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:http/io_client.dart';
 import 'package:sentry/sentry.dart';
 
 import 'package:http/http.dart' as http;

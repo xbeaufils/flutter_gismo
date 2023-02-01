@@ -1,7 +1,6 @@
 import 'dart:io';
 
 //import 'package:admob_flutter/admob_flutter.dart';
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -18,7 +17,7 @@ import 'package:flutter_gismo/model/AdoptionQualite.dart';
 import 'package:flutter_gismo/model/AgnelageQualite.dart';
 import 'package:flutter_gismo/model/CauseMort.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
-//import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer' as debug;
 
@@ -35,11 +34,9 @@ class LambingPage extends StatefulWidget {
 }
 
 class _LambingPageState extends State<LambingPage> {
-  //List<LambModel> _lambs = new List();
   final GismoBloc _bloc;
   late LambingModel _lambing;
-  //List<LambModel> _lambs;
-  //BannerAd ? _adBanner;
+  BannerAd ? _adBanner;
 
   DateTime selectedDate = DateTime.now();
   final df = new DateFormat('dd/MM/yyyy');
@@ -49,7 +46,6 @@ class _LambingPageState extends State<LambingPage> {
   TextEditingController _dateAgnelageCtl = TextEditingController();
   TextEditingController _obsCtl = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   _LambingPageState(this._bloc);
@@ -162,15 +158,11 @@ class _LambingPageState extends State<LambingPage> {
       return Container();
     }
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
-      return  AdmobBanner(
-        adUnitId: this._getBannerAdUnitId(),
-        adSize: AdmobBannerSize.BANNER,);
-        /*Card(
-          child:
-          Container(
+      return Card(
+          child: Container(
               height:  this._adBanner!.size.height.toDouble(),
               width:  this._adBanner!.size.width.toDouble(),
-              child: AdWidget(ad:  this._adBanner!)));*/
+              child: AdWidget(ad:  this._adBanner!)));
     }
     return Container();
   }
@@ -334,7 +326,7 @@ class _LambingPageState extends State<LambingPage> {
         _obsCtl.text = _lambing.observations!;
       _adoption = Adoption.getAdoption(_lambing.adoption!);
       _agnelage = Agnelage.getAgnelage(_lambing.qualite!);
-    }/*
+    }
     this._adBanner = BannerAd(
       adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
       size: AdSize.banner,
@@ -342,7 +334,6 @@ class _LambingPageState extends State<LambingPage> {
       listener: BannerAdListener(),
     );
     this._adBanner!.load();
-    */
   }
 
   @override
