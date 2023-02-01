@@ -39,6 +39,8 @@ class GismoDrawer extends StatelessWidget {
   }
 
   Widget _showBlueTooth(BuildContext context) {
+    if (_bloc.user == null)
+      return Container();
     if (_bloc.user!.subscribe!)
       return  ListTile(
         title: Text("Bluetooth"),

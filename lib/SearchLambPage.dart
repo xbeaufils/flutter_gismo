@@ -144,8 +144,7 @@ class _SearchLambPageState extends State<SearchLambPage> {
           title: Row(
             children: <Widget>[
               Expanded( child:
-          ( _filteredLambs[index].marquageProvisoire == null)? Container() : Text( _filteredLambs[index].marquageProvisoire!),
-              ),
+                (_filteredLambs[index].marquageProvisoire == null)? Container() : Text( _filteredLambs[index].marquageProvisoire!),),
               IconButton( icon: new Icon(Icons.delete), onPressed: () => _showDialog(context, _filteredLambs[index])),
             ],),
           subtitle:
