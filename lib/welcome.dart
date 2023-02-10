@@ -149,6 +149,7 @@ class _WelcomePageState extends State<WelcomePage> {
       return 'ca-app-pub-9699928438497749~5245883820';
       //return 'ca-app-pub-9699928438497749/5554017347';
     }
+    debug.log("Unable to find plateform");
     return "";
   }
 
@@ -187,7 +188,7 @@ class _WelcomePageState extends State<WelcomePage> {
       listener: BannerAdListener(),
     );
     debug.log("Load Ad Banner");
-    this._adBanner!.load();
+    //this._adBanner!.load();
     FacebookAudienceNetwork.init(
       testingId: "a77955ee-3304-4635-be65-81029b0f5201",
       iOSAdvertiserTrackingEnabled: true,
