@@ -54,6 +54,7 @@ abstract class DataProvider {
   Future<String> deletePesee(int idBd);
   // Echographie
   Future<String> saveEcho(EchographieModel echo);
+  Future<String> deleteEcho(EchographieModel echo);
   Future<EchographieModel?> searchEcho(int idBd);
   Future<List<EchographieModel>> getEcho(Bete bete);
   //  Saillie

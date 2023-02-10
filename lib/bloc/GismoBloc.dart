@@ -521,6 +521,10 @@ class GismoBloc {
     }
   }
 
+  Future<String> deleteEcho(EchographieModel echo) {
+    return this._repository!.dataProvider.deleteEcho(echo);
+  }
+
   Future<String> saveSaillie(SaillieModel saillie) async {
     try {
       return this._repository!.dataProvider.saveSaillie(saillie);

@@ -219,10 +219,12 @@ class _SanitairePageState extends State<SanitairePage> {
                           direction: Axis.horizontal,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            TextButton(
-                                onPressed: () => _showDialog(context),
-                                child: Text("Supprimer")),
-                          new ElevatedButton(key:null, onPressed:_save,
+                            (this.widget._currentTraitement == null) ?
+                                Container():
+                                TextButton(
+                                  onPressed: () => _showDialog(context),
+                                  child: Text("Supprimer")),
+                            new ElevatedButton(key:null, onPressed:_save,
                               //color: Colors.lightGreen[700],
                               child: new Text("Enregistrer",style: TextStyle( color: Colors.white)),)
                           ]

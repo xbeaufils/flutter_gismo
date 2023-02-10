@@ -124,6 +124,11 @@ class DummyDataProvider extends DataProvider {
   }
 
   @override
+  Future<String> deleteEcho(EchographieModel echo) {
+    throw RepositoryTypeException("Type de repository inconnue");
+  }
+
+  @override
   Future<String> saveSaillie(SaillieModel echo) {
     throw RepositoryTypeException("Type de repository inconnue");
   }

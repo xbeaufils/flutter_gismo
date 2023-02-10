@@ -773,7 +773,7 @@ class LocalDataProvider extends DataProvider{
   Future<String> deleteSaillie(int idBd) async {
     Database db = await this.database;
     int res =   await db.delete("saillie",
-        where: "id = ?", whereArgs: <int>[idBd]);
+        where: "idBd = ?", whereArgs: <int>[idBd]);
     return "Suppression effectuée";
   }
 
@@ -826,6 +826,20 @@ class LocalDataProvider extends DataProvider{
       //super.bloc.reportError(e, stackTrace);
     }
     return "Erreur d'enregistrement";
+  }
+
+  @override
+  Future<String> deleteEcho(EchographieModel echo) async {
+    try {
+      Database db = await this.database;
+      int res =   await db.delete("Echo",
+          where: "id = ?", whereArgs: <int>[echo.idBd!]);
+      return "Suppression OK";
+    }
+    catch(e,stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+    }
+    return "Erreur de suppression";
   }
 
   @override
@@ -966,7 +980,7 @@ class LocalDataProvider extends DataProvider{
       //      super.bloc.reportError(e, stackTrace);
       return "Une erreur est survenue :" + e.toString();
     }
-    return "Enregistrement efectué";
+    return "Enregistrement effectué";
   }
 
   @override

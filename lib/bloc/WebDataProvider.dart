@@ -537,6 +537,19 @@ class WebDataProvider extends DataProvider {
     }
   }
 
+  Future<String> deleteEcho(EchographieModel echo) async {
+    try {
+      final response = await _gismoHttp.doDeleteMessage(
+          '/echo/delete', echo.toJson());
+      return response;
+    }
+    catch (e, stacktrace) {
+      debug.log("Error", error: e);
+      Sentry.captureException(e, stackTrace : stacktrace);
+    }
+    return "Erreur de suppression";
+  }
+
   @override
   Future<List<EchographieModel>> getEcho(Bete bete) async {
     final response = await _gismoHttp.doGetList(
