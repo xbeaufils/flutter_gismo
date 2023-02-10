@@ -235,7 +235,12 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
         builder: (context) => LambingPage.edit(_bloc, lambing),
       ),
     );
-    navigationResult.then( (message) {if (message != null) _showMessage(message);} );
+    navigationResult.then( (message) {
+      setState(() {
+        if (message != null)
+          _showMessage(message);
+      });
+    } );
 
   }
 
@@ -261,7 +266,12 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
         builder: (context) => EchoPage.edit(_bloc, echo, _bete),
       ),
     );
-    navigationResult.then( (message) { if (message != null) _showMessage(message);} );
+    navigationResult.then( (message) {
+      setState(() {
+        if (message != null)
+          _showMessage(message);
+        });
+     });
   }
 
   void _editMemo(MemoModel memo)  {
@@ -271,7 +281,12 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
         builder: (context) => MemoPage.edit(_bloc, memo),
       ),
     );
-    navigationResult.then( (message) { if (message != null) _showMessage(message);} );
+    navigationResult.then( (message) {
+      setState(() {
+        if (message != null)
+          _showMessage(message);
+      });
+    });
   }
 
   void _viewMere(Bete mere) {
