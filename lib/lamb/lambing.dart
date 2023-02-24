@@ -311,6 +311,12 @@ class _LambingPageState extends State<LambingPage> {
   //void radioChanged(double value) {}
 
   @override
+  void dispose() {
+    super.dispose();
+    //this._adBanner!.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     if (this.widget._currentLambing == null) {
@@ -332,14 +338,7 @@ class _LambingPageState extends State<LambingPage> {
       size: AdSize.banner,
       request: AdRequest(),
       listener: BannerAdListener(),
-    );
-    this._adBanner!.load();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    //this._adBanner!.dispose();
+    )..load();
   }
 
   Widget _buildLambItem(BuildContext context, int index) {

@@ -146,8 +146,7 @@ class _WelcomePageState extends State<WelcomePage> {
     if (Platform.isIOS) {
       return 'ca-app-pub-9699928438497749/2969884909';
     } else if (Platform.isAndroid) {
-      return 'ca-app-pub-9699928438497749~5245883820';
-      //return 'ca-app-pub-9699928438497749/5554017347';
+      return 'ca-app-pub-9699928438497749/5554017347';
     }
     debug.log("Unable to find plateform");
     return "";
@@ -180,26 +179,28 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   void initState() {
-
-    this._adBanner = BannerAd(
-      adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
-      size: AdSize.banner,
-      request: AdRequest(),
-      listener: BannerAdListener(),
-    );
-    debug.log("Load Ad Banner");
-    //this._adBanner!.load();
-    FacebookAudienceNetwork.init(
-      testingId: "a77955ee-3304-4635-be65-81029b0f5201",
-      iOSAdvertiserTrackingEnabled: true,
-    );
-
+    if ( ! _bloc.isLogged()!) {
+      this._adBanner = BannerAd(
+        adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
+        size: AdSize.banner,
+        request: AdRequest(),
+        listener: BannerAdListener(),
+      )..load();
+      // See in https://dev-yakuza.posstree.com/en/flutter/admob/#configure-app-id-on-android
+      debug.log("Load Ad Banner");
+      //this._adBanner!.load();
+      FacebookAudienceNetwork.init(
+        testingId: "a77955ee-3304-4635-be65-81029b0f5201",
+        iOSAdvertiserTrackingEnabled: true,
+      );
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
-    //this._adBanner!.dispose();
+    if (this._adBanner != null)
+      this._adBanner!.dispose();
   }
 
   void _parcellePressed() {
@@ -208,19 +209,6 @@ class _WelcomePageState extends State<WelcomePage> {
     else
       this.showMessage("Les parcelles ne sont pas visibles en mode autonome");
   }
-
-  void _settingPressed() {
-    Future<dynamic> message = Navigator.pushNamed(context, '/config') ;
-    message.then((message) {
-      showMessage(message);
-      setState(() {
-
-      });
-    }).catchError((message) {
-      showMessage(message);
-    });
-  }
-
 
   void _individuPressed() {
     Navigator.pushNamed(context, '/search');
@@ -282,10 +270,5 @@ class _WelcomePageState extends State<WelcomePage> {
 
   void _sailliePressed() {
     Navigator.pushNamed(context, '/saillie');
-  }
-
-  void _choixBt() {
-    Navigator.pushNamed(context, '/bluetooth');
-
   }
 }
