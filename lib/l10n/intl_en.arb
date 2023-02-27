@@ -1,0 +1,34 @@
+{
+  "@@locale": "en",
+  "batch" : "Batch",
+  "sheep" : "Sheep",
+  "lambing" : "Lambing",
+  "lambs" : "Lambs",
+  "ultrasound" : "Ultrasound",
+  "mating" : "Mating",
+  "weight" : "Weight",
+  "body_cond" : "Body cond.",
+  "treatment" : "Treatment",
+  "input": "Entry",
+  "output": "Departure",
+
+  "welcome" : "Welcome",
+  "memo" : "Memo",
+  "configuration" : "Configuration",
+  "localuser" : "Local user",
+
+  "earring" : "Earring",
+
+  "birth" : "Birth",
+  "creation" : "Creation",
+  "renewal" : "Renewal",
+  "purchase" : "Purchase",
+  "reactivation" : "Reactivation",
+  "loan" : "Loan or pension",
+  "transfer" : "Internal transfer",
+  "unknown" : "Unknown",
+  "dateEntry" : "Date of entry",
+  "noEntryDate" : "No entry date",
+
+  "bt_save" : "Save"
+}

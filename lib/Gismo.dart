@@ -14,6 +14,8 @@ import 'package:flutter_gismo/parcelle/ParcellePage.dart';
 import 'package:flutter_gismo/traitement/selectionTraitement.dart';
 import 'package:flutter_gismo/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 enum GismoPage {lamb, sanitaire, etat_corporel, individu, sortie, lot, pesee, echo, saillie, sailliePere, note  }
 
@@ -39,8 +41,9 @@ class GismoApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.green,
       ),
+     //localizationsDelegates: AppLocalizations.localizationsDelegates,
       localizationsDelegates: [
-        //const TranslationsDelegate(),
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
@@ -48,6 +51,7 @@ class GismoApp extends StatelessWidget {
       supportedLocales: [
         const Locale('en', ''),
         const Locale('fr', ''),
+        const Locale('de', ''),
       ],
       //home: openHome(),
       initialRoute: this.initialRoute,

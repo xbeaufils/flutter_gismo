@@ -16,7 +16,6 @@ import 'package:flutter_gismo/lamb/lambing.dart';
 import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
-import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
 import 'package:sentry/sentry.dart';
 

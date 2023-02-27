@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EntreePage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -28,18 +28,19 @@ class _EntreePageState extends State<EntreePage> {
   BannerAd ? _adBanner;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  List<DropdownMenuItem<String>> _getMotifEntreeItems() {
+  List<DropdownMenuItem<String>> _getMotifEntreeItems(BuildContext context) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     List<DropdownMenuItem<String>> items = [];
-    items.add( new DropdownMenuItem(value: 'NAISSANCE', child: new Text('Naissance')));
-    items.add( new DropdownMenuItem(value: 'CREATION', child: new Text('Création')));
-    items.add( new DropdownMenuItem(value: 'RENOUVELLEMENT', child: new Text('Renouvellement')));
-    items.add( new DropdownMenuItem(value: 'ACHAT', child: new Text('Achat')));
+    items.add( new DropdownMenuItem(value: 'NAISSANCE', child: new Text( appLocalizations!.birth )));
+    items.add( new DropdownMenuItem(value: 'CREATION', child: new Text(appLocalizations.creation)));
+    items.add( new DropdownMenuItem(value: 'RENOUVELLEMENT', child: new Text(appLocalizations.renewal)));
+    items.add( new DropdownMenuItem(value: 'ACHAT', child: new Text(appLocalizations.purchase)));
     items.add( new DropdownMenuItem(value: 'MUTATION_INTERNE', child: new Text('Mutation interne')));
-    items.add( new DropdownMenuItem(value: 'REACTIVATION', child: new Text('Réactivation')));
-    items.add( new DropdownMenuItem(value: 'PRET_OU_PENSION', child: new Text('Prêt ou pension')));
+    items.add( new DropdownMenuItem(value: 'REACTIVATION', child: new Text(appLocalizations.reactivation)));
+    items.add( new DropdownMenuItem(value: 'PRET_OU_PENSION', child: new Text(appLocalizations.loan)));
     items.add( new DropdownMenuItem(value: 'ENTREE_EN_SCI_OU_CE', child: new Text('Entree en SCI ou CE')));
     items.add( new DropdownMenuItem(value: 'REPRISE_EN_SCI_OU_CE', child: new Text('Reprise en SCI ou CE')));
-    items.add( new DropdownMenuItem(value: 'INCONNUE', child: new Text('Inconnue')));
+    items.add( new DropdownMenuItem(value: 'INCONNUE', child: new Text(appLocalizations.unknown)));
     return items;
   }
 
@@ -52,10 +53,12 @@ class _EntreePageState extends State<EntreePage> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
+
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: new Text('Entree'),
+        title: new Text(appLocalizations!.input),
       ),
       body:
       new Column(
@@ -70,11 +73,11 @@ class _EntreePageState extends State<EntreePage> {
                       keyboardType: TextInputType.datetime,
                       controller: _dateEntreeCtl,
                       decoration: InputDecoration(
-                          labelText: "Date d'entrée",
+                          labelText: appLocalizations.dateEntry,
                           hintText: 'jj/mm/aaaa'),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Pas de date d'entrée";
+                          return appLocalizations.noEntryDate;
                         }},
                       onSaved: (value) {
                         setState(() {
@@ -85,7 +88,6 @@ class _EntreePageState extends State<EntreePage> {
                         DateTime date = DateTime.now();
                         FocusScope.of(context).requestFocus(new FocusNode());
                         date = (await showDatePicker(
-
                           locale: const Locale("fr","FR"),
                           context: context,
                           initialDate:DateTime.now(),
@@ -109,16 +111,11 @@ class _EntreePageState extends State<EntreePage> {
           Expanded(
             child: Sheeps(this._sheeps, this)),
           ElevatedButton(
-            child: Text('Enregistrer',
+            child: Text(appLocalizations.bt_save,
                 style: new TextStyle(color: Colors.white, ),),
-            //color: Colors.lightGreen[700],
             onPressed: _saveEntree),
           (this._bloc.isLogged()!) ?
             Container():_getAdmobAdvice()
-           /* AdmobBanner(
-              adUnitId: _getBannerAdUnitId()!,
-              adSize: AdmobBannerSize.BANNER,),*/
-
           ]
 
       ),
@@ -209,9 +206,11 @@ class _EntreePageState extends State<EntreePage> {
   void initState() {
     super.initState();
     _sheeps = [];
-    _motifEntreeItems = _getMotifEntreeItems();
+    //_motifEntreeItems = _getMotifEntreeItems();
     _dateEntreeCtl.text = _df.format(DateTime.now());
-
+    new Future.delayed(Duration.zero,() {
+      _motifEntreeItems = _getMotifEntreeItems(context);
+    });
     this._adBanner = BannerAd(
       adUnitId: _getBannerAdUnitId()!, //'<ad unit ID>',
       size: AdSize.banner,

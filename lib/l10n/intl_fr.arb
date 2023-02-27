@@ -1,0 +1,15 @@
+{
+  "@@locale": "fr",
+  "batch" : "Lot",
+  "sheep" : "Individu",
+  "lambing" : "Agnelage",
+  "lambs" : "Agneaux",
+  "mating" : "Saillie",
+  "ultrasound" : "Echographie",
+  "weight" : "Poids",
+  "body_cond" : "Etat corp.",
+  "treatment" : "Traitement",
+  "input": "Entrée",
+  "output": "Sortie",
+  "localuser": "Utilisateur local"
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GismoDrawer extends StatelessWidget {
   GismoBloc _bloc;
@@ -8,19 +9,20 @@ class GismoDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return Drawer(
       child: ListView(
         children: [
-          this._userstatus(),
+          this._userstatus(context),
           Column(
             children: [
               ListTile(
-                title: Text("Accueil"),
+                title: Text(appLocalizations!.welcome),
                 leading: Icon(Icons.home),
                 onTap:() { _homePressed(context);},
               ),
               ListTile(
-                title: Text("Memos"),
+                title: Text(appLocalizations.memo),
                 leading: Icon(Icons.note),
                 onTap: () { _notePressed(context);},
               ),
@@ -29,7 +31,7 @@ class GismoDrawer extends StatelessWidget {
                 thickness: 1,
               ),
               ListTile(
-                title: Text("Configuration"),
+                title: Text(appLocalizations.configuration),
                 leading: Icon(Icons.settings),
                 onTap:  () { _settingPressed(context);},
               ),
@@ -49,21 +51,13 @@ class GismoDrawer extends StatelessWidget {
       );
     return Container();
   }
+
   void _choixBt(BuildContext context) {
     Navigator.pushNamed(context, '/bluetooth');
   }
 
   void _settingPressed(BuildContext context) {
     Navigator.pushReplacementNamed(context, '/config') ;
-    /*
-    message.then((message) {
-      showMessage(message);
-      setState(() {
-
-      });
-    }).catchError((message) {
-      showMessage(message);
-    });*/
   }
 
   void _homePressed(BuildContext context) {
@@ -73,9 +67,11 @@ class GismoDrawer extends StatelessWidget {
   void _notePressed( BuildContext context) {
     Navigator.pushReplacementNamed(context, '/note') ;
   }
-  Widget _userstatus() {
+
+  Widget _userstatus(BuildContext context) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     Icon iconConnexion = Icon(Icons.person);
-    Text userName = new Text("utilisateur local");
+    Text userName = new Text(appLocalizations!.localuser);
     Text cheptel = new Text("000000");
     if (_bloc.user == null) {
       iconConnexion = Icon(Icons.error_outline);

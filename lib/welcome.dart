@@ -5,6 +5,7 @@ import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'dart:developer' as debug;
 
@@ -34,6 +35,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.lightGreen,
@@ -61,7 +63,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       children: <Widget>[
                         _buildButton("Lot", "assets/Lot.png",_lotPressed),
                         _buildButton("Individu", "assets/brebis.png", _individuPressed),
-                        _buildButton("Agneaux", 'assets/jumping_lambs.png', _lambPressed),
+                        _buildButton(appLocalizations!.lambs, 'assets/jumping_lambs.png', _lambPressed),
                       ])))),
               Card(
                 child: Center(
@@ -72,9 +74,9 @@ class _WelcomePageState extends State<WelcomePage> {
                     alignment: MainAxisAlignment.spaceEvenly,
                     buttonMinWidth: 90.0,
                     children: <Widget>[
-                      _buildButton("Saillie", "assets/saillie.png", _sailliePressed),
-                      _buildButton("Echographie", 'assets/ultrasound.png', _echoPressed),
-                      _buildButton("Agnelage", 'assets/lamb.png', _lambingPressed),
+                      _buildButton(appLocalizations!.mating, "assets/saillie.png", _sailliePressed),
+                      _buildButton(appLocalizations!.ultrasound, 'assets/ultrasound.png', _echoPressed),
+                      _buildButton( appLocalizations!.lambing, 'assets/lamb.png', _lambingPressed),
                     ])))),
               Card(
                 child: Center(
@@ -85,9 +87,9 @@ class _WelcomePageState extends State<WelcomePage> {
                     alignment: MainAxisAlignment.spaceEvenly,
                     buttonMinWidth: 90.0,
                     children: <Widget>[
-                      _buildButton("Traitement", "assets/syringe.png",_traitementPressed),
-                      _buildButton("Etat corp.", "assets/etat_corporel.png", _necPressed), //Etat corporel
-                      _buildButton("Poids", 'assets/peseur.png', _peseePressed), // Pesée
+                      _buildButton(appLocalizations!.treatment, "assets/syringe.png",_traitementPressed),
+                      _buildButton(appLocalizations!.body_cond, "assets/etat_corporel.png", _necPressed), //Etat corporel
+                      _buildButton(appLocalizations!.weight, 'assets/peseur.png', _peseePressed), // Pesée
                   ])))),
               Card(
                 child: Center(
@@ -98,8 +100,8 @@ class _WelcomePageState extends State<WelcomePage> {
                     alignment: MainAxisAlignment.spaceEvenly,
                     buttonMinWidth: 90.0,
                     children: <Widget>[
-                      _buildButton("Entree", "assets/home.png", _entreePressed), // Entrée
-                      _buildButton("Sortie", "assets/Truck.png", _sortiePressed),
+                      _buildButton(appLocalizations!.input, "assets/home.png", _entreePressed), // Entrée
+                      _buildButton(appLocalizations!.output, "assets/Truck.png", _sortiePressed),
                       _buildButton("Parcelles", "assets/parcelles.png", _parcellePressed),
                     //  _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
                     ])))),
