@@ -6,8 +6,9 @@
   "lambs" : "Lambs",
   "ultrasound" : "Ultrasound",
   "mating" : "Mating",
-  "weight" : "Weight",
+  "weighing" : "Weighing",
   "body_cond" : "Body cond.",
+  "body_cond_full" : "Body condition note",
   "treatment" : "Treatment",
   "input": "Entry",
   "output": "Departure",
@@ -18,6 +19,13 @@
   "localuser" : "Local user",
 
   "earring" : "Earring",
+  "earring_search": "Search earring",
+  "search" : "Search",
+  "title_empty_list" : "Empty list",
+  "text_empty_list" : "To enter lifestock, make an entry from the main screen.",
+  "not_connected" : "Not connected",
+  "data_available" : "Data available",
+  "no_earring_read" : "No earring read",
 
   "birth" : "Birth",
   "creation" : "Creation",
@@ -30,5 +38,22 @@
   "dateEntry" : "Date of entry",
   "noEntryDate" : "No entry date",
 
-  "bt_save" : "Save"
+  "weight" : "Weight",
+  "weighing_date": "Weighing date",
+  "no_weighing_date": "No weighing date",
+  "weighing_error" : "weighing has not a number format",
+  "weighing_hint" : "Weight in Kg",
+  "no_weight_entered": "No weight entered",
+
+  "provisional_number" : "Provisional number",
+  "tooltip_search" : "Search",
+
+
+  "bt_cancel" : "Cancel",
+  "bt_continue" : "Continue",
+  "bt_save" : "Save",
+  "bt_add" : "Add",
+
+  "title_delete" : "Delete",
+  "text_delete" : "Do you want to delete this record ?"
 }

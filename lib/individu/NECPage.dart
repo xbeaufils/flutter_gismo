@@ -3,6 +3,7 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NECPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -25,10 +26,11 @@ class NECPageState extends State<NECPage> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: const Text("Note d'état corporel"),
+        title: Text(appLocalizations!.body_cond),
         leading: Text(this.widget._bete.numBoucle),
       ),
       body:
@@ -132,9 +134,10 @@ class HelpPageState extends State<HelpPage> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
         appBar: new AppBar(
-        title: const Text("Note d'état corporel"),
+        title: Text(appLocalizations!.body_cond),
     ),
     body:
       Card(

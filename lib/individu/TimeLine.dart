@@ -13,6 +13,7 @@ import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class TimeLinePage extends StatefulWidget {
@@ -36,10 +37,11 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: new Text('Individu'),
+        title: new Text(appLocalizations!.sheep),
         ),
       body:
           Column (
@@ -153,6 +155,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   }
 
   Future _showDialog(BuildContext context, Event event) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     String message ="Voulez vous supprimer ";
     if (event.type == EventType.NEC)
       message += "cette note d'Etat corp ?";
@@ -164,9 +167,8 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Suppression"),
-          content: Text(
-              message),
+          title: Text(appLocalizations!.title_delete),
+          content: Text(appLocalizations.text_delete),
           actions: [
             _cancelButton(),
             _continueButton(event),
@@ -178,8 +180,9 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   
   // set up the buttons
   Widget _cancelButton() {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return TextButton(
-      child: Text("Annuler"),
+      child: Text(appLocalizations!.bt_cancel),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -187,8 +190,9 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   }
 
   Widget _continueButton(Event event) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return TextButton(
-      child: Text("Continuer"),
+      child: Text(appLocalizations!.bt_continue),
       onPressed: () {
         if (event.type == EventType.pesee || event.type == EventType.NEC || event.type == EventType.saillie)
           _deleteEvent(event);

@@ -89,7 +89,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     children: <Widget>[
                       _buildButton(appLocalizations!.treatment, "assets/syringe.png",_traitementPressed),
                       _buildButton(appLocalizations!.body_cond, "assets/etat_corporel.png", _necPressed), //Etat corporel
-                      _buildButton(appLocalizations!.weight, 'assets/peseur.png', _peseePressed), // Pesée
+                      _buildButton(appLocalizations!.weighing, 'assets/peseur.png', _peseePressed), // Pesée
                   ])))),
               Card(
                 child: Center(

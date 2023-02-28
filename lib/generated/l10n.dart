@@ -110,11 +110,11 @@ class S {
     );
   }
 
-  /// `Weight`
-  String get weight {
+  /// `Weighing`
+  String get weighing {
     return Intl.message(
-      'Weight',
-      name: 'weight',
+      'Weighing',
+      name: 'weighing',
       desc: '',
       args: [],
     );
@@ -125,6 +125,16 @@ class S {
     return Intl.message(
       'Body cond.',
       name: 'body_cond',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Body condition note`
+  String get body_cond_full {
+    return Intl.message(
+      'Body condition note',
+      name: 'body_cond_full',
       desc: '',
       args: [],
     );
@@ -205,6 +215,76 @@ class S {
     return Intl.message(
       'Earring',
       name: 'earring',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search earring`
+  String get earring_search {
+    return Intl.message(
+      'Search earring',
+      name: 'earring_search',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search`
+  String get search {
+    return Intl.message(
+      'Search',
+      name: 'search',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Empty list`
+  String get title_empty_list {
+    return Intl.message(
+      'Empty list',
+      name: 'title_empty_list',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To seize lifestock, make an entry from the main screen.`
+  String get text_empty_list {
+    return Intl.message(
+      'To seize lifestock, make an entry from the main screen.',
+      name: 'text_empty_list',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not connected`
+  String get not_connected {
+    return Intl.message(
+      'Not connected',
+      name: 'not_connected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Data available`
+  String get data_available {
+    return Intl.message(
+      'Data available',
+      name: 'data_available',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No earring read`
+  String get no_earring_read {
+    return Intl.message(
+      'No earring read',
+      name: 'no_earring_read',
       desc: '',
       args: [],
     );
@@ -310,11 +390,141 @@ class S {
     );
   }
 
+  /// `Weight`
+  String get weight {
+    return Intl.message(
+      'Weight',
+      name: 'weight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weighing date`
+  String get weighing_date {
+    return Intl.message(
+      'Weighing date',
+      name: 'weighing_date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No weighing date`
+  String get no_weighing_date {
+    return Intl.message(
+      'No weighing date',
+      name: 'no_weighing_date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `weighing has not a number format`
+  String get weighing_error {
+    return Intl.message(
+      'weighing has not a number format',
+      name: 'weighing_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weight in Kg`
+  String get weighing_hint {
+    return Intl.message(
+      'Weight in Kg',
+      name: 'weighing_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No weight entered`
+  String get no_weight_entered {
+    return Intl.message(
+      'No weight entered',
+      name: 'no_weight_entered',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Provisional number`
+  String get provisional_number {
+    return Intl.message(
+      'Provisional number',
+      name: 'provisional_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search`
+  String get tooltip_search {
+    return Intl.message(
+      'Search',
+      name: 'tooltip_search',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get bt_cancel {
+    return Intl.message(
+      'Cancel',
+      name: 'bt_cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue`
+  String get bt_continue {
+    return Intl.message(
+      'Continue',
+      name: 'bt_continue',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Save`
   String get bt_save {
     return Intl.message(
       'Save',
       name: 'bt_save',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add`
+  String get bt_add {
+    return Intl.message(
+      'Add',
+      name: 'bt_add',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete`
+  String get title_delete {
+    return Intl.message(
+      'Delete',
+      name: 'title_delete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you want to delete this record ?`
+  String get text_delete {
+    return Intl.message(
+      'Do you want to delete this record ?',
+      name: 'text_delete',
       desc: '',
       args: [],
     );

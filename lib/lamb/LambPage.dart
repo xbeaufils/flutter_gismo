@@ -7,6 +7,7 @@ import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LambPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -30,6 +31,7 @@ class LambPageState extends State<LambPage> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(
@@ -41,7 +43,7 @@ class LambPageState extends State<LambPage> {
           Column(
               children: <Widget>[
                 new TextField(
-                  decoration: InputDecoration(labelText: 'Marquage provisoire'),
+                  decoration: InputDecoration(labelText: appLocalizations!.provisional_number),
                   controller: _marquageCtrl,
                 ),
                 new Row(
@@ -151,10 +153,12 @@ class LambPageState extends State<LambPage> {
   @override
   void initState() {
     List<DropdownMenuItem<MethodeAllaitement>> items = [];
-    items.add(new DropdownMenuItem( value: MethodeAllaitement.ALLAITEMENT_MATERNEL, child: new Text(MethodeAllaitement.ALLAITEMENT_MATERNEL.libelle)));
-    items.add(new DropdownMenuItem( value: MethodeAllaitement.ALLAITEMENT_ARTIFICIEL, child: new Text(MethodeAllaitement.ALLAITEMENT_ARTIFICIEL.libelle)));
-    items.add(new DropdownMenuItem( value: MethodeAllaitement.ADOPTE, child: new Text(MethodeAllaitement.ADOPTE.libelle)));
-    items.add(new DropdownMenuItem( value: MethodeAllaitement.BIBERONNE, child: new Text(MethodeAllaitement.BIBERONNE.libelle)));
+    new Future.delayed(Duration.zero,() {
+      items.add(new DropdownMenuItem( value: MethodeAllaitement.ALLAITEMENT_MATERNEL, child: new Text(MethodeAllaitement.ALLAITEMENT_MATERNEL.libelle)));
+      items.add(new DropdownMenuItem( value: MethodeAllaitement.ALLAITEMENT_ARTIFICIEL, child: new Text(MethodeAllaitement.ALLAITEMENT_ARTIFICIEL.libelle)));
+      items.add(new DropdownMenuItem( value: MethodeAllaitement.ADOPTE, child: new Text(MethodeAllaitement.ADOPTE.libelle)));
+      items.add(new DropdownMenuItem( value: MethodeAllaitement.BIBERONNE, child: new Text(MethodeAllaitement.BIBERONNE.libelle)));
+    });
     _dropDownMenuItems = items;
     if (this.widget._lamb != null) {
       _currentAllaitement = this.widget._lamb!.allaitement;
@@ -176,13 +180,13 @@ class LambPageState extends State<LambPage> {
   }
 
   Widget _mainButton() {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     if (this.widget._lamb == null)
       return new ElevatedButton(
           onPressed:_addLamb,
           //color: Colors.lightGreen[900],
           child:
-          new Text(
-            "Ajouter",
+          new Text(appLocalizations!.bt_add,
             style: new TextStyle(color: Colors.white),
           )
       );
@@ -191,7 +195,7 @@ class LambPageState extends State<LambPage> {
         onPressed:_saveLamb,
       //color: Colors.lightGreen[900],
         icon: Icon(Icons.save),
-        label: Text("Enregistrer"),
+        label: Text(appLocalizations!.bt_save),
       ) ;
   }
 
@@ -348,8 +352,9 @@ class LambPageState extends State<LambPage> {
 
   // set up the buttons
   Widget _cancelButton() {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return TextButton(
-      child: Text("Annuler"),
+      child: Text(appLocalizations!.bt_cancel),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -357,8 +362,9 @@ class LambPageState extends State<LambPage> {
   }
 
   Widget _continueButton(Event event) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return TextButton(
-      child: Text("Continuer"),
+      child: Text(appLocalizations!.bt_continue),
       onPressed: () {
         if (event.type == EventType.pesee || event.type == EventType.traitement)
           _deleteEvent(event);
@@ -368,18 +374,13 @@ class LambPageState extends State<LambPage> {
   }
 
   Future _showDialog(BuildContext context, Event event) {
-    String message ="Voulez vous supprimer ";
-    if (event.type == EventType.traitement)
-      message += "ce traitement ?";
-    if (event.type == EventType.pesee)
-      message += "cette pesée ?";
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Suppression"),
-          content: Text(
-              message),
+          title: Text(appLocalizations!.title_delete),
+          content: Text(appLocalizations!.text_delete),
           actions: [
             _cancelButton(),
             _continueButton(event),

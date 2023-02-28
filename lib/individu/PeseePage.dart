@@ -3,6 +3,7 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PeseePage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -27,10 +28,11 @@ class PeseePageState extends State<PeseePage> {
 
   @override
   Widget build(BuildContext context) {
+    var t = AppLocalizations.of(context);
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: const Text("Pesée"),
+        title: Text(t!.weighing),
         //leading: Text(this.widget._bete.numBoucle),
       ),
       body:
@@ -40,11 +42,11 @@ class PeseePageState extends State<PeseePage> {
                 keyboardType: TextInputType.datetime,
                 controller: _datePeseeCtl,
                 decoration: InputDecoration(
-                    labelText: "Date de pesée",
+                    labelText: t!.weighing_date,
                     hintText: 'jj/mm/aaaa'),
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return "Pas de date de pesée";
+                    return t!.no_weighing_date;
                   }},
                 onSaved: (value) {
                   setState(() {
@@ -70,11 +72,11 @@ class PeseePageState extends State<PeseePage> {
                 keyboardType: TextInputType.number,
                 controller: _poidsCtl,
               decoration: InputDecoration(
-                  labelText: "Poids",
-                  hintText: 'Poids en kg'),
+                  labelText: t!.weight,
+                  hintText: t.weighing_hint),
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return "Pas de poids saisi";
+                    return t.no_weight_entered;
                   }},
                 onSaved: (value) {
                   setState(() {
@@ -84,7 +86,7 @@ class PeseePageState extends State<PeseePage> {
             ),
             (_isSaving) ? CircularProgressIndicator():
               ElevatedButton(
-                child: Text('Enregistrer',
+                child: Text(t!.bt_save,
                   style: new TextStyle(color: Colors.white, ),),
                 //color: Colors.lightGreen[700],
                 onPressed: _savePesee)
@@ -100,11 +102,12 @@ class PeseePageState extends State<PeseePage> {
   }
 
   void _savePesee() async {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     double? poids = double.tryParse(_poidsCtl.text);
     String message="";
     if (poids == null) {
-      message = "Le poids n'est pas au format numérique";
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      message = "";
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(appLocalizations!.weighing_error)));
       return;
     }
     setState(() {

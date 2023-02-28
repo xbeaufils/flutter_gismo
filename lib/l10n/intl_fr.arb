@@ -8,8 +8,49 @@
   "ultrasound" : "Echographie",
   "weight" : "Poids",
   "body_cond" : "Etat corp.",
+  "body_cond_full" : "Note d'état corporel",
   "treatment" : "Traitement",
   "input": "Entrée",
   "output": "Sortie",
-  "localuser": "Utilisateur local"
+  "localuser": "Utilisateur local",
+  "welcome" : "Accueil",
+  "memo" : "Memo",
+  "configuration" : "Configuration",
+
+  "earring" : "Boucle",
+  "earring_search": "Recherche boucle",
+  "search" : "Recherche",
+  "title_empty_list" : "Liste vide",
+  "text_empty_list" : "Pour saisir l'effectif, veuillez faire une entrée depuis l'écran principal.",
+  "not_connected" : "Non connecté",
+  "data_available" : "Données reçues",
+  "no_earring_read" : "Pas de boucle lue",
+
+  "birth" : "Naissance",
+  "creation" : "Creation",
+  "renewal" : "Renouvellement",
+  "purchase" : "Achat",
+  "reactivation" : "Reactivation",
+  "loan" : "Prêt ou pension",
+  "transfer" : "Transfert interne",
+  "unknown" : "Inconnu",
+  "dateEntry" : "Date d'entrée",
+  "noEntryDate" : "Pas de date d'entrée",
+
+  "weight" : "Poids",
+  "weighing_date": "Date de pesée",
+  "no_weighing_date": "Pas de date de pesée",
+  "weighing_error" : "Le poids n'est pas au format numérique",
+  "weighing_hint" : "Poids en Kg",
+
+  "provisional_number" : "Numéro provisoire",
+  "tooltip_search" : "Recherche",
+
+  "bt_cancel" : "Annuler",
+  "bt_continue" : "Continuer",
+  "bt_save" : "Enregistrer",
+  "bt_add" : "Ajouter",
+
+  "title_delete" : "Suppression",
+  "text_delete" : "Voulez vous supprimer cet enregistrement ?"
 }
