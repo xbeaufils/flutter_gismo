@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum View {lot, saillie, all}
 
@@ -27,14 +28,15 @@ class _SearchPerePageState  extends State<SearchPerePage> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
         key: _scaffoldKey,
         bottomNavigationBar:
         BottomNavigationBar(
             items: [
-              BottomNavigationBarItem(icon: Image.asset("assets/Lot.png"),label:"Lots"),
-              BottomNavigationBarItem(icon: Image.asset("assets/saillie.png"),  label: "Saillie"),
-              BottomNavigationBarItem(icon: Image.asset("assets/ram_inactif.png"), label: "Tout beliers"),
+              BottomNavigationBarItem(icon: Image.asset("assets/Lot.png"),label: appLocalizations!.batch),
+              BottomNavigationBarItem(icon: Image.asset("assets/saillie.png"),  label: appLocalizations.mating),
+              BottomNavigationBarItem(icon: Image.asset("assets/ram_inactif.png"), label: appLocalizations.all_ram),
             ],
             currentIndex: _curIndex,
             onTap: (index) =>{ _changePage(index)}
@@ -67,6 +69,7 @@ class _SearchPerePageState  extends State<SearchPerePage> {
   }
 
   Widget _listBelierWidget() {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return FutureBuilder(
       builder: (context, AsyncSnapshot<List<Bete>> belierSnap) {
         if (belierSnap.connectionState == ConnectionState.none && belierSnap.hasData == null) {
@@ -80,8 +83,8 @@ class _SearchPerePageState  extends State<SearchPerePage> {
           return Center( child:
           ListTile(
             leading: Icon(Icons.info_outline),
-            title: Text('Liste vide'),
-            subtitle: Text("Pas de bélier trouvé avec les critères choisis"),
+            title: Text(appLocalizations!.title_empty_list),
+            subtitle: Text(appLocalizations.no_ram_found),
           ),);
 
         return ListView.builder(

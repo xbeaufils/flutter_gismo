@@ -53,7 +53,7 @@ class LambPageState extends State<LambPage> {
                     children: <Widget>[
                       new Flexible (child:
                         RadioListTile<Sex>(
-                          title: const Text('Male'),
+                          title: Text(appLocalizations!.male),
                           value: Sex.male,
                           groupValue: _sex,
                           onChanged: (Sex ? value) { setState(() { _sex = value! ; }); },
@@ -61,7 +61,7 @@ class LambPageState extends State<LambPage> {
                       ),
                       new Flexible( child:
                         RadioListTile<Sex>(
-                          title: const Text('Femelle'),
+                          title: Text(appLocalizations!.female),
                           value: Sex.femelle,
                           groupValue: _sex,
                           onChanged: (Sex ? value) { setState(() { _sex = value!; }); },
@@ -74,24 +74,24 @@ class LambPageState extends State<LambPage> {
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text("Etat de santé"),
+                      Text(appLocalizations.health),
                         RadioListTile<Sante>(
                           dense: true,
-                          title: const Text('Vivant'),
+                          title: Text(appLocalizations!.alive),
                           value: Sante.VIVANT,
                           groupValue: _sante,
                           onChanged: (Sante ? value) { setState(() { _sante = value!; }); },
                         ),
                         RadioListTile<Sante>(
                           dense: true,
-                          title: const Text('Mort-né'),
+                          title: Text(appLocalizations.stillborn),
                           value: Sante.MORT_NE,
                           groupValue: _sante,
                           onChanged: (Sante ? value) { setState(() { _sante = value!; }); },
                         ),
                         RadioListTile<Sante>(
                           dense: true,
-                          title: const Text('Avorté'),
+                          title: Text(appLocalizations.aborted),
                           value: Sante.AVORTE,
                           groupValue: _sante,
                           onChanged: (Sante ? value) { setState(() { _sante = value!; }); },
@@ -102,7 +102,7 @@ class LambPageState extends State<LambPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    new Text("Mode d'allaitement: "),
+                    new Text(appLocalizations.breastfeeding_mode),
                     new Container(
                       padding: new EdgeInsets.all(16.0),
                     ),
@@ -113,13 +113,7 @@ class LambPageState extends State<LambPage> {
                     )
                   ],
                 ),
-                //new Row(
-                //    mainAxisAlignment: MainAxisAlignment.center,
-                //    mainAxisSize: MainAxisSize.max,
-                //    children: <Widget>[
                       this._mainButton(),
-                //    ]
-                //),
                 SizedBox(
                     height: 200,
                     child : (this.widget._lamb == null) ? Container() : _buildEvents())

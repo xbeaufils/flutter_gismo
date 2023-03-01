@@ -3,6 +3,7 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EchoPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -31,10 +32,11 @@ class EchoPageState extends State<EchoPage> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: const Text("Echographie"),
+        title: Text(appLocalizations!.ultrasound),
         leading: Text(this.widget._bete.numBoucle),
       ),
       body:
@@ -44,11 +46,11 @@ class EchoPageState extends State<EchoPage> {
                 keyboardType: TextInputType.datetime,
                 controller: _dateEchoCtl,
                 decoration: InputDecoration(
-                    labelText: "Date d\'echographie",
+                    labelText: appLocalizations.date_ultrasound,
                     hintText: 'jj/mm/aaaa'),
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return "Pas de date saisie";
+                    return appLocalizations.no_ultrasound_date;
                   }},
                 onSaved: (value) {
                   setState(() {
@@ -71,7 +73,7 @@ class EchoPageState extends State<EchoPage> {
                   }
                 }),
             new Text(
-              'Résultat :',
+              appLocalizations.result,
               style: new TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18.0,
@@ -86,7 +88,7 @@ class EchoPageState extends State<EchoPage> {
                   onChanged: _handleRdNombreChange,
                 ),
                 new Text(
-                  'Vide',
+                  appLocalizations.empty,
                   style: new TextStyle(fontSize: 16.0),
                 ),
                 new Radio(
@@ -95,7 +97,7 @@ class EchoPageState extends State<EchoPage> {
                   onChanged: _handleRdNombreChange,
                 ),
                 new Text(
-                  'simple',
+                  appLocalizations.simple,
                   style: new TextStyle(
                     fontSize: 16.0,
                   ),
@@ -110,7 +112,7 @@ class EchoPageState extends State<EchoPage> {
                   onChanged: _handleRdNombreChange,
                 ),
                 new Text(
-                  'Double',
+                  appLocalizations.double,
                   style: new TextStyle(fontSize: 16.0),
                 ),
                 new Radio(
@@ -119,7 +121,7 @@ class EchoPageState extends State<EchoPage> {
                   onChanged: _handleRdNombreChange,
                 ),
                 new Text(
-                  'Triple et +',
+                  appLocalizations.triplet,
                   style: new TextStyle(fontSize: 16.0),
                 ),
               ],
@@ -128,7 +130,7 @@ class EchoPageState extends State<EchoPage> {
                 keyboardType: TextInputType.datetime,
                 controller: _dateSaillieCtl,
                 decoration: InputDecoration(
-                    labelText: "Date de saillie estimée",
+                    labelText: appLocalizations.estimated_mating_date,
                     hintText: 'jj/mm/aaaa'),
                 onSaved: (value) {
                   setState(() {
@@ -153,7 +155,7 @@ class EchoPageState extends State<EchoPage> {
                 keyboardType: TextInputType.datetime,
                 controller: _dateAgnelageCtl,
                 decoration: InputDecoration(
-                    labelText: "Date d'agnelage prévu",
+                    labelText: appLocalizations.expected_lambing_date,
                     hintText: 'jj/mm/aaaa'),
                 onSaved: (value) {
                   setState(() {
@@ -184,10 +186,10 @@ class EchoPageState extends State<EchoPage> {
                     (this.widget._currentEcho != null) ?
                       TextButton(
                         onPressed: () => _showDialog(context),
-                        child: Text("Supprimer")):
+                        child: Text(appLocalizations.bt_delete)):
                       Container(),
                     ElevatedButton(
-                      child: Text('Enregistrer',
+                      child: Text(appLocalizations.bt_save,
                       style: new TextStyle(color: Colors.white, ),),
                     //color: Colors.lightGreen[700],
                       onPressed: _saveEcho)
@@ -199,8 +201,9 @@ class EchoPageState extends State<EchoPage> {
 
   // set up the buttons
   Widget _cancelButton() {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return TextButton(
-      child: Text("Annuler"),
+      child: Text(appLocalizations!.bt_cancel),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -208,8 +211,9 @@ class EchoPageState extends State<EchoPage> {
   }
 
   Widget _continueButton() {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return TextButton(
-      child: Text("Continuer"),
+      child: Text(appLocalizations!.bt_continue),
       onPressed: () {
         _delete();
         Navigator.of(context).pop();
@@ -218,13 +222,13 @@ class EchoPageState extends State<EchoPage> {
   }
 
   Future _showDialog(BuildContext context) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Suppression"),
-          content: Text(
-              "Voulez vous supprimer cet enregistrement ?"),
+          title: Text(appLocalizations!.title_delete),
+          content: Text(appLocalizations.text_delete),
           actions: [
             _cancelButton(),
             _continueButton(),
@@ -266,9 +270,10 @@ class EchoPageState extends State<EchoPage> {
   }
 
   void _saveEcho() async {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     String message;
     if (_nombre == null) {
-      message = "Le nombre de foetus est vide";
+      message = appLocalizations!.number_fetuses_empty;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
       return;
     }

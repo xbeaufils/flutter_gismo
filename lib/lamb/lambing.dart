@@ -20,6 +20,7 @@ import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer' as debug;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LambingPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -52,8 +53,7 @@ class _LambingPageState extends State<LambingPage> {
 
   @override
   Widget build(BuildContext context) {
-
-
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
       appBar: new AppBar(
         title: (this.widget._mere != null) ? 
@@ -73,12 +73,11 @@ class _LambingPageState extends State<LambingPage> {
                       keyboardType: TextInputType.datetime,
                       controller: _dateAgnelageCtl,
                       decoration: InputDecoration(
-
-                                    labelText: 'Date Agnelage',
+                                    labelText: appLocalizations!.lambing_date,
                                     hintText: 'jj/mm/aaaa'),
                       validator: (value) {
                                   if (value!.isEmpty) {
-                                    return 'Entrez une date d''agnelage';
+                                    return appLocalizations!.enter_lambing_date;
                                   }
                                   return null;
                                   },
@@ -102,17 +101,17 @@ class _LambingPageState extends State<LambingPage> {
                               }
                             }),
                 ListTile(
-                  title: Text("Qualité d'agnelage") ,
+                  title: Text(appLocalizations!.lambing_quality) ,
                   subtitle: Text(_agnelage.key.toString() + " : " +_agnelage.value),
                   trailing: new IconButton(onPressed: _openAgnelageDialog, icon: new Icon(Icons.create)),),
                 ListTile(
-                  title: Text("Qualité adoption") ,
+                  title: Text(appLocalizations!.adoption_quality) ,
                   subtitle: Text(_adoption.key.toString() + " : " +_adoption.value),
                   trailing: new IconButton(onPressed: _openAdoptionDialog, icon: new Icon(Icons.create)),),
                 TextFormField(
                   controller: _obsCtl,
                   decoration: InputDecoration(
-                  labelText: 'Observations',
+                  labelText: appLocalizations!.observations,
                   hintText: 'Obs',
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder()),
@@ -135,7 +134,7 @@ class _LambingPageState extends State<LambingPage> {
                         //color: Colors.lightGreen[700],
                         child:
                           new Text(
-                          "Valider l'agnelage",
+                          appLocalizations.validate_lambing,
                           style: new TextStyle(color: Colors.white, ), )
                     )
                   ]
@@ -147,7 +146,7 @@ class _LambingPageState extends State<LambingPage> {
       floatingActionButton: (this._lambing.idBd == null)?
       new FloatingActionButton(
         onPressed: _openAddEntryDialog,
-        tooltip: 'Ajouter un agneau',
+        tooltip: appLocalizations.add_lamb,
         child: new Icon(Icons.add),
       ): null,
     );
@@ -184,12 +183,13 @@ class _LambingPageState extends State<LambingPage> {
   }
 
   Widget _buildPereWidget() {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     String identifPere = "";
     if (_lambing.numBouclePere!=null ||_lambing.numMarquagePere!=null)  {
       identifPere = _lambing.numBouclePere! + " " + _lambing.numMarquagePere!;
     }
     return ListTile(
-      title: Text("Père") ,
+      title: Text(appLocalizations!.ram) ,
       subtitle: Text(identifPere),
       trailing: (_lambing.idPere == null ) ?
       IconButton(icon: Icon(Icons.search), onPressed: () => _addPere(), ):
@@ -342,12 +342,13 @@ class _LambingPageState extends State<LambingPage> {
   }
 
   Widget _buildLambItem(BuildContext context, int index) {
-    String sexe = (_lambing.lambs[index].sex == Sex.male) ?"Male" : "";
-    sexe = (_lambing.lambs[index].sex == Sex.femelle) ?"Femelle" : sexe;
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
+    String sexe = (_lambing.lambs[index].sex == Sex.male) ? appLocalizations!.male : "";
+    sexe = (_lambing.lambs[index].sex == Sex.femelle) ? appLocalizations!.female : sexe;
     return ListTile(
       leading: (_lambing.lambs[index].marquageProvisoire == null) ? null : Text(_lambing.lambs[index].marquageProvisoire!),
       title: Text(sexe) ,
-      subtitle: (_lambing.lambs[index].allaitement != null) ? Text(_lambing.lambs[index].allaitement.libelle): Text("Allaitement non spécifié"), // Text(_lambs[index].marquageProvisoire),
+      subtitle: (_lambing.lambs[index].allaitement != null) ? Text(_lambing.lambs[index].allaitement.libelle): Text(appLocalizations!.breastfeeding_not_specified), // Text(_lambs[index].marquageProvisoire),
       trailing:  _buildTrailing(_lambing.lambs[index]),);
   }
 

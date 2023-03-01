@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MortPage extends StatefulWidget {
   final LambModel _currentLamb ;
@@ -63,6 +64,7 @@ class _MortPageState extends State<MortPage> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(
@@ -81,11 +83,11 @@ class _MortPageState extends State<MortPage> {
                         keyboardType: TextInputType.datetime,
                         controller: _dateMortCtl,
                         decoration: InputDecoration(
-                            labelText: "Date de décès",
+                            labelText: appLocalizations!.death_date,
                             hintText: 'jj/mm/aaaa'),
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "Pas de date de décès";
+                            return appLocalizations.no_death_date;
                           }},
                         onSaved: (value) {
                           setState(() {
@@ -110,14 +112,14 @@ class _MortPageState extends State<MortPage> {
                     new DropdownButton<String>(
                       value: _currentMotif,
                       items: _getCauseMortItems(),
-                      hint: Text("Selectionnez une cause de décès",style: TextStyle(color: Colors.lightGreen,)),
+                      hint: Text(appLocalizations.select_death_cause,style: TextStyle(color: Colors.lightGreen,)),
                       onChanged: _changedCauseDecesItem,
                     )
 
                   ],
                 )),
             ElevatedButton (
-                child: Text('Enregistrer',
+                child: Text(appLocalizations.bt_save,
                   style: new TextStyle(color: Colors.white, ),),
 
                 // color: Colors.lightGreen[700],
@@ -135,17 +137,18 @@ class _MortPageState extends State<MortPage> {
   }
 
   void _saveDeath() {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     if (_dateMortCtl.text.isEmpty) {
-      showError("Pas de date de décès");
+      showError(appLocalizations!.no_death_date);
       return;
     }
 
     if ( _currentMotif == null) {
-      showError("Cause de décès obligatoire");
+      showError(appLocalizations!.death_cause_mandatory);
       return;
     }
     if (_currentMotif!.isEmpty) {
-      showError("Cause de décès obligatoire");
+      showError(appLocalizations!.death_cause_mandatory);
       return;
     }
 

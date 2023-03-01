@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/model/AgnelageQualite.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AgnelageDialog extends StatefulWidget {
   int _currentLevel;
@@ -16,17 +17,18 @@ class AgnelageState extends State<AgnelageDialog> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
       appBar: new AppBar(
-        title: const Text("Defaut d'agnelage"),
+        title: Text(appLocalizations!.lambing_default),
 
       ),
       body:
       new Column(
           children: <Widget> [
             ListTile(
-              title: const Text("Defauts courants sur l'agnelage"),
-              subtitle: const Text("Permet d'évaluer les défauts sur l'agnelage"),
+              title: Text(appLocalizations.title_lambing_default),
+              subtitle: Text(appLocalizations.text_lambing_default),
               trailing: new Icon(Icons.copyright),
             ),
             _getAgnelage(Agnelage.level0),

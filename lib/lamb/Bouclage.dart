@@ -10,6 +10,7 @@ import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:intl/intl.dart';
 import 'package:sentry/sentry.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class BouclagePage extends StatefulWidget {
@@ -43,10 +44,11 @@ class _BouclagePageState extends State<BouclagePage> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(
-          title: new Text('Bouclage'),
+          title: new Text(appLocalizations!.earring),
         ),
         floatingActionButton: _buildRfid(),
         body: new Container(
@@ -93,7 +95,7 @@ class _BouclagePageState extends State<BouclagePage> {
                     ),
                     new ElevatedButton(
                       child: new Text(
-                        'Poser la boucle',
+                        appLocalizations.place_earring,
                         style: new TextStyle(color: Colors.white),
                       ),
                       onPressed: _createBete,
@@ -122,13 +124,14 @@ class _BouclagePageState extends State<BouclagePage> {
   }
 
   Widget _statusBluetoothBar() {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     if (! this._bloc.isLogged()!)
       return Container();
     List<Widget> status = [];
     switch (_bluetoothState ) {
       case "NONE":
         status.add(Icon(Icons.bluetooth));
-        status.add(Text("Non connecté"));
+        status.add(Text(appLocalizations!.not_connected));
         break;
       case "WAITING":
         status.add(Icon(Icons.bluetooth));
@@ -136,7 +139,7 @@ class _BouclagePageState extends State<BouclagePage> {
         break;
       case "AVAILABLE":
         status.add(Icon(Icons.bluetooth));
-        status.add(Text("Données reçues"));
+        status.add(Text(appLocalizations!.data_available));
     }
     return Row(children: status,);
   }
