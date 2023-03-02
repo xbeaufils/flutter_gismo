@@ -1,12 +1,12 @@
 import 'dart:io';
 
-//import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 
 import 'package:flutter_gismo/lamb/Adoption.dart';
 import 'package:flutter_gismo/lamb/AgnelageQualityPage.dart';
@@ -20,7 +20,6 @@ import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer' as debug;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LambingPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -53,7 +52,6 @@ class _LambingPageState extends State<LambingPage> {
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
       appBar: new AppBar(
         title: (this.widget._mere != null) ? 
@@ -73,11 +71,11 @@ class _LambingPageState extends State<LambingPage> {
                       keyboardType: TextInputType.datetime,
                       controller: _dateAgnelageCtl,
                       decoration: InputDecoration(
-                                    labelText: appLocalizations!.lambing_date,
+                                    labelText: S.of(context).lambing_date,
                                     hintText: 'jj/mm/aaaa'),
                       validator: (value) {
                                   if (value!.isEmpty) {
-                                    return appLocalizations!.enter_lambing_date;
+                                    return S.of(context).enter_lambing_date;
                                   }
                                   return null;
                                   },
@@ -101,17 +99,17 @@ class _LambingPageState extends State<LambingPage> {
                               }
                             }),
                 ListTile(
-                  title: Text(appLocalizations!.lambing_quality) ,
+                  title: Text(S.of(context).lambing_quality) ,
                   subtitle: Text(_agnelage.key.toString() + " : " +_agnelage.value),
                   trailing: new IconButton(onPressed: _openAgnelageDialog, icon: new Icon(Icons.create)),),
                 ListTile(
-                  title: Text(appLocalizations!.adoption_quality) ,
+                  title: Text(S.of(context).adoption_quality) ,
                   subtitle: Text(_adoption.key.toString() + " : " +_adoption.value),
                   trailing: new IconButton(onPressed: _openAdoptionDialog, icon: new Icon(Icons.create)),),
                 TextFormField(
                   controller: _obsCtl,
                   decoration: InputDecoration(
-                  labelText: appLocalizations!.observations,
+                  labelText: S.of(context).observations,
                   hintText: 'Obs',
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder()),
@@ -134,8 +132,8 @@ class _LambingPageState extends State<LambingPage> {
                         //color: Colors.lightGreen[700],
                         child:
                           new Text(
-                          appLocalizations.validate_lambing,
-                          style: new TextStyle(color: Colors.white, ), )
+                            S.of(context).validate_lambing,
+                            style: new TextStyle(color: Colors.white, ), )
                     )
                   ]
                 ),
@@ -146,7 +144,7 @@ class _LambingPageState extends State<LambingPage> {
       floatingActionButton: (this._lambing.idBd == null)?
       new FloatingActionButton(
         onPressed: _openAddEntryDialog,
-        tooltip: appLocalizations.add_lamb,
+        tooltip: S.of(context).add_lamb,
         child: new Icon(Icons.add),
       ): null,
     );
@@ -183,13 +181,12 @@ class _LambingPageState extends State<LambingPage> {
   }
 
   Widget _buildPereWidget() {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     String identifPere = "";
     if (_lambing.numBouclePere!=null ||_lambing.numMarquagePere!=null)  {
       identifPere = _lambing.numBouclePere! + " " + _lambing.numMarquagePere!;
     }
     return ListTile(
-      title: Text(appLocalizations!.ram) ,
+      title: Text(S.of(context).ram) ,
       subtitle: Text(identifPere),
       trailing: (_lambing.idPere == null ) ?
       IconButton(icon: Icon(Icons.search), onPressed: () => _addPere(), ):
@@ -342,13 +339,12 @@ class _LambingPageState extends State<LambingPage> {
   }
 
   Widget _buildLambItem(BuildContext context, int index) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
-    String sexe = (_lambing.lambs[index].sex == Sex.male) ? appLocalizations!.male : "";
-    sexe = (_lambing.lambs[index].sex == Sex.femelle) ? appLocalizations!.female : sexe;
+    String sexe = (_lambing.lambs[index].sex == Sex.male) ? S.of(context).male : "";
+    sexe = (_lambing.lambs[index].sex == Sex.femelle) ? S.of(context).female : sexe;
     return ListTile(
       leading: (_lambing.lambs[index].marquageProvisoire == null) ? null : Text(_lambing.lambs[index].marquageProvisoire!),
       title: Text(sexe) ,
-      subtitle: (_lambing.lambs[index].allaitement != null) ? Text(_lambing.lambs[index].allaitement.libelle): Text(appLocalizations!.breastfeeding_not_specified), // Text(_lambs[index].marquageProvisoire),
+      subtitle: (_lambing.lambs[index].allaitement != null) ? Text(_lambing.lambs[index].allaitement.libelle): Text(S.of(context).breastfeeding_not_specified), // Text(_lambs[index].marquageProvisoire),
       trailing:  _buildTrailing(_lambing.lambs[index]),);
   }
 
