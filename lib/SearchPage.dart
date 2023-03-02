@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/bloc/BluetoothBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/individu/NECPage.dart';
 import 'package:flutter_gismo/individu/PeseePage.dart';
@@ -18,7 +19,6 @@ import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
 import 'package:sentry/sentry.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SearchPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -86,8 +86,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   Widget build(BuildContext context) {
-    var t = AppLocalizations.of(context);
-
     return Scaffold(
       appBar: _buildBar(context),
       key: _scaffoldKey,
@@ -104,14 +102,13 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   Widget _statusBluetoothBar(BuildContext context)  {
-    var t = AppLocalizations.of(context);
     if ( ! this._bloc.isLogged()!)
       return Container();
     List<Widget> status = <Widget>[]; //new List();
     switch (_bluetoothState) {
       case "NONE":
         status.add(Icon(Icons.bluetooth));
-        status.add(Text(t!.not_connected));
+        status.add(Text(S.of(context).not_connected));
         break;
       case "WAITING":
         status.add(Icon(Icons.bluetooth));
@@ -119,7 +116,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         break;
       case "AVAILABLE":
         status.add(Icon(Icons.bluetooth));
-        status.add(Text(t!.data_available));
+        status.add(Text(S.of(context).data_available));
     }
     return Row(children: status,);
   }
@@ -200,15 +197,14 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   AppBar _buildBar(BuildContext context) {
-    var t = AppLocalizations.of(context);
-    this._appBarTitle = new Text( t!.earring_search );
+    this._appBarTitle = new Text( S.of(context).earring_search );
     return new AppBar(
       centerTitle: true,
       title: _appBarTitle,
       actions: <Widget>[
         IconButton(
             icon: const Icon(Icons.search),
-            tooltip: t!.search,
+            tooltip: S.of(context).search,
             onPressed: () => _searchPressed(context)
             ),
       ],
@@ -216,7 +212,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   Widget _buildList(BuildContext context) {
-    var t = AppLocalizations.of(context);
     if (_searchText.isNotEmpty) {
       List<Bete> tempList = <Bete>[]; // new List();
       for (int i = 0; i < _filteredBetes.length; i++) {
@@ -230,8 +225,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       return Center( child:
         ListTile(
           leading: Icon(Icons.info_outline),
-          title: Text(t!.title_empty_list),
-          subtitle: Text(t.text_empty_list),
+          title: Text(S.of(context).title_empty_list),
+          subtitle: Text(S.of(context).text_empty_list),
       ),);
     }
     return ListView.builder(
@@ -309,7 +304,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   void _searchPressed(BuildContext context) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     setState(() {
       if (this._searchIcon.icon == Icons.search) {
         this._searchIcon = new Icon(Icons.close);
@@ -319,12 +313,12 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           keyboardType: TextInputType.number,
           decoration: new InputDecoration(
               prefixIcon: new Icon(Icons.search),
-              hintText: appLocalizations!.earring
+              hintText: S.of(context).earring
           ),
         );
       } else {
         this._searchIcon = new Icon(Icons.search);
-        this._appBarTitle = new Text( appLocalizations!.earring_search );
+        this._appBarTitle = new Text( S.of(context).earring_search );
         _filteredBetes = _betes;
         _filter.clear();
       }

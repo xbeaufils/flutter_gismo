@@ -5,11 +5,10 @@ import 'package:flutter_gismo/SearchPage.dart';
 import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/menu/MenuPage.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
-import 'package:flutter_gismo/memo/MemoPage.dart';
-import 'package:sentry/sentry.dart';
 
 class MemoListPage extends StatefulWidget {
   GismoBloc _bloc;
@@ -29,7 +28,7 @@ class _MemoListPageState extends State<MemoListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: (new Text('Memos'))),
+        appBar: AppBar(title: (new Text(S.of(context).memo))),
     body: _listNoteWidget(),
     floatingActionButtonLocation:FloatingActionButtonLocation.centerFloat,
     floatingActionButton:
@@ -49,8 +48,6 @@ class _MemoListPageState extends State<MemoListPage> {
         }
         if (noteSnap.connectionState == ConnectionState.waiting)
           return CircularProgressIndicator();
-         //return NotesExpansionList(notes: noteSnap.data ?? []);
-         //return NotesList(notes: noteSnap.data ?? []);
          return _notesList  (noteSnap.data ?? []);
       },
       future: _getNotes(),
@@ -139,14 +136,12 @@ class _MemoListPageState extends State<MemoListPage> {
   }
 
   Future _showDialog(BuildContext context, MemoModel note) {
-    String message ="Voulez vous supprimer ce mémo ?";
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Suppression"),
-          content: Text(
-              message),
+          title: Text(S.of(context).title_delete),
+          content: Text(S.of(context).text_delete),
           actions: [
             _cancelButton(),
             _continueButton(note),
@@ -157,8 +152,8 @@ class _MemoListPageState extends State<MemoListPage> {
   }
   // set up the buttons
   Widget _cancelButton() {
-    return TextButton(
-      child: Text("Annuler"),
+     return TextButton(
+      child: Text(S.of(context).bt_cancel),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -167,7 +162,7 @@ class _MemoListPageState extends State<MemoListPage> {
 
   Widget _continueButton(MemoModel event) {
     return TextButton(
-      child: Text("Continuer"),
+      child: Text(S.of(context).bt_continue),
       onPressed: () {
           _delete(event);
         Navigator.of(context).pop();

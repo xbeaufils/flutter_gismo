@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
 import 'package:flutter_gismo/memo/MemoPage.dart';
@@ -13,7 +14,6 @@ import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class TimeLinePage extends StatefulWidget {
@@ -37,11 +37,10 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: new Text(appLocalizations!.sheep),
+        title: new Text(S.of(context).sheep),
         ),
       body:
           Column (
@@ -155,7 +154,6 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   }
 
   Future _showDialog(BuildContext context, Event event) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     String message ="Voulez vous supprimer ";
     if (event.type == EventType.NEC)
       message += "cette note d'Etat corp ?";
@@ -167,8 +165,8 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(appLocalizations!.title_delete),
-          content: Text(appLocalizations.text_delete),
+          title: Text(S.of(context).title_delete),
+          content: Text(S.of(context).text_delete),
           actions: [
             _cancelButton(),
             _continueButton(event),
@@ -180,9 +178,8 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   
   // set up the buttons
   Widget _cancelButton() {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return TextButton(
-      child: Text(appLocalizations!.bt_cancel),
+      child: Text(S.of(context).bt_cancel),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -190,9 +187,8 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   }
 
   Widget _continueButton(Event event) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return TextButton(
-      child: Text(appLocalizations!.bt_continue),
+      child: Text(S.of(context).bt_continue),
       onPressed: () {
         if (event.type == EventType.pesee || event.type == EventType.NEC || event.type == EventType.saillie)
           _deleteEvent(event);

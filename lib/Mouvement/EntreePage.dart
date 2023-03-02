@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
@@ -53,12 +54,10 @@ class _EntreePageState extends State<EntreePage> {
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
-
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: new Text(appLocalizations!.input),
+        title: new Text(S.of(context).input),
       ),
       body:
       new Column(
@@ -73,11 +72,11 @@ class _EntreePageState extends State<EntreePage> {
                       keyboardType: TextInputType.datetime,
                       controller: _dateEntreeCtl,
                       decoration: InputDecoration(
-                          labelText: appLocalizations.dateEntry,
+                          labelText: S.of(context).dateEntry,
                           hintText: 'jj/mm/aaaa'),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return appLocalizations.noEntryDate;
+                          return S.of(context).noEntryDate;
                         }},
                       onSaved: (value) {
                         setState(() {
@@ -111,7 +110,7 @@ class _EntreePageState extends State<EntreePage> {
           Expanded(
             child: Sheeps(this._sheeps, this)),
           ElevatedButton(
-            child: Text(appLocalizations.bt_save,
+            child: Text(S.of(context).bt_save,
                 style: new TextStyle(color: Colors.white, ),),
             onPressed: _saveEntree),
           (this._bloc.isLogged()!) ?

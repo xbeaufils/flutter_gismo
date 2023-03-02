@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/PeseePage.dart';
 import 'package:flutter_gismo/lamb/Bouclage.dart';
 import 'package:flutter_gismo/lamb/Mort.dart';
@@ -7,7 +8,6 @@ import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LambPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -31,7 +31,6 @@ class LambPageState extends State<LambPage> {
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(
@@ -43,7 +42,7 @@ class LambPageState extends State<LambPage> {
           Column(
               children: <Widget>[
                 new TextField(
-                  decoration: InputDecoration(labelText: appLocalizations!.provisional_number),
+                  decoration: InputDecoration(labelText: S.of(context).provisional_number),
                   controller: _marquageCtrl,
                 ),
                 new Row(
@@ -53,7 +52,7 @@ class LambPageState extends State<LambPage> {
                     children: <Widget>[
                       new Flexible (child:
                         RadioListTile<Sex>(
-                          title: Text(appLocalizations!.male),
+                          title: Text(S.of(context).male),
                           value: Sex.male,
                           groupValue: _sex,
                           onChanged: (Sex ? value) { setState(() { _sex = value! ; }); },
@@ -61,7 +60,7 @@ class LambPageState extends State<LambPage> {
                       ),
                       new Flexible( child:
                         RadioListTile<Sex>(
-                          title: Text(appLocalizations!.female),
+                          title: Text(S.of(context).female),
                           value: Sex.femelle,
                           groupValue: _sex,
                           onChanged: (Sex ? value) { setState(() { _sex = value!; }); },
@@ -74,24 +73,24 @@ class LambPageState extends State<LambPage> {
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text(appLocalizations.health),
+                      Text(S.of(context).health),
                         RadioListTile<Sante>(
                           dense: true,
-                          title: Text(appLocalizations!.alive),
+                          title: Text(S.of(context).alive),
                           value: Sante.VIVANT,
                           groupValue: _sante,
                           onChanged: (Sante ? value) { setState(() { _sante = value!; }); },
                         ),
                         RadioListTile<Sante>(
                           dense: true,
-                          title: Text(appLocalizations.stillborn),
+                          title: Text(S.of(context).stillborn),
                           value: Sante.MORT_NE,
                           groupValue: _sante,
                           onChanged: (Sante ? value) { setState(() { _sante = value!; }); },
                         ),
                         RadioListTile<Sante>(
                           dense: true,
-                          title: Text(appLocalizations.aborted),
+                          title: Text(S.of(context).aborted),
                           value: Sante.AVORTE,
                           groupValue: _sante,
                           onChanged: (Sante ? value) { setState(() { _sante = value!; }); },
@@ -102,7 +101,7 @@ class LambPageState extends State<LambPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    new Text(appLocalizations.breastfeeding_mode),
+                    new Text(S.of(context).breastfeeding_mode),
                     new Container(
                       padding: new EdgeInsets.all(16.0),
                     ),
@@ -174,13 +173,12 @@ class LambPageState extends State<LambPage> {
   }
 
   Widget _mainButton() {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     if (this.widget._lamb == null)
       return new ElevatedButton(
           onPressed:_addLamb,
           //color: Colors.lightGreen[900],
           child:
-          new Text(appLocalizations!.bt_add,
+          new Text(S.of(context).bt_add,
             style: new TextStyle(color: Colors.white),
           )
       );
@@ -189,7 +187,7 @@ class LambPageState extends State<LambPage> {
         onPressed:_saveLamb,
       //color: Colors.lightGreen[900],
         icon: Icon(Icons.save),
-        label: Text(appLocalizations!.bt_save),
+        label: Text(S.of(context).bt_save),
       ) ;
   }
 
@@ -346,9 +344,8 @@ class LambPageState extends State<LambPage> {
 
   // set up the buttons
   Widget _cancelButton() {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return TextButton(
-      child: Text(appLocalizations!.bt_cancel),
+      child: Text(S.of(context).bt_cancel),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -356,9 +353,8 @@ class LambPageState extends State<LambPage> {
   }
 
   Widget _continueButton(Event event) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return TextButton(
-      child: Text(appLocalizations!.bt_continue),
+      child: Text(S.of(context).bt_continue),
       onPressed: () {
         if (event.type == EventType.pesee || event.type == EventType.traitement)
           _deleteEvent(event);
@@ -368,13 +364,12 @@ class LambPageState extends State<LambPage> {
   }
 
   Future _showDialog(BuildContext context, Event event) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(appLocalizations!.title_delete),
-          content: Text(appLocalizations!.text_delete),
+          title: Text(S.of(context).title_delete),
+          content: Text(S.of(context).text_delete),
           actions: [
             _cancelButton(),
             _continueButton(event),

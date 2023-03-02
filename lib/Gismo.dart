@@ -8,6 +8,7 @@ import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/SplashScreen.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/bluetooth.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/loginPage.dart';
 import 'package:flutter_gismo/memo/MemoListPage.dart';
 import 'package:flutter_gismo/parcelle/ParcellePage.dart';
@@ -43,16 +44,13 @@ class GismoApp extends StatelessWidget {
       ),
      //localizationsDelegates: AppLocalizations.localizationsDelegates,
       localizationsDelegates: [
-        AppLocalizations.delegate,
+        S.delegate,
+        //AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: [
-        const Locale('en', ''),
-        const Locale('fr', ''),
-        const Locale('de', ''),
-      ],
+      supportedLocales: S.delegate.supportedLocales,
       //home: openHome(),
       initialRoute: this.initialRoute,
       routes: {

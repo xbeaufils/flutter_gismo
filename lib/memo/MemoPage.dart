@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MemoPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -31,10 +33,11 @@ class MemoPageState extends State<MemoPage> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: const Text("Note"),
+        title: Text(appLocalizations!.memo),
         //leading: Text(this.widget._bete.numBoucle),
       ),
       body:
@@ -52,11 +55,11 @@ class MemoPageState extends State<MemoPage> {
                           keyboardType: TextInputType.datetime,
                           controller: _dateDebutCtl,
                           decoration: InputDecoration(
-                              labelText: "Date début",
+                              labelText: S.of(context).date_debut,
                               hintText: 'jj/mm/aaaa'),
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return "Pas de date de début";
+                              return S.of(context).no_date_debut;
                             }},
                           onSaved: (value) {
                             setState(() {
@@ -121,7 +124,7 @@ class MemoPageState extends State<MemoPage> {
                       _classe = value!;
                     });
                   }),
-                  Icon(Icons.error_outline),  Text(" Warning"),Spacer(),
+                  Icon(Icons.error_outline),  Text(S.of(context).warning),Spacer(),
                   Radio(value: MemoClasse.INFO, groupValue: _classe, onChanged: (MemoClasse ? value) {
                     setState(() {
                       _classe = value!;
@@ -135,11 +138,11 @@ class MemoPageState extends State<MemoPage> {
                   maxLines: 3,
                   controller: _noteCtl,
                   decoration: InputDecoration(
-                      labelText: "Note",
-                      hintText: 'Information sur cette bête'),
+                      labelText: S.of(context).note_label,
+                      hintText: S.of(context).note_hint),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return "Pas de note saisi";
+                      return S.of(context).no_note;
                     }},
                   onSaved: (value) {
                     setState(() {
@@ -149,7 +152,7 @@ class MemoPageState extends State<MemoPage> {
               ),
               (_isSaving) ? CircularProgressIndicator():
               ElevatedButton(
-                  child: Text('Enregistrer',),
+                  child: Text(S.of(context).bt_save,),
                   //style: new TextStyle(color: Colors.white, ),),
                   style : ButtonStyle(
                     textStyle: MaterialStateProperty.all( TextStyle(color: Colors.white, ) ),

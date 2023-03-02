@@ -134,5 +134,12 @@
   "bt_delete" : "Supprimer",
 
   "title_delete" : "Suppression",
-  "text_delete" : "Voulez vous supprimer cet enregistrement ?"
+  "text_delete" : "Voulez vous supprimer cet enregistrement ?",
+
+  "date_debut" : "Date début",
+  "no_date_debut": "Pas de date de début",
+  "date_fin" : "Date fin",
+  "note_label" : "Note",
+  "note_hint" : "Information sur cette bête",
+  "no_note" : "Pas de note saisie"
 }

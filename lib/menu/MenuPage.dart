@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 
 class GismoDrawer extends StatelessWidget {
   GismoBloc _bloc;
@@ -9,7 +9,6 @@ class GismoDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return Drawer(
       child: ListView(
         children: [
@@ -17,12 +16,12 @@ class GismoDrawer extends StatelessWidget {
           Column(
             children: [
               ListTile(
-                title: Text(appLocalizations!.welcome),
+                title: Text(S.of(context).welcome),
                 leading: Icon(Icons.home),
                 onTap:() { _homePressed(context);},
               ),
               ListTile(
-                title: Text(appLocalizations.memo),
+                title: Text(S.of(context).memo),
                 leading: Icon(Icons.note),
                 onTap: () { _notePressed(context);},
               ),
@@ -31,7 +30,7 @@ class GismoDrawer extends StatelessWidget {
                 thickness: 1,
               ),
               ListTile(
-                title: Text(appLocalizations.configuration),
+                title: Text(S.of(context).configuration),
                 leading: Icon(Icons.settings),
                 onTap:  () { _settingPressed(context);},
               ),
@@ -69,9 +68,8 @@ class GismoDrawer extends StatelessWidget {
   }
 
   Widget _userstatus(BuildContext context) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     Icon iconConnexion = Icon(Icons.person);
-    Text userName = new Text(appLocalizations!.localuser);
+    Text userName = new Text(S.of(context).localuser);
     Text cheptel = new Text("000000");
     if (_bloc.user == null) {
       iconConnexion = Icon(Icons.error_outline);
