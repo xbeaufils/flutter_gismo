@@ -6,7 +6,7 @@
   "lambs" : "Agneaux",
   "mating" : "Saillie",
   "ultrasound" : "Echographie",
-  "weighing" : "Weighing",
+  "weighing" : "Pesée",
   "body_cond" : "Etat corp.",
   "body_cond_full" : "Note d'état corporel",
   "treatment" : "Traitement",
@@ -141,5 +141,6 @@
   "date_fin" : "Date fin",
   "note_label" : "Note",
   "note_hint" : "Information sur cette bête",
-  "no_note" : "Pas de note saisie"
+  "no_note" : "Pas de note saisie",
+  "dateDeNotation": "Date de notation"
 }

@@ -142,5 +142,6 @@
   "note_label" : "Memo",
   "note_hint" : "Information about this beast",
   "no_note" : "No entered memo",
-  "warning": "Warning"
+  "warning": "Warning",
+  "dateDeNotation": "Body cond date"
 }

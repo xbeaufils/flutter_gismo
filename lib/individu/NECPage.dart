@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NECPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -26,11 +26,10 @@ class NECPageState extends State<NECPage> {
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: Text(appLocalizations!.body_cond),
+        title: Text(S.of(context).body_cond),
         leading: Text(this.widget._bete.numBoucle),
       ),
       body:
@@ -40,7 +39,7 @@ class NECPageState extends State<NECPage> {
                 keyboardType: TextInputType.datetime,
                 controller: _dateNoteCtl,
                 decoration: InputDecoration(
-                    labelText: "Date de notation",
+                    labelText: S.of(context).dateDeNotation,
                     hintText: 'jj/mm/aaaa'),
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -74,7 +73,7 @@ class NECPageState extends State<NECPage> {
             _getNec(NEC.level5),
             (_isSaving) ? CircularProgressIndicator():
               ElevatedButton(
-                child: Text('Enregistrer',
+                child: Text(S.of(context).bt_save,
                   style: new TextStyle(color: Colors.white, ),),
                 //color: Colors.lightGreen[700],
                 onPressed: _saveNote)
@@ -117,7 +116,6 @@ class NECPageState extends State<NECPage> {
         .closed
         .then((e) => {Navigator.of(context).pop()});
   }
-
 }
 
 class HelpPage  extends StatefulWidget {
@@ -134,10 +132,9 @@ class HelpPageState extends State<HelpPage> {
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
         appBar: new AppBar(
-        title: Text(appLocalizations!.body_cond),
+        title: Text(S.of(context).body_cond),
     ),
     body:
       Card(
