@@ -154,14 +154,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   }
 
   Future _showDialog(BuildContext context, Event event) {
-    String message ="Voulez vous supprimer ";
-    if (event.type == EventType.NEC)
-      message += "cette note d'Etat corp ?";
-    if (event.type == EventType.saillie)
-      message += "cette saillie ?";
-    if (event.type == EventType.pesee)
-      message += "cette pesée ?";
-    return showDialog(
+     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(

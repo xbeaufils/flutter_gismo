@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
@@ -58,9 +59,9 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
             bottomNavigationBar:
               BottomNavigationBar(
                   items: [
-                    BottomNavigationBarItem(icon: Icon(Icons.edit),label:"Edition"),
-                    BottomNavigationBarItem(icon: Image.asset("assets/ram_inactif.png"), activeIcon: Image.asset("assets/ram_actif.png") ,label: "Beliers"),
-                    BottomNavigationBarItem(icon: Image.asset("assets/ewe_inactif.png"), activeIcon: Image.asset("assets/ewe_actif.png") , label: "Brebis"),
+                    BottomNavigationBarItem(icon: Icon(Icons.edit),label: S.of(context).bt_edition),
+                    BottomNavigationBarItem(icon: Image.asset("assets/ram_inactif.png"), activeIcon: Image.asset("assets/ram_actif.png") ,label: S.of(context).ram),
+                    BottomNavigationBarItem(icon: Image.asset("assets/ewe_inactif.png"), activeIcon: Image.asset("assets/ewe_actif.png") , label: S.of(context).ewe),
                   ],
                 currentIndex: _curIndex,
                 onTap: (index) =>{ _changePage(index)}
@@ -78,7 +79,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
   void _changePage(int index) {
     if (this.widget._currentLot.idb == null ) {
       final snackBar = SnackBar(
-        content: Text("vous devez enregistrer le lot avant d'ajouter"),
+        content: Text(S.of(context).batch_warning),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       return;
@@ -123,7 +124,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
                 children: <Widget>[
                   new TextFormField(
                       controller: _codeLotCtl,
-                      decoration: InputDecoration(labelText: 'Nom lot', hintText: 'Lot'),
+                      decoration: InputDecoration(labelText: S.of(context).batch_name, hintText: S.of(context).batch),
                    ),
 
                   new Row(
@@ -134,7 +135,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
                         Flexible( child:
                           TextFormField(
                             controller: _campagneCtrl,
-                            decoration: InputDecoration(labelText: 'Campagne'),
+                            decoration: InputDecoration(labelText: S.of(context).batch_campaign),
                             enabled: false,
                           ),
                         )
@@ -150,7 +151,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
                           new TextFormField(
                             controller: _dateDebutCtl,
                             decoration: InputDecoration(
-                              labelText: "Date de début",),
+                              labelText: S.of(context).date_debut,),
                             onTap: () async{
                               DateTime ? date = DateTime.now();
                               FocusScope.of(context).requestFocus(new FocusNode());
@@ -170,7 +171,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
                           new TextFormField(
                             controller: _dateFinCtl,
                             decoration: InputDecoration(
-                              labelText: "Date de Fin",),
+                              labelText: S.of(context).date_fin,),
                             onTap: () async{
                               DateTime ? date = DateTime.now();
                               FocusScope.of(context).requestFocus(new FocusNode());
@@ -189,7 +190,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
                   ),
                   ElevatedButton(
                       //color: Colors.lightGreen[700],
-                      child: new Text("Enregistrer",style: TextStyle( color: Colors.white)),
+                      child: new Text(S.of(context).bt_save,style: TextStyle( color: Colors.white)),
                       onPressed: _save)
                 ])
         ));
@@ -306,9 +307,9 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
         //if (_dateEntreeCtl.text.isEmpty)
         //  _dateEntreeCtl.text = this.widget._currentLot.dateDebutLutte;
         String ? dateEntree = await _showDateDialog(this.context,
-            "Date d'entrée",
+            S.of(context).dateEntry,
             "Saisir une date d'entrée si différente de la date de début de lot",
-            "Date d'entrée");
+            S.of(context).dateEntry);
         if (dateEntree != null) {
           String message = await this._bloc.addBete(
               currentLot, selectedBete, dateEntree);
@@ -326,9 +327,9 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
 
   Future _removeBete(Affectation affect) async {
       String ? dateSortie = await _showDateDialog(this.context,
-          "Date de sortie",
+          S.of(context).dateDeparture,
           "Saisir une date de sortie si différente de la date de fin de lot",
-          "Date de sortie");
+          S.of(context).dateDeparture);
       if (dateSortie != null ) {
         String message = await this._bloc.removeFromLot(affect, dateSortie);
         final snackBar = SnackBar(
@@ -375,13 +376,12 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
   }
 
   Future _showDialog(BuildContext context, Affectation affect) {
-    String message ="Voulez vous supprimer ";
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Suppression"),
-          content: Text(message),
+          title: Text(S.of(context).title_delete),
+          content: Text(S.of(context).text_delete),
           actions: [
             _cancelButton(),
             _deleteButton(affect),
@@ -394,7 +394,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
 
   Widget _cancelButton() {
     return TextButton(
-      child: Text("Annuler"),
+      child: Text(S.of(context).bt_cancel),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -403,7 +403,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
 
   Widget _deleteButton(Affectation affectation) {
     return TextButton(
-      child: Text("Supprimer"),
+      child: Text(S.of(context).bt_delete),
       onPressed: () {
           _deleteAffectation(affectation);
         Navigator.of(context).pop();
