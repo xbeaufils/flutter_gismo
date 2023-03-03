@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/AgnelageQualite.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AgnelageDialog extends StatefulWidget {
   int _currentLevel;
@@ -17,18 +17,17 @@ class AgnelageState extends State<AgnelageDialog> {
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
       appBar: new AppBar(
-        title: Text(appLocalizations!.lambing_default),
+        title: Text(S.of(context).lambing_default),
 
       ),
       body:
       new Column(
           children: <Widget> [
             ListTile(
-              title: Text(appLocalizations.title_lambing_default),
-              subtitle: Text(appLocalizations.text_lambing_default),
+              title: Text(S.of(context).title_lambing_default),
+              subtitle: Text(S.of(context).text_lambing_default),
               trailing: new Icon(Icons.copyright),
             ),
             _getAgnelage(Agnelage.level0),
@@ -61,6 +60,7 @@ class AgnelageState extends State<AgnelageDialog> {
   @override
   void initState() {
     _agnelage = this.widget._currentLevel;
+    super.initState();
   }
 
 

@@ -86,6 +86,10 @@
   "no_ram_found" : "Pas de bélier trouvé avec les critères choisis",
   "title_lambing_default": "Defauts courants sur l'agnelage",
   "text_lambing_default": "Permet d'évaluer les défauts sur l'agnelage",
+  "search_ram" : "Recherche du père",
+  "adoption_default_title" : "Défaut d'adoption",
+  "echelle_connasse": "Echelle des connasses",
+  "echelle_connasse_text" : "Permet d'évaluer les qualités maternelles suivant les critères de Stéphanie Maubé",
 
   "mort_mise_bas" : "Mise bas",
   "mort_pas_de_contraction_dilatation":"Pas de contraction/dilatation",
@@ -176,5 +180,21 @@
   "note_label" : "Note",
   "note_hint" : "Information sur cette bête",
   "no_note" : "Pas de note saisie",
-  "dateDeNotation": "Date de notation"
+  "dateDeNotation": "Date de notation",
+
+  "connected_mode" : "Mode connecté",
+  "connected_mode_text" : "Dans ce mode, les données seront enregistrées sur le serveur.\nCe mode nécesite un compte sur gismo",
+  "email" : "Email",
+  "password" : "Mot de passe",
+  "connection": "Connexion",
+
+  "alone_mode" : "Mode autonome",
+  "alone_mode_text" : "Dans ce mode, les données seront enregistrés dans une base de données de votre téléphone.\nCopiez votre base de données locale pour la sauvegarder sur un PC et la restaurer en cas de besoin.",
+  "data_null" : "Data null",
+  "copy_base" : "Copier la base de données",
+  "empty_folder" : "Répertoire vide",
+  "restore_bd" : "Restauration de la BD",
+  "restore_bd_text" : "Les données actuelles seront remplacées.",
+  "with_subscription" : "Avec abonnement",
+  "save_config" : "Enregistrer la configuration"
 }

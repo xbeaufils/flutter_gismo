@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum View {lot, saillie, all}
 
@@ -28,22 +27,21 @@ class _SearchPerePageState  extends State<SearchPerePage> {
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
         key: _scaffoldKey,
         bottomNavigationBar:
         BottomNavigationBar(
             items: [
-              BottomNavigationBarItem(icon: Image.asset("assets/Lot.png"),label: appLocalizations!.batch),
-              BottomNavigationBarItem(icon: Image.asset("assets/saillie.png"),  label: appLocalizations.mating),
-              BottomNavigationBarItem(icon: Image.asset("assets/ram_inactif.png"), label: appLocalizations.all_ram),
+              BottomNavigationBarItem(icon: Image.asset("assets/Lot.png"),label: S.of(context).batch),
+              BottomNavigationBarItem(icon: Image.asset("assets/saillie.png"),  label: S.of(context).mating),
+              BottomNavigationBarItem(icon: Image.asset("assets/ram_inactif.png"), label: S.of(context).all_ram),
             ],
             currentIndex: _curIndex,
             onTap: (index) =>{ _changePage(index)}
         ),
         appBar: new AppBar(
           title:
-          Text("Recherche du père") ,
+          Text(S.of(context).search_ram) ,
         ),
         body:
         _listBelierWidget()
@@ -69,7 +67,6 @@ class _SearchPerePageState  extends State<SearchPerePage> {
   }
 
   Widget _listBelierWidget() {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return FutureBuilder(
       builder: (context, AsyncSnapshot<List<Bete>> belierSnap) {
         if (belierSnap.connectionState == ConnectionState.none && belierSnap.hasData == null) {
@@ -83,8 +80,8 @@ class _SearchPerePageState  extends State<SearchPerePage> {
           return Center( child:
           ListTile(
             leading: Icon(Icons.info_outline),
-            title: Text(appLocalizations!.title_empty_list),
-            subtitle: Text(appLocalizations.no_ram_found),
+            title: Text(S.of(context).title_empty_list),
+            subtitle: Text(S.of(context).no_ram_found),
           ),);
 
         return ListView.builder(

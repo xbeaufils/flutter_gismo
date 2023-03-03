@@ -15,7 +15,6 @@ import 'package:flutter_gismo/parcelle/ParcellePage.dart';
 import 'package:flutter_gismo/traitement/selectionTraitement.dart';
 import 'package:flutter_gismo/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 enum GismoPage {lamb, sanitaire, etat_corporel, individu, sortie, lot, pesee, echo, saillie, sailliePere, note  }

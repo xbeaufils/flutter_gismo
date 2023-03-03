@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/menu/MenuPage.dart';
 import 'package:flutter_gismo/model/User.dart';
 
@@ -48,21 +49,9 @@ class _ConfigPageState extends State<ConfigPage> {
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            /*
-            new SizedBox(
-              width: 100.0,
-              height: 100.0,
-              child:
-              new Image.asset('assets/gismo.png',
-                fit:BoxFit.fill,
-              ),
-            ),
-
-             */
             ListTile(
-              title: Text("Mode connecté"),
-              subtitle: Text("Dans ce mode, les données seront enregistrés sur le serveur.\n"
-              "Ce mode nécesite un compte sur gismo"),
+              title: Text(S.of(context).connected_mode),
+              subtitle: Text(S.of(context).connected_mode_text),
             isThreeLine: true,),
             new Card(key: null,
               child:
@@ -71,35 +60,31 @@ class _ConfigPageState extends State<ConfigPage> {
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    new Text(
-                      "email",
+                    new Text(S.of(context).email,
                     ),
                     new TextField(
                       controller: _emailCtrl,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                          hintText: "Email",
+                          hintText: S.of(context).email,
                           border:
                           OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                     ),
-                    new Text(
-                      "Mot de passe",
-                    ),
+                    new Text(S.of(context).password),
                     new TextField(
                       controller: _passwordCtrl,
                       obscureText: true,
                       decoration: InputDecoration(
                           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                          hintText: "Mot de passe",
+                          hintText: S.of(context).password,
                           border:
                           OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                     ),
                     new ElevatedButton(key:null, onPressed:_login,
                         //color: const Color(0xFFe0e0e0),
                         child:
-                        new Text(
-                          "Connexion",
+                        new Text(S.of(context).connection,
                           style: new TextStyle(
                             color: const Color(0xFF000000),),
                         )
@@ -115,9 +100,8 @@ class _ConfigPageState extends State<ConfigPage> {
   Widget _autonomePage() {
     return new Column(children: <Widget>[
       ListTile(
-        title: Text("Mode autonome"),
-        subtitle: Text("Dans ce mode, les données seront enregistrés dans une base de données de votre téléphone.\n"
-            "Copiez votre base de données locale pour la sauvegarder sur un PC et la restaurer en cas de besoin."),
+        title: Text(S.of(context).alone_mode),
+        subtitle: Text(S.of(context).alone_mode_text),
         isThreeLine: true,
       ),
         FutureBuilder(
@@ -128,9 +112,9 @@ class _ConfigPageState extends State<ConfigPage> {
                   return Container();
                 default:
                   if (projectSnap.data == null)
-                    return Container(child: Text("Data null"),);
+                    return Container(child: Text(S.of(context).data_null),);
                   if (projectSnap.data.length == 0 ) {
-                    return Container(child: Text("Répertoire vide"),);
+                    return Container(child: Text(S.of(context).empty_folder),);
                   }
                   return ListView.builder(
                     shrinkWrap: true,
@@ -154,8 +138,7 @@ class _ConfigPageState extends State<ConfigPage> {
       new ElevatedButton(key:null, onPressed:_copyBD,
           //color: const Color(0xFFe0e0e0),
           child:
-          new Text(
-            "Copier la base de données",
+          new Text(S.of(context).copy_base,
             style: new TextStyle(
               color: const Color(0xFF000000),),
           )
@@ -219,18 +202,17 @@ class _ConfigPageState extends State<ConfigPage> {
       barrierDismissible: false, // user must tap button for close dialog!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Restauration de la BD'),
-          content: const Text(
-              'Les données actuelles seront remplacées.'),
+          title: Text(S.of(context).restore_bd),
+          content: Text(S.of(context).restore_bd_text),
           actions: [
             TextButton(
-              child: const Text('Annuler'),
+              child: Text(S.of(context).bt_cancel),
               onPressed: () {
                 Navigator.of(context).pop(ConfirmAction.CANCEL);
               },
             ),
             TextButton(
-              child: const Text('Accepter'),
+              child: Text(S.of(context).bt_continue),
               onPressed: () {
                 Navigator.of(context).pop(ConfirmAction.ACCEPT);
               },
@@ -275,11 +257,11 @@ class _ConfigPageState extends State<ConfigPage> {
         floatingActionButton: (! _isSubscribed || configTeste == TestConfig.DONE)?
         FloatingActionButton.extended(
             onPressed: _saveConfig,
-            label: Text("Enregistrer la configuration"),
+            label: Text(S.of(context).save_config),
             icon: Icon(Icons.save),
         ): null ,
         appBar: AppBar(
-          title: Text('Configuration'),
+          title: Text(S.of(context).configuration),
         ),
         body:
           SingleChildScrollView(
@@ -287,7 +269,7 @@ class _ConfigPageState extends State<ConfigPage> {
               Column(children: <Widget>[
                     Row(children: <Widget>[
                       Expanded(
-                          child: Text("Avec abonnement")
+                          child: Text(S.of(context).with_subscription)
                       ),
                       Switch(
                         value: _isSubscribed,

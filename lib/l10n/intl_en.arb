@@ -86,6 +86,10 @@
   "no_ram_found" : "No ram found with this criteria",
   "title_lambing_default": "Common faults in lambing",
   "text_lambing_default": "Allows to evaluate faults on lambing",
+  "search_ram" : "Search ram",
+  "adoption_default_title" : "Lack of adoption",
+  "echelle_connasse": "Scale of bitches",
+  "echelle_connasse_text" : "Allows to evaluate the maternal qualities according to the criteria of Stéphanie Maubé",
 
   "mort_mise_bas" : "Farrowing",
   "mort_pas_de_contraction_dilatation":"No contraction/dilation",
@@ -100,7 +104,7 @@
   "mort_chetif_maigre":"Very small / skinny / thin",
   "mort_tetee":"Breastfeeding",
   "mort_incapacite_a_teter":"Inability to breastfeed",
-    "mort_brebis_sans_lait":"Ewe without milk",
+  "mort_brebis_sans_lait":"Ewe without milk",
   "mort_non_accepte":"Not accepted",
   "mort_sanitaire":"Sanitary",
   "mort_mou" : "Mou",
@@ -175,5 +179,21 @@
   "note_hint" : "Information about this beast",
   "no_note" : "No entered memo",
   "warning": "Warning",
-  "dateDeNotation": "Body cond date"
+  "dateDeNotation": "Body cond date",
+
+  "connected_mode" : "Connected mode",
+  "connected_mode_text" : "In this mode, the data will be saved on the server.\nThis mode requires an account on gismo",
+  "email" : "Email",
+  "password" : "Password",
+  "connection": "Connection",
+
+  "alone_mode" : "Alone mode",
+  "alone_mode_text" : "In this mode, the data will be saved in a database on your phone.\nCopy your local database to back it up on a PC and restore it when needed.",
+  "data_null" : "Data null",
+  "copy_base" : "Copy database",
+  "empty_folder" : "Empty folder",
+  "restore_bd" : "Restore database",
+  "restore_bd_text" : "Current data will be overwritten.",
+  "with_subscription" : "With subscription",
+  "save_config" : "save configuration"
 }

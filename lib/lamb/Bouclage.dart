@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/bloc/BluetoothBloc.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:intl/intl.dart';
 import 'package:sentry/sentry.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class BouclagePage extends StatefulWidget {
@@ -44,11 +44,10 @@ class _BouclagePageState extends State<BouclagePage> {
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(
-          title: new Text(appLocalizations!.earring),
+          title: new Text(S.of(context).earring),
         ),
         floatingActionButton: _buildRfid(),
         body: new Container(
@@ -64,10 +63,10 @@ class _BouclagePageState extends State<BouclagePage> {
                     new TextFormField(
                       controller: this._numBoucleCtrl,
                         keyboardType: TextInputType.number,
-                        decoration: InputDecoration(labelText: 'Numero boucle', hintText: 'Boucle'),
+                        decoration: InputDecoration(labelText: S.of(context).identity_number, hintText: S.of(context).identity_number_hint),
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Please enter a name';
+                            return S.of(context).enter_identity_number;
                           }
                           return "";
                         },
@@ -80,10 +79,10 @@ class _BouclagePageState extends State<BouclagePage> {
                     new TextFormField(
                         controller: this._numMarquageCtrl,
                         keyboardType: TextInputType.number,
-                        decoration: InputDecoration(labelText: 'Numero marquage', hintText: 'Marquage'),
+                        decoration: InputDecoration(labelText: S.of(context).flock_number, hintText: S.of(context).flock_number_hint),
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Please enter a name';
+                            return S.of(context).enter_flock_number;
                           }
                           return "";
                         },
@@ -95,7 +94,7 @@ class _BouclagePageState extends State<BouclagePage> {
                     ),
                     new ElevatedButton(
                       child: new Text(
-                        appLocalizations.place_earring,
+                        S.of(context).place_earring,
                         style: new TextStyle(color: Colors.white),
                       ),
                       onPressed: _createBete,
@@ -110,6 +109,7 @@ class _BouclagePageState extends State<BouclagePage> {
   void initState() {
     if (this._bloc.isLogged()!)
       this._startService();
+    super.initState();
   }
 
   Widget _buildRfid() {
@@ -124,14 +124,13 @@ class _BouclagePageState extends State<BouclagePage> {
   }
 
   Widget _statusBluetoothBar() {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     if (! this._bloc.isLogged()!)
       return Container();
     List<Widget> status = [];
     switch (_bluetoothState ) {
       case "NONE":
         status.add(Icon(Icons.bluetooth));
-        status.add(Text(appLocalizations!.not_connected));
+        status.add(Text(S.of(context).not_connected));
         break;
       case "WAITING":
         status.add(Icon(Icons.bluetooth));
@@ -139,7 +138,7 @@ class _BouclagePageState extends State<BouclagePage> {
         break;
       case "AVAILABLE":
         status.add(Icon(Icons.bluetooth));
-        status.add(Text(appLocalizations!.data_available));
+        status.add(Text(S.of(context).data_available));
     }
     return Row(children: status,);
   }
