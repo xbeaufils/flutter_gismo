@@ -3,6 +3,7 @@ import 'dart:developer' as debug;
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Lot/LotAffectationViewPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 
 
@@ -22,7 +23,7 @@ class _LotPageState extends State<LotPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('Lot'),
+        title: new Text(S.of(context).batch),
       ),
       body:
           SingleChildScrollView(
@@ -125,9 +126,8 @@ class _LotPageState extends State<LotPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Suppression"),
-          content: Text(
-              "Voulez vous supprimer cet enregistrement ?"),
+          title: Text(S.of(context).title_delete),
+          content: Text( S.of(context).text_delete),
           actions: [
             _cancelButton(),
             _continueButton(lot),
@@ -138,7 +138,7 @@ class _LotPageState extends State<LotPage> {
   }
   Widget _cancelButton() {
     return TextButton(
-      child: Text("Annuler"),
+      child: Text(S.of(context).bt_cancel),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -147,7 +147,7 @@ class _LotPageState extends State<LotPage> {
 
   Widget _continueButton(LotModel lot) {
     return TextButton(
-      child: Text("Continuer"),
+      child: Text(S.of(context).bt_continue),
       onPressed: () {
         _delete(lot);
         Navigator.of(context).pop();
