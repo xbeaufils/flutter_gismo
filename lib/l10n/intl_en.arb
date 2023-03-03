@@ -149,6 +149,15 @@
   "ram" : "Ram",
   "ewe" : "Ewe",
 
+  "collective_treatment" : "Collective treatment",
+  "prescription" : "Prescription",
+  "medication" : "Medication",
+  "route" : "Route",
+  "dose" : "Dose",
+  "rythme" : "Rhythm",
+  "contributor" : "Contributor",
+  "reason" : "Reason",
+
   "bt_cancel" : "Cancel",
   "bt_continue" : "Continue",
   "bt_save" : "Save",

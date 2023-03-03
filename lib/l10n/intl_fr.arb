@@ -146,6 +146,15 @@
   "ram" : "Bélier",
   "ewe" : "Brebis",
 
+  "collective_treatment" : "Traitement collectif",
+  "prescription" : "Ordonnance",
+  "medication" : "Medicament",
+  "route" : "Voie",
+  "dose" : "Dose",
+  "rythme" : "Rythme",
+  "contributor" : "Intervenant",
+  "reason" : "Motif",
+
   "mating_date" : "Date de saillie",
   "no_mating_date" : "Pas de date saisie",
   "mating_male_text" : "Si vide, la saillie ne sera pas enregistrée ou sera supprimée",

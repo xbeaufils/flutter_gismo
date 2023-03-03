@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 //import 'package:flutter_gismo/main.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
@@ -47,7 +48,7 @@ class _SanitairePageState extends State<SanitairePage> {
       backgroundColor: Colors.lightGreen,
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: new Text('Traitement'),
+        title: new Text(S.of(context).treatment),
       ),
       body:
           SingleChildScrollView (
@@ -68,7 +69,7 @@ class _SanitairePageState extends State<SanitairePage> {
                             new TextFormField(
                               controller: _dateDebutCtl,
                               decoration: InputDecoration(
-                                labelText: "Date de début",),
+                                labelText: S.of(context).date_debut,),
                               onTap: () async{
                                 DateTime ? date = DateTime.now();
                                 FocusScope.of(context).requestFocus(new FocusNode());
@@ -88,7 +89,7 @@ class _SanitairePageState extends State<SanitairePage> {
                             new TextFormField(
                               controller: _dateFinCtl,
                               decoration: InputDecoration(
-                                labelText: "Date de Fin",),
+                                labelText: S.of(context).date_fin,),
                               onTap: () async{
                                 DateTime ? date = DateTime.now();
                                 FocusScope.of(context).requestFocus(new FocusNode());
@@ -119,7 +120,7 @@ class _SanitairePageState extends State<SanitairePage> {
                                       child:
                                       new TextFormField(
                                         controller: _ordonnanceCtl,
-                                        decoration: InputDecoration(labelText: "Ordonnance",),
+                                        decoration: InputDecoration(labelText: S.of(context).prescription,),
                                       ))
                                 ]
                             ),
@@ -132,7 +133,7 @@ class _SanitairePageState extends State<SanitairePage> {
                                 child:
                                 new TextFormField(
                                   controller: _medicamentCtl,
-                                  decoration: InputDecoration(labelText: "Medicament",),
+                                  decoration: InputDecoration(labelText: S.of(context).medication,),
                                 ),
                               )
                             ]
@@ -146,19 +147,19 @@ class _SanitairePageState extends State<SanitairePage> {
                                   new Flexible( child:
                                     new TextFormField(
                                       controller: _voieCtl,
-                                      decoration: InputDecoration(labelText: "Voie",),
+                                      decoration: InputDecoration(labelText: S.of(context).route,),
                                     ),
                                   ),
                                   new Flexible( child:
                                   new TextFormField(
                                     controller: _doseCtl,
-                                    decoration: InputDecoration(labelText: "Dose",),
+                                    decoration: InputDecoration(labelText: S.of(context).dose,),
                                   ),
                                   ),
                                   new Flexible( child:
                                   new TextFormField(
                                     controller: _rythmeCtl,
-                                    decoration: InputDecoration(labelText: "Rythme",),
+                                    decoration: InputDecoration(labelText: S.of(context).rythme,),
                                   ),
                                   ),
                                 ]
@@ -173,7 +174,7 @@ class _SanitairePageState extends State<SanitairePage> {
                                   child:
                                   new TextFormField(
                                     controller: _intervenantCtl,
-                                    decoration: InputDecoration(labelText: "Intervenant",),
+                                    decoration: InputDecoration(labelText: S.of(context).contributor,),
                                 ))
                             ]
                         ),
@@ -190,7 +191,7 @@ class _SanitairePageState extends State<SanitairePage> {
                                       child:
                                       new TextFormField(
                                         controller: _motifCtl,
-                                        decoration: InputDecoration(labelText: "Motif",),
+                                        decoration: InputDecoration(labelText: S.of(context).reason,),
                                       ),
                                     ),
                             ]),
@@ -203,7 +204,7 @@ class _SanitairePageState extends State<SanitairePage> {
                               child:
                               new TextFormField(
                                 controller: _observationCtl,
-                                decoration: InputDecoration(labelText: "Observation",),
+                                decoration: InputDecoration(labelText: S.of(context).observations,),
                                 keyboardType: TextInputType.multiline,
                                 minLines: 3,
                                 maxLines: null,
@@ -223,10 +224,10 @@ class _SanitairePageState extends State<SanitairePage> {
                                 Container():
                                 TextButton(
                                   onPressed: () => _showDialog(context),
-                                  child: Text("Supprimer")),
+                                  child: Text(S.of(context).bt_delete)),
                             new ElevatedButton(key:null, onPressed:_save,
                               //color: Colors.lightGreen[700],
-                              child: new Text("Enregistrer",style: TextStyle( color: Colors.white)),)
+                              child: new Text(S.of(context).bt_save,style: TextStyle( color: Colors.white)),)
                           ]
                         )
                   )
@@ -238,7 +239,7 @@ class _SanitairePageState extends State<SanitairePage> {
   // set up the buttons
   Widget _cancelButton() {
     return TextButton(
-      child: Text("Annuler"),
+      child: Text(S.of(context).bt_cancel),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -247,7 +248,7 @@ class _SanitairePageState extends State<SanitairePage> {
 
   Widget _continueButton() {
     return TextButton(
-      child: Text("Continuer"),
+      child: Text(S.of(context).bt_continue),
       onPressed: () {
         _delete();
         Navigator.of(context).pop();
@@ -260,9 +261,8 @@ class _SanitairePageState extends State<SanitairePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Suppression"),
-          content: Text(
-              "Voulez vous supprimer cet enregistrement ?"),
+          title: Text(S.of(context).title_delete),
+          content: Text(S.of(context).text_delete),
           actions: [
             _cancelButton(),
             _continueButton(),
@@ -337,18 +337,4 @@ class _SanitairePageState extends State<SanitairePage> {
       _dateFinCtl.text = df.format(selectedDate);
     }
   }
-/*
-  void badSaving(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
-  }
-
-  void goodSaving(String message) {
-    message = "Traitement : " + message;
-    Navigator.pop(context, message);
-  }
-
- */
 }

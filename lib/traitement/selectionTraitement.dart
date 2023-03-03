@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
@@ -41,7 +42,7 @@ class _SelectionPageState extends State<SelectionPage> {
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: Text("Traitement collectif"),
+        title: Text(S.of(context).collective_treatment),
        ),
       floatingActionButton:  FloatingActionButton(child: Icon(Icons.add), onPressed: _addBete),
       body: _listBeteWidget(),
@@ -73,7 +74,7 @@ class _SelectionPageState extends State<SelectionPage> {
       ),
       Center(child:
         ElevatedButton(
-            child: Text('Poursuivre', style: new TextStyle(color: Colors.white, ),),
+            child: Text( S.of(context).bt_continue, style: new TextStyle(color: Colors.white, ),),
             //color: Colors.lightGreen[700],
             onPressed: _openTraitement),
       )
