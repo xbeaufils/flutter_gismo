@@ -62,6 +62,7 @@ class AdoptionState extends State<AdoptionDialog> {
   @override
   void initState() {
     _adoption = this.widget._currentLevel;
+    super.initState();
   }
 
 
