@@ -16,6 +16,7 @@
   "welcome" : "Accueil",
   "memo" : "Memo",
   "configuration" : "Configuration",
+  "user_error" : "User error",
 
   "earring" : "Boucle",
   "earring_search": "Recherche boucle",
@@ -180,6 +181,9 @@
   "note_label" : "Note",
   "note_hint" : "Information sur cette bête",
   "no_note" : "Pas de note saisie",
+  "warning": "Warning",
+  "alert": "Alerte",
+  "info" : "Info",
   "dateDeNotation": "Date de notation",
 
   "connected_mode" : "Mode connecté",

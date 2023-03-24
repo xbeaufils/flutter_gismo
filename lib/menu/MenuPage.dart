@@ -73,11 +73,11 @@ class GismoDrawer extends StatelessWidget {
     Text cheptel = new Text("000000");
     if (_bloc.user == null) {
       iconConnexion = Icon(Icons.error_outline);
-      userName = new Text("Erreur utilisateur");
+      userName = new Text(S.of(context).user_error);
     } else
     if (_bloc.user!.subscribe == null) {
       iconConnexion = Icon(Icons.error_outline);
-      userName = new Text("Erreur utilisateur");
+      userName = new Text(S.of(context).user_error);
     } else {
 
       if (_bloc.user!.subscribe!) {

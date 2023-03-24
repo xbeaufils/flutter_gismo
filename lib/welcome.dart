@@ -60,8 +60,8 @@ class _WelcomePageState extends State<WelcomePage> {
                         alignment: MainAxisAlignment.center,
                       buttonMinWidth: 90.0,
                       children: <Widget>[
-                        _buildButton("Lot", "assets/Lot.png",_lotPressed),
-                        _buildButton("Individu", "assets/brebis.png", _individuPressed),
+                        _buildButton(S.of(context).batch, "assets/Lot.png",_lotPressed),
+                        _buildButton(S.of(context).sheep, "assets/brebis.png", _individuPressed),
                         _buildButton(S.of(context).lambs, 'assets/jumping_lambs.png', _lambPressed),
                       ])))),
               Card(

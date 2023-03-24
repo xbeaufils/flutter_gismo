@@ -16,6 +16,7 @@
   "memo" : "Memo",
   "configuration" : "Configuration",
   "localuser" : "Local user",
+  "user_error" : "User error",
 
   "earring" : "Ear tag",
   "earring_search": "Search ear tag",
@@ -179,6 +180,8 @@
   "note_hint" : "Information about this beast",
   "no_note" : "No entered memo",
   "warning": "Warning",
+  "alert": "Alert",
+  "info" : "Info",
   "dateDeNotation": "Body cond date",
 
   "connected_mode" : "Connected mode",

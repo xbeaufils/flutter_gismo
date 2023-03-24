@@ -4,7 +4,7 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class MemoPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -27,17 +27,16 @@ class MemoPageState extends State<MemoPage> {
   TextEditingController _noteCtl = TextEditingController();
   MemoClasse  _classe = MemoClasse.INFO;
 
-  final _df = new DateFormat('dd/MM/yyyy');
+  final _df =  new DateFormat('dd/MM/yyyy');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool _isSaving = false;
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: Text(appLocalizations!.memo),
+        title: Text(S.of(context).memo),
         //leading: Text(this.widget._bete.numBoucle),
       ),
       body:
@@ -70,7 +69,7 @@ class MemoPageState extends State<MemoPage> {
                             DateTime ? date = DateTime.now();
                             FocusScope.of(context).requestFocus(new FocusNode());
                             date = await showDatePicker(
-                                locale: const Locale("fr","FR"),
+                                //locale: const Locale("fr","FR"),
                                 context: context,
                                 initialDate:DateTime.now(),
                                 firstDate:DateTime(1900),
@@ -87,7 +86,7 @@ class MemoPageState extends State<MemoPage> {
                           keyboardType: TextInputType.datetime,
                           controller: _dateFinCtl,
                           decoration: InputDecoration(
-                              labelText: "Date fin",
+                              labelText: S.of(context).date_fin,
                               hintText: 'jj/mm/aaaa'),
                           onSaved: (value) {
                             setState(() {
@@ -98,7 +97,7 @@ class MemoPageState extends State<MemoPage> {
                             DateTime ? date = DateTime.now();
                             FocusScope.of(context).requestFocus(new FocusNode());
                             date = await showDatePicker(
-                                locale: const Locale("fr","FR"),
+                                //locale: const Locale("fr","FR"),
                                 context: context,
                                 initialDate:DateTime.now(),
                                 firstDate:DateTime(1900),
@@ -118,7 +117,7 @@ class MemoPageState extends State<MemoPage> {
                       _classe = value!;
                     });
                   }),
-                  Icon(Icons.warning_amber_outlined),  Text(" Alerte"),Spacer(),
+                  Icon(Icons.warning_amber_outlined),  Text( S.of(context).alert),Spacer(),
                   Radio(value: MemoClasse.WARNING, groupValue: _classe, onChanged: (MemoClasse ? value) {
                     setState(() {
                       _classe = value!;
@@ -130,7 +129,7 @@ class MemoPageState extends State<MemoPage> {
                       _classe = value!;
                     });
                   }),
-                  Icon(Icons.info_outlined),  Text(" Info"),Spacer(),
+                  Icon(Icons.info_outlined),  Text(S.of(context).info),Spacer(),
                 ],
               ),
               TextFormField(

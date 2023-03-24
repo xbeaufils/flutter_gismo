@@ -210,30 +210,40 @@ class S {
     );
   }
 
-  /// `Earring`
+  /// `User error`
+  String get user_error {
+    return Intl.message(
+      'User error',
+      name: 'user_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ear tag`
   String get earring {
     return Intl.message(
-      'Earring',
+      'Ear tag',
       name: 'earring',
       desc: '',
       args: [],
     );
   }
 
-  /// `Search earring`
+  /// `Search ear tag`
   String get earring_search {
     return Intl.message(
-      'Search earring',
+      'Search ear tag',
       name: 'earring_search',
       desc: '',
       args: [],
     );
   }
 
-  /// `Place the earring`
+  /// `Place the ear tag`
   String get place_earring {
     return Intl.message(
-      'Place the earring',
+      'Place the ear tag',
       name: 'place_earring',
       desc: '',
       args: [],
@@ -290,11 +300,131 @@ class S {
     );
   }
 
-  /// `No earring read`
+  /// `No ear tag read`
   String get no_earring_read {
     return Intl.message(
-      'No earring read',
+      'No ear tag read',
       name: 'no_earring_read',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Flock number`
+  String get flock_number {
+    return Intl.message(
+      'Flock number',
+      name: 'flock_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Flock`
+  String get flock_number_hint {
+    return Intl.message(
+      'Flock',
+      name: 'flock_number_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a flock number`
+  String get enter_flock_number {
+    return Intl.message(
+      'Enter a flock number',
+      name: 'enter_flock_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Flock number missing`
+  String get flock_number_warn {
+    return Intl.message(
+      'Flock number missing',
+      name: 'flock_number_warn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Identity number`
+  String get identity_number {
+    return Intl.message(
+      'Identity number',
+      name: 'identity_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Identity`
+  String get identity_number_hint {
+    return Intl.message(
+      'Identity',
+      name: 'identity_number_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter an identity number`
+  String get enter_identity_number {
+    return Intl.message(
+      'Enter an identity number',
+      name: 'enter_identity_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Identity number missing`
+  String get identity_number_warn {
+    return Intl.message(
+      'Identity number missing',
+      name: 'identity_number_warn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sex missing`
+  String get sex_warn {
+    return Intl.message(
+      'Sex missing',
+      name: 'sex_warn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name`
+  String get name {
+    return Intl.message(
+      'Name',
+      name: 'name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name`
+  String get name_hint {
+    return Intl.message(
+      'Name',
+      name: 'name_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Identity number is already present`
+  String get identity_number_error {
+    return Intl.message(
+      'Identity number is already present',
+      name: 'identity_number_error',
       desc: '',
       args: [],
     );
@@ -395,6 +525,56 @@ class S {
     return Intl.message(
       'No entry date',
       name: 'noEntryDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Date of departure`
+  String get dateDeparture {
+    return Intl.message(
+      'Date of departure',
+      name: 'dateDeparture',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No date of departure`
+  String get noDateDeparture {
+    return Intl.message(
+      'No date of departure',
+      name: 'noDateDeparture',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Batch name`
+  String get batch_name {
+    return Intl.message(
+      'Batch name',
+      name: 'batch_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Campaign`
+  String get batch_campaign {
+    return Intl.message(
+      'Campaign',
+      name: 'batch_campaign',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You must save the batch before add`
+  String get batch_warning {
+    return Intl.message(
+      'You must save the batch before add',
+      name: 'batch_warning',
       desc: '',
       args: [],
     );
@@ -675,6 +855,46 @@ class S {
     return Intl.message(
       'Allows to evaluate faults on lambing',
       name: 'text_lambing_default',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search ram`
+  String get search_ram {
+    return Intl.message(
+      'Search ram',
+      name: 'search_ram',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lack of adoption`
+  String get adoption_default_title {
+    return Intl.message(
+      'Lack of adoption',
+      name: 'adoption_default_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scale of bitches`
+  String get echelle_connasse {
+    return Intl.message(
+      'Scale of bitches',
+      name: 'echelle_connasse',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Allows to evaluate the maternal qualities according to the criteria of Stéphanie Maubé`
+  String get echelle_connasse_text {
+    return Intl.message(
+      'Allows to evaluate the maternal qualities according to the criteria of Stéphanie Maubé',
+      name: 'echelle_connasse_text',
       desc: '',
       args: [],
     );
@@ -1190,6 +1410,36 @@ class S {
     );
   }
 
+  /// `Mating date`
+  String get mating_date {
+    return Intl.message(
+      'Mating date',
+      name: 'mating_date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No mating date`
+  String get no_mating_date {
+    return Intl.message(
+      'No mating date',
+      name: 'no_mating_date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If empty, the mating won't be saved or will be deleted`
+  String get mating_male_text {
+    return Intl.message(
+      'If empty, the mating won\'t be saved or will be deleted',
+      name: 'mating_male_text',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Male`
   String get male {
     return Intl.message(
@@ -1225,6 +1475,86 @@ class S {
     return Intl.message(
       'Ewe',
       name: 'ewe',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Collective treatment`
+  String get collective_treatment {
+    return Intl.message(
+      'Collective treatment',
+      name: 'collective_treatment',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Prescription`
+  String get prescription {
+    return Intl.message(
+      'Prescription',
+      name: 'prescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Medication`
+  String get medication {
+    return Intl.message(
+      'Medication',
+      name: 'medication',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Route`
+  String get route {
+    return Intl.message(
+      'Route',
+      name: 'route',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dose`
+  String get dose {
+    return Intl.message(
+      'Dose',
+      name: 'dose',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rhythm`
+  String get rythme {
+    return Intl.message(
+      'Rhythm',
+      name: 'rythme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contributor`
+  String get contributor {
+    return Intl.message(
+      'Contributor',
+      name: 'contributor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reason`
+  String get reason {
+    return Intl.message(
+      'Reason',
+      name: 'reason',
       desc: '',
       args: [],
     );
@@ -1275,6 +1605,16 @@ class S {
     return Intl.message(
       'Delete',
       name: 'bt_delete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit`
+  String get bt_edition {
+    return Intl.message(
+      'Edit',
+      name: 'bt_edition',
       desc: '',
       args: [],
     );
@@ -1365,6 +1705,176 @@ class S {
     return Intl.message(
       'Warning',
       name: 'warning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Alert`
+  String get alert {
+    return Intl.message(
+      'Alert',
+      name: 'alert',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Info`
+  String get info {
+    return Intl.message(
+      'Info',
+      name: 'info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Body cond date`
+  String get dateDeNotation {
+    return Intl.message(
+      'Body cond date',
+      name: 'dateDeNotation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connected mode`
+  String get connected_mode {
+    return Intl.message(
+      'Connected mode',
+      name: 'connected_mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In this mode, the data will be saved on the server.\nThis mode requires an account on gismo`
+  String get connected_mode_text {
+    return Intl.message(
+      'In this mode, the data will be saved on the server.\nThis mode requires an account on gismo',
+      name: 'connected_mode_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email`
+  String get email {
+    return Intl.message(
+      'Email',
+      name: 'email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password`
+  String get password {
+    return Intl.message(
+      'Password',
+      name: 'password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connection`
+  String get connection {
+    return Intl.message(
+      'Connection',
+      name: 'connection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Alone mode`
+  String get alone_mode {
+    return Intl.message(
+      'Alone mode',
+      name: 'alone_mode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In this mode, the data will be saved in a database on your phone.\nCopy your local database to back it up on a PC and restore it when needed.`
+  String get alone_mode_text {
+    return Intl.message(
+      'In this mode, the data will be saved in a database on your phone.\nCopy your local database to back it up on a PC and restore it when needed.',
+      name: 'alone_mode_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Data null`
+  String get data_null {
+    return Intl.message(
+      'Data null',
+      name: 'data_null',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Copy database`
+  String get copy_base {
+    return Intl.message(
+      'Copy database',
+      name: 'copy_base',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Empty folder`
+  String get empty_folder {
+    return Intl.message(
+      'Empty folder',
+      name: 'empty_folder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restore database`
+  String get restore_bd {
+    return Intl.message(
+      'Restore database',
+      name: 'restore_bd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current data will be overwritten.`
+  String get restore_bd_text {
+    return Intl.message(
+      'Current data will be overwritten.',
+      name: 'restore_bd_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `With subscription`
+  String get with_subscription {
+    return Intl.message(
+      'With subscription',
+      name: 'with_subscription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `save configuration`
+  String get save_config {
+    return Intl.message(
+      'save configuration',
+      name: 'save_config',
       desc: '',
       args: [],
     );
