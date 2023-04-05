@@ -431,80 +431,80 @@ class S {
   }
 
   /// `Birth`
-  String get birth {
+  String get entree_birth {
     return Intl.message(
       'Birth',
-      name: 'birth',
+      name: 'entree_birth',
       desc: '',
       args: [],
     );
   }
 
   /// `Creation`
-  String get creation {
+  String get entree_creation {
     return Intl.message(
       'Creation',
-      name: 'creation',
+      name: 'entree_creation',
       desc: '',
       args: [],
     );
   }
 
   /// `Renewal`
-  String get renewal {
+  String get entree_renewal {
     return Intl.message(
       'Renewal',
-      name: 'renewal',
+      name: 'entree_renewal',
       desc: '',
       args: [],
     );
   }
 
   /// `Purchase`
-  String get purchase {
+  String get entree_purchase {
     return Intl.message(
       'Purchase',
-      name: 'purchase',
+      name: 'entree_purchase',
       desc: '',
       args: [],
     );
   }
 
   /// `Reactivation`
-  String get reactivation {
+  String get entree_reactivation {
     return Intl.message(
       'Reactivation',
-      name: 'reactivation',
+      name: 'entree_reactivation',
       desc: '',
       args: [],
     );
   }
 
   /// `Loan or pension`
-  String get loan {
+  String get entree_loan {
     return Intl.message(
       'Loan or pension',
-      name: 'loan',
+      name: 'entree_loan',
       desc: '',
       args: [],
     );
   }
 
   /// `Internal transfer`
-  String get transfer {
+  String get entree_transfer {
     return Intl.message(
       'Internal transfer',
-      name: 'transfer',
+      name: 'entree_transfer',
       desc: '',
       args: [],
     );
   }
 
   /// `Unknown`
-  String get unknown {
+  String get entree_unknown {
     return Intl.message(
       'Unknown',
-      name: 'unknown',
+      name: 'entree_unknown',
       desc: '',
       args: [],
     );
@@ -545,6 +545,96 @@ class S {
     return Intl.message(
       'No date of departure',
       name: 'noDateDeparture',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Death`
+  String get output_death {
+    return Intl.message(
+      'Death',
+      name: 'output_death',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Butchery shop sale`
+  String get output_boucherie {
+    return Intl.message(
+      'Butchery shop sale',
+      name: 'output_boucherie',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Breeder sale`
+  String get output_reproducteur {
+    return Intl.message(
+      'Breeder sale',
+      name: 'output_reproducteur',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Internal mutation`
+  String get output_mutation {
+    return Intl.message(
+      'Internal mutation',
+      name: 'output_mutation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Number error`
+  String get output_error {
+    return Intl.message(
+      'Number error',
+      name: 'output_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loan or pension`
+  String get output_loan {
+    return Intl.message(
+      'Loan or pension',
+      name: 'output_loan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Automatic output`
+  String get output_auto {
+    return Intl.message(
+      'Automatic output',
+      name: 'output_auto',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Self-consumption`
+  String get output_conso {
+    return Intl.message(
+      'Self-consumption',
+      name: 'output_conso',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unknown`
+  String get output_unknown {
+    return Intl.message(
+      'Unknown',
+      name: 'output_unknown',
       desc: '',
       args: [],
     );

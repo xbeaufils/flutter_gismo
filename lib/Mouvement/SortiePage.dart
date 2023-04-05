@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:intl/intl.dart';
 
@@ -26,15 +26,15 @@ class _SortiePageState extends State<SortiePage> {
 
   List<DropdownMenuItem<String>> _getMotifSortieItems() {
     List<DropdownMenuItem<String>> items = [];
-    items.add( new DropdownMenuItem(value: 'MORT', child: new Text('Mort')));
-    items.add( new DropdownMenuItem(value: 'VENTE_BOUCHERIE', child: new Text('Vente boucherie')));
-    items.add( new DropdownMenuItem(value: 'VENTE_REPRODUCTEUR', child: new Text('Vente reproducteur')));
-    items.add( new DropdownMenuItem(value: 'MUTATION_INTERNE', child: new Text('Mutation interne')));
-    items.add( new DropdownMenuItem(value: 'ERREUR_DE_NUMERO', child: new Text('Erreur de numéro')));
-    items.add( new DropdownMenuItem(value: 'PRET_OU_PENSION', child: new Text('Prêt ou pension')));
-    items.add( new DropdownMenuItem(value: 'SORTIE_AUTOMATIQUE', child: new Text('Sortie Automatique')));
-    items.add( new DropdownMenuItem(value: 'AUTO_CONSOMMATION', child: new Text('Auto consommation')));
-    items.add( new DropdownMenuItem(value: 'INCONNUE', child: new Text('Inconnue')));
+    items.add( new DropdownMenuItem(value: 'MORT', child: new Text(S.of(context).output_death)));
+    items.add( new DropdownMenuItem(value: 'VENTE_BOUCHERIE', child: new Text( S.of(context).output_boucherie)));
+    items.add( new DropdownMenuItem(value: 'VENTE_REPRODUCTEUR', child: new Text(S.of(context).output_reproducteur)));
+    items.add( new DropdownMenuItem(value: 'MUTATION_INTERNE', child: new Text(S.of(context).output_mutation)));
+    items.add( new DropdownMenuItem(value: 'ERREUR_DE_NUMERO', child: new Text(S.of(context).output_error)));
+    items.add( new DropdownMenuItem(value: 'PRET_OU_PENSION', child: new Text(S.of(context).output_loan)));
+    items.add( new DropdownMenuItem(value: 'SORTIE_AUTOMATIQUE', child: new Text(S.of(context).output_auto)));
+    items.add( new DropdownMenuItem(value: 'AUTO_CONSOMMATION', child: new Text(S.of(context).output_conso)));
+    items.add( new DropdownMenuItem(value: 'INCONNUE', child: new Text(S.of(context).output_unknown)));
     return items;
   }
 

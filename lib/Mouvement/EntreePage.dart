@@ -8,7 +8,6 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EntreePage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -30,18 +29,17 @@ class _EntreePageState extends State<EntreePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   List<DropdownMenuItem<String>> _getMotifEntreeItems(BuildContext context) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     List<DropdownMenuItem<String>> items = [];
-    items.add( new DropdownMenuItem(value: 'NAISSANCE', child: new Text( appLocalizations!.birth )));
-    items.add( new DropdownMenuItem(value: 'CREATION', child: new Text(appLocalizations.creation)));
-    items.add( new DropdownMenuItem(value: 'RENOUVELLEMENT', child: new Text(appLocalizations.renewal)));
-    items.add( new DropdownMenuItem(value: 'ACHAT', child: new Text(appLocalizations.purchase)));
+    items.add( new DropdownMenuItem(value: 'NAISSANCE', child: new Text( S.of(context).entree_birth )));
+    items.add( new DropdownMenuItem(value: 'CREATION', child: new Text(S.of(context).entree_creation)));
+    items.add( new DropdownMenuItem(value: 'RENOUVELLEMENT', child: new Text(S.of(context).entree_renewal)));
+    items.add( new DropdownMenuItem(value: 'ACHAT', child: new Text(S.of(context).entree_purchase)));
     items.add( new DropdownMenuItem(value: 'MUTATION_INTERNE', child: new Text('Mutation interne')));
-    items.add( new DropdownMenuItem(value: 'REACTIVATION', child: new Text(appLocalizations.reactivation)));
-    items.add( new DropdownMenuItem(value: 'PRET_OU_PENSION', child: new Text(appLocalizations.loan)));
+    items.add( new DropdownMenuItem(value: 'REACTIVATION', child: new Text(S.of(context).entree_reactivation)));
+    items.add( new DropdownMenuItem(value: 'PRET_OU_PENSION', child: new Text(S.of(context).entree_loan)));
     items.add( new DropdownMenuItem(value: 'ENTREE_EN_SCI_OU_CE', child: new Text('Entree en SCI ou CE')));
     items.add( new DropdownMenuItem(value: 'REPRISE_EN_SCI_OU_CE', child: new Text('Reprise en SCI ou CE')));
-    items.add( new DropdownMenuItem(value: 'INCONNUE', child: new Text(appLocalizations.unknown)));
+    items.add( new DropdownMenuItem(value: 'INCONNUE', child: new Text(S.of(context).entree_unknown)));
     return items;
   }
 
