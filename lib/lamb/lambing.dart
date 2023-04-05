@@ -40,8 +40,8 @@ class _LambingPageState extends State<LambingPage> {
 
   DateTime selectedDate = DateTime.now();
   final df = new DateFormat('dd/MM/yyyy');
-  Adoption _adoption = Adoption.level0;
-  Agnelage _agnelage = Agnelage.level0;
+  AdoptionEnum _adoption = AdoptionEnum.level0;
+  AgnelageEnum _agnelage = AgnelageEnum.level0;
 
   TextEditingController _dateAgnelageCtl = TextEditingController();
   TextEditingController _obsCtl = TextEditingController();
@@ -52,6 +52,8 @@ class _LambingPageState extends State<LambingPage> {
 
   @override
   Widget build(BuildContext context) {
+    AdoptionHelper transAdoption = new AdoptionHelper(this.context);
+    AgnelageHelper transAgnelage = new AgnelageHelper(this.context);
     return new Scaffold(
       appBar: new AppBar(
         title: (this.widget._mere != null) ? 
@@ -100,11 +102,11 @@ class _LambingPageState extends State<LambingPage> {
                             }),
                 ListTile(
                   title: Text(S.of(context).lambing_quality) ,
-                  subtitle: Text(_agnelage.key.toString() + " : " +_agnelage.value),
+                  subtitle: Text(_agnelage.key.toString() + " : " + transAgnelage.translate(_agnelage)),
                   trailing: new IconButton(onPressed: _openAgnelageDialog, icon: new Icon(Icons.create)),),
                 ListTile(
                   title: Text(S.of(context).adoption_quality) ,
-                  subtitle: Text(_adoption.key.toString() + " : " +_adoption.value),
+                  subtitle: Text(_adoption.key.toString() + " : " + transAdoption.translate(_adoption)),
                   trailing: new IconButton(onPressed: _openAdoptionDialog, icon: new Icon(Icons.create)),),
                 TextFormField(
                   controller: _obsCtl,
@@ -259,7 +261,7 @@ class _LambingPageState extends State<LambingPage> {
     )) as int;
     if (qualiteAdoption != null) {
       setState(() {
-        _adoption = Adoption.getAdoption(qualiteAdoption);
+        _adoption = AdoptionHelper.getAdoption(qualiteAdoption);
       });
     }
   }
@@ -273,7 +275,7 @@ class _LambingPageState extends State<LambingPage> {
     ))as int;
     if (qualiteAgnelage != null) {
       setState(() {
-        _agnelage = Agnelage.getAgnelage(qualiteAgnelage);
+        _agnelage = AgnelageHelper.getAgnelage(qualiteAgnelage);
       });
     }
   }
@@ -319,16 +321,16 @@ class _LambingPageState extends State<LambingPage> {
     if (this.widget._currentLambing == null) {
       _lambing = new LambingModel(this.widget._mere!.idBd!);
       _dateAgnelageCtl.text = df.format(selectedDate);
-      _adoption = Adoption.level0;
-      _agnelage = Agnelage.level0;
+      _adoption = AdoptionEnum.level0;
+      _agnelage = AgnelageEnum.level0;
     }
     else {
       _lambing = this.widget._currentLambing!;
       _dateAgnelageCtl.text = _lambing.dateAgnelage!;
       if (_lambing.observations != null)
         _obsCtl.text = _lambing.observations!;
-      _adoption = Adoption.getAdoption(_lambing.adoption!);
-      _agnelage = Agnelage.getAgnelage(_lambing.qualite!);
+      _adoption = AdoptionHelper.getAdoption(_lambing.adoption!);
+      _agnelage = AgnelageHelper.getAgnelage(_lambing.qualite!);
     }
     this._adBanner = BannerAd(
       adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',

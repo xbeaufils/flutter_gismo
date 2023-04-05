@@ -30,20 +30,21 @@ class AgnelageState extends State<AgnelageDialog> {
               subtitle: Text(S.of(context).text_lambing_default),
               trailing: new Icon(Icons.copyright),
             ),
-            _getAgnelage(Agnelage.level0),
-            _getAgnelage(Agnelage.level1),
-            _getAgnelage(Agnelage.level2),
-            _getAgnelage(Agnelage.level3),
-            _getAgnelage(Agnelage.level4),
+            _getAgnelage(AgnelageEnum.level0),
+            _getAgnelage(AgnelageEnum.level1),
+            _getAgnelage(AgnelageEnum.level2),
+            _getAgnelage(AgnelageEnum.level3),
+            _getAgnelage(AgnelageEnum.level4),
           ]),
 
     );
   }
 
-  Widget _getAgnelage(Agnelage agnelage) {
+  Widget _getAgnelage(AgnelageEnum agnelage) {
+    AgnelageHelper translator = new AgnelageHelper(this.context);
     return RadioListTile<int>(
       title: Text(agnelage.key.toString()),
-      subtitle: Text(agnelage.value),
+      subtitle: Text(translator.translate(agnelage)),
       value: agnelage.key,
       groupValue: _agnelage,
       onChanged: (int ? value) {

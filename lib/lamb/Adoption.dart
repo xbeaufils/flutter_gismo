@@ -31,21 +31,22 @@ class AdoptionState extends State<AdoptionDialog> {
               subtitle: Text(S.of(context).echelle_connasse_text),
               trailing: new Icon(Icons.copyright),
             ),
-            _getAdoption(Adoption.level0),
-            _getAdoption(Adoption.level1),
-            _getAdoption(Adoption.level2),
-            _getAdoption(Adoption.level3),
-            _getAdoption(Adoption.level4),
-            _getAdoption(Adoption.level5),
+            _getAdoption(AdoptionEnum.level0),
+            _getAdoption(AdoptionEnum.level1),
+            _getAdoption(AdoptionEnum.level2),
+            _getAdoption(AdoptionEnum.level3),
+            _getAdoption(AdoptionEnum.level4),
+            _getAdoption(AdoptionEnum.level5),
           ]),
 
     );
   }
 
-  Widget _getAdoption(Adoption adoption) {
+  Widget _getAdoption(AdoptionEnum adoption) {
+    AdoptionHelper translator = new AdoptionHelper(this.context);
     return RadioListTile<int>(
       title: Text(adoption.key.toString()),
-      subtitle: Text(adoption.value),
+      subtitle: Text(translator.translate(adoption)),
       value: adoption.key,
       groupValue: _adoption,
       onChanged: (int ? value) {

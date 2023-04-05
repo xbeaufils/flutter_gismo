@@ -1,27 +1,49 @@
+import 'package:flutter/widgets.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
+
 class AgnelageNotFoundException implements Exception {}
 
-class Agnelage {
-  int _key;
-  String _value;
+enum AgnelageEnum {
+  level0(0),
+  level1(1),
+  level2(2),
+  level3(3),
+  level4(4),
+  level5(5);
+
+  final int _key;
 
   int get key => _key;
-  String get value => _value;
+  const AgnelageEnum(this._key);
+}
 
-  Agnelage(this._key, this._value);
+class AgnelageHelper {
+  BuildContext context;
+  AgnelageHelper(this.context);
 
-  static Agnelage level0 = Agnelage(0, "Seule");
-  static Agnelage level1 = Agnelage(1, "Aidée");
-  static Agnelage level2 = Agnelage(2, "Agneau replacé");
-  static Agnelage level3 = Agnelage(3, "Fouillée pour la délivrance");
-  static Agnelage level4 = Agnelage(4, "Fouillée pour l'agneau");
+  String translate(AgnelageEnum agne) {
+    switch (agne) {
+      case AgnelageEnum.level0:
+        return S.of(context).agnelage_seul;
+      case AgnelageEnum.level1 :
+        return S.of(context).agnelage_aide;
+      case AgnelageEnum.level2:
+        return S.of(context).agnelage_replace;
+      case AgnelageEnum.level3 :
+        return S.of(context).agnelage_delivrance;
+      case AgnelageEnum.level4 :
+        return S.of(context).agnelage_fouille;
+    }
+    throw new AgnelageNotFoundException();
+  }
 
-  static Agnelage getAgnelage(int value) {
+  static AgnelageEnum getAgnelage(int value) {
     switch (value) {
-      case 0: return level0;
-      case 1: return level1;
-      case 2: return level2;
-      case 3: return level3;
-      case 4: return level4;
+      case 0: return AgnelageEnum.level0;
+      case 1: return AgnelageEnum.level1;
+      case 2: return AgnelageEnum.level2;
+      case 3: return AgnelageEnum.level3;
+      case 4: return AgnelageEnum.level4;
     }
     throw new AgnelageNotFoundException();
   }

@@ -900,6 +900,116 @@ class S {
     );
   }
 
+  /// `Lick, call and let itself be suckled`
+  String get adoption_leche {
+    return Intl.message(
+      'Lick, call and let itself be suckled',
+      name: 'adoption_leche',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Apathetic`
+  String get adoption_apathique {
+    return Intl.message(
+      'Apathetic',
+      name: 'adoption_apathique',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `leave one of the lambs`
+  String get adoption_delaisse {
+    return Intl.message(
+      'leave one of the lambs',
+      name: 'adoption_delaisse',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Abandoned while fleeing`
+  String get adoption_abandon {
+    return Intl.message(
+      'Abandoned while fleeing',
+      name: 'adoption_abandon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hold for breastfeeding`
+  String get adoption_tenir {
+    return Intl.message(
+      'Hold for breastfeeding',
+      name: 'adoption_tenir',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kill one`
+  String get adoption_infanticide {
+    return Intl.message(
+      'Kill one',
+      name: 'adoption_infanticide',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Seule`
+  String get agnelage_seul {
+    return Intl.message(
+      'Seule',
+      name: 'agnelage_seul',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Aidée`
+  String get agnelage_aide {
+    return Intl.message(
+      'Aidée',
+      name: 'agnelage_aide',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Agneau replacé`
+  String get agnelage_replace {
+    return Intl.message(
+      'Agneau replacé',
+      name: 'agnelage_replace',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fouillée pour la délivrance`
+  String get agnelage_delivrance {
+    return Intl.message(
+      'Fouillée pour la délivrance',
+      name: 'agnelage_delivrance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fouillée pour l'agneau`
+  String get agnelage_fouille {
+    return Intl.message(
+      'Fouillée pour l\'agneau',
+      name: 'agnelage_fouille',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Farrowing`
   String get mort_mise_bas {
     return Intl.message(

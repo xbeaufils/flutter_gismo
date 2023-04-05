@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -21,7 +22,7 @@ class _MortPageState extends State<MortPage> {
 
   List<DropdownMenuItem<String>> _getCauseMortItems() {
     List<DropdownMenuItem<String>> items = [];
-    items.add( new DropdownMenuItem(value: 'Mise_bas', child: new Text('Mise bas')));
+    items.add( new DropdownMenuItem(value: 'Mise_bas', child: new Text( S.of(context).mort_mise_bas)));
     items.add( new DropdownMenuItem(value: 'Pas_de_contraction_dilatation', child: new Text('Pas de contraction/dilatation')));
     items.add( new DropdownMenuItem(value: 'Prolapsus', child: new Text('Prolapsus')));
     items.add( new DropdownMenuItem(value: 'Mal_place', child: new Text('Mal placé')));
