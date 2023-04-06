@@ -41,6 +41,8 @@
   "name_hint" : "Nom",
   "identity_number_error" : "Numero de boucle déja présent",
 
+  "entree_select" : "Sélectionnez une cause d'entree",
+  "entree_reason_required" : "Cause d'entrée obligatoire",
   "entree_birth" : "Naissance",
   "entree_creation" : "Creation",
   "entree_renewal" : "Renouvellement",
@@ -53,6 +55,8 @@
   "noEntryDate" : "Pas de date d'entrée",
   "dateDeparture" : "Date de sortie",
   "noDateDeparture": "Pas de date de sortie",
+  "output_select" : "Sélectionnez une cause de sortie",
+  "output_reason_required" : "Cause de sortie obligatoire",
   "output_death" :"Mort",
   "output_boucherie" : "Vente boucherie",
   "output_reproducteur" : "Vente reproducteur",
@@ -62,6 +66,8 @@
   "output_auto" : "Sortie Automatique",
   "output_conso" : "Auto consommation",
   "output_unknown" : "Inconnue",
+  "empty_list" : "Liste des betes vide",
+  "tooltip_add_beast" : "Ajouter une bête",
 
   "batch_name" :"Nom lot",
   "batch_campaign" : "Campagne",

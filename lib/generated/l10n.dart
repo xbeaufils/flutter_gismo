@@ -430,6 +430,26 @@ class S {
     );
   }
 
+  /// `Select an entry reason`
+  String get entree_select {
+    return Intl.message(
+      'Select an entry reason',
+      name: 'entree_select',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Entry reason is required`
+  String get entree_reason_required {
+    return Intl.message(
+      'Entry reason is required',
+      name: 'entree_reason_required',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Birth`
   String get entree_birth {
     return Intl.message(
@@ -550,6 +570,26 @@ class S {
     );
   }
 
+  /// `Select a departure reason`
+  String get output_select {
+    return Intl.message(
+      'Select a departure reason',
+      name: 'output_select',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Departure reason is required`
+  String get output_reason_required {
+    return Intl.message(
+      'Departure reason is required',
+      name: 'output_reason_required',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Death`
   String get output_death {
     return Intl.message(
@@ -635,6 +675,26 @@ class S {
     return Intl.message(
       'Unknown',
       name: 'output_unknown',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Empty beast list`
+  String get empty_list {
+    return Intl.message(
+      'Empty beast list',
+      name: 'empty_list',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add a beast`
+  String get tooltip_add_beast {
+    return Intl.message(
+      'Add a beast',
+      name: 'tooltip_add_beast',
       desc: '',
       args: [],
     );

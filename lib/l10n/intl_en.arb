@@ -41,6 +41,8 @@
   "name_hint" : "Name",
   "identity_number_error" : "Identity number is already present",
 
+  "entree_select" : "Select an entry reason",
+  "entree_reason_required" : "Entry reason is required",
   "entree_birth" : "Birth",
   "entree_creation" : "Creation",
   "entree_renewal" : "Renewal",
@@ -53,6 +55,8 @@
   "noEntryDate" : "No entry date",
   "dateDeparture" : "Date of departure",
   "noDateDeparture": "No date of departure",
+  "output_select" : "Select a departure reason",
+  "output_reason_required" : "Departure reason is required",
   "output_death" :"Death",
   "output_boucherie" : "Butchery shop sale",
   "output_reproducteur" : "Breeder sale",
@@ -62,6 +66,8 @@
   "output_auto" : "Automatic output",
   "output_conso" : "Self-consumption",
   "output_unknown" : "Unknown",
+  "empty_list" : "Empty beast list",
+  "tooltip_add_beast" : "Add a beast",
 
   "batch_name" :"Batch name",
   "batch_campaign" : "Campaign",

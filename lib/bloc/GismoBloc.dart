@@ -226,8 +226,8 @@ class GismoBloc {
     return "Enregistrement effectué";
   }
 
-  Future<String> saveEntree(String date, String motif, List<Bete> betes ) async {
-    debug.log("Motif " + motif + " date " + date + " nb Betes " + betes.length.toString(), name: "GismoBloc::saveEntree");
+  Future<String> saveEntree(DateTime date, String motif, List<Bete> betes ) async {
+    debug.log("Motif " + motif + " date " + date.toString() + " nb Betes " + betes.length.toString(), name: "GismoBloc::saveEntree");
     this._repository!.dataProvider.saveEntree(this._currentUser!.cheptel!, date, motif, betes);
     return "OK";
   }
@@ -280,7 +280,7 @@ class GismoBloc {
       List<EchographieModel> lstEcho = await this._repository!.dataProvider.getEcho(bete);
       List<SaillieModel> lstSaillie = await this._repository!.dataProvider.getSaillies(bete);
       List<MemoModel> lstMemos = await this._repository!.dataProvider.getMemos(bete);
-      lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd!, EventType.agnelage, lambing.dateAgnelage!, lambing.lambs.length.toString()))});
+      lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd!, EventType.agnelage, DateFormat.yMd().format(lambing.dateAgnelage!), lambing.lambs.length.toString()))});
       lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement, traitement.debut, traitement.medicament))});
       lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd!, EventType.NEC, note.date, note.note.toString()))});
       lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id!, EventType.pesee, poids.datePesee, poids.poids.toString()))});

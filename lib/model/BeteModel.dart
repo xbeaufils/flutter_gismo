@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 enum Sex { male, femelle }
 //enum Motif_Entree {bouclage, achat}
 
@@ -6,7 +8,7 @@ class Bete  {
   late String _numBoucle;
   String ? _numMarquage;
   String ? _nom;
-  String ? _dateEntree;
+  DateTime ? _dateEntree;
   late Sex _sex = Sex.male;
   //Motif_Entree _motifEntree = Motif_Entree.achat;
   String ? _observations;
@@ -16,11 +18,12 @@ class Bete  {
   Bete( this._idBd, this._numBoucle, this._numMarquage, this._nom, this._observations, this._dateEntree, this._sex, this._motifEntree);
 
   Bete.fromResult (result){
+    final _df = new DateFormat('dd/MM/yyyy');
     _idBd = result["id"];
     _numBoucle = result["numBoucle"];
     _numMarquage = result["numMarquage"];
     _nom = result["nom"];
-    _dateEntree = result["dateEntree"];
+    _dateEntree = _df.parse(result["dateEntree"]);
     _observations = result["observations"];
     if (result['sex'] != null)
       _sex= Sex.values.firstWhere((e) => e.toString() == 'Sex.' + result["sex"]);
@@ -29,13 +32,15 @@ class Bete  {
   }
 
   Map<String, dynamic> toJson() {
+    final _df = new DateFormat('dd/MM/yyyy');
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (_idBd != null)
       data["id"] = _idBd ;
     data["numBoucle"] = _numBoucle;
     data["numMarquage"] = _numMarquage;
     data["nom"] = _nom;
-    data["dateEntree"] = _dateEntree;
+    if (_dateEntree != null)
+      data["dateEntree"] = _df.format(_dateEntree!);
     data["observations"] = _observations;
     data["sex"]= _sex.toString().split('.').last;
     data["motifEntree"] = _motifEntree.toString().split('.').last;
@@ -47,7 +52,7 @@ class Bete  {
   String get numBoucle =>_numBoucle;
   String get numMarquage =>_numMarquage!;
   String ? get nom =>_nom;
-  String get dateEntree => _dateEntree! ;
+  DateTime get dateEntree => _dateEntree! ;
   Sex get sex => _sex;
   String get motifEntree =>_motifEntree!;
 
@@ -69,7 +74,7 @@ class Bete  {
     _sex = value;
   }
 
-  set dateEntree(String value) {
+  set dateEntree(DateTime value) {
     _dateEntree = value;
   }
 

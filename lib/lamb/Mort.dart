@@ -169,7 +169,7 @@ class _MortPageState extends State<MortPage> {
   void goodSaving(String message) {
     message = "Décès : " + message;
     this.widget._currentLamb.motifDeces = _currentMotif;
-    this.widget._currentLamb.dateDeces =  _dateMortCtl.text;
+    this.widget._currentLamb.dateDeces = DateFormat.yMd().parse( _dateMortCtl.text );
     Navigator.pop(context, this.widget._currentLamb);
   }
 

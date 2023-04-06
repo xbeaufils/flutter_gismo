@@ -20,6 +20,7 @@ import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/model/User.dart';
+import 'package:intl/intl.dart';
 //import 'package:geolocator/geolocator.dart';
 
 import 'dart:developer' as debug;
@@ -276,11 +277,12 @@ class WebDataProvider extends DataProvider {
     }
 
   @override
-  Future<String> saveEntree(String cheptel, String date, String motif, List<Bete> lstBete) async {
+  Future<String> saveEntree(String cheptel, DateTime date, String motif, List<Bete> lstBete) async {
+    DateFormat df = new DateFormat('dd/MM/yyyy');
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['cheptel'] = cheptel;
     data['cause'] = motif;
-    data['dateEntree'] = date;
+    data['dateEntree'] = df.format( date );
     data['lstBete'] = lstBete.map((bete) => bete.toJson()).toList();
     try {
       final response = await _gismoHttp.doPostMessage(
@@ -750,7 +752,7 @@ class WebDataProvider extends DataProvider {
 
   Future<MemoModel?> searchMemo(int id) async {
     final response = await _gismoHttp.doGet(
-        '/memp/search/' + id.toString());
+        '/memo/search/' + id.toString());
     return new MemoModel.fromResult(response);
   }
 

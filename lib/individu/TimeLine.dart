@@ -14,6 +14,7 @@ import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
+import 'package:intl/intl.dart';
 
 
 class TimeLinePage extends StatefulWidget {
@@ -26,12 +27,10 @@ class TimeLinePage extends StatefulWidget {
 
 class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderStateMixin {
 
-  final _formKeyIdentity = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GismoBloc _bloc;
 
   Bete _bete;
-  int _indexExpandedTraitement = -1;
 
   _TimeLinePageState(this._bloc, this._bete);
 
@@ -48,7 +47,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
               Card(child:
                 ListTile(
                   title: Text(_bete.numBoucle + " " + _bete.numMarquage),
-                  subtitle: (_bete.dateEntree!= null) ? Text(_bete.dateEntree): null,
+                  subtitle: (_bete.dateEntree!= null) ? Text( DateFormat.yMd().format(_bete.dateEntree)): null,
                   leading: Image.asset("assets/brebis.png") ,
                   trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: _openIdentityDialog, ),)
                 ,),

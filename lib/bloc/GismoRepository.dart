@@ -204,7 +204,7 @@ class DummyDataProvider extends DataProvider {
   }
 
   @override
-  Future<String> saveEntree(String cheptel, String date, String motif,
+  Future<String> saveEntree(String cheptel, DateTime date, String motif,
       List<Bete> lstBete) {
     throw RepositoryTypeException("Type de repository inconnue");
   }

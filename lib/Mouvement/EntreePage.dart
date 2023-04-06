@@ -8,6 +8,7 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class EntreePage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -85,21 +86,21 @@ class _EntreePageState extends State<EntreePage> {
                         DateTime date = DateTime.now();
                         FocusScope.of(context).requestFocus(new FocusNode());
                         date = (await showDatePicker(
-                          locale: const Locale("fr","FR"),
+                          //locale: const Locale("fr","FR"),
                           context: context,
                           initialDate:DateTime.now(),
                           firstDate:DateTime(1900),
                           lastDate: DateTime(2100)))!;
                         if (date != null) {
                           setState(() {
-                            _dateEntreeCtl.text = _df.format(date);
+                            _dateEntreeCtl.text = DateFormat.yMd().format(date);
                           });
                         }
                       }),
                   new DropdownButton<String>(
                     value: _currentMotif,
                     items: _motifEntreeItems,
-                    hint: Text("Selectionnez une cause d'entree",style: TextStyle(color: Colors.lightGreen,)),
+                    hint: Text(S.of(context).entree_select,style: TextStyle(color: Colors.lightGreen,)),
                     onChanged: _changedMotifEntreeItem,
                   )
 
@@ -118,7 +119,7 @@ class _EntreePageState extends State<EntreePage> {
       ),
       floatingActionButton: new FloatingActionButton(
         onPressed: _openAddEntryDialog,
-        tooltip: 'Ajouter une bête',
+        tooltip: S.of(context).tooltip_add_beast,
         child: new Icon(Icons.add),
       ),
     );
@@ -150,24 +151,24 @@ class _EntreePageState extends State<EntreePage> {
 
   void _saveEntree() {
     if (_dateEntreeCtl.text.isEmpty) {
-      showError("Pas de date d'entréee");
+      showError(S.of(context).noEntryDate);
       return;
     }
 
     if ( _currentMotif == null) {
-      showError("Cause d'entrée obligatoire");
+      showError(S.of(context).entree_reason_required);
       return;
     }
     if (_currentMotif!.isEmpty) {
-      showError("Cause d'entrée obligatoire");
+      showError(S.of(context).entree_reason_required);
       return;
     }
     if (_sheeps.length == 0) {
-      showError("Liste des betes vide");
+      showError(S.of(context).empty_list);
       return;
     }
-
-    var message  = this._bloc.saveEntree(_dateEntreeCtl.text, _currentMotif!, this._sheeps);
+    DateTime dateEntree = DateFormat.yMd().parse(_dateEntreeCtl.text);
+    var message  = this._bloc.saveEntree(dateEntree, _currentMotif!, this._sheeps);
     message
       .then( (message) {goodSaving(message);})
       .catchError( (message) {showError(message);});
@@ -181,7 +182,7 @@ class _EntreePageState extends State<EntreePage> {
   }
 
   void goodSaving(String message) {
-    message = "Entree : " + message;
+    message = S.of(context).input + " : " + message;
     Navigator.pop(context, message);
   }
 
@@ -204,10 +205,11 @@ class _EntreePageState extends State<EntreePage> {
     super.initState();
     _sheeps = [];
     //_motifEntreeItems = _getMotifEntreeItems();
-    _dateEntreeCtl.text = _df.format(DateTime.now());
+    _dateEntreeCtl.text = DateFormat.yMd().format(DateTime.now());
+    /*
     new Future.delayed(Duration.zero,() {
       _motifEntreeItems = _getMotifEntreeItems(context);
-    });
+    });*/
     this._adBanner = BannerAd(
       adUnitId: _getBannerAdUnitId()!, //'<ad unit ID>',
       size: AdSize.banner,
@@ -216,6 +218,11 @@ class _EntreePageState extends State<EntreePage> {
     );
     this._adBanner!.load();
   }
+
+  void didChangeDependencies() {
+    _motifEntreeItems  = this._getMotifEntreeItems(context);
+  }
+
   @override
   void dispose() {
     super.dispose();

@@ -49,7 +49,7 @@ class _SortiePageState extends State<SortiePage> {
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: new Text('Sortie'),
+        title: new Text(S.of(context).output),
       ),
       body:
       new Column(
@@ -64,11 +64,11 @@ class _SortiePageState extends State<SortiePage> {
                       keyboardType: TextInputType.datetime,
                       controller: _dateSortieCtl,
                       decoration: InputDecoration(
-                          labelText: 'Date de sortie',
+                          labelText: S.of(context).dateDeparture,
                           hintText: 'jj/mm/aaaa'),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'Pas de date de sortie';
+                          return S.of(context).noDateDeparture;
                         }},
                       onSaved: (value) {
                         setState(() {
@@ -94,7 +94,7 @@ class _SortiePageState extends State<SortiePage> {
                   new DropdownButton<String>(
                     value: _currentMotif,
                     items: _motifSortieItems,
-                    hint: Text('Selectionnez une cause de sortie',style: TextStyle(color: Colors.lightGreen,)),
+                    hint: Text(S.of(context).output_select,style: TextStyle(color: Colors.lightGreen,)),
                     onChanged: changedMotifSortieItem,
                   )
 
@@ -104,7 +104,7 @@ class _SortiePageState extends State<SortiePage> {
             child: Sheeps(this._sheeps, this)),
             ElevatedButton(
                 //color: Colors.lightGreen[900],
-                child: Text('Enregistrer',
+                child: Text(S.of(context).bt_save,
                   style: new TextStyle(color: Colors.white, ),),
                 onPressed: _saveSortie)
           ]
@@ -112,7 +112,7 @@ class _SortiePageState extends State<SortiePage> {
       ),
       floatingActionButton: new FloatingActionButton(
         onPressed: _openAddEntryDialog,
-        tooltip: 'Ajouter une bête',
+        tooltip: S.of(context).tooltip_add_beast,
         child: new Icon(Icons.add),
       ),
     );
@@ -120,20 +120,20 @@ class _SortiePageState extends State<SortiePage> {
 
   void _saveSortie() {
     if (_dateSortieCtl.text.isEmpty) {
-      showError("Pas de date de sortie");
+      showError(S.of(context).noDateDeparture);
       return;
     }
 
     if ( _currentMotif == null) {
-      showError("Cause de sortie obligatoire");
+      showError(S.of(context).output_reason_required);
       return;
     }
     if (_currentMotif!.isEmpty) {
-      showError("Cause de sortie obligatoire");
+      showError(S.of(context).output_reason_required);
       return;
     }
     if (_sheeps.length == 0) {
-      showError("Liste des betes vide");
+      showError(S.of(context).empty_list);
       return;
     }
 
@@ -152,7 +152,7 @@ class _SortiePageState extends State<SortiePage> {
   }
 
   void goodSaving(String message) {
-    message = "Sortie : " + message;
+    message = S.of(context).output + " : " + message;
     Navigator.pop(context, message);
   }
 
@@ -170,11 +170,15 @@ class _SortiePageState extends State<SortiePage> {
       }
   }
 
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _motifSortieItems = _getMotifSortieItems();
+  }
+
   @override
   void initState() {
     super.initState();
     _sheeps = [];
-    _motifSortieItems = _getMotifSortieItems();
     _dateSortieCtl.text = _df.format(DateTime.now());
   }
 

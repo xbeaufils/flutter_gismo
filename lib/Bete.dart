@@ -251,7 +251,7 @@ class _BetePageState extends State<BetePage> {
           _numMarquageCtrl.text,
           _nom,
           _obs,
-          _dateEntreCtrl.text,
+          DateFormat.yMd().parse(_dateEntreCtrl.text),
           _sex!,
           _motif);
       _existant = await _bloc.checkBete(_bete!);
@@ -261,7 +261,7 @@ class _BetePageState extends State<BetePage> {
       _bete!.numMarquage = _numMarquageCtrl.text;
       _bete!.nom = _nom!;
       _bete!.observations = _obs!;
-      _bete!.dateEntree =  _dateEntreCtrl.text;
+      _bete!.dateEntree =  DateFormat.yMd().parse(_dateEntreCtrl.text);
       _bete!.sex = _sex!;
       if (_motif != null)
         _bete!.motifEntree = _motif!;
@@ -298,7 +298,7 @@ class _BetePageState extends State<BetePage> {
     if (_bete == null )
       _dateEntreCtrl.text = df.format(_selectedDate);
     else {
-      _dateEntreCtrl.text = _bete!.dateEntree;
+      _dateEntreCtrl.text = DateFormat.yMd().format(_bete!.dateEntree);
       _numBoucleCtrl.text = _bete!.numBoucle;
       _numMarquageCtrl.text = _bete!.numMarquage;
       _nom = _bete!.nom;

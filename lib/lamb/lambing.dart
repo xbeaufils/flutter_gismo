@@ -196,7 +196,7 @@ class _LambingPageState extends State<LambingPage> {
   }
 
   void _addPere() async {
-    this._lambing.setDateAgnelage( _dateAgnelageCtl.text );
+    this._lambing.setDateAgnelage( DateFormat.yMd().parse(_dateAgnelageCtl.text) );
     Bete ? pere;
     if (this._bloc.isLogged() != null) {
       if (this._bloc.isLogged()!) {
@@ -281,7 +281,7 @@ class _LambingPageState extends State<LambingPage> {
   }
 
   void saveLambing() {
-    _lambing.setDateAgnelage(_dateAgnelageCtl.text);
+    _lambing.setDateAgnelage(DateFormat.yMd().parse(_dateAgnelageCtl.text));
     _lambing.observations = _obsCtl.text;
     _lambing.adoption = _adoption.key;
     _lambing.qualite = _agnelage.key;
@@ -326,7 +326,7 @@ class _LambingPageState extends State<LambingPage> {
     }
     else {
       _lambing = this.widget._currentLambing!;
-      _dateAgnelageCtl.text = _lambing.dateAgnelage!;
+      _dateAgnelageCtl.text = DateFormat.yMd().format(_lambing.dateAgnelage!);
       if (_lambing.observations != null)
         _obsCtl.text = _lambing.observations!;
       _adoption = AdoptionHelper.getAdoption(_lambing.adoption!);
@@ -364,7 +364,7 @@ class _LambingPageState extends State<LambingPage> {
     if (lamb.dateDeces != null)
       return Column(children: <Widget>[
         Text(CauseMortExtension.getValue(lamb.motifDeces!).name),
-        Text(lamb.dateDeces!),
+        Text(DateFormat.yMd().format(lamb.dateDeces!)),
       ],);
 
     return
