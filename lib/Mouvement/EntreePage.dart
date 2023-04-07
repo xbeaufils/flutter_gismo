@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
@@ -211,14 +210,15 @@ class _EntreePageState extends State<EntreePage> {
     _sheeps = [];
     _motifEntreeItems = _getMotifEntreeItems();
     _dateEntreeCtl.text = _df.format(DateTime.now());
-
-    this._adBanner = BannerAd(
-      adUnitId: _getBannerAdUnitId()!, //'<ad unit ID>',
-      size: AdSize.banner,
-      request: AdRequest(),
-      listener: BannerAdListener(),
-    );
-    this._adBanner!.load();
+    if ( ! _bloc.isLogged()!) {
+      this._adBanner = BannerAd(
+        adUnitId: _getBannerAdUnitId()!, //'<ad unit ID>',
+        size: AdSize.banner,
+        request: AdRequest(),
+        listener: BannerAdListener(),
+      );
+      this._adBanner!.load();
+    }
   }
   @override
   void dispose() {
