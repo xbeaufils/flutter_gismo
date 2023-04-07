@@ -111,7 +111,7 @@ class _SailliePageState extends State<SailliePage> {
       _dateSaillieCtl.text = _df.format(DateTime.now());
     }
     else {
-      _dateSaillieCtl.text = this.widget._currentSaillie!.dateSaillie!;
+      _dateSaillieCtl.text = DateFormat.yMd().format(this.widget._currentSaillie!.dateSaillie!);
       _numBouclePere = (this.widget._currentSaillie!.numBouclePere != null) ? this.widget._currentSaillie!.numBouclePere! : "";
       _numMarquagePere =(this.widget._currentSaillie!.numMarquagePere != null) ? this.widget._currentSaillie!.numMarquagePere! : "";
     }
@@ -150,7 +150,7 @@ class _SailliePageState extends State<SailliePage> {
     if (this.widget._currentSaillie == null)
       this.widget._currentSaillie = new SaillieModel();
     this.widget._currentSaillie!.idMere = this.widget._bete.idBd!;
-    this.widget._currentSaillie!.dateSaillie = _dateSaillieCtl.text;
+    this.widget._currentSaillie!.dateSaillie = DateFormat.yMd().parse(_dateSaillieCtl.text);
     this.widget._currentSaillie!.idPere = _idPere!;
     message =
       await this._bloc.saveSaillie(this.widget._currentSaillie!);

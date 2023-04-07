@@ -41,8 +41,8 @@ class PeseePageState extends State<PeseePage> {
                 keyboardType: TextInputType.datetime,
                 controller: _datePeseeCtl,
                 decoration: InputDecoration(
-                    labelText: S.of(context).weighing_date,
-                    hintText: 'jj/mm/aaaa'),
+                    labelText: S.of(context).weighing_date),
+                    //hintText: 'jj/mm/aaaa'),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return S.of(context).no_weighing_date;
@@ -56,7 +56,7 @@ class PeseePageState extends State<PeseePage> {
                   DateTime ? date = DateTime.now();
                   FocusScope.of(context).requestFocus(new FocusNode());
                   date = await showDatePicker(
-                      locale: const Locale("fr","FR"),
+                      //locale: const Locale("fr","FR"),
                       context: context,
                       initialDate:DateTime.now(),
                       firstDate:DateTime(1900),
@@ -97,7 +97,7 @@ class PeseePageState extends State<PeseePage> {
   @override
   void initState() {
     super.initState();
-    _datePeseeCtl.text = _df.format(DateTime.now());
+    _datePeseeCtl.text = DateFormat.yMd().format(DateTime.now());
   }
 
   void _savePesee() async {
@@ -112,9 +112,9 @@ class PeseePageState extends State<PeseePage> {
       _isSaving = true;
     });
     if (this.widget._bete != null)
-      message = await this._bloc.savePesee(this.widget._bete!, poids, _datePeseeCtl.text);
+      message = await this._bloc.savePesee(this.widget._bete!, poids, DateFormat.yMd().parse( _datePeseeCtl.text) );
     if (this.widget._lamb != null)
-      message = await this._bloc.savePeseeLamb(this.widget._lamb!, poids, _datePeseeCtl.text);
+      message = await this._bloc.savePeseeLamb(this.widget._lamb!, poids, DateFormat.yMd().parse( _datePeseeCtl.text ) );
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)))
           .closed
           .then((e) => {Navigator.of(context).pop()});
