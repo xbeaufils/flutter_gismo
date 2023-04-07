@@ -43,36 +43,9 @@ class WebDataProvider extends DataProvider {
 
   WebDataProvider(GismoBloc bloc) : super(bloc) {
     _gismoHttp = new GismoHttp(bloc);
-    //_dio.interceptors.add(LogInterceptor(responseBody: false));
-    /*
-    _dio.interceptors.add(InterceptorsWrapper(
+  }
+  final DateFormat _df = new DateFormat('dd/MM/yyyy');
 
-      onRequest: (RequestOptions options,RequestInterceptorHandler requestInterceptorHandler) => requestInterceptor(options, requestInterceptorHandler),
-      onResponse: (Response<dynamic> options,ResponseInterceptorHandler requestInterceptorHandler) => responseInterceptor(options, requestInterceptorHandler),
-      onError: (DioError dioError,ErrorInterceptorHandler requestInterceptorHandler) => onError(dioError,requestInterceptorHandler)
-    ));
-     */
-  }
-/*
-  void responseInterceptor(Response<dynamic> response,ResponseInterceptorHandler handler) {
-    return handler.next(response) ;// super.onResponse(response, handler);
-  }
-
-  void requestInterceptor(RequestOptions options, RequestInterceptorHandler handler)  {
-    //SharedPreferences prefs = await SharedPreferences.getInstance();
-    //String token = prefs.getString("token");
-    if (super.token != null)
-      //options.headers.addAll({"token": super.token});
-      options.headers["token"] = super.token;
-    return handler.next(options);
-    //return options;
-  }
-
-  void onError(DioError dioError,ErrorInterceptorHandler handler) {
-    debug.log("dioError " + dioError.toString(), name: "WebDataProvider::onError");
-    return handler.next(dioError);
-  }
-*/
   Future<User> auth(User user) async {
     try {
       //final response = await _dio.post( Environnement.getUrlTarget() + '/user/auth', data: user.toMap());
@@ -262,10 +235,10 @@ class WebDataProvider extends DataProvider {
   }
 
   @override
-  Future<String> saveSortie(String date, String motif, List<Bete> lstBete) async {
+  Future<String> saveSortie(DateTime date, String motif, List<Bete> lstBete) async {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['cause'] = motif;
-    data['dateSortie'] = date;
+    data['dateSortie'] = _df.format(date);
     data['lstBete'] = lstBete.map((bete) => bete.toJson()).toList();
     try {
       final response = await _gismoHttp.doPostMessage(
@@ -278,11 +251,11 @@ class WebDataProvider extends DataProvider {
 
   @override
   Future<String> saveEntree(String cheptel, DateTime date, String motif, List<Bete> lstBete) async {
-    DateFormat df = new DateFormat('dd/MM/yyyy');
+
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['cheptel'] = cheptel;
     data['cause'] = motif;
-    data['dateEntree'] = df.format( date );
+    data['dateEntree'] = _df.format( date );
     data['lstBete'] = lstBete.map((bete) => bete.toJson()).toList();
     try {
       final response = await _gismoHttp.doPostMessage(

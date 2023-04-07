@@ -112,10 +112,10 @@
   "adoption_abandon" : "Abandoned while fleeing",
   "adoption_tenir" : "Hold for breastfeeding",
   "adoption_infanticide" : "Kill one",
-  "agnelage_seul" : "Seule",
-  "agnelage_aide": "Aidée",
+  "agnelage_seul" : "Alone",
+  "agnelage_aide": "Helped",
   "agnelage_replace": "Agneau replacé",
-  "agnelage_delivrance" : "Fouillée pour la délivrance",
+  "agnelage_delivrance" : "Manual remove of retained placenta",
   "agnelage_fouille": "Fouillée pour l'agneau",
 
   "mort_mise_bas" : "Farrowing",

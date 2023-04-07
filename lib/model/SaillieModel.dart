@@ -1,12 +1,15 @@
+import 'package:intl/intl.dart';
+
 class SaillieModel {
   int ? idBd;
-  String ? dateSaillie;
+  DateTime ? dateSaillie;
   late int idMere;
   String ? numBoucleMere;
   String ? numMarquageMere;
   late int idPere;
   String ? numBouclePere;
   String ? numMarquagePere;
+  final _df = new DateFormat('dd/MM/yyyy');
 
   SaillieModel();
 
@@ -16,13 +19,13 @@ class SaillieModel {
       data["idBd"] = idBd;
     data["idMere"] = idMere;
     data["idPere"] = idPere;
-    data["dateSaillie"] = dateSaillie;
+    data["dateSaillie"] = _df.format(dateSaillie!);
     return data;
   }
 
   SaillieModel.fromResult(result) {
     idBd = result["idBd"];
-    dateSaillie = result["dateSaillie"];
+    dateSaillie = _df.parse(result["dateSaillie"]);
     idMere = result["idMere"];
     numBoucleMere = result["numBoucleMere"];
     numMarquageMere = result["numMarquageMere"];

@@ -38,8 +38,7 @@ class _LambingPageState extends State<LambingPage> {
   late LambingModel _lambing;
   BannerAd ? _adBanner;
 
-  DateTime selectedDate = DateTime.now();
-  final df = new DateFormat('dd/MM/yyyy');
+  DateTime _selectedDate = DateTime.now();
   AdoptionEnum _adoption = AdoptionEnum.level0;
   AgnelageEnum _agnelage = AgnelageEnum.level0;
 
@@ -73,8 +72,7 @@ class _LambingPageState extends State<LambingPage> {
                       keyboardType: TextInputType.datetime,
                       controller: _dateAgnelageCtl,
                       decoration: InputDecoration(
-                                    labelText: S.of(context).lambing_date,
-                                    hintText: 'jj/mm/aaaa'),
+                                    labelText: S.of(context).lambing_date),
                       validator: (value) {
                                   if (value!.isEmpty) {
                                     return S.of(context).enter_lambing_date;
@@ -96,7 +94,7 @@ class _LambingPageState extends State<LambingPage> {
                                   lastDate: DateTime(2100)) as DateTime;
                               if (date != null) {
                                 setState(() {
-                                  _dateAgnelageCtl.text = df.format(date);
+                                  _dateAgnelageCtl.text = DateFormat.yMd().format(date);
                                 });
                               }
                             }),
@@ -320,7 +318,7 @@ class _LambingPageState extends State<LambingPage> {
     super.initState();
     if (this.widget._currentLambing == null) {
       _lambing = new LambingModel(this.widget._mere!.idBd!);
-      _dateAgnelageCtl.text = df.format(selectedDate);
+      _dateAgnelageCtl.text = DateFormat.yMd().format(_selectedDate);
       _adoption = AdoptionEnum.level0;
       _agnelage = AgnelageEnum.level0;
     }

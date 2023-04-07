@@ -64,8 +64,8 @@ class _SortiePageState extends State<SortiePage> {
                       keyboardType: TextInputType.datetime,
                       controller: _dateSortieCtl,
                       decoration: InputDecoration(
-                          labelText: S.of(context).dateDeparture,
-                          hintText: 'jj/mm/aaaa'),
+                          labelText: S.of(context).dateDeparture),
+                          //hintText: 'jj/mm/aaaa'),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return S.of(context).noDateDeparture;
@@ -79,8 +79,6 @@ class _SortiePageState extends State<SortiePage> {
                         DateTime date = DateTime.now();
                         FocusScope.of(context).requestFocus(new FocusNode());
                         date = await showDatePicker(
-
-                          locale: const Locale("fr","FR"),
                           context: context,
                           initialDate:DateTime.now(),
                           firstDate:DateTime(1900),
@@ -137,7 +135,7 @@ class _SortiePageState extends State<SortiePage> {
       return;
     }
 
-    var message  = this._bloc.saveSortie(_dateSortieCtl.text, _currentMotif!, this._sheeps);
+    var message  = this._bloc.saveSortie(DateFormat.yMd().parse(_dateSortieCtl.text), _currentMotif!, this._sheeps);
     message
       .then( (message) {goodSaving(message);})
       .catchError( (message) {showError(message);});

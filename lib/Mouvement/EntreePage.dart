@@ -167,8 +167,7 @@ class _EntreePageState extends State<EntreePage> {
       showError(S.of(context).empty_list);
       return;
     }
-    DateTime dateEntree = DateFormat.yMd().parse(_dateEntreeCtl.text);
-    var message  = this._bloc.saveEntree(dateEntree, _currentMotif!, this._sheeps);
+    var message  = this._bloc.saveEntree(DateFormat.yMd().parse(_dateEntreeCtl.text), _currentMotif!, this._sheeps);
     message
       .then( (message) {goodSaving(message);})
       .catchError( (message) {showError(message);});

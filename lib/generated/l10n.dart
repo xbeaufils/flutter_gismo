@@ -1110,20 +1110,20 @@ class S {
     );
   }
 
-  /// `Seule`
+  /// `Alone`
   String get agnelage_seul {
     return Intl.message(
-      'Seule',
+      'Alone',
       name: 'agnelage_seul',
       desc: '',
       args: [],
     );
   }
 
-  /// `Aidée`
+  /// `Helped`
   String get agnelage_aide {
     return Intl.message(
-      'Aidée',
+      'Helped',
       name: 'agnelage_aide',
       desc: '',
       args: [],
@@ -1140,10 +1140,10 @@ class S {
     );
   }
 
-  /// `Fouillée pour la délivrance`
+  /// `Manual remove of retained placenta`
   String get agnelage_delivrance {
     return Intl.message(
-      'Fouillée pour la délivrance',
+      'Manual remove of retained placenta',
       name: 'agnelage_delivrance',
       desc: '',
       args: [],

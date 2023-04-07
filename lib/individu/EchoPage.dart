@@ -26,7 +26,7 @@ class EchoPageState extends State<EchoPage> {
 
   int _nombre = 0;
 
-  final _df = new DateFormat('dd/MM/yyyy');
+  //final _df = new DateFormat('dd/MM/yyyy');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool _isSaving = false;
 
@@ -67,7 +67,7 @@ class EchoPageState extends State<EchoPage> {
                       lastDate: DateTime(2100)) as DateTime;
                   if (date != null) {
                     setState(() {
-                      _dateEchoCtl.text = _df.format(date);
+                      _dateEchoCtl.text = DateFormat.yMd().format(date);
                     });
                   }
                 }),
@@ -146,7 +146,7 @@ class EchoPageState extends State<EchoPage> {
                       lastDate: DateTime(2100)) as DateTime;
                   if (date != null) {
                     setState(() {
-                      _dateSaillieCtl.text = _df.format(date);
+                      _dateSaillieCtl.text = DateFormat.yMd().format(date);
                     });
                   }
                 }),
@@ -171,7 +171,7 @@ class EchoPageState extends State<EchoPage> {
                       lastDate: DateTime(2100));
                   if (date != null) {
                     setState(() {
-                      _dateAgnelageCtl.text = _df.format(date);
+                      _dateAgnelageCtl.text = DateFormat.yMd().format(date);
                     });
                   }
                 }),
@@ -247,14 +247,14 @@ class EchoPageState extends State<EchoPage> {
   void initState() {
     super.initState();
     if (this.widget._currentEcho == null)
-      _dateEchoCtl.text = _df.format(DateTime.now());
+      _dateEchoCtl.text = DateFormat.yMd().format(DateTime.now());
     else {
       _nombre = this.widget._currentEcho!.nombre;
-      _dateEchoCtl.text = this.widget._currentEcho!.dateEcho;
+      _dateEchoCtl.text = DateFormat.yMd().format(this.widget._currentEcho!.dateEcho);
       if (this.widget._currentEcho!.dateAgnelage != null)
-        _dateAgnelageCtl.text = this.widget._currentEcho!.dateAgnelage!;
+        _dateAgnelageCtl.text = DateFormat.yMd().format(this.widget._currentEcho!.dateAgnelage!);
       if (this.widget._currentEcho!.dateSaillie != null)
-      _dateSaillieCtl.text = this.widget._currentEcho!.dateSaillie!;
+      _dateSaillieCtl.text = DateFormat.yMd().format(this.widget._currentEcho!.dateSaillie!);
     }
    // _nec = this.widget._currentLevel;
   }
@@ -278,14 +278,14 @@ class EchoPageState extends State<EchoPage> {
     if (this.widget._currentEcho == null)
       this.widget._currentEcho = new EchographieModel();
     this.widget._currentEcho!.bete_id = this.widget._bete.idBd!;
-    this.widget._currentEcho!.dateEcho = _dateEchoCtl.text;
+    this.widget._currentEcho!.dateEcho = DateFormat.yMd().parse(_dateEchoCtl.text);
     this.widget._currentEcho!.nombre = _nombre;
     if (_dateSaillieCtl.text.isNotEmpty)
-      this.widget._currentEcho!.dateSaillie = _dateSaillieCtl.text;
+      this.widget._currentEcho!.dateSaillie = DateFormat.yMd().parse(_dateSaillieCtl.text);
     else
       this.widget._currentEcho!.dateSaillie = null;
     if (_dateAgnelageCtl.text.isNotEmpty )
-      this.widget._currentEcho!.dateAgnelage = _dateAgnelageCtl.text;
+      this.widget._currentEcho!.dateAgnelage = DateFormat.yMd().parse(_dateAgnelageCtl.text);
     else
       this.widget._currentEcho!.dateAgnelage = null;
     message =
