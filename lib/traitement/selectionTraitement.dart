@@ -72,9 +72,9 @@ class _SelectionPageState extends State<SelectionPage> {
         ),
       ),
       Center(child:
-        RaisedButton(
+        ElevatedButton(
             child: Text('Poursuivre', style: new TextStyle(color: Colors.white, ),),
-            color: Colors.lightGreen[700],
+            //color: Colors.lightGreen[700],
             onPressed: _openTraitement),
       )
     ],

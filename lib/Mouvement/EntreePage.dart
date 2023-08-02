@@ -1,13 +1,11 @@
 import 'dart:io';
 
-import 'package:admob_flutter/admob_flutter.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-//import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 
 class EntreePage extends StatefulWidget {
@@ -26,7 +24,7 @@ class _EntreePageState extends State<EntreePage> {
   late List<Bete> _sheeps;
   String ?  _currentMotif;
   late List<DropdownMenuItem<String>> _motifEntreeItems;
-  //BannerAd ? _adBanner;
+  BannerAd ? _adBanner;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   List<DropdownMenuItem<String>> _getMotifEntreeItems() {
@@ -109,10 +107,10 @@ class _EntreePageState extends State<EntreePage> {
               )),
           Expanded(
             child: Sheeps(this._sheeps, this)),
-          RaisedButton(
+          ElevatedButton(
             child: Text('Enregistrer',
                 style: new TextStyle(color: Colors.white, ),),
-            color: Colors.lightGreen[700],
+            //color: Colors.lightGreen[700],
             onPressed: _saveEntree),
           (this._bloc.isLogged()!) ?
             Container():_getAdmobAdvice()
@@ -130,25 +128,21 @@ class _EntreePageState extends State<EntreePage> {
       ),
     );
   }
+
   Widget _getAdmobAdvice() {
     if (this._bloc.isLogged() ! ) {
       return Container();
     }
-
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
-      return
-        Card(child:
-        AdmobBanner(
-          adUnitId: _getBannerAdUnitId()!,
-          adSize: AdmobBannerSize.BANNER,)
-         /* Container(
-            height:  this._adBanner!.size.height.toDouble(),
-            width:  this._adBanner!.size.width.toDouble(),
-            child: AdWidget(ad:  this._adBanner!))*/);
-
+      return Card(
+            child: Container(
+                height:  this._adBanner!.size.height.toDouble(),
+                width:  this._adBanner!.size.width.toDouble(),
+                child: AdWidget(ad:  this._adBanner!)));
     }
     return Container();
   }
+
 
   String ? _getBannerAdUnitId() {
     if (Platform.isIOS) {
@@ -216,14 +210,15 @@ class _EntreePageState extends State<EntreePage> {
     _sheeps = [];
     _motifEntreeItems = _getMotifEntreeItems();
     _dateEntreeCtl.text = _df.format(DateTime.now());
-    /*
-    this._adBanner = BannerAd(
-      adUnitId: _getBannerAdUnitId()!, //'<ad unit ID>',
-      size: AdSize.banner,
-      request: AdRequest(),
-      listener: BannerAdListener(),
-    );
-    this._adBanner!.load();*/
+    if ( ! _bloc.isLogged()!) {
+      this._adBanner = BannerAd(
+        adUnitId: _getBannerAdUnitId()!, //'<ad unit ID>',
+        size: AdSize.banner,
+        request: AdRequest(),
+        listener: BannerAdListener(),
+      );
+      this._adBanner!.load();
+    }
   }
   @override
   void dispose() {

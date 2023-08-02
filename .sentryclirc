@@ -1,0 +1,6 @@
+[auth]
+token=d892031f6c9e422f8c09d1bb4a574262d900b8259c3e4779946bc66d8642f513
+
+[defaults]
+org=neme-sys
+project=gismo

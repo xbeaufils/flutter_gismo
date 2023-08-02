@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter_gismo/Environnement.dart';
+import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/bloc/Message.dart';
 import 'package:http/http.dart' as http;
@@ -46,6 +46,27 @@ class GismoHttp  {
     }
   }
 
+  Future<String> doDeleteMessage(String url, Object body) async {
+    //Message msg = Message();
+    try {
+      var response = await http.delete(
+          Uri.parse(Environnement.getUrlTarget() + url),
+          headers: _getHeaders(),
+          body: jsonEncode(body)).timeout(Duration(seconds: 5) ).timeout(Duration(seconds: 10));
+      Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
+      if (msg.error) {
+        throw (msg.error);
+      }
+      else {
+        return msg.message;
+      }
+    } on TimeoutException catch (e) {
+      throw (e);
+    } on Error catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      throw (e);
+    }
+  }
 
   Future<String> doPostMessage(String url, Object body) async {
     //Message msg = Message();

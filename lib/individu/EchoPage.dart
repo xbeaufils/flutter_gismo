@@ -176,14 +176,71 @@ class EchoPageState extends State<EchoPage> {
                 }),
 
             (_isSaving) ? CircularProgressIndicator():
-              RaisedButton(
-                child: Text('Enregistrer',
-                  style: new TextStyle(color: Colors.white, ),),
-                color: Colors.lightGreen[700],
-                onPressed: _saveEcho)
+              new Card(child:
+                Flex(
+                  direction: Axis.horizontal,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    (this.widget._currentEcho != null) ?
+                      TextButton(
+                        onPressed: () => _showDialog(context),
+                        child: Text("Supprimer")):
+                      Container(),
+                    ElevatedButton(
+                      child: Text('Enregistrer',
+                      style: new TextStyle(color: Colors.white, ),),
+                    //color: Colors.lightGreen[700],
+                      onPressed: _saveEcho)
+                  ])),
           ]),
 
     );
+  }
+
+  // set up the buttons
+  Widget _cancelButton() {
+    return TextButton(
+      child: Text("Annuler"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget _continueButton() {
+    return TextButton(
+      child: Text("Continuer"),
+      onPressed: () {
+        _delete();
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Future _showDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Suppression"),
+          content: Text(
+              "Voulez vous supprimer cet enregistrement ?"),
+          actions: [
+            _cancelButton(),
+            _continueButton(),
+          ],
+        );
+      },
+    );
+  }
+
+  void _delete () async {
+    if (this.widget._currentEcho != null) {
+      var message  = await _bloc.deleteEcho(this.widget._currentEcho!);
+      Navigator.pop(context, message);
+    }
+    else
+      Navigator.of(context).pop();
   }
 
   @override

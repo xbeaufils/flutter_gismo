@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:admob_flutter/admob_flutter.dart';
+//import 'package:admob_flutter/admob_flutter.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +8,9 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 
 import 'dart:developer' as debug;
 
-//import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:flutter_gismo/menu/MenuPage.dart';
+
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 
 
@@ -27,93 +29,42 @@ class _WelcomePageState extends State<WelcomePage> {
   final GismoBloc _bloc;
 
   _WelcomePageState(this._bloc);
-  //BannerAd ? _adBanner;
+  BannerAd ? _adBanner;
 
-  Widget _getStatus(String message) {
-    if (message == null) message = "";
-    Icon iconConnexion = Icon(Icons.person);
-    Text userName = new Text("utilisateur local");
-    if (_bloc.user == null) {
-      iconConnexion = Icon(Icons.error_outline);
-      userName = new Text("Erreur utilisateur");
-    } else
-      if (_bloc.user!.subscribe == null) {
-        iconConnexion = Icon(Icons.error_outline);
-        userName = new Text("Erreur utilisateur");
-      } else {
-
-        if (_bloc.user!.subscribe!) {
-          iconConnexion = Icon(Icons.verified_user);
-          userName = new Text(_bloc.user!.email!);
-        }
-    }
-    return Card(
-      child: Row(
-        children: <Widget>[
-          iconConnexion,
-          userName,
-          new Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-          ),
-        ],
-      ),
-    );
-  }
-
-  List<Widget> _getActionButton() {
-    List<Widget> actionBtns = List.empty(growable: true);
-    if (!kIsWeb) {
-    // if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
-        if (this._bloc.user!.subscribe!) {
-          actionBtns.add(
-              IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: _choixBt,
-              ));
-        }
-        actionBtns.add(
-            IconButton(
-              icon: Icon(Icons.settings),
-              onPressed: _settingPressed,
-            ));
-
-    }
-    return actionBtns;
-  }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.lightGreen,
-        persistentFooterButtons: <Widget>[
-          (this.widget._message==null)? Container():_getStatus(this.widget._message!),
-        ],
         appBar: new AppBar(
             title: (_bloc.user != null) ?
               new Text('Gismo ' + _bloc.user!.cheptel!):
               new Text('Erreur de connexion'),
             // N'affiche pas la touche back (qui revient à la SplashScreen
-            automaticallyImplyLeading: false,
-            actions: _getActionButton(),
-            ),
-        bottomNavigationBar: this._getFacebookAdvice(),
-        body: ListView(
+            automaticallyImplyLeading: true,
+             ),
+//        bottomNavigationBar: this._navigationBar(),
+        body:
+          ListView(
             scrollDirection: Axis.vertical,
             children: <Widget>[
               Card(
-                child: SingleChildScrollView (
-                  scrollDirection: Axis.horizontal,
-                  child : ButtonBar(
-                    mainAxisSize: MainAxisSize.max,
-                    alignment: MainAxisAlignment.spaceEvenly,
-                    buttonMinWidth: 90.0,
-                    children: <Widget>[
-                      _buildButton("Lot", "assets/Lot.png",_lotPressed),
-                      _buildButton("Individu", "assets/brebis.png", _individuPressed),
-                      _buildButton("Agneaux", 'assets/jumping_lambs.png', _lambPressed),
-                    ]))),
+                child: Center(
+                  child : SingleChildScrollView (
+                    scrollDirection: Axis.horizontal,
+                    child : ButtonBar(
+                      mainAxisSize: MainAxisSize.max,
+                      //alignment: MainAxisAlignment.spaceBetween,
+                        alignment: MainAxisAlignment.center,
+                      buttonMinWidth: 90.0,
+                      children: <Widget>[
+                        _buildButton("Lot", "assets/Lot.png",_lotPressed),
+                        _buildButton("Individu", "assets/brebis.png", _individuPressed),
+                        _buildButton("Agneaux", 'assets/jumping_lambs.png', _lambPressed),
+                      ])))),
               Card(
+                child: Center(
                 child:  SingleChildScrollView (
                   scrollDirection: Axis.horizontal,
                   child: ButtonBar(
@@ -124,8 +75,9 @@ class _WelcomePageState extends State<WelcomePage> {
                       _buildButton("Saillie", "assets/saillie.png", _sailliePressed),
                       _buildButton("Echographie", 'assets/ultrasound.png', _echoPressed),
                       _buildButton("Agnelage", 'assets/lamb.png', _lambingPressed),
-                    ]))),
+                    ])))),
               Card(
+                child: Center(
                 child: SingleChildScrollView (
                   scrollDirection: Axis.horizontal,
                   child: ButtonBar(
@@ -136,8 +88,9 @@ class _WelcomePageState extends State<WelcomePage> {
                       _buildButton("Traitement", "assets/syringe.png",_traitementPressed),
                       _buildButton("Etat corp.", "assets/etat_corporel.png", _necPressed), //Etat corporel
                       _buildButton("Poids", 'assets/peseur.png', _peseePressed), // Pesée
-                  ]))),
+                  ])))),
               Card(
+                child: Center(
                   child: SingleChildScrollView (
                   scrollDirection: Axis.horizontal,
                   child:
@@ -149,30 +102,25 @@ class _WelcomePageState extends State<WelcomePage> {
                       _buildButton("Sortie", "assets/Truck.png", _sortiePressed),
                       _buildButton("Parcelles", "assets/parcelles.png", _parcellePressed),
                     //  _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
-                    ]))),
-             this._getAdmobAdvice(),
-              //this._getFacebookAdvice(),
-            ]));
+                    ])))),
+
+              this._getAdmobAdvice(),
+              this._getFacebookAdvice(),
+            ]),
+        drawer: GismoDrawer(_bloc),);
   }
 
   Widget _getAdmobAdvice() {
     if (this._bloc.isLogged() ! ) {
       return Container();
     }
-     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
+    if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
        return Card(
-         child:
-         /*        Container(
+         child: Container(
             height:  this._adBanner!.size.height.toDouble(),
             width:  this._adBanner!.size.width.toDouble(),
-            child: AdWidget(ad:  this._adBanner!)));*/
-//    }
-//adWidget;
-         AdmobBanner(
-           adUnitId: _getBannerAdUnitId(),
-           adSize: AdmobBannerSize.BANNER,),
-       );
-     }
+            child: AdWidget(ad:  this._adBanner!)));
+    }
     return Container();
   }
 
@@ -200,6 +148,7 @@ class _WelcomePageState extends State<WelcomePage> {
     } else if (Platform.isAndroid) {
       return 'ca-app-pub-9699928438497749/5554017347';
     }
+    debug.log("Unable to find plateform");
     return "";
   }
 
@@ -230,25 +179,28 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   void initState() {
-/*
-    this._adBanner = BannerAd(
-      adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
-      size: AdSize.banner,
-      request: AdRequest(),
-      listener: BannerAdListener(),
-    );
-    this._adBanner!.load();*/
-/*   FacebookAudienceNetwork.init(
-      testingId: "a77955ee-3304-4635-be65-81029b0f5201",
-      iOSAdvertiserTrackingEnabled: true,
-    );*/
-
+    if ( ! _bloc.isLogged()!) {
+      this._adBanner = BannerAd(
+        adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
+        size: AdSize.banner,
+        request: AdRequest(),
+        listener: BannerAdListener(),
+      )..load();
+      // See in https://dev-yakuza.posstree.com/en/flutter/admob/#configure-app-id-on-android
+      debug.log("Load Ad Banner");
+      //this._adBanner!.load();
+      FacebookAudienceNetwork.init(
+        testingId: "a77955ee-3304-4635-be65-81029b0f5201",
+        iOSAdvertiserTrackingEnabled: true,
+      );
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
-    //this._adBanner!.dispose();
+    if (this._adBanner != null)
+      this._adBanner!.dispose();
   }
 
   void _parcellePressed() {
@@ -257,19 +209,6 @@ class _WelcomePageState extends State<WelcomePage> {
     else
       this.showMessage("Les parcelles ne sont pas visibles en mode autonome");
   }
-
-  void _settingPressed() {
-    Future<dynamic> message = Navigator.pushNamed(context, '/config') ;
-    message.then((message) {
-      showMessage(message);
-      setState(() {
-
-      });
-    }).catchError((message) {
-      showMessage(message);
-    });
-  }
-
 
   void _individuPressed() {
     Navigator.pushNamed(context, '/search');
@@ -331,10 +270,5 @@ class _WelcomePageState extends State<WelcomePage> {
 
   void _sailliePressed() {
     Navigator.pushNamed(context, '/saillie');
-  }
-
-  void _choixBt() {
-    Navigator.pushNamed(context, '/bluetooth');
-
   }
 }

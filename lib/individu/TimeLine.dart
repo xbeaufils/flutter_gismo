@@ -1,15 +1,16 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
+import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
 
@@ -125,13 +126,85 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
               leading: _getImageType(event.type),
               title: Text(event.eventName),
               subtitle: Text(event.date),
-              trailing:IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _searchEvent(event), ),
+              trailing:this._eventButton(event),
             );
           },
         );
       },
       future: this._bloc.getEvents(_bete),
     );
+  }
+
+  Widget ? _eventButton(Event event) {
+    switch (event.type) {
+      case EventType.agnelage :
+      case EventType.traitement:
+      case EventType.echo:
+      case EventType.memo:
+        return IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _searchEvent(event), );
+        break;
+      case EventType.saillie:
+      case EventType.NEC:
+      case EventType.pesee:
+        return IconButton(icon: Icon(Icons.delete), onPressed: () => _showDialog(context, event), );
+      default:
+    }
+    return null;
+  }
+
+  Future _showDialog(BuildContext context, Event event) {
+    String message ="Voulez vous supprimer ";
+    if (event.type == EventType.NEC)
+      message += "cette note d'Etat corp ?";
+    if (event.type == EventType.saillie)
+      message += "cette saillie ?";
+    if (event.type == EventType.pesee)
+      message += "cette pesée ?";
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Suppression"),
+          content: Text(
+              message),
+          actions: [
+            _cancelButton(),
+            _continueButton(event),
+          ],
+        );
+      },
+    );
+  }
+  
+  // set up the buttons
+  Widget _cancelButton() {
+    return TextButton(
+      child: Text("Annuler"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget _continueButton(Event event) {
+    return TextButton(
+      child: Text("Continuer"),
+      onPressed: () {
+        if (event.type == EventType.pesee || event.type == EventType.NEC || event.type == EventType.saillie)
+          _deleteEvent(event);
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  void _deleteEvent(Event event) async {
+    String message = await this.widget._bloc.deleteEvent(event);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    /*_scaffoldKey.currentState
+        .showSnackBar(SnackBar(content: Text(message)));*/
+    setState(() {
+
+    });
   }
 
   void _searchEvent(Event event) {
@@ -145,6 +218,12 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       case EventType.echo:
         _bloc.searchEcho(event.idBd).then( (echo) => { _editEcho(echo!)});
         break;
+      case EventType.memo:
+        _bloc.searchMemo(event.idBd).then( (memo) => { _editMemo(memo!) });
+        break;
+      case EventType.saillie:
+      case EventType.NEC:
+      case EventType.pesee:
        default:
     }
   }
@@ -156,7 +235,12 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
         builder: (context) => LambingPage.edit(_bloc, lambing),
       ),
     );
-    navigationResult.then( (message) {if (message != null) _showMessage(message);} );
+    navigationResult.then( (message) {
+      setState(() {
+        if (message != null)
+          _showMessage(message);
+      });
+    } );
 
   }
 
@@ -167,7 +251,12 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
         builder: (context) => SanitairePage.edit(_bloc, traitement),
       ),
     );
-    navigationResult.then( (message) { if (message != null) _showMessage(message);} );
+    navigationResult.then( (message) {
+      if (message != null)
+        setState(() {
+          _showMessage(message);
+        });
+    } );
   }
 
   void _editEcho(EchographieModel  echo)  {
@@ -177,7 +266,27 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
         builder: (context) => EchoPage.edit(_bloc, echo, _bete),
       ),
     );
-    navigationResult.then( (message) { if (message != null) _showMessage(message);} );
+    navigationResult.then( (message) {
+      setState(() {
+        if (message != null)
+          _showMessage(message);
+        });
+     });
+  }
+
+  void _editMemo(MemoModel memo)  {
+    var navigationResult = Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MemoPage.edit(_bloc, memo),
+      ),
+    );
+    navigationResult.then( (message) {
+      setState(() {
+        if (message != null)
+          _showMessage(message);
+      });
+    });
   }
 
   void _viewMere(Bete mere) {
@@ -208,6 +317,8 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
         return new Image.asset("assets/ultrasound.png");
       case EventType.saillie:
         return new Image.asset("assets/saillie.png");
+      case EventType.memo:
+        return new Image.asset("assets/memo.png");
       case EventType.entree:
       case EventType.sortie:
      }

@@ -19,6 +19,7 @@ import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
+import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
@@ -73,23 +74,6 @@ class GismoBloc {
     }
   }
 
-/*
-  Future<String> configBt() async {
-    FlutterSecureStorage storage = new FlutterSecureStorage();
-    String address = await storage.read(key: "address");
-    return address;
-  }
- */
-/*
-  void saveBt(bool isBlueTooth, String  ? address) {
-    FlutterSecureStorage storage = new FlutterSecureStorage();
-    storage.write(key: "bluetooth", value: isBlueTooth.toString());
-    if (isBlueTooth)
-      storage.write(key: "address", value: address);
-    else
-      storage.delete(key: "address");
-  }
-*/
   Stream<BluetoothState> streamConnectBluetooth(String address) async* {
     BluetoothState state;
     /*FlutterSecureStorage storage = new FlutterSecureStorage();
@@ -253,6 +237,10 @@ class GismoBloc {
     return "OK";
   }
 
+  Future<String> deleteTraitement(int idBd) {
+    return this._repository!.dataProvider.deleteTraitement(idBd);
+  }
+
   Future<String> saveTraitement(TraitementModel traitement) {
     return this._repository!.dataProvider.saveTraitement(traitement);
   }
@@ -296,6 +284,7 @@ class GismoBloc {
       List<Pesee> lstPoids  = await this._repository!.dataProvider.getPesee(bete);
       List<EchographieModel> lstEcho = await this._repository!.dataProvider.getEcho(bete);
       List<SaillieModel> lstSaillie = await this._repository!.dataProvider.getSaillies(bete);
+      List<MemoModel> lstMemos = await this._repository!.dataProvider.getMemos(bete);
       lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd!, EventType.agnelage, lambing.dateAgnelage!, lambing.lambs.length.toString()))});
       lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement, traitement.debut, traitement.medicament))});
       lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd!, EventType.NEC, note.date, note.note.toString()))});
@@ -311,6 +300,7 @@ class GismoBloc {
         lstEvents.add(new Event.name(saillie.idBd!, EventType.saillie, saillie.dateSaillie!, numBoucleConjoint));
 
       });
+      lstMemos.forEach((note) {lstEvents.add(new Event.name(note.id!, EventType.memo, note.debut!, note.note!)); });
       lstEvents.sort((a, b) =>  _compareDate(a, b));
       return lstEvents;
     }
@@ -344,6 +334,12 @@ class GismoBloc {
         break;
       case EventType.traitement:
         message = await this._repository!.dataProvider.deleteTraitement(event.idBd);
+        break;
+      case EventType.NEC:
+        message = await this._repository!.dataProvider.deleteNec(event.idBd);
+        break;
+      case EventType.saillie:
+        message = await this._repository!.dataProvider.deleteSaillie(event.idBd);
         break;
     }
     return message;
@@ -525,6 +521,10 @@ class GismoBloc {
     }
   }
 
+  Future<String> deleteEcho(EchographieModel echo) {
+    return this._repository!.dataProvider.deleteEcho(echo);
+  }
+
   Future<String> saveSaillie(SaillieModel saillie) async {
     try {
       return this._repository!.dataProvider.saveSaillie(saillie);
@@ -534,11 +534,15 @@ class GismoBloc {
       return "Une erreur et survenue";
     }
   }
-
+  // Lots
   Future<LotModel ?> saveLot(LotModel lot) async {
     lot.cheptel = this._currentUser!.cheptel!;
     LotModel ? newLot  = await this._repository!.dataProvider.saveLot(lot);
     return newLot;
+  }
+
+  Future<String> deleteLot(LotModel lot) {
+    return this._repository!.dataProvider.deleteLot(lot);
   }
 
   Future<List<LotModel>> getLots() {
@@ -585,7 +589,26 @@ class GismoBloc {
   Future<List<Bete>> getLotBeliers(LambingModel lambing) {
     return this._repository!.dataProvider.getLotBeliers(lambing);
   }
+  // Notes
+  Future<List<MemoModel>> getCheptelNotes() {
+    return this._repository!.dataProvider.getCheptelMemos(_currentUser!.cheptel!);
+  }
+  Future<List<MemoModel>> getBeteNotes(Bete bete) {
+    return this._repository!.dataProvider.getMemos(bete);
+  }
 
+  Future<String> saveNote(MemoModel note) {
+    return this._repository!.dataProvider.saveMemo(note);
+  }
+
+  Future<String> deleteNote(MemoModel note) {
+    return this._repository!.dataProvider.delete(note);
+  }
+  Future<MemoModel?> searchMemo(int idBd) {
+    return this._repository!.dataProvider.searchMemo(idBd);
+  }
+
+  // Cadastre
   Future<String> getCadastre(LatLng /*Position*/ myPosition) async {
     if (this._repository!.dataProvider is WebDataProvider) {
        String cadastre = await (this._repository!.dataProvider as WebDataProvider).getCadastre(myPosition);

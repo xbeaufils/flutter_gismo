@@ -13,9 +13,10 @@ import 'package:flutter_gismo/individu/SailliePage.dart';
 import 'package:flutter_gismo/individu/TimeLine.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
+import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
-import 'package:flutter_gismo/model/StatusBluetooth.dart';
+import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
 import 'package:sentry/sentry.dart';
 
@@ -129,7 +130,6 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       return Container();
   }
 
-
   void _readRFID() async {
     try {
       String response = await PLATFORM_CHANNEL.invokeMethod("startRead");
@@ -230,8 +230,10 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       itemCount: _betes == null ? 0 : _filteredBetes.length,
       itemBuilder: (BuildContext context, int index) {
         return new ListTile(
+          leading: (_filteredBetes[index].sex == Sex.male) ? ImageIcon(  AssetImage("assets/male.png")): ImageIcon(  AssetImage("assets/female.png")),
           title: Text( _filteredBetes[index].numBoucle),
           subtitle: Text(_filteredBetes[index].numMarquage ),
+          trailing: (_filteredBetes[index].nom != null) ? Text(_filteredBetes[index].nom! ) : SizedBox(width: 0,height: 0,),
           onTap: () => _selectBete(_filteredBetes[index]),
         );
       },
@@ -262,6 +264,9 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       case GismoPage.saillie:
         page = SailliePage(_bloc, bete);
         break;
+      case GismoPage.note:
+        page = MemoPage(_bloc, bete);
+        break;
       case GismoPage.sortie:
       case GismoPage.lot:
       case GismoPage.sailliePere:
@@ -270,10 +275,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     }
 
     if (page  == null) {
-      Navigator
-          .of(context)
-          .pop(bete);
-
+      Navigator.of(context).pop(bete);
     }
     else {
       var navigationResult = Navigator.push(

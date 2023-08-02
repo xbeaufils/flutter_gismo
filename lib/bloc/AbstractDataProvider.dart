@@ -5,6 +5,7 @@ import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
+import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
@@ -53,17 +54,21 @@ abstract class DataProvider {
   Future<String> deletePesee(int idBd);
   // Echographie
   Future<String> saveEcho(EchographieModel echo);
+  Future<String> deleteEcho(EchographieModel echo);
   Future<EchographieModel?> searchEcho(int idBd);
   Future<List<EchographieModel>> getEcho(Bete bete);
   //  Saillie
   Future<String> saveSaillie(SaillieModel saillie);
   Future<List<SaillieModel>> getSaillies(Bete bete);
+  Future<String> deleteSaillie(int idBd);
   // Note etat corporel
   Future<String> saveNec(NoteModel node);
   Future<List<NoteModel>> getNec(Bete bete);
+  Future<String> deleteNec(int idBd);
   // Lots
   Future<List<LotModel>> getLots(String cheptel) ;
   Future<LotModel?> saveLot(LotModel lot);
+  Future<String> deleteLot(LotModel lot);
   Future<List<Affectation>>getBrebisForLot(int idLot);
   Future<List<Affectation>>getBeliersForLot(int idLot);
   Future<List<Affectation>>getAffectationForBete(int idBete);
@@ -72,4 +77,10 @@ abstract class DataProvider {
   Future<String> remove(Affectation affect);
   Future<String> addBete(LotModel lot, Bete bete, String dateEntree);
   Future<String> deleteAffectation(Affectation affect);
+  // Notes
+  Future<List<MemoModel>> getCheptelMemos(String cheptel) ;
+  Future<List<MemoModel>> getMemos(Bete bete) ;
+  Future<MemoModel?> searchMemo(int id) ;
+  Future<String> saveMemo(MemoModel note);
+  Future<String> delete(MemoModel note) ;
 }

@@ -12,6 +12,7 @@ import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
+import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/ReportModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
@@ -60,6 +61,7 @@ class LocalDataProvider extends DataProvider{
             _createTablePesee(db);
             _createTableEcho(db);
             _createTableSaillie(db);
+            _createTableMemo(db);
           },
          onUpgrade:(db, oldVersion, newVersion) {
           if (oldVersion < 2) {
@@ -91,43 +93,18 @@ class LocalDataProvider extends DataProvider{
           }
           if (oldVersion < 11 )
             this._migrate10to11(db);
-         // if (oldVersion < 12 )
-         //   this._migrate11to12(db);
+          if (oldVersion < 12 )
+            this._migrate11to12(db);
+          if (oldVersion < 13 )
+            this._migrate12to13(db);
+
         },
         // Set the version. This executes the onCreate function and provides a
         // path to perform database upgrades and downgrades.
-        version:12,
+        version:13,
     );
     this._sendReport(database);
-    /*
-    Report report = new Report();
-    report.cheptel = super.cheptel!;
-    List<Map<String, dynamic>> maps = await database.rawQuery("select count(*) as nb from bete");
-    report.betes = maps[0]['nb'];
-    maps = await database.rawQuery("select count(*) as nb from lot");
-    report.lots = maps[0]['nb'];
-    maps = await database.rawQuery("select count(*) as nb from affectation");
-    report.affectations = maps[0]['nb'];
-    maps = await database.rawQuery("select count(*) as nb from traitement");
-    report.traitements = maps[0]['nb'];
-    maps = await database.rawQuery("select count(*) as nb from agneaux");
-    report.agneaux = maps[0]['nb'];
-    maps = await database.rawQuery("select count(*) as nb from agnelage");
-    report.agnelages = maps[0]['nb'];
-    maps = await database.rawQuery("select count(*) as nb from NEC");
-    report.nec = maps[0]['nb'];
-    try {
-      final response = await _gismoHttp.doPostWeb(
-          '/send', report.toJson());
-    }
-    catch(e,stackTrace) {
-      Sentry.captureException(e, stackTrace : stackTrace);
-      //super.bloc.reportError(e, stackTrace);
-      debug.log("message"  , name: "LocalDataProvider::_init");
-    }*/
-    // finally {
-      return database;
-    //}
+    return database;
   }
 
   void _sendReport(Database database ) async {
@@ -199,6 +176,12 @@ class LocalDataProvider extends DataProvider{
     _createTableSaillie(db);
     db.execute("ALTER TABLE `agnelage` ADD COLUMN `pere_id` INTEGER NULL DEFAULT NULL");
   }
+  void _migrate11to12(Database db) {
+  }
+  void _migrate12to13(Database db) {
+    _createTableMemo(db);
+  }
+
   void _createTableAgnelage(Database db) {
     db.execute("CREATE TABLE `agnelage` ( "
         "`id` INTEGER PRIMARY KEY,"
@@ -306,12 +289,22 @@ class LocalDataProvider extends DataProvider{
         " PRIMARY KEY('idBd'))");
 
   }
+  void _createTableMemo(Database db) {
+    db.execute("CREATE TABLE `memo` ("
+        "`id` INTEGER NOT NULL,"
+        "`debut` TEXT NULL DEFAULT NULL,"
+        "`fin` TEXT NULL DEFAULT NULL,"
+        "`classe` TEXT NULL DEFAULT NULL,"
+        "`note` TEXT NULL DEFAULT NULL,"
+        "`bete_id` INTEGER NULL DEFAULT NULL,"
+        "PRIMARY KEY (`id`))");
+  }
 
   @override
   Future<List<Bete>> getBetes(String cheptel) async {
     Database db = await this.database;
     //deleteDatabase(join(await getDatabasesPath(), 'gismo_database.db'));
-    final Future<List<Map<String, dynamic>>> futureMaps = db.query('bete', where: 'cheptel = ? AND dateSortie IS NULL', whereArgs: [cheptel]);
+    final Future<List<Map<String, dynamic>>> futureMaps = db.query('bete', where: 'cheptel = ? AND dateSortie IS NULL', whereArgs: [cheptel], orderBy: 'numBoucle');
     //final Future<List<Map<String, dynamic>>> futureMaps = client.query('car', where: 'id = ?', whereArgs: [id]);
     //futureMaps.then(onValue)
     var maps = await futureMaps;
@@ -341,7 +334,8 @@ class LocalDataProvider extends DataProvider{
       debug.log("Bete non trouvéé " , name: "LocalDataProvider::searchBete");
       return false;
     }
-    return true;
+    Bete beteBd = Bete.fromResult(futureMaps[0]);
+    return  (bete.idBd != beteBd.idBd);
   }
 
   @override
@@ -523,10 +517,17 @@ class LocalDataProvider extends DataProvider{
       return null;
     }
     LambingModel current = new LambingModel.fromResult(futureMaps[0]);
+    if (current.idPere != null) {
+      Bete ? pere = await this._searchBete(current.idPere!);
+      if (pere != null) {
+        current.numMarquagePere = pere.numMarquage;
+        current.numBouclePere = pere.numBoucle;
+      }
+    }
     Bete ? mere = await this._searchBete(current.idMere);
     if (mere != null) {
       current.numMarquageMere = mere.numMarquage;
-    current.numBoucleMere = mere.numBoucle;
+      current.numBoucleMere = mere.numBoucle;
     }
     current.lambs = [];
     List<Map<String, dynamic>> agneaux = await db.query('agneaux',where: 'agnelage_id = ?', whereArgs: [current.idBd]);
@@ -701,11 +702,19 @@ class LocalDataProvider extends DataProvider{
   }
 
   @override
+  Future<String> deleteNec(int idBd) async {
+    Database db = await this.database;
+    int res =   await db.delete("NEC",
+        where: "idBd = ?", whereArgs: <int>[idBd]);
+    return "Suppression effectuée";
+  }
+
+  @override
   Future<String> savePesee(Pesee note) async {
     try {
       Database db = await this.database;
       await db.insert('pesee', note.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
-      return "Enregsitrement de la pesée";
+      return "Enregistrement de la pesée";
     }
     catch(e,stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
@@ -761,6 +770,15 @@ class LocalDataProvider extends DataProvider{
   }
 
   @override
+  Future<String> deleteSaillie(int idBd) async {
+    Database db = await this.database;
+    int res =   await db.delete("saillie",
+        where: "idBd = ?", whereArgs: <int>[idBd]);
+    return "Suppression effectuée";
+  }
+
+
+  @override
   Future<List<SaillieModel>> getSaillies(Bete bete) async {
     List<SaillieModel> tempList = [];
     String sqlCritere;
@@ -808,6 +826,20 @@ class LocalDataProvider extends DataProvider{
       //super.bloc.reportError(e, stackTrace);
     }
     return "Erreur d'enregistrement";
+  }
+
+  @override
+  Future<String> deleteEcho(EchographieModel echo) async {
+    try {
+      Database db = await this.database;
+      int res =   await db.delete("Echo",
+          where: "id = ?", whereArgs: <int>[echo.idBd!]);
+      return "Suppression OK";
+    }
+    catch(e,stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+    }
+    return "Erreur de suppression";
   }
 
   @override
@@ -906,6 +938,27 @@ class LocalDataProvider extends DataProvider{
     return null;
   }
 
+  Future<String> deleteLot(LotModel lot) async {
+    try {
+      List<Affectation> brebis = await this.getBrebisForLot(lot.idb!);
+      if (brebis.isNotEmpty)
+        return "Suppression impossible : des brebis ont des affectations";
+      List<Affectation> beliers = await this.getBeliersForLot(lot.idb!);
+      if (beliers.isNotEmpty)
+        return "Suppression impossible : des beliers ont des affectations";
+      Database db = await this.database;
+      int res =   await db.delete("lot",
+          where: "idBd = ?", whereArgs: <int>[lot.idb!]);
+      return "Suppression effectuée";
+    }
+    catch (e, stacktrace) {
+      debug.log("Error", error: e);
+      Sentry.captureException(e, stackTrace : stacktrace);
+    }
+    return "Erreur de suppression";
+  }
+
+
   @override
   Future<String> addBete(LotModel lot, Bete bete, String dateEntree) async {
     try {
@@ -927,7 +980,7 @@ class LocalDataProvider extends DataProvider{
       //      super.bloc.reportError(e, stackTrace);
       return "Une erreur est survenue :" + e.toString();
     }
-    return "Enregistrement efectué";
+    return "Enregistrement effectué";
   }
 
   @override
@@ -979,6 +1032,69 @@ class LocalDataProvider extends DataProvider{
     }
      return tempList;
   }
+  // Notes
+  Future<List<MemoModel>> getCheptelMemos(String cheptel) async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> maps  = await db.rawQuery(
+        'SELECT _memo.*, _bete.numBoucle, _bete.numMarquage '
+        'FROM memo _memo inner join bete _bete on _memo.bete_id = _bete.id '
+        'where _bete.cheptel= ? '
+        ' AND _memo.fin is null'
+        ,
+        [cheptel]);
+    List<MemoModel> tempList = [];
+    maps.forEach((element) {
+      tempList.add(new MemoModel.fromResult(element)); });
+    return tempList;
+  }
+
+  @override
+  Future<List<MemoModel>> getMemos(Bete bete) async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> maps  = await db.rawQuery(
+        'SELECT _note.*, _bete.numBoucle, _bete.numMarquage '
+            'FROM memo _note inner join bete _bete on _note.bete_id = _bete.id '
+            'where _bete.id= ?',
+        [bete.idBd]);
+    List<MemoModel> tempList = [];
+    for (int i = 0; i < maps.length; i++) {
+      tempList.add(new MemoModel.fromResult(maps[i]));
+    }
+    return tempList;
+
+  }
+
+  Future<String> saveMemo(MemoModel note) async {
+    try {
+      Database db = await this.database;
+      await db.insert("memo", note.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+      return " Enregistrement effectué";
+    }
+    catch(e,stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //super.bloc.reportError(e, stackTrace);
+      debug.log("Error", error: e);
+      return "Erreur d'enregistrement";
+    }
+  }
+
+  Future<MemoModel?> searchMemo(int id) async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> futureMaps = await db.query('memo',where: 'id= ?', whereArgs: [id]);
+    if (futureMaps.length == 0)
+      return null;
+    return MemoModel.fromResult(futureMaps[0]);
+  }
+
+  @override
+  Future<String> delete(MemoModel note) async {
+      Database db = await this.database;
+      int res =   await db.delete("memo",
+          where: "id = ?", whereArgs: <int>[note.id!]);
+      return "Suppression effectuée";
+  }
+
 
   Future<String> backupBd() async {
     String databasePath = await getDatabasesPath();
@@ -994,6 +1110,7 @@ class LocalDataProvider extends DataProvider{
     mapBase['pesee'] =  await db.query('pesee');
     mapBase['traitement'] =  await db.query('traitement');
     mapBase['Echo'] =  await db.query('Echo');
+    mapBase['memo'] =  await db.query('memo');
     return jsonEncode(mapBase);
   }
 
@@ -1036,6 +1153,9 @@ class LocalDataProvider extends DataProvider{
       }
       for (var i = 0; i < mapBase["Echo"].length; i++) {
         db.insert('Echo', mapBase["Echo"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (var i = 0; i < mapBase["memo"].length; i++) {
+        db.insert('memo', mapBase["memo"][i], conflictAlgorithm: ConflictAlgorithm.replace);
       }
 
     }catch (e, stac) {

@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:flutter_gismo/Exception/EventException.dart';
 import 'package:flutter_gismo/bloc/GismoHttp.dart';
 //import 'package:dio/dio.dart';
-import 'package:flutter_gismo/Environnement.dart';
+import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
@@ -14,6 +14,7 @@ import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
+import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
@@ -25,6 +26,7 @@ import 'dart:developer' as debug;
 
 //import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:sentry/sentry.dart';
 
 
 class WebDataProvider extends DataProvider {
@@ -156,7 +158,6 @@ class WebDataProvider extends DataProvider {
     }
   }
 
-
   Future<List<Bete>> getBetes(String cheptel) async {
     final response = await _gismoHttp.doGetList(
         '/bete/cheptel/' + cheptel);
@@ -194,7 +195,6 @@ class WebDataProvider extends DataProvider {
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
-
   }
 
   @override
@@ -337,7 +337,6 @@ class WebDataProvider extends DataProvider {
     return tempList;
   }
 
-
   @override
   Future<String> deleteTraitement(int idBd) async {
     try {
@@ -417,6 +416,23 @@ class WebDataProvider extends DataProvider {
   }
 
   @override
+  Future<String> deleteNec(int idBd) async {
+    try {
+      final response = await _gismoHttp.doGet('/nec/del/' + idBd.toString());
+      if (response['error']) {
+        throw (response['message']);
+      }
+      else {
+        return response['message'];
+      }
+    }
+    catch ( e) {
+      debug.log("Error " + e.toString());
+      return "Error " + e.toString();
+    }
+  }
+
+  @override
   Future<String> savePesee(Pesee pesee) async {
     try {
       final response = await _gismoHttp.doPostMessage(
@@ -453,7 +469,12 @@ class WebDataProvider extends DataProvider {
   Future<String> deletePesee(int idBd) async {
     try {
       final response = await _gismoHttp.doGet('/poids/del/' + idBd.toString());
-      return response['message'];
+      if (response['error']) {
+        throw (response['message']);
+      }
+      else {
+        return response['message'];
+      }
     }
     catch ( e) {
       debug.log("Error " + e.toString());
@@ -489,6 +510,23 @@ class WebDataProvider extends DataProvider {
   }
 
   @override
+  Future<String> deleteSaillie(int idBd) async {
+    try {
+      final response = await _gismoHttp.doGet('/saillie/del/' + idBd.toString());
+      if (response['error']) {
+        throw (response['message']);
+      }
+      else {
+        return response['message'];
+      }
+    }
+    catch ( e) {
+      debug.log("Error " + e.toString());
+      return "Error " + e.toString();
+    }
+  }
+
+  @override
   Future<String> saveEcho(EchographieModel echo) async {
     try {
       final response = await _gismoHttp.doPostMessage(
@@ -497,6 +535,19 @@ class WebDataProvider extends DataProvider {
     }  catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
+  }
+
+  Future<String> deleteEcho(EchographieModel echo) async {
+    try {
+      final response = await _gismoHttp.doDeleteMessage(
+          '/echo/delete', echo.toJson());
+      return response;
+    }
+    catch (e, stacktrace) {
+      debug.log("Error", error: e);
+      Sentry.captureException(e, stackTrace : stacktrace);
+    }
+    return "Erreur de suppression";
   }
 
   @override
@@ -606,6 +657,20 @@ class WebDataProvider extends DataProvider {
     }
   }
 
+  Future<String> deleteLot(LotModel lot) async {
+    try {
+      final response = await _gismoHttp.doDeleteMessage(
+          '/lot/suppress', lot.toJson());
+      return response;
+    }
+    catch (e, stacktrace) {
+      debug.log("Error", error: e);
+      Sentry.captureException(e, stackTrace : stacktrace);
+    }
+    return "Erreur de suppression";
+  }
+
+
   @override
   Future<List<Affectation>> getAffectationForBete(int idBete) async {
     try {
@@ -650,6 +715,62 @@ class WebDataProvider extends DataProvider {
     }
     return tempList;
   }
+  // Notes
+  Future<List<MemoModel>> getCheptelMemos(String cheptel) async {
+    final response = await _gismoHttp.doGetList(
+        '/memo/active/' + cheptel);
+    List<MemoModel> tempList =[];
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new MemoModel.fromResult(response[i]));
+    }
+    return tempList;
+  }
+
+  @override
+  Future<List<MemoModel>> getMemos(Bete bete) async {
+    final response = await _gismoHttp.doGetList(
+        '/memo/get/' + bete.idBd.toString());
+    List<MemoModel> tempList =[];
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new MemoModel.fromResult(response[i]));
+    }
+    return tempList;
+
+  }
+
+  Future<String> saveMemo(MemoModel note) async {
+    try {
+      final response = await _gismoHttp.doPostMessage(
+          '/memo/new', note.toJson());
+      return response;
+    }  catch ( e) {
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+  }
+
+  Future<MemoModel?> searchMemo(int id) async {
+    final response = await _gismoHttp.doGet(
+        '/memp/search/' + id.toString());
+    return new MemoModel.fromResult(response);
+  }
+
+  @override
+  Future<String> delete(MemoModel note) async {
+     try {
+      final response = await _gismoHttp.doGet(
+          '/memo/del/'+ note.id!.toString());
+      if (response['error']) {
+        throw (response['message']);
+      }
+      else {
+        return response['message'];
+      }
+    }
+    catch ( e) {
+      debug.log("Error " + e.toString());
+      return "Error " + e.toString();
+    }
+  }
 
   Future<String> getCadastre( LatLng /*Position*/ /*LocationData*/ myPosition) async {
     try {
@@ -692,6 +813,7 @@ class WebDataProvider extends DataProvider {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
+
   Future<Pature> getPature(String idu) async {
     try {
       final response = await _gismoHttp.doGet(

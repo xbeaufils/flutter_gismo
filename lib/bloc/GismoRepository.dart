@@ -10,6 +10,7 @@ import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
+import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
@@ -83,6 +84,9 @@ class DummyDataProvider extends DataProvider {
   Future<LotModel> saveLot(LotModel lot) {
     throw RepositoryTypeException("Type de repository inconnue");
   }
+  Future<String> deleteLot(LotModel lot) {
+    throw RepositoryTypeException("Type de repository inconnue");
+  }
 
   @override
   Future<List<LotModel>> getLots(String cheptel) {
@@ -96,6 +100,11 @@ class DummyDataProvider extends DataProvider {
 
   @override
   Future<String> saveNec(NoteModel node) {
+    throw RepositoryTypeException("Type de repository inconnue");
+  }
+
+  @override
+  Future<String> deleteNec(int idBd) {
     throw RepositoryTypeException("Type de repository inconnue");
   }
 
@@ -115,12 +124,22 @@ class DummyDataProvider extends DataProvider {
   }
 
   @override
+  Future<String> deleteEcho(EchographieModel echo) {
+    throw RepositoryTypeException("Type de repository inconnue");
+  }
+
+  @override
   Future<String> saveSaillie(SaillieModel echo) {
     throw RepositoryTypeException("Type de repository inconnue");
   }
 
   @override
   Future<List<SaillieModel>> getSaillies(Bete bete) {
+    throw RepositoryTypeException("Type de repository inconnue");
+  }
+
+  @override
+  Future<String> deleteSaillie(int idBd) {
     throw RepositoryTypeException("Type de repository inconnue");
   }
 
@@ -261,6 +280,27 @@ class DummyDataProvider extends DataProvider {
   @override
   Future<List<Bete>> getSaillieBeliers(LambingModel lambing) {
     // TODO: implement getSaillieBeliers
+    throw UnimplementedError();
+  }
+  // Notes
+  Future<List<MemoModel>> getMemos(Bete bete) {
+    throw UnimplementedError();
+  }
+
+  Future<List<MemoModel>> getCheptelMemos(String cheptel) {
+    throw UnimplementedError();
+  }
+
+  Future<String> saveMemo(MemoModel note) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> delete(MemoModel note) {
+    throw UnimplementedError();
+  }
+
+  Future<MemoModel> searchMemo(int id) {
     throw UnimplementedError();
   }
 }

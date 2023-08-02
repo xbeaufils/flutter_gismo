@@ -177,9 +177,9 @@ class LambPageState extends State<LambPage> {
 
   Widget _mainButton() {
     if (this.widget._lamb == null)
-      return new RaisedButton(
+      return new ElevatedButton(
           onPressed:_addLamb,
-          color: Colors.lightGreen[900],
+          //color: Colors.lightGreen[900],
           child:
           new Text(
             "Ajouter",
@@ -187,7 +187,7 @@ class LambPageState extends State<LambPage> {
           )
       );
     return
-      new RaisedButton.icon(
+      new ElevatedButton.icon(
         onPressed:_saveLamb,
       //color: Colors.lightGreen[900],
         icon: Icon(Icons.save),
@@ -348,7 +348,7 @@ class LambPageState extends State<LambPage> {
 
   // set up the buttons
   Widget _cancelButton() {
-    return FlatButton(
+    return TextButton(
       child: Text("Annuler"),
       onPressed: () {
         Navigator.of(context).pop();
@@ -357,7 +357,7 @@ class LambPageState extends State<LambPage> {
   }
 
   Widget _continueButton(Event event) {
-    return FlatButton(
+    return TextButton(
       child: Text("Continuer"),
       onPressed: () {
         if (event.type == EventType.pesee || event.type == EventType.traitement)

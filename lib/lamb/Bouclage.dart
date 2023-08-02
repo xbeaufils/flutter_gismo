@@ -91,13 +91,13 @@ class _BouclagePageState extends State<BouclagePage> {
                           });
                         }
                     ),
-                    new RaisedButton(
+                    new ElevatedButton(
                       child: new Text(
                         'Poser la boucle',
                         style: new TextStyle(color: Colors.white),
                       ),
                       onPressed: _createBete,
-                      color: Colors.lightGreen[900],
+                      //color: Colors.lightGreen[900],
                     ),
                   ]
               ),

@@ -4,14 +4,15 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:admob_flutter/admob_flutter.dart';
+//import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/Environnement.dart';
+import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
-//import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:http/io_client.dart';
+import 'package:flutter_gismo/flavor/Flavor.dart';
+import 'package:flutter_gismo/flavor/FlavorOvin.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sentry/sentry.dart';
 
 import 'package:http/http.dart' as http;
@@ -28,6 +29,7 @@ void main() async {
   /// added to SecurityContext.
   /// Wrapped in try catch in case the certificate is already trusted by
   /// device/os, which will cause an exception to be thrown.
+  /*
   HttpClient customHttpClient({String cert}) {
     SecurityContext context = SecurityContext.defaultContext;
 
@@ -52,37 +54,42 @@ void main() async {
 
     return httpClient;
   }
-
+  */
   /// Use package:http Client with our custom dart:io HttpClient with added
   /// LetsEncrypt trusted certificate
+  /*
   http.Client createLEClient() {
     IOClient ioClient;
     ioClient = IOClient(customHttpClient(cert: ISRG_X1));
     return ioClient;
   }
-
+  */
   /// Example using a custom package:http Client
   /// that will work with devices missing LetsEncrypt
   /// ISRG Root X1 certificates, like old Android 7 devices.
   //test('HTTP client to LetsEncrypt SSL website', () async {
-  const sslUrl = 'https://valid-isrgrootx1.letsencrypt.org/';
-    http.Client _client = createLEClient();
-    http.Response _response = await _client.get(Uri.parse(sslUrl) );
-    print(_response.body);
-    //expect(_response.statusCode, 200);
-  //});
+
   /*
+  const sslUrl = 'https://valid-isrgrootx1.letsencrypt.org/';
+  http.Client _client = createLEClient();
+  http.Response _response = await _client.get(Uri.parse(sslUrl) );
+  print(_response.body);
+   */
+   /*
   Fin certificat
    */
   WidgetsFlutterBinding.ensureInitialized();
   if ( ! kIsWeb) {
     // if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))
     WidgetsFlutterBinding.ensureInitialized();
-    //MobileAds.instance.initialize();
-    Admob.initialize(testDeviceIds: ['CDB1827517618849EC4C60C7389786D9']);
+    MobileAds.instance.initialize();
+    RequestConfiguration configuration = RequestConfiguration(testDeviceIds: ["395AA0EC16134E88603112A34BE6BF57"]);
+    MobileAds.instance.updateRequestConfiguration(configuration);
+
+    //Admob.initialize(testDeviceIds: ['CDB1827517618849EC4C60C7389786D9']);
   }
   gismoBloc = new GismoBloc();
-  Environnement.init( "https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api");
+  Environnement.init( "https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api", new FlavorOvin());
   String nextPage = '/splash';
   if (kIsWeb)
     //if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))
@@ -94,7 +101,7 @@ void main() async {
   await Sentry.init(
       (options) => {
         options.dsn = 'https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553',
-        /*options.release = ''*/},
+        options.release = 'gismo@2.4.0+15'},
       appRunner: () => runApp(gismoApp),
   );
 

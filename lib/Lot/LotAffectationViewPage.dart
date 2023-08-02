@@ -31,8 +31,6 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
   TextEditingController _campagneCtrl = TextEditingController();
   final _df = new DateFormat('dd/MM/yyyy');
   int _curIndex=0;
-  int _nbBrebis = -1;
-  int _nbBeliers = -1;
   late View _currentView;
 
   LotModel get currentLot => this.widget._currentLot;
@@ -189,8 +187,8 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
                       ]
 
                   ),
-                  RaisedButton(
-                      color: Colors.lightGreen[700],
+                  ElevatedButton(
+                      //color: Colors.lightGreen[700],
                       child: new Text("Enregistrer",style: TextStyle( color: Colors.white)),
                       onPressed: _save)
                 ])
@@ -344,41 +342,28 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
   void _save() async {
    currentLot.dateDebutLutte = _dateDebutCtl.text;
     if (currentLot.dateDebutLutte == "") {
-      final snackBar = SnackBar(
-        content: Text(
-            "La date de début est obligatoire"),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      this._showMessage("La date de début est obligatoire");
       return;
     }
     if (_df.parse(_dateDebutCtl.text).year.toString() != _campagneCtrl.text) {
-      final snackBar = SnackBar(
-         content: Text("L'année de la date de début doit être égale à la campagne"),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      this._showMessage("L'année de la date de début doit être égale à la campagne");
       return;
     }
     currentLot.dateFinLutte =  _dateFinCtl.text;
     if (currentLot.dateFinLutte == "") {
-      final snackBar = SnackBar(
-        content: Text(
-            "La date de fin est obligatoire"),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      this._showMessage("La date de fin est obligatoire");
       return;
     }
     currentLot.campagne = _campagneCtrl.text;
     currentLot.codeLotLutte = _codeLotCtl.text;
     if (currentLot.codeLotLutte == "") {
-       final snackBar = SnackBar(
-         content: Text(
-             "Le nom du lot est obligatoire"),
-       );
-       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-       return;
-     }
-     currentLot.campagne = _campagneCtrl.text;
+      this._showMessage( "Le nom du lot est obligatoire");
+      return;
+    }
+    currentLot.campagne = _campagneCtrl.text;
     this.widget._currentLot = (await this._bloc.saveLot(currentLot))!;
+    //Navigator.pop(context, "Lot enregistré");
+    this._showMessage("Lot enregistré");
   }
 
   Future<List<Affectation>> _getBeliers(int idLot)  {
@@ -396,8 +381,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Suppression"),
-          content: Text(
-              message),
+          content: Text(message),
           actions: [
             _cancelButton(),
             _deleteButton(affect),
@@ -475,14 +459,14 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
                   ],
                 ),
                 actions: <Widget>[
-                  FlatButton(
+                  TextButton(
                       onPressed: () {
                           setState(() {
                             _dateMvtCtl.text="";
                           });
                       },
                       child: Text("Effacer")),
-                  FlatButton(
+                  TextButton(
                     child: Text('Enregistrer'),
                     onPressed: () {
                       Navigator.of(context).pop(_dateMvtCtl.text);
@@ -493,6 +477,14 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
             },
           );
         });
+  }
+
+  void _showMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    //_scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
   @override

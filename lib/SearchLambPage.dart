@@ -144,8 +144,7 @@ class _SearchLambPageState extends State<SearchLambPage> {
           title: Row(
             children: <Widget>[
               Expanded( child:
-          ( _filteredLambs[index].marquageProvisoire == null)? Container() : Text( _filteredLambs[index].marquageProvisoire!),
-              ),
+                (_filteredLambs[index].marquageProvisoire == null)? Container() : Text( _filteredLambs[index].marquageProvisoire!),),
               IconButton( icon: new Icon(Icons.delete), onPressed: () => _showDialog(context, _filteredLambs[index])),
             ],),
           subtitle:
@@ -195,7 +194,7 @@ class _SearchLambPageState extends State<SearchLambPage> {
 
   // set up the buttons
   Widget _cancelButton() {
-    return FlatButton(
+    return TextButton(
       child: Text("Annuler"),
       onPressed: () {
         Navigator.of(context).pop();
@@ -204,7 +203,7 @@ class _SearchLambPageState extends State<SearchLambPage> {
   }
 
   Widget _continueButton(CompleteLambModel lamb) {
-    return FlatButton(
+    return TextButton(
       child: Text("Continuer"),
       onPressed: () {
         _deleteLamb(lamb);
