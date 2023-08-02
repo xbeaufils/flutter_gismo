@@ -111,7 +111,7 @@ class GismoBloc {
     FlutterSecureStorage storage = new FlutterSecureStorage();
 
     try {
-      String email = await storage.read(key: "email");
+      String? email = await storage.read(key: "email");
       if (email == null) {
         this._currentUser = new User(null, null);
         _currentUser!.setCheptel("00000000");
@@ -130,7 +130,7 @@ class GismoBloc {
         }
         return "Mode autonome";
       }
-      String password = await storage.read(key: "password");
+      String? password = await storage.read(key: "password");
 
       this._currentUser = new User(email, password);
       this._currentUser?.setCheptel("");
