@@ -1,4 +1,4 @@
-// @dart=2.9
+// @dart=2.12.0
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -13,6 +13,8 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/flavor/Flavor.dart';
 import 'package:flutter_gismo/flavor/FlavorOvin.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:sentry/sentry.dart';
 
 import 'package:http/http.dart' as http;
@@ -94,6 +96,8 @@ void main() async {
   if (kIsWeb)
     //if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))
     nextPage='/login';
+
+  initializeDateFormatting();
   final GismoApp gismoApp = new GismoApp(gismoBloc,
     initialRoute: nextPage, //isLogged ? '/welcome' : '/config',
   );

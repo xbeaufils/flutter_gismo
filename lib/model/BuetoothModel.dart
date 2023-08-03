@@ -4,7 +4,8 @@ class BluetoothState {
 
   BluetoothState.fromResult(result) {
     _status = result["status"];
-    _data = result["data"];
+    if (_status != 'NONE')
+      _data = result["data"];
   }
 
   String get data => _data;

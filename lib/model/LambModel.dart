@@ -252,9 +252,9 @@ class LambModel {
     _marquageProvisoire = result["marquageProvisoire"];
     _numMarquage = result["numMarquage"];
     _numBoucle = result["numBoucle"];
-    _idAgnelage= result["agnelage_id"];
-    _idDevenir = result["devenir_id"];
-    if (result["dataDeces"] == null)
+    //_idAgnelage= result["agnelage_id"];
+    //_idDevenir = result["devenir_id"];
+    if (result["dataDeces"] != null)
       _dateDeces = _df.parse( result["dateDeces"] );
     _motifDeces = result["motifDeces"];
     _allaitement = MethodeAllaitement.getMethodeAllaitement(result["allaitement"]);

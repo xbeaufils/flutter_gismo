@@ -1,9 +1,12 @@
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:intl/intl.dart';
 
 class TraitementModel {
+  final _df = new DateFormat('dd/MM/yyyy');
+
   int ? _idBd;
-  late String _debut;
-  late String _fin;
+  late DateTime _debut;
+  late DateTime _fin;
   late String _medicament;
   String ? _voie;
   String ? _dose;
@@ -18,8 +21,8 @@ class TraitementModel {
   String ? _observation;
 
   int ? get idBd => _idBd;
-  String get debut =>_debut;
-  String get fin =>_fin;
+  DateTime get debut =>_debut;
+  DateTime get fin =>_fin;
   String get numBoucle =>_numBoucle;
   String get numMarquage =>_numMarquage;
   String get medicament =>_medicament;
@@ -47,7 +50,7 @@ class TraitementModel {
     _idBd = value;
   }
 
-  set debut(String value) {
+  set debut(DateTime value) {
     _debut = value;
   }
 
@@ -81,7 +84,7 @@ class TraitementModel {
     _voie = value;
   }
 
-  set fin(String value) {
+  set fin(DateTime value) {
     _fin = value;
   }
 
@@ -101,8 +104,8 @@ class TraitementModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (_idBd != null)
       data["idBd"] = _idBd ;
-    data["debut"] = _debut;
-    data["fin"] = _fin;
+    data["debut"] = _df.format(_debut);
+    data["fin"] = _df.format(_fin);
     data["medicament"] = _medicament;
     data["voie"] = _voie;
     data["dose"] = _dose;
@@ -122,8 +125,8 @@ class TraitementModel {
 
   TraitementModel.fromResult(result) {
     _idBd= result["idBd"] ;
-    _debut = result["debut"] ;
-    _fin = result["fin"] ;
+    _debut = _df.parse(result["debut"]) ;
+    _fin = _df.parse(result["fin"] );
     _medicament = result["medicament"] ;
     _voie = result["voie"] ;
     _dose = result["dose"] ;

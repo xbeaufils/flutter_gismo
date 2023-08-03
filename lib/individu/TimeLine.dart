@@ -72,7 +72,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
             child: ListTile(
               leading: Image.asset("assets/sheep_lamb.png"),
               title: Text(mere.data.numBoucle + " " + mere.data.numMarquage),
-              subtitle: Text(mere.data.dateEntree),
+              subtitle: Text(DateFormat.yMd().format(mere.data.dateEntree)),
               trailing: IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _viewMere(mere.data), )),
           );
         },

@@ -292,9 +292,9 @@ class _SanitairePageState extends State<SanitairePage> {
       if (this.widget._bebeMalade != null)
         traitement.idLamb = this.widget._bebeMalade?.idBd;
     }
-    traitement.debut = _dateDebutCtl.text;
+    traitement.debut = DateFormat().parse(_dateDebutCtl.text);
     traitement.dose = _doseCtl.text;
-    traitement.fin = _dateFinCtl.text;
+    traitement.fin = DateFormat().parse(_dateFinCtl.text);
     traitement.intervenant= _intervenantCtl.text;
     traitement.observation = _observationCtl.text;
     traitement.motif =_motifCtl.text;

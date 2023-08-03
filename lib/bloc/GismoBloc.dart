@@ -106,7 +106,7 @@ class GismoBloc {
     FlutterSecureStorage storage = new FlutterSecureStorage();
 
     try {
-      String email = await storage.read(key: "email");
+      String? email = await storage.read(key: "email");
       if (email == null) {
         this._currentUser = new User(null, null);
         _currentUser!.setCheptel("00000000");
@@ -125,7 +125,7 @@ class GismoBloc {
         }
         return "Mode autonome";
       }
-      String password = await storage.read(key: "password");
+      String? password = await storage.read(key: "password");
 
       this._currentUser = new User(email, password);
       this._currentUser?.setCheptel("");
@@ -281,7 +281,7 @@ class GismoBloc {
       List<SaillieModel> lstSaillie = await this._repository!.dataProvider.getSaillies(bete);
       List<MemoModel> lstMemos = await this._repository!.dataProvider.getMemos(bete);
       lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd!, EventType.agnelage, DateFormat.yMd().format(lambing.dateAgnelage!), lambing.lambs.length.toString()))});
-      lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement, traitement.debut, traitement.medicament))});
+      lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement, DateFormat.yMd().format(traitement.debut), traitement.medicament))});
       lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd!, EventType.NEC, DateFormat.yMd().format(note.date), note.note.toString()))});
       lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id!, EventType.pesee, DateFormat.yMd().format(poids.datePesee), poids.poids.toString()))});
       lstAffect.forEach( (affect) => {lstEvents.addAll ( _makeEventforAffectation(affect) )});
@@ -311,7 +311,7 @@ class GismoBloc {
       List<Pesee> lstPoids  = await this._repository!.dataProvider.getPeseeForLamb(lamb);
       lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id!, EventType.pesee, DateFormat.yMd().format( poids.datePesee) , poids.poids.toString()))});
       List<TraitementModel> lstTraits = await this._repository!.dataProvider.getTraitementsForLamb(lamb);
-      lstTraits.forEach((traitement) {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement,  traitement.debut, traitement.medicament)); });
+      lstTraits.forEach((traitement) {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement,  DateFormat.yMd().format(traitement.debut), traitement.medicament)); });
       return lstEvents;
     }
     catch(e, stackTrace) {

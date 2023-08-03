@@ -1,4 +1,4 @@
-// @dart=2.9
+// @dart=2.12.0
 import 'dart:convert';
 import 'dart:io';
 
@@ -17,18 +17,18 @@ class CertificatLetsEncrypt {
   /// added to SecurityContext.
   /// Wrapped in try catch in case the certificate is already trusted by
   /// device/os, which will cause an exception to be thrown.
-  HttpClient customHttpClient({String cert}) {
+  HttpClient customHttpClient({String? cert}) {
     SecurityContext context = SecurityContext.defaultContext;
 
     try {
       if (cert != null) {
-        Uint8List bytes = utf8.encode(cert);
+        List<int> bytes = utf8.encode(cert);
         context.setTrustedCertificatesBytes(bytes);
       }
       print('createHttpClient() - cert added!');
     } on TlsException catch (e) {
       if (e?.osError?.message != null &&
-          e.osError.message.contains('CERT_ALREADY_IN_HASH_TABLE')) {
+          e.osError!.message.contains('CERT_ALREADY_IN_HASH_TABLE')) {
         print('createHttpClient() - cert already trusted! Skipping.');
       }
       else {
