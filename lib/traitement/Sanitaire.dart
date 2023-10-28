@@ -292,9 +292,9 @@ class _SanitairePageState extends State<SanitairePage> {
       if (this.widget._bebeMalade != null)
         traitement.idLamb = this.widget._bebeMalade?.idBd;
     }
-    traitement.debut = DateFormat().parse(_dateDebutCtl.text);
+    traitement.debut = DateFormat.yMd().parse(_dateDebutCtl.text);
     traitement.dose = _doseCtl.text;
-    traitement.fin = DateFormat().parse(_dateFinCtl.text);
+    traitement.fin = DateFormat.yMd().parse(_dateFinCtl.text);
     traitement.intervenant= _intervenantCtl.text;
     traitement.observation = _observationCtl.text;
     traitement.motif =_motifCtl.text;
@@ -320,9 +320,9 @@ class _SanitairePageState extends State<SanitairePage> {
     DateTime selectedDate = DateTime.now();
     super.initState();
     if (this.widget._currentTraitement != null) {
-      _dateDebutCtl.text = this.widget._currentTraitement?.debut as String;
+      _dateDebutCtl.text = DateFormat.yMd().format(this.widget._currentTraitement!.debut);
       _doseCtl.text = this.widget._currentTraitement?.dose  as String;
-      _dateFinCtl.text = this.widget._currentTraitement?.fin  as String;
+      _dateFinCtl.text = DateFormat.yMd().format(this.widget._currentTraitement!.fin);
       _intervenantCtl.text = this.widget._currentTraitement?.intervenant as String;
       _observationCtl.text = this.widget._currentTraitement?.observation  as String;
       _motifCtl.text = this.widget._currentTraitement?.motif as String;
