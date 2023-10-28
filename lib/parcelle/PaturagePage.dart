@@ -139,9 +139,10 @@ class _PaturagePageState extends State<PaturagePage> {
   @override
   void initState() {
     _currentLot = this.widget._pature.lotId;
-    _dateDebutCtl.text = this.widget._pature.debut;
+    if (this.widget._pature.debut != null)
+      _dateDebutCtl.text = this.widget._pature.debut!;
     if (this.widget._pature.fin != null)
-      _dateFinCtl.text = this.widget._pature.fin;
+      _dateFinCtl.text = this.widget._pature.fin!;
   }
 
 }
