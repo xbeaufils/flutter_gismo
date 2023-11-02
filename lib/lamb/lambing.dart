@@ -239,12 +239,12 @@ class _LambingPageState extends State<LambingPage> {
   }
 
   Future _openAddEntryDialog() async {
-    LambModel newLamb = await Navigator.of(context).push(new MaterialPageRoute<LambModel>(
+    LambModel? newLamb = await Navigator.of(context).push(new MaterialPageRoute<LambModel>(
         builder: (BuildContext context) {
           return new LambPage(this._bloc); // AddingLambDialog(this._bloc);
         },
         fullscreenDialog: true
-    )) as LambModel;
+    ));
     if (newLamb != null) {
       _addLamb(newLamb);
     }
@@ -330,12 +330,15 @@ class _LambingPageState extends State<LambingPage> {
       _adoption = AdoptionHelper.getAdoption(_lambing.adoption!);
       _agnelage = AgnelageHelper.getAgnelage(_lambing.qualite!);
     }
-    this._adBanner = BannerAd(
-      adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
-      size: AdSize.banner,
-      request: AdRequest(),
-      listener: BannerAdListener(),
-    )..load();
+    if ( ! _bloc.isLogged()!) {
+      this._adBanner = BannerAd(
+        adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
+        size: AdSize.banner,
+        request: AdRequest(),
+        listener: BannerAdListener(),
+      )
+        ..load();
+    }
   }
 
   Widget _buildLambItem(BuildContext context, int index) {

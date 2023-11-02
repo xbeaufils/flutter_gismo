@@ -146,12 +146,10 @@ class LambPageState extends State<LambPage> {
   @override
   void initState() {
     List<DropdownMenuItem<MethodeAllaitement>> items = [];
-    new Future.delayed(Duration.zero,() {
       items.add(new DropdownMenuItem( value: MethodeAllaitement.ALLAITEMENT_MATERNEL, child: new Text(MethodeAllaitement.ALLAITEMENT_MATERNEL.libelle)));
       items.add(new DropdownMenuItem( value: MethodeAllaitement.ALLAITEMENT_ARTIFICIEL, child: new Text(MethodeAllaitement.ALLAITEMENT_ARTIFICIEL.libelle)));
       items.add(new DropdownMenuItem( value: MethodeAllaitement.ADOPTE, child: new Text(MethodeAllaitement.ADOPTE.libelle)));
       items.add(new DropdownMenuItem( value: MethodeAllaitement.BIBERONNE, child: new Text(MethodeAllaitement.BIBERONNE.libelle)));
-    });
     _dropDownMenuItems = items;
     if (this.widget._lamb != null) {
       _currentAllaitement = this.widget._lamb!.allaitement;
