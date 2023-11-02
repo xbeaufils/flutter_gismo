@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as debug;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Gismo.dart';
@@ -70,7 +71,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   void initState() {
     this._getBetes();
     super.initState();
-    if (this._bloc.isLogged()!)
+    if (this._bloc.isLogged()! && defaultTargetPlatform == TargetPlatform.android)
       new Future.delayed(Duration.zero,() {
         this._startService(context);
       });
@@ -78,10 +79,12 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    PLATFORM_CHANNEL.invokeMethod<String>('stop');
-    this._bloc.stopReadBluetooth();
-    if (this._bluetoothSubscription != null)
-      this._bluetoothSubscription?.cancel();
+    if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
+      PLATFORM_CHANNEL.invokeMethod<String>('stop');
+      this._bloc.stopReadBluetooth();
+      if (this._bluetoothSubscription != null)
+        this._bluetoothSubscription?.cancel();
+    }
     super.dispose();
   }
 
@@ -197,7 +200,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   AppBar _buildBar(BuildContext context) {
-    this._appBarTitle = new Text( S.of(context).earring_search );
+    //this._appBarTitle = new Text( S.of(context).earring_search );
     return new AppBar(
       centerTitle: true,
       title: _appBarTitle,
