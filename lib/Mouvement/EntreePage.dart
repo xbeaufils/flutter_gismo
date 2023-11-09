@@ -209,13 +209,15 @@ class _EntreePageState extends State<EntreePage> {
     new Future.delayed(Duration.zero,() {
       _motifEntreeItems = _getMotifEntreeItems(context);
     });*/
-    this._adBanner = BannerAd(
-      adUnitId: _getBannerAdUnitId()!, //'<ad unit ID>',
-      size: AdSize.banner,
-      request: AdRequest(),
-      listener: BannerAdListener(),
-    );
-    this._adBanner!.load();
+    if ( ! _bloc.isLogged()!) {
+      this._adBanner = BannerAd(
+        adUnitId: _getBannerAdUnitId()!, //'<ad unit ID>',
+        size: AdSize.banner,
+        request: AdRequest(),
+        listener: BannerAdListener(),
+      );
+      this._adBanner!.load();
+    }
   }
 
   void didChangeDependencies() {
