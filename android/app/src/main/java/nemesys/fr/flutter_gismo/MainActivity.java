@@ -1,6 +1,7 @@
 package nemesys.fr.flutter_gismo;
 
 
+import android.Manifest;
 import android.bluetooth.BluetoothDevice;
 
 import android.content.BroadcastReceiver;
@@ -244,6 +245,14 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                     this.reader.cancel();
             }
             else if (call.method.contentEquals("listBlueTooth")) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_DENIED)
+                {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                    {
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 2);
+                        return;
+                    }
+                }
                 BluetoothSerial bluetooth = new BluetoothSerial(null);
                 List<BluetoothDevice> devices = bluetooth.getBondedDevices();
                 JSONArray devicesJson = new JSONArray();
