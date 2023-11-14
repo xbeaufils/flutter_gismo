@@ -9,13 +9,16 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -177,7 +180,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         }
 
         @Override
-        public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
+        public void onMethodCall(MethodCall call, MethodChannel.Result result) {
             if (this.isConnected())
                 stateBluetooth =  State.CONNECTED;
             else
@@ -250,6 +253,14 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
                     {
                         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 2);
+                        return;
+                    }
+                }
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_DENIED)
+                {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                    {
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.BLUETOOTH_SCAN}, 2);
                         return;
                     }
                 }

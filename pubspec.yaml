@@ -28,7 +28,8 @@ dependencies:
   http: ^0.13.3
   intl: ^0.18.0
   sqflite:
-  permission_handler: ^9.2.0
+  permission_handler: ^11.0.1
+  provider: ^6.1.1
   path_provider: ^2.0.9
   flutter_secure_storage:
   #location: ^4.1.1

@@ -165,19 +165,20 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     try {
       debug.log("Start service ", name: "_SearchPageState::_startService");
       BluetoothState _bluetoothState =  await this._bloc.startReadBluetooth();
-      debug.log("Start status " + _bluetoothState.status, name: "_SearchPageState::_startService");
+      if (_bluetoothState.status != null)
+        debug.log("Start status " + _bluetoothState.status!, name: "_SearchPageState::_startService");
       if (_bluetoothState.status == BluetoothBloc.CONNECTED
       || _bluetoothState.status == BluetoothBloc.STARTED) {
         this._bluetoothStream = this._btBloc.streamReadBluetooth();
         this._bluetoothSubscription = this._bluetoothStream!.listen(
-                (BluetoothState event) {
-              debug.log("Status " + event.status,
-                  name: "_SearchPageState::_startService");
+            (BluetoothState event) {
+              if ( event.status != null)
+                debug.log("Status " + event.status!, name: "_SearchPageState::_startService");
               if (this._bluetoothState != event.status)
                 setState(() {
-                  this._bluetoothState = event.status;
+                  this._bluetoothState = event.status!;
                   if (event.status == 'AVAILABLE') {
-                    String _foundBoucle = event.data;
+                    String _foundBoucle = event.data!;
                     if (_foundBoucle.length > 15)
                       _foundBoucle =
                           _foundBoucle.substring(_foundBoucle.length - 15);

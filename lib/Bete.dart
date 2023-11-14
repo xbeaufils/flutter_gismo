@@ -315,7 +315,8 @@ class _BetePageState extends State<BetePage> {
       //if ( await this._bloc.configIsBt()) {
         debug.log("Start service ", name: "_BetePageState::_startService");
         BluetoothState _bluetoothState =  await this._bloc.startReadBluetooth();
-        debug.log("Start status " + _bluetoothState.status, name: "_BetePageState::_startService");
+        if (_bluetoothState.status != null)
+          debug.log("Start status " + _bluetoothState.status!, name: "_BetePageState::_startService");
         if (_bluetoothState.status == BluetoothBloc.CONNECTED
             || _bluetoothState.status == BluetoothBloc.STARTED) {
           this._bluetoothStream = this._btBloc.streamReadBluetooth();
@@ -324,13 +325,18 @@ class _BetePageState extends State<BetePage> {
                 (BluetoothState event) {
                   if (this._bluetoothState != event.status)
                     setState(() {
-                      this._bluetoothState = event.status;
+                      this._bluetoothState = event.status!;
                       if (event.status == 'AVAILABLE') {
-                        String _foundBoucle = event.data;
-                        if (_foundBoucle.length > 15)
-                          _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
-                        _numBoucleCtrl.text = _foundBoucle.substring(_foundBoucle.length - 5);
-                        _numMarquageCtrl.text = _foundBoucle.substring(0, _foundBoucle.length - 5);
+                        String ? _foundBoucle = event.data;
+                        if ( _foundBoucle != null) {
+                          if (_foundBoucle.length > 15)
+                            _foundBoucle = _foundBoucle.substring(
+                                _foundBoucle.length - 15);
+                          _numBoucleCtrl.text =
+                              _foundBoucle.substring(_foundBoucle.length - 5);
+                          _numMarquageCtrl.text = _foundBoucle.substring(
+                              0, _foundBoucle.length - 5);
+                        }
                       }
                     });
                   });

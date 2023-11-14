@@ -8,7 +8,7 @@ class DeviceModel {
   }
 
   late String _address;
-  late String _id;
+  String ? _id;
   late bool _connected;
 
   bool get connected => _connected;
@@ -23,9 +23,9 @@ class DeviceModel {
     _address = value;
   }
 
-  String get id => _id;
+  String ? get id => _id;
 
-  set id(String value) {
+  set id(String ? value) {
     _id = value;
   }
 

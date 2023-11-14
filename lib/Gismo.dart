@@ -71,7 +71,7 @@ class GismoApp extends StatelessWidget {
         '/lot' : (context) => LotPage(this._bloc),
         '/parcelle' : (context) =>ParcellePage(this._bloc),
         '/config' : (context) =>ConfigPage(this._bloc),
-        '/bluetooth' : (context) =>BluetoothPage(this._bloc),
+        '/bluetooth' : (context) =>BluetoothPermissionPage(this._bloc),
         '/saillie' : (context) => SearchPage(this._bloc,GismoPage.saillie),
       },
     );

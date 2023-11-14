@@ -206,7 +206,8 @@ class _BouclagePageState extends State<BouclagePage> {
     try {
       debug.log("Start service ", name: "_BouclagePageState::_startService");
       BluetoothState _bluetoothState =  await this._bloc.startReadBluetooth();
-      debug.log("Start status " + _bluetoothState.status, name: "_BouclagePageState::_startService");
+      if (_bluetoothState.status != null)
+        debug.log("Start status " + _bluetoothState.status!, name: "_BouclagePageState::_startService");
       if (_bluetoothState.status == BluetoothBloc.CONNECTED
           || _bluetoothState.status == BluetoothBloc.STARTED) {
         //this._bluetoothStream.listen((BluetoothState event) { })
@@ -214,9 +215,9 @@ class _BouclagePageState extends State<BouclagePage> {
                 (BluetoothState event) {
                   if (this._bluetoothState != event.status)
               setState(() {
-                this._bluetoothState = event.status;
+                this._bluetoothState = event.status!;
                 if (event.status == 'AVAILABLE') {
-                  String _foundBoucle = event.data;
+                  String _foundBoucle = event.data!;
                   if (_foundBoucle.length > 15)
                     _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
                   _numBoucleCtrl.text = _foundBoucle.substring(_foundBoucle.length - 5);
