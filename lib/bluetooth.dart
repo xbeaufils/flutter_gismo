@@ -9,7 +9,98 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/model/DeviceModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
+import 'package:provider/provider.dart';
 import 'package:sentry/sentry.dart';
+
+class BluetoothPermissionPage extends StatefulWidget {
+  final GismoBloc _bloc;
+
+  BluetoothPermissionPage(this._bloc,  {Key ? key}) : super(key: key);
+
+  @override
+  BluetoothPermissionPageState createState() => new BluetoothPermissionPageState(_bloc);
+
+}
+class BluetoothPermissionPageState extends State<BluetoothPermissionPage> {
+  final GismoBloc _bloc;
+  late final BluetoothModel _model;
+
+  BluetoothPermissionPageState(this._bloc);
+
+  @override
+  void initState() {
+    super.initState();
+
+    _model = BluetoothModel();
+    _model.checkBlueToothPermission();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider.value(
+        value: _model,
+        child: Consumer<BluetoothModel>(
+            builder: (context, model, child) {
+              Widget widget;
+              switch (_model.permission) {
+                case BluetoothPermission.noBluetoothConnectPermission:
+                case BluetoothPermission.noBluetoothScanPermission :
+                  widget = new BluetoothAskPermissions(onPressed: _checkPermissions,);
+                  break;
+                case BluetoothPermission.bluetoothOkPermission:
+                  widget = new BluetoothPage(this._bloc);
+              }
+              return Scaffold(
+                //backgroundColor: Colors.lightGreen,
+                  appBar: new AppBar(
+                    title: new Text('Connexion BlueTooth'),
+                  ),
+                  body:
+                  widget);
+            })
+    );
+  }
+
+  Future<void> _checkPermissions() async {
+    final hasFilePermission = await _model.requestBlueToothPermission();
+  }
+
+  /*
+  Widget viewDeviceList() {
+    return FutureBuilder(
+        builder: (context, AsyncSnapshot deviceSnap) {
+          if (deviceSnap.connectionState == ConnectionState.none &&
+              deviceSnap.hasData == null) {
+            return Container();
+          }
+          if (deviceSnap.data == null)
+            return Container();
+          return ListView.builder(
+            itemCount: deviceSnap.data.length,
+            itemBuilder: (context, index) {
+              DeviceModel device = deviceSnap.data[index];
+              return Card( child:
+              Row(children: [
+                Flexible(child:
+                ListTile(
+                  title: Text(device.name),
+                  subtitle: Text(device.address),
+                  trailing: this._stateButton(device),
+                  onTap: () => this._selectDevice( device ),
+                  selected:  (this._isDeviceSelected(device)),
+                  selectedTileColor: Colors.lightGreen[100],
+                ),
+                ),
+              ],)
+              );
+            },
+          );
+        },
+        future: _getDeviceList()
+    );
+
+  }*/
+}
 
 class BluetoothPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -38,18 +129,11 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
 
   @override
   void initState()  {
-   }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //backgroundColor: Colors.lightGreen,
-      key: _scaffoldKey,
-      appBar: new AppBar(
-          title: new Text('Connexion BlueTooth'),
-        ),
-      body:
-      FutureBuilder(
+    return FutureBuilder(
         builder: (context, AsyncSnapshot deviceSnap) {
           if (deviceSnap.connectionState == ConnectionState.none &&
               deviceSnap.hasData == null) {
@@ -61,8 +145,6 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
             itemCount: deviceSnap.data.length,
             itemBuilder: (context, index) {
               DeviceModel device = deviceSnap.data[index];
-              //if (device.address == _preferredAddress )
-              //  _selectedDevice=device;
               return Card( child:
               Row(children: [
                 Flexible(child:
@@ -80,9 +162,10 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
             },
           );
         },
-        future: _getDeviceList(),)
+        future: _getDeviceList()
     );
   }
+
 
   bool _isDeviceSelected(DeviceModel device) {
     if (this._selectedDevice == null)
@@ -116,6 +199,9 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   }
 
   Future<List<DeviceModel>> _getDeviceList() async {
+    BluetoothModel model = new BluetoothModel();
+    //final bool permission = await model.requestBlueToothPermission();
+    //if (permission)
     debug.log("Get device List ", name: "_getDeviceList");
     String response = await BLUETOOTH_CHANNEL.invokeMethod("listBlueTooth");
     this._lstDevice = ( jsonDecode(response) as List).map( (i) => DeviceModel.fromResult(i)).toList();
@@ -146,7 +232,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
       }
     return lstReturnDevice;
   }
-
+/*
   void _switchBluetooth(bool on, String address) {
     this._startBlueTooth(on);
     if (on) {
@@ -157,7 +243,7 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
 
     }
   }
-
+*/
   void _selectDevice(DeviceModel device) {
     setState(() {
       _selectedDevice = device;
@@ -177,30 +263,14 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
       this._bluetoothStream = this._bloc.streamConnectBluetooth(this._selectedDevice!.address);
       this._bluetoothSubscription = this._bluetoothStream.listen((BluetoothState event) {
         setState(() {
-          _bluetoothState = event.status;
+          _bluetoothState = event.status!;
           if (event.status == BluetoothBloc.STARTED) {
             debug.log("Change connected " + value.toString(),  name: "_startBlueTooth");
             this._selectedDevice!.connected = value;
           }
         });
       });
-      /*
-      _bluetoothStatusSubscription = this._bloc.streamStatusBluetooth().listen((event) {
-        debug.log("status " + event.toString(), name: "streamStatusBluetooth");
-        if (_bluetoothState  !=  event.connect) {
-          _bluetoothState = event.connect;
-          setState(() {
-            if (event.connect == 'CONNECTED') {
-              this._selectedDevice!.connected = true;
-            //this._bluetoothStatusSubscription!.cancel();
-            }
-          });
-          if (this._bluetoothState == "ERROR")
-            ScaffoldMessenger.of(context).showSnackBar(new SnackBar(content: Text("Erreur bluetooth"),));
-        }
-      });
-    */
-    } on Exception catch (e, stackTrace) {
+     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       debug.log(e.toString());
     }
@@ -222,4 +292,69 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
    }
 
 
+}
+
+class BluetoothAskPermissions extends StatelessWidget {
+  //final bool isPermanent;
+  final VoidCallback onPressed;
+
+  const BluetoothAskPermissions({
+    Key? key,
+    //required this.isPermanent,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.only(
+              left: 16.0,
+              top: 24.0,
+              right: 16.0,
+            ),
+            child: Text(
+              'Autorisation BlueTooth',
+              style: Theme.of(context).textTheme.headline6,
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(
+              left: 16.0,
+              top: 24.0,
+              right: 16.0,
+            ),
+            child: const Text(
+              'L\'application a besoin de votre autorisation pour se connecter au lecteur de boucle.'
+                  ,
+              textAlign: TextAlign.center,
+            ),
+          ),
+/*          if (isPermanent)
+            Container(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                top: 24.0,
+                right: 16.0,
+              ),
+              child: const Text(
+                'You need to give this permission from the system settings.',
+                textAlign: TextAlign.center,
+              ),
+            ),
+ */        Container(
+            padding: const EdgeInsets.only(
+                left: 16.0, top: 24.0, right: 16.0, bottom: 24.0),
+            child: ElevatedButton(
+              child: Text( 'Autoriser'),
+              onPressed: () => onPressed(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

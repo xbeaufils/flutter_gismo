@@ -1,30 +1,70 @@
+
+import 'package:flutter/widgets.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
+
 class AdoptionNotFoundException implements Exception {}
 
+enum AdoptionEnum {
+  level0(0),
+  level1(1),
+  level2(2),
+  level3(3),
+  level4(4),
+  level5(5);
 
-class Adoption {
-  int _key;
-  String _value;
+  const AdoptionEnum(this._key);
+  final int _key;
+  int get key => this._key;
 
-  int get key => _key;
-  String get value => _value;
+}
 
-  Adoption(this._key, this._value);
+class AdoptionHelper {
+  //int _key;
+  //String _value;
+  BuildContext context;
 
-  static Adoption level0 = Adoption(0, "Lèche, appelle et se laisse téter");
-  static Adoption level1 = Adoption(1, "Apathique");
-  static Adoption level2 = Adoption(2, "Délaisse un des agneaux");
-  static Adoption level3 = Adoption(3, "Abandonne en fuyant");
-  static Adoption level4 = Adoption(4, "Maintenir de force pour allaiter");
-  static Adoption level5 = Adoption(5, "Infanticide");
+  AdoptionHelper(this.context);
+  //Adoption(this._key, this._value);
 
-  static Adoption getAdoption(int value) {
+
+  String translate(AdoptionEnum adopt) {
+    switch (adopt) {
+      case AdoptionEnum.level0 :
+        return S
+            .of(context)
+            .adoption_leche;
+      case AdoptionEnum.level1 :
+        return S
+            .of(context)
+            .adoption_apathique;
+      case AdoptionEnum.level2 :
+        return S
+            .of(context)
+            .adoption_delaisse;
+      case AdoptionEnum.level3:
+        return S
+            .of(context)
+            .adoption_abandon;
+      case AdoptionEnum.level4:
+        return S
+            .of(context)
+            .adoption_tenir;
+      case AdoptionEnum.level5:
+        return S
+            .of(context)
+            .adoption_infanticide;
+    }
+    throw new AdoptionNotFoundException();
+  }
+
+  static AdoptionEnum getAdoption(int value) {
     switch (value) {
-      case 0: return level0;
-      case 1: return level1;
-      case 2: return level2;
-      case 3: return level3;
-      case 4: return level4;
-      case 5: return level5;
+      case 0: return AdoptionEnum.level0;
+      case 1: return AdoptionEnum.level1;
+      case 2: return AdoptionEnum.level2;
+      case 3: return AdoptionEnum.level3;
+      case 4: return AdoptionEnum.level4;
+      case 5: return AdoptionEnum.level5;
     }
     throw new AdoptionNotFoundException();
   }

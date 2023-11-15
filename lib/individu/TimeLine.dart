@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
 import 'package:flutter_gismo/memo/MemoPage.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
+import 'package:intl/intl.dart';
 
 
 class TimeLinePage extends StatefulWidget {
@@ -25,12 +27,10 @@ class TimeLinePage extends StatefulWidget {
 
 class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderStateMixin {
 
-  final _formKeyIdentity = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GismoBloc _bloc;
 
   Bete _bete;
-  int _indexExpandedTraitement = -1;
 
   _TimeLinePageState(this._bloc, this._bete);
 
@@ -39,7 +39,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: new Text('Individu'),
+        title: new Text(S.of(context).sheep),
         ),
       body:
           Column (
@@ -47,7 +47,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
               Card(child:
                 ListTile(
                   title: Text(_bete.numBoucle + " " + _bete.numMarquage),
-                  subtitle: (_bete.dateEntree!= null) ? Text(_bete.dateEntree): null,
+                  subtitle: (_bete.dateEntree!= null) ? Text( DateFormat.yMd().format(_bete.dateEntree)): null,
                   leading: Image.asset("assets/brebis.png") ,
                   trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: _openIdentityDialog, ),)
                 ,),
@@ -72,7 +72,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
             child: ListTile(
               leading: Image.asset("assets/sheep_lamb.png"),
               title: Text(mere.data.numBoucle + " " + mere.data.numMarquage),
-              subtitle: Text(mere.data.dateEntree),
+              subtitle: Text(DateFormat.yMd().format(mere.data.dateEntree)),
               trailing: IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _viewMere(mere.data), )),
           );
         },
@@ -89,7 +89,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
           child: ListTile(
               leading: Image.asset("assets/belier.png"),
               title: Text(pere.data.numBoucle + " " + pere.data.numMarquage),
-              subtitle: Text(pere.data.dateEntree),
+              subtitle: Text(DateFormat.yMd().format(pere.data.dateEntree)),
               trailing: IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _viewMere(pere.data), )),
         );
       },
@@ -153,20 +153,12 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   }
 
   Future _showDialog(BuildContext context, Event event) {
-    String message ="Voulez vous supprimer ";
-    if (event.type == EventType.NEC)
-      message += "cette note d'Etat corp ?";
-    if (event.type == EventType.saillie)
-      message += "cette saillie ?";
-    if (event.type == EventType.pesee)
-      message += "cette pesée ?";
-    return showDialog(
+     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Suppression"),
-          content: Text(
-              message),
+          title: Text(S.of(context).title_delete),
+          content: Text(S.of(context).text_delete),
           actions: [
             _cancelButton(),
             _continueButton(event),
@@ -179,7 +171,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   // set up the buttons
   Widget _cancelButton() {
     return TextButton(
-      child: Text("Annuler"),
+      child: Text(S.of(context).bt_cancel),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -188,7 +180,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
 
   Widget _continueButton(Event event) {
     return TextButton(
-      child: Text("Continuer"),
+      child: Text(S.of(context).bt_continue),
       onPressed: () {
         if (event.type == EventType.pesee || event.type == EventType.NEC || event.type == EventType.saillie)
           _deleteEvent(event);

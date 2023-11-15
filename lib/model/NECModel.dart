@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class NECNotFoundException implements Exception {}
 
 class NEC {
@@ -57,9 +59,10 @@ class NEC {
 
 class NoteModel {
   int ? _idBd;
-  late String _date;
+  late DateTime _date;
   late int _note;
   late int _idBete;
+  final _df = new DateFormat('dd/MM/yyyy');
 
   NoteModel();
 
@@ -68,7 +71,7 @@ class NoteModel {
     if (result["date"] != null)
       _date = result["date"];
     else
-      _date ="01/01/1900";
+      _date =_df.parse("01/01/1900");
     _note = result["note"];
     _idBete = result["bete_id"];
   }
@@ -77,7 +80,7 @@ class NoteModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (_idBd != null)
       data["idBd"] = _idBd ;
-    data["date"] = _date;
+    data["date"] = _df.format(_date);
     data["note"] = _note.toString();
     data["bete_id"] = _idBete.toString();
     return data;
@@ -95,9 +98,9 @@ class NoteModel {
     _note = value;
   }
 
-  String get date => _date;
+  DateTime get date => _date;
 
-  set date(String value) {
+  set date(DateTime value) {
     _date = value;
   }
 

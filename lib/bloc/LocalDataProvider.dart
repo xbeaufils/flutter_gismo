@@ -17,6 +17,7 @@ import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/ReportModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:sentry/sentry.dart';
 import 'package:sqflite/sqflite.dart';
@@ -25,7 +26,7 @@ import 'dart:developer' as debug;
 
 class LocalDataProvider extends DataProvider{
   late GismoHttp _gismoHttp; // = new GismoHttp(super.token);
-
+  final _df = new DateFormat('dd/MM/yyyy');
   // only have a single app-wide reference to the database
   static Database ? _database;
 
@@ -546,7 +547,7 @@ class LocalDataProvider extends DataProvider{
   }
 
   @override
-  Future<String> saveSortie( String date, String motif, List<Bete> lstBete) async {
+  Future<String> saveSortie( DateTime date, String motif, List<Bete> lstBete) async {
     Database db = await this.database;
     Batch batch = db.batch();
     lstBete.forEach((bete) => { _updateSortie(batch, date, motif, bete)});
@@ -555,15 +556,15 @@ class LocalDataProvider extends DataProvider{
     return "Sortie enregistrée";
   }
 
-  void _updateSortie(Batch batch, String date, String motif, Bete bete) {
+  void _updateSortie(Batch batch, DateTime date, String motif, Bete bete) {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data["motifSortie"] = motif;
-    data["dateSortie"] = date;
+    data["dateSortie"] = _df.format( date );
     batch.update("bete", data , where: "id = ?", whereArgs: <int>[bete.idBd!]);
   }
 
   @override
-  Future<String> saveEntree(String cheptel, String date, String motif, List<Bete> lstBete) async {
+  Future<String> saveEntree(String cheptel, DateTime date, String motif, List<Bete> lstBete) async {
     Database db = await this.database;
     Batch batch = db.batch();
     lstBete.forEach((bete) => { _insertEntree(batch, cheptel, date, motif, bete)});
@@ -572,7 +573,7 @@ class LocalDataProvider extends DataProvider{
     return "Entrée enregistrée";
   }
 
-  void _insertEntree(Batch batch, String cheptel, String date, String motif, Bete bete) async {
+  void _insertEntree(Batch batch, String cheptel, DateTime date, String motif, Bete bete) async {
     //Database db = await this.database;
     bete.cheptel = cheptel;
     bete.motifEntree = motif;

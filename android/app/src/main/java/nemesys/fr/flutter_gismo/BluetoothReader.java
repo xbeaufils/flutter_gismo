@@ -2,10 +2,8 @@ package nemesys.fr.flutter_gismo;
 
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +11,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.flutter.BuildConfig;
 import io.sentry.Sentry;
 
 public class BluetoothReader extends Thread {

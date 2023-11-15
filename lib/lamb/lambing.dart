@@ -1,12 +1,12 @@
 import 'dart:io';
 
-//import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 
 import 'package:flutter_gismo/lamb/Adoption.dart';
 import 'package:flutter_gismo/lamb/AgnelageQualityPage.dart';
@@ -38,10 +38,9 @@ class _LambingPageState extends State<LambingPage> {
   late LambingModel _lambing;
   BannerAd ? _adBanner;
 
-  DateTime selectedDate = DateTime.now();
-  final df = new DateFormat('dd/MM/yyyy');
-  Adoption _adoption = Adoption.level0;
-  Agnelage _agnelage = Agnelage.level0;
+  DateTime _selectedDate = DateTime.now();
+  AdoptionEnum _adoption = AdoptionEnum.level0;
+  AgnelageEnum _agnelage = AgnelageEnum.level0;
 
   TextEditingController _dateAgnelageCtl = TextEditingController();
   TextEditingController _obsCtl = TextEditingController();
@@ -52,8 +51,8 @@ class _LambingPageState extends State<LambingPage> {
 
   @override
   Widget build(BuildContext context) {
-
-
+    AdoptionHelper transAdoption = new AdoptionHelper(this.context);
+    AgnelageHelper transAgnelage = new AgnelageHelper(this.context);
     return new Scaffold(
       appBar: new AppBar(
         title: (this.widget._mere != null) ? 
@@ -73,12 +72,10 @@ class _LambingPageState extends State<LambingPage> {
                       keyboardType: TextInputType.datetime,
                       controller: _dateAgnelageCtl,
                       decoration: InputDecoration(
-
-                                    labelText: 'Date Agnelage',
-                                    hintText: 'jj/mm/aaaa'),
+                                    labelText: S.of(context).lambing_date),
                       validator: (value) {
                                   if (value!.isEmpty) {
-                                    return 'Entrez une date d''agnelage';
+                                    return S.of(context).enter_lambing_date;
                                   }
                                   return null;
                                   },
@@ -97,22 +94,22 @@ class _LambingPageState extends State<LambingPage> {
                                   lastDate: DateTime(2100)) as DateTime;
                               if (date != null) {
                                 setState(() {
-                                  _dateAgnelageCtl.text = df.format(date);
+                                  _dateAgnelageCtl.text = DateFormat.yMd().format(date);
                                 });
                               }
                             }),
                 ListTile(
-                  title: Text("Qualité d'agnelage") ,
-                  subtitle: Text(_agnelage.key.toString() + " : " +_agnelage.value),
+                  title: Text(S.of(context).lambing_quality) ,
+                  subtitle: Text(_agnelage.key.toString() + " : " + transAgnelage.translate(_agnelage)),
                   trailing: new IconButton(onPressed: _openAgnelageDialog, icon: new Icon(Icons.create)),),
                 ListTile(
-                  title: Text("Qualité adoption") ,
-                  subtitle: Text(_adoption.key.toString() + " : " +_adoption.value),
+                  title: Text(S.of(context).adoption_quality) ,
+                  subtitle: Text(_adoption.key.toString() + " : " + transAdoption.translate(_adoption)),
                   trailing: new IconButton(onPressed: _openAdoptionDialog, icon: new Icon(Icons.create)),),
                 TextFormField(
                   controller: _obsCtl,
                   decoration: InputDecoration(
-                  labelText: 'Observations',
+                  labelText: S.of(context).observations,
                   hintText: 'Obs',
                   border: OutlineInputBorder(),
                   enabledBorder: OutlineInputBorder()),
@@ -135,8 +132,8 @@ class _LambingPageState extends State<LambingPage> {
                         //color: Colors.lightGreen[700],
                         child:
                           new Text(
-                          "Valider l'agnelage",
-                          style: new TextStyle(color: Colors.white, ), )
+                            S.of(context).validate_lambing,
+                            style: new TextStyle(color: Colors.white, ), )
                     )
                   ]
                 ),
@@ -147,7 +144,7 @@ class _LambingPageState extends State<LambingPage> {
       floatingActionButton: (this._lambing.idBd == null)?
       new FloatingActionButton(
         onPressed: _openAddEntryDialog,
-        tooltip: 'Ajouter un agneau',
+        tooltip: S.of(context).add_lamb,
         child: new Icon(Icons.add),
       ): null,
     );
@@ -189,7 +186,7 @@ class _LambingPageState extends State<LambingPage> {
       identifPere = _lambing.numBouclePere! + " " + _lambing.numMarquagePere!;
     }
     return ListTile(
-      title: Text("Père") ,
+      title: Text(S.of(context).ram) ,
       subtitle: Text(identifPere),
       trailing: (_lambing.idPere == null ) ?
       IconButton(icon: Icon(Icons.search), onPressed: () => _addPere(), ):
@@ -197,7 +194,7 @@ class _LambingPageState extends State<LambingPage> {
   }
 
   void _addPere() async {
-    this._lambing.setDateAgnelage( _dateAgnelageCtl.text );
+    this._lambing.setDateAgnelage( DateFormat.yMd().parse(_dateAgnelageCtl.text) );
     Bete ? pere;
     if (this._bloc.isLogged() != null) {
       if (this._bloc.isLogged()!) {
@@ -242,12 +239,12 @@ class _LambingPageState extends State<LambingPage> {
   }
 
   Future _openAddEntryDialog() async {
-    LambModel newLamb = await Navigator.of(context).push(new MaterialPageRoute<LambModel>(
+    LambModel? newLamb = await Navigator.of(context).push(new MaterialPageRoute<LambModel>(
         builder: (BuildContext context) {
           return new LambPage(this._bloc); // AddingLambDialog(this._bloc);
         },
         fullscreenDialog: true
-    )) as LambModel;
+    ));
     if (newLamb != null) {
       _addLamb(newLamb);
     }
@@ -262,7 +259,7 @@ class _LambingPageState extends State<LambingPage> {
     )) as int;
     if (qualiteAdoption != null) {
       setState(() {
-        _adoption = Adoption.getAdoption(qualiteAdoption);
+        _adoption = AdoptionHelper.getAdoption(qualiteAdoption);
       });
     }
   }
@@ -276,13 +273,13 @@ class _LambingPageState extends State<LambingPage> {
     ))as int;
     if (qualiteAgnelage != null) {
       setState(() {
-        _agnelage = Agnelage.getAgnelage(qualiteAgnelage);
+        _agnelage = AgnelageHelper.getAgnelage(qualiteAgnelage);
       });
     }
   }
 
   void saveLambing() {
-    _lambing.setDateAgnelage(_dateAgnelageCtl.text);
+    _lambing.setDateAgnelage(DateFormat.yMd().parse(_dateAgnelageCtl.text));
     _lambing.observations = _obsCtl.text;
     _lambing.adoption = _adoption.key;
     _lambing.qualite = _agnelage.key;
@@ -321,33 +318,36 @@ class _LambingPageState extends State<LambingPage> {
     super.initState();
     if (this.widget._currentLambing == null) {
       _lambing = new LambingModel(this.widget._mere!.idBd!);
-      _dateAgnelageCtl.text = df.format(selectedDate);
-      _adoption = Adoption.level0;
-      _agnelage = Agnelage.level0;
+      _dateAgnelageCtl.text = DateFormat.yMd().format(_selectedDate);
+      _adoption = AdoptionEnum.level0;
+      _agnelage = AgnelageEnum.level0;
     }
     else {
       _lambing = this.widget._currentLambing!;
-      _dateAgnelageCtl.text = _lambing.dateAgnelage!;
+      _dateAgnelageCtl.text = DateFormat.yMd().format(_lambing.dateAgnelage!);
       if (_lambing.observations != null)
         _obsCtl.text = _lambing.observations!;
-      _adoption = Adoption.getAdoption(_lambing.adoption!);
-      _agnelage = Agnelage.getAgnelage(_lambing.qualite!);
+      _adoption = AdoptionHelper.getAdoption(_lambing.adoption!);
+      _agnelage = AgnelageHelper.getAgnelage(_lambing.qualite!);
     }
-    this._adBanner = BannerAd(
-      adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
-      size: AdSize.banner,
-      request: AdRequest(),
-      listener: BannerAdListener(),
-    )..load();
+    if ( ! _bloc.isLogged()!) {
+      this._adBanner = BannerAd(
+        adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
+        size: AdSize.banner,
+        request: AdRequest(),
+        listener: BannerAdListener(),
+      )
+        ..load();
+    }
   }
 
   Widget _buildLambItem(BuildContext context, int index) {
-    String sexe = (_lambing.lambs[index].sex == Sex.male) ?"Male" : "";
-    sexe = (_lambing.lambs[index].sex == Sex.femelle) ?"Femelle" : sexe;
+    String sexe = (_lambing.lambs[index].sex == Sex.male) ? S.of(context).male : "";
+    sexe = (_lambing.lambs[index].sex == Sex.femelle) ? S.of(context).female : sexe;
     return ListTile(
       leading: (_lambing.lambs[index].marquageProvisoire == null) ? null : Text(_lambing.lambs[index].marquageProvisoire!),
       title: Text(sexe) ,
-      subtitle: (_lambing.lambs[index].allaitement != null) ? Text(_lambing.lambs[index].allaitement.libelle): Text("Allaitement non spécifié"), // Text(_lambs[index].marquageProvisoire),
+      subtitle: (_lambing.lambs[index].allaitement != null) ? Text(_lambing.lambs[index].allaitement.libelle): Text(S.of(context).breastfeeding_not_specified), // Text(_lambs[index].marquageProvisoire),
       trailing:  _buildTrailing(_lambing.lambs[index]),);
   }
 
@@ -365,7 +365,7 @@ class _LambingPageState extends State<LambingPage> {
     if (lamb.dateDeces != null)
       return Column(children: <Widget>[
         Text(CauseMortExtension.getValue(lamb.motifDeces!).name),
-        Text(lamb.dateDeces!),
+        Text(DateFormat.yMd().format(lamb.dateDeces!)),
       ],);
 
     return

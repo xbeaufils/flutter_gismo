@@ -4,9 +4,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class EntreePage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -27,18 +29,18 @@ class _EntreePageState extends State<EntreePage> {
   BannerAd ? _adBanner;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  List<DropdownMenuItem<String>> _getMotifEntreeItems() {
+  List<DropdownMenuItem<String>> _getMotifEntreeItems(BuildContext context) {
     List<DropdownMenuItem<String>> items = [];
-    items.add( new DropdownMenuItem(value: 'NAISSANCE', child: new Text('Naissance')));
-    items.add( new DropdownMenuItem(value: 'CREATION', child: new Text('Création')));
-    items.add( new DropdownMenuItem(value: 'RENOUVELLEMENT', child: new Text('Renouvellement')));
-    items.add( new DropdownMenuItem(value: 'ACHAT', child: new Text('Achat')));
+    items.add( new DropdownMenuItem(value: 'NAISSANCE', child: new Text( S.of(context).entree_birth )));
+    items.add( new DropdownMenuItem(value: 'CREATION', child: new Text(S.of(context).entree_creation)));
+    items.add( new DropdownMenuItem(value: 'RENOUVELLEMENT', child: new Text(S.of(context).entree_renewal)));
+    items.add( new DropdownMenuItem(value: 'ACHAT', child: new Text(S.of(context).entree_purchase)));
     items.add( new DropdownMenuItem(value: 'MUTATION_INTERNE', child: new Text('Mutation interne')));
-    items.add( new DropdownMenuItem(value: 'REACTIVATION', child: new Text('Réactivation')));
-    items.add( new DropdownMenuItem(value: 'PRET_OU_PENSION', child: new Text('Prêt ou pension')));
+    items.add( new DropdownMenuItem(value: 'REACTIVATION', child: new Text(S.of(context).entree_reactivation)));
+    items.add( new DropdownMenuItem(value: 'PRET_OU_PENSION', child: new Text(S.of(context).entree_loan)));
     items.add( new DropdownMenuItem(value: 'ENTREE_EN_SCI_OU_CE', child: new Text('Entree en SCI ou CE')));
     items.add( new DropdownMenuItem(value: 'REPRISE_EN_SCI_OU_CE', child: new Text('Reprise en SCI ou CE')));
-    items.add( new DropdownMenuItem(value: 'INCONNUE', child: new Text('Inconnue')));
+    items.add( new DropdownMenuItem(value: 'INCONNUE', child: new Text(S.of(context).entree_unknown)));
     return items;
   }
 
@@ -54,7 +56,7 @@ class _EntreePageState extends State<EntreePage> {
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: new Text('Entree'),
+        title: new Text(S.of(context).input),
       ),
       body:
       new Column(
@@ -69,11 +71,11 @@ class _EntreePageState extends State<EntreePage> {
                       keyboardType: TextInputType.datetime,
                       controller: _dateEntreeCtl,
                       decoration: InputDecoration(
-                          labelText: "Date d'entrée",
+                          labelText: S.of(context).dateEntry,
                           hintText: 'jj/mm/aaaa'),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Pas de date d'entrée";
+                          return S.of(context).noEntryDate;
                         }},
                       onSaved: (value) {
                         setState(() {
@@ -84,22 +86,21 @@ class _EntreePageState extends State<EntreePage> {
                         DateTime date = DateTime.now();
                         FocusScope.of(context).requestFocus(new FocusNode());
                         date = (await showDatePicker(
-
-                          locale: const Locale("fr","FR"),
+                          //locale: const Locale("fr","FR"),
                           context: context,
                           initialDate:DateTime.now(),
                           firstDate:DateTime(1900),
                           lastDate: DateTime(2100)))!;
                         if (date != null) {
                           setState(() {
-                            _dateEntreeCtl.text = _df.format(date);
+                            _dateEntreeCtl.text = DateFormat.yMd().format(date);
                           });
                         }
                       }),
                   new DropdownButton<String>(
                     value: _currentMotif,
                     items: _motifEntreeItems,
-                    hint: Text("Selectionnez une cause d'entree",style: TextStyle(color: Colors.lightGreen,)),
+                    hint: Text(S.of(context).entree_select,style: TextStyle(color: Colors.lightGreen,)),
                     onChanged: _changedMotifEntreeItem,
                   )
 
@@ -108,22 +109,17 @@ class _EntreePageState extends State<EntreePage> {
           Expanded(
             child: Sheeps(this._sheeps, this)),
           ElevatedButton(
-            child: Text('Enregistrer',
+            child: Text(S.of(context).bt_save,
                 style: new TextStyle(color: Colors.white, ),),
-            //color: Colors.lightGreen[700],
             onPressed: _saveEntree),
           (this._bloc.isLogged()!) ?
             Container():_getAdmobAdvice()
-           /* AdmobBanner(
-              adUnitId: _getBannerAdUnitId()!,
-              adSize: AdmobBannerSize.BANNER,),*/
-
           ]
 
       ),
       floatingActionButton: new FloatingActionButton(
         onPressed: _openAddEntryDialog,
-        tooltip: 'Ajouter une bête',
+        tooltip: S.of(context).tooltip_add_beast,
         child: new Icon(Icons.add),
       ),
     );
@@ -155,24 +151,23 @@ class _EntreePageState extends State<EntreePage> {
 
   void _saveEntree() {
     if (_dateEntreeCtl.text.isEmpty) {
-      showError("Pas de date d'entréee");
+      showError(S.of(context).noEntryDate);
       return;
     }
 
     if ( _currentMotif == null) {
-      showError("Cause d'entrée obligatoire");
+      showError(S.of(context).entree_reason_required);
       return;
     }
     if (_currentMotif!.isEmpty) {
-      showError("Cause d'entrée obligatoire");
+      showError(S.of(context).entree_reason_required);
       return;
     }
     if (_sheeps.length == 0) {
-      showError("Liste des betes vide");
+      showError(S.of(context).empty_list);
       return;
     }
-
-    var message  = this._bloc.saveEntree(_dateEntreeCtl.text, _currentMotif!, this._sheeps);
+    var message  = this._bloc.saveEntree(DateFormat.yMd().parse(_dateEntreeCtl.text), _currentMotif!, this._sheeps);
     message
       .then( (message) {goodSaving(message);})
       .catchError( (message) {showError(message);});
@@ -186,7 +181,7 @@ class _EntreePageState extends State<EntreePage> {
   }
 
   void goodSaving(String message) {
-    message = "Entree : " + message;
+    message = S.of(context).input + " : " + message;
     Navigator.pop(context, message);
   }
 
@@ -208,8 +203,12 @@ class _EntreePageState extends State<EntreePage> {
   void initState() {
     super.initState();
     _sheeps = [];
-    _motifEntreeItems = _getMotifEntreeItems();
-    _dateEntreeCtl.text = _df.format(DateTime.now());
+    //_motifEntreeItems = _getMotifEntreeItems();
+    _dateEntreeCtl.text = DateFormat.yMd().format(DateTime.now());
+    /*
+    new Future.delayed(Duration.zero,() {
+      _motifEntreeItems = _getMotifEntreeItems(context);
+    });*/
     if ( ! _bloc.isLogged()!) {
       this._adBanner = BannerAd(
         adUnitId: _getBannerAdUnitId()!, //'<ad unit ID>',
@@ -220,6 +219,11 @@ class _EntreePageState extends State<EntreePage> {
       this._adBanner!.load();
     }
   }
+
+  void didChangeDependencies() {
+    _motifEntreeItems  = this._getMotifEntreeItems(context);
+  }
+
   @override
   void dispose() {
     super.dispose();

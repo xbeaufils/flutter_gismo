@@ -1,11 +1,13 @@
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:intl/intl.dart';
 enum Sante { VIVANT, MORT_NE, AVORTE }
 
 class MethodeAllaitementNotFoundException implements Exception {}
 
 class LambingModel {
+  final _df = new DateFormat('dd/MM/yyyy');
   int ? _idBd;
-  String ? _dateAgnelage;
+  DateTime ? _dateAgnelage;
   late int _idMere;
   String ? _numBoucleMere;
   String ? _numMarquageMere;
@@ -30,8 +32,8 @@ class LambingModel {
     _qualite = value;
   }
 
-  String ? get dateAgnelage => _dateAgnelage ;
-  void setDateAgnelage(String ? dateAgnelage) {
+  DateTime ? get dateAgnelage => _dateAgnelage ;
+  void setDateAgnelage(DateTime ? dateAgnelage) {
     this._dateAgnelage = dateAgnelage;
   }
   int get idMere => _idMere;
@@ -72,11 +74,11 @@ class LambingModel {
   }
 
   LambingModel.fromResult (result){
-    _idBd = result["id"];
+     _idBd = result["id"];
     _idMere = result["mere_id"];
     _numBoucleMere = result["numBoucleMere"];
     _numMarquageMere = result["numMarquageMere"];
-    _dateAgnelage = result["dateAgnelage"];
+    _dateAgnelage = _df.parse(result["dateAgnelage"]);
     _qualite = result["qualite"];
     _adoption = result["adoption"];
     _observations = result["observations"];
@@ -98,7 +100,7 @@ class LambingModel {
     if (this._idBd != null)
       data['id'] = this._idBd;
     data["mere_id"]= this.idMere;
-    data["dateAgnelage"]= this.dateAgnelage;
+    data["dateAgnelage"]= _df.format(this.dateAgnelage!);
     data["qualite"] = this._qualite;
     data["adoption"] = this._adoption;
     data["observations"] = this._observations;
@@ -112,7 +114,7 @@ class LambingModel {
     if (this._idBd != null)
       data['id'] = this._idBd;
     data["mere_id"]= this.idMere;
-    data["dateAgnelage"]= this.dateAgnelage;
+    data["dateAgnelage"]= _df.format(this.dateAgnelage!);
     data["qualite"] = this._qualite;
     data["adoption"] = this._adoption;
     data["observations"] = this._observations;
@@ -163,6 +165,7 @@ class MethodeAllaitement {
 }
 
 class LambModel {
+  final _df = new DateFormat('dd/MM/yyyy');
   int ? _idBd;
   late int _idAgnelage;
   int ? _idDevenir;
@@ -171,7 +174,7 @@ class LambModel {
 
   String ? _numBoucle;
   String ? _numMarquage;
-  String ? _dateDeces;
+  DateTime ? _dateDeces;
   String ? _motifDeces;
   late MethodeAllaitement _allaitement;
   late Sante _sante;
@@ -223,9 +226,9 @@ class LambModel {
     _idBd = value;
   }
 
-  String ? get dateDeces => _dateDeces;
+  DateTime ? get dateDeces => _dateDeces;
 
-  set dateDeces(String ? value) {
+  set dateDeces(DateTime ? value) {
     _dateDeces = value;
   }
 
@@ -249,9 +252,10 @@ class LambModel {
     _marquageProvisoire = result["marquageProvisoire"];
     _numMarquage = result["numMarquage"];
     _numBoucle = result["numBoucle"];
-    _idAgnelage= result["agnelage_id"];
-    _idDevenir = result["devenir_id"];
-    _dateDeces = result["dateDeces"];
+    //_idAgnelage= result["agnelage_id"];
+    //_idDevenir = result["devenir_id"];
+    if (result["dataDeces"] != null)
+      _dateDeces = _df.parse( result["dateDeces"] );
     _motifDeces = result["motifDeces"];
     _allaitement = MethodeAllaitement.getMethodeAllaitement(result["allaitement"]);
     switch (result["sante"]) {

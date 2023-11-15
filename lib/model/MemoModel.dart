@@ -1,5 +1,7 @@
 import 'dart:core';
 
+import 'package:intl/intl.dart';
+
 enum MemoClasse {ALERT, WARNING, INFO}
 
 class MemoModel {
@@ -7,18 +9,19 @@ class MemoModel {
   int ? bete_id;
   String ? numBoucle;
   String ? numMarquage;
-  String ? debut;
-  String ? fin;
+  DateTime ? debut;
+  DateTime ? fin;
   MemoClasse ? classe;
   String ? note;
   bool isExpanded=false;
+  final _df = new DateFormat('dd/MM/yyyy');
 
   MemoModel();
 
   MemoModel.fromResult(result) {
     id = result["id"];
-    debut = result["debut"];
-    fin = result["fin"];
+    debut = _df.parse( result["debut"]);
+    fin = _df.parse(result["fin"]);
     numBoucle = result["numBoucle"];
     numMarquage = result["numMarquage"];
     note = result["note"];
@@ -42,9 +45,9 @@ class MemoModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data["id"] = id;
-    data["debut"] = debut;
+    data["debut"] = _df.format(debut!);
     if (fin != null)
-      data["fin"] = fin;
+      data["fin"] = _df.format(fin!);
     data["classe"] = classe;
     data["note"] = note;
     data["bete_id"] = bete_id;

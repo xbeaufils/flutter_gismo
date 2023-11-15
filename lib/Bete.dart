@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/bloc/BluetoothBloc.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:intl/intl.dart';
@@ -48,33 +49,22 @@ class _BetePageState extends State<BetePage> {
 
   Widget _statusBluetoothBar() {
     if (! this._bloc.isLogged()!)
-      return Container();/*
-    return FutureBuilder(
-        future: this._bloc.configIsBt(),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.none && snapshot.hasData == null) {
-            return Container();
-          }
-          if (snapshot.connectionState == ConnectionState.waiting)
-            return Center(child: CircularProgressIndicator(),);
-          if (! snapshot.hasData )
-            return Container();*/
-          List<Widget> status = [];
-          switch (_bluetoothState ) {
-            case "NONE":
-              status.add(Icon(Icons.bluetooth));
-              status.add(Text("Non connecté"));
-              break;
-            case "WAITING":
-              status.add(Icon(Icons.bluetooth));
-              status.add(Expanded( child: LinearProgressIndicator(),) );
-              break;
-            case "AVAILABLE":
-              status.add(Icon(Icons.bluetooth));
-              status.add(Text("Données reçues"));
-          }
-          return Row(children: status,);
-   // });
+      return Container();
+    List<Widget> status = [];
+    switch (_bluetoothState ) {
+      case "NONE":
+        status.add(Icon(Icons.bluetooth));
+        status.add(Text(S.of(context).not_connected));
+        break;
+      case "WAITING":
+        status.add(Icon(Icons.bluetooth));
+        status.add(Expanded( child: LinearProgressIndicator(),) );
+        break;
+      case "AVAILABLE":
+        status.add(Icon(Icons.bluetooth));
+        status.add(Text(S.of(context).data_available));
+    }
+    return Row(children: status,);
   }
 
   @override
@@ -82,7 +72,7 @@ class _BetePageState extends State<BetePage> {
     return new Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(
-          title: new Text('Bete'),
+          title: new Text(S.of(context).sheep),
 
         ),
         floatingActionButton: _buildRfid(),
@@ -100,10 +90,10 @@ class _BetePageState extends State<BetePage> {
                   new TextFormField(
                     controller: _numBoucleCtrl,
                     keyboardType: TextInputType.number,
-                    decoration: InputDecoration(labelText: 'Numero boucle', hintText: 'Boucle'),
+                    decoration: InputDecoration(labelText: S.of(context).identity_number, hintText: S.of(context).flock_number_hint),
                     validator: (value) {
                         if (value!.isEmpty) {
-                          return 'Entrez un numero de boucle';
+                          return S.of(context).identity_number_warn;
                         }
                         return "";
                       },
@@ -116,10 +106,10 @@ class _BetePageState extends State<BetePage> {
                   new TextFormField(
                       //keyboardType: TextInputType.number,
                     controller: _numMarquageCtrl,
-                    decoration: InputDecoration(labelText: 'Numero marquage', hintText: 'Marquage'),
+                    decoration: InputDecoration(labelText: S.of(context).flock_number, hintText: S.of(context).flock_number_hint),
                     validator: (value) {
                         if (value!.isEmpty) {
-                          return 'Entrez un numero de marquage';
+                          return S.of(context).enter_flock_number;
                         }
                         return "";
                         },
@@ -132,7 +122,7 @@ class _BetePageState extends State<BetePage> {
                   new TextFormField(
                     //keyboardType: TextInputType.number,
                       initialValue: _nom,
-                      decoration: InputDecoration(labelText: 'Petit nom', hintText: 'Nom'),
+                      decoration: InputDecoration(labelText: S.of(context).name, hintText: S.of(context).name_hint),
                       onSaved: (value) {
                         setState(() {
                           _nom = value;
@@ -143,7 +133,7 @@ class _BetePageState extends State<BetePage> {
                      children: <Widget>[
                       new Flexible (child:
                           RadioListTile<Sex>(
-                            title: const Text('Male'),
+                            title: Text(S.of(context).male),
                             selected: _sex == Sex.male,
                             value: Sex.male,
                             groupValue: _sex,
@@ -152,7 +142,7 @@ class _BetePageState extends State<BetePage> {
                       ),
                       new Flexible( child:
                           RadioListTile<Sex>(
-                            title: const Text('Femelle'),
+                            title: Text(S.of(context).female),
                             selected: _sex == Sex.femelle,
                             value: Sex.femelle,
                             groupValue: _sex,
@@ -164,7 +154,7 @@ class _BetePageState extends State<BetePage> {
                     //keyboardType: TextInputType.number,
                       initialValue: _obs,
                       decoration: InputDecoration(
-                          labelText: 'Observations',
+                          labelText: S.of(context).observations,
                           hintText: 'Obs',
                           border: OutlineInputBorder(),
                           enabledBorder: OutlineInputBorder()),
@@ -178,7 +168,7 @@ class _BetePageState extends State<BetePage> {
                   ElevatedButton (
                   // RaisedButton(
                       child: new Text(
-                        (_bete == null)?'Ajouter':'Enregistrer',
+                        (_bete == null)? S.of(context).bt_add: S.of(context).bt_save,
                         style: new TextStyle(color: Colors.white),
                       ),
                       onPressed: _save,
@@ -234,23 +224,23 @@ class _BetePageState extends State<BetePage> {
   void _save() async {
     _formKey.currentState!.save();
     if (_numBoucleCtrl.text == null) {
-      this._badSaving("Numéro de boucle absent");
+      this._badSaving(S.of(context).identity_number_warn);
       return;
     }
     if (_numBoucleCtrl.text.isEmpty){
-      this._badSaving("Numéro de boucle absent");
+      this._badSaving(S.of(context).identity_number_warn);
       return;
     }
     if (_numMarquageCtrl.text == null){
-      this._badSaving("Numéro de marquage absent");
+      this._badSaving(S.of(context).flock_number_warn);
       return;
     }
     if (_numMarquageCtrl.text.isEmpty){
-      this._badSaving("Numéro de marquage absent");
+      this._badSaving(S.of(context).flock_number_warn);
       return;
     }
     if (_sex == null){
-      this._badSaving("Sexe absent");
+      this._badSaving(S.of(context).sex_warn);
       return;
     }
     bool _existant = false;
@@ -261,7 +251,7 @@ class _BetePageState extends State<BetePage> {
           _numMarquageCtrl.text,
           _nom,
           _obs,
-          _dateEntreCtrl.text,
+          DateFormat.yMd().parse(_dateEntreCtrl.text),
           _sex!,
           _motif);
       _existant = await _bloc.checkBete(_bete!);
@@ -271,7 +261,7 @@ class _BetePageState extends State<BetePage> {
       _bete!.numMarquage = _numMarquageCtrl.text;
       _bete!.nom = _nom!;
       _bete!.observations = _obs!;
-      _bete!.dateEntree =  _dateEntreCtrl.text;
+      _bete!.dateEntree =  DateFormat.yMd().parse(_dateEntreCtrl.text);
       _bete!.sex = _sex!;
       if (_motif != null)
         _bete!.motifEntree = _motif!;
@@ -285,7 +275,7 @@ class _BetePageState extends State<BetePage> {
         .of(context)
         .pop(_bete);
     else
-      _badSaving("Numero de boucle déja présent");
+      _badSaving(S.of(context).identity_number_error);
   }
 
   void _goodSaving(String message) {
@@ -308,7 +298,7 @@ class _BetePageState extends State<BetePage> {
     if (_bete == null )
       _dateEntreCtrl.text = df.format(_selectedDate);
     else {
-      _dateEntreCtrl.text = _bete!.dateEntree;
+      _dateEntreCtrl.text = DateFormat.yMd().format(_bete!.dateEntree);
       _numBoucleCtrl.text = _bete!.numBoucle;
       _numMarquageCtrl.text = _bete!.numMarquage;
       _nom = _bete!.nom;
@@ -325,7 +315,8 @@ class _BetePageState extends State<BetePage> {
       //if ( await this._bloc.configIsBt()) {
         debug.log("Start service ", name: "_BetePageState::_startService");
         BluetoothState _bluetoothState =  await this._bloc.startReadBluetooth();
-        debug.log("Start status " + _bluetoothState.status, name: "_BetePageState::_startService");
+        if (_bluetoothState.status != null)
+          debug.log("Start status " + _bluetoothState.status!, name: "_BetePageState::_startService");
         if (_bluetoothState.status == BluetoothBloc.CONNECTED
             || _bluetoothState.status == BluetoothBloc.STARTED) {
           this._bluetoothStream = this._btBloc.streamReadBluetooth();
@@ -334,13 +325,18 @@ class _BetePageState extends State<BetePage> {
                 (BluetoothState event) {
                   if (this._bluetoothState != event.status)
                     setState(() {
-                      this._bluetoothState = event.status;
+                      this._bluetoothState = event.status!;
                       if (event.status == 'AVAILABLE') {
-                        String _foundBoucle = event.data;
-                        if (_foundBoucle.length > 15)
-                          _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
-                        _numBoucleCtrl.text = _foundBoucle.substring(_foundBoucle.length - 5);
-                        _numMarquageCtrl.text = _foundBoucle.substring(0, _foundBoucle.length - 5);
+                        String ? _foundBoucle = event.data;
+                        if ( _foundBoucle != null) {
+                          if (_foundBoucle.length > 15)
+                            _foundBoucle = _foundBoucle.substring(
+                                _foundBoucle.length - 15);
+                          _numBoucleCtrl.text =
+                              _foundBoucle.substring(_foundBoucle.length - 5);
+                          _numMarquageCtrl.text = _foundBoucle.substring(
+                              0, _foundBoucle.length - 5);
+                        }
                       }
                     });
                   });

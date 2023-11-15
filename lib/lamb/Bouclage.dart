@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/bloc/BluetoothBloc.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
@@ -46,7 +47,7 @@ class _BouclagePageState extends State<BouclagePage> {
     return new Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(
-          title: new Text('Bouclage'),
+          title: new Text(S.of(context).earring),
         ),
         floatingActionButton: _buildRfid(),
         body: new Container(
@@ -62,10 +63,10 @@ class _BouclagePageState extends State<BouclagePage> {
                     new TextFormField(
                       controller: this._numBoucleCtrl,
                         keyboardType: TextInputType.number,
-                        decoration: InputDecoration(labelText: 'Numero boucle', hintText: 'Boucle'),
+                        decoration: InputDecoration(labelText: S.of(context).identity_number, hintText: S.of(context).identity_number_hint),
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Please enter a name';
+                            return S.of(context).enter_identity_number;
                           }
                           return "";
                         },
@@ -78,10 +79,10 @@ class _BouclagePageState extends State<BouclagePage> {
                     new TextFormField(
                         controller: this._numMarquageCtrl,
                         keyboardType: TextInputType.number,
-                        decoration: InputDecoration(labelText: 'Numero marquage', hintText: 'Marquage'),
+                        decoration: InputDecoration(labelText: S.of(context).flock_number, hintText: S.of(context).flock_number_hint),
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'Please enter a name';
+                            return S.of(context).enter_flock_number;
                           }
                           return "";
                         },
@@ -93,7 +94,7 @@ class _BouclagePageState extends State<BouclagePage> {
                     ),
                     new ElevatedButton(
                       child: new Text(
-                        'Poser la boucle',
+                        S.of(context).place_earring,
                         style: new TextStyle(color: Colors.white),
                       ),
                       onPressed: _createBete,
@@ -108,6 +109,7 @@ class _BouclagePageState extends State<BouclagePage> {
   void initState() {
     if (this._bloc.isLogged()!)
       this._startService();
+    super.initState();
   }
 
   Widget _buildRfid() {
@@ -128,7 +130,7 @@ class _BouclagePageState extends State<BouclagePage> {
     switch (_bluetoothState ) {
       case "NONE":
         status.add(Icon(Icons.bluetooth));
-        status.add(Text("Non connecté"));
+        status.add(Text(S.of(context).not_connected));
         break;
       case "WAITING":
         status.add(Icon(Icons.bluetooth));
@@ -136,7 +138,7 @@ class _BouclagePageState extends State<BouclagePage> {
         break;
       case "AVAILABLE":
         status.add(Icon(Icons.bluetooth));
-        status.add(Text("Données reçues"));
+        status.add(Text(S.of(context).data_available));
     }
     return Row(children: status,);
   }
@@ -204,7 +206,8 @@ class _BouclagePageState extends State<BouclagePage> {
     try {
       debug.log("Start service ", name: "_BouclagePageState::_startService");
       BluetoothState _bluetoothState =  await this._bloc.startReadBluetooth();
-      debug.log("Start status " + _bluetoothState.status, name: "_BouclagePageState::_startService");
+      if (_bluetoothState.status != null)
+        debug.log("Start status " + _bluetoothState.status!, name: "_BouclagePageState::_startService");
       if (_bluetoothState.status == BluetoothBloc.CONNECTED
           || _bluetoothState.status == BluetoothBloc.STARTED) {
         //this._bluetoothStream.listen((BluetoothState event) { })
@@ -212,9 +215,9 @@ class _BouclagePageState extends State<BouclagePage> {
                 (BluetoothState event) {
                   if (this._bluetoothState != event.status)
               setState(() {
-                this._bluetoothState = event.status;
+                this._bluetoothState = event.status!;
                 if (event.status == 'AVAILABLE') {
-                  String _foundBoucle = event.data;
+                  String _foundBoucle = event.data!;
                   if (_foundBoucle.length > 15)
                     _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
                   _numBoucleCtrl.text = _foundBoucle.substring(_foundBoucle.length - 5);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/AgnelageQualite.dart';
 
 class AgnelageDialog extends StatefulWidget {
@@ -18,31 +19,32 @@ class AgnelageState extends State<AgnelageDialog> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: const Text("Defaut d'agnelage"),
+        title: Text(S.of(context).lambing_default),
 
       ),
       body:
       new Column(
           children: <Widget> [
             ListTile(
-              title: const Text("Defauts courants sur l'agnelage"),
-              subtitle: const Text("Permet d'évaluer les défauts sur l'agnelage"),
+              title: Text(S.of(context).title_lambing_default),
+              subtitle: Text(S.of(context).text_lambing_default),
               trailing: new Icon(Icons.copyright),
             ),
-            _getAgnelage(Agnelage.level0),
-            _getAgnelage(Agnelage.level1),
-            _getAgnelage(Agnelage.level2),
-            _getAgnelage(Agnelage.level3),
-            _getAgnelage(Agnelage.level4),
+            _getAgnelage(AgnelageEnum.level0),
+            _getAgnelage(AgnelageEnum.level1),
+            _getAgnelage(AgnelageEnum.level2),
+            _getAgnelage(AgnelageEnum.level3),
+            _getAgnelage(AgnelageEnum.level4),
           ]),
 
     );
   }
 
-  Widget _getAgnelage(Agnelage agnelage) {
+  Widget _getAgnelage(AgnelageEnum agnelage) {
+    AgnelageHelper translator = new AgnelageHelper(this.context);
     return RadioListTile<int>(
       title: Text(agnelage.key.toString()),
-      subtitle: Text(agnelage.value),
+      subtitle: Text(translator.translate(agnelage)),
       value: agnelage.key,
       groupValue: _agnelage,
       onChanged: (int ? value) {
@@ -59,6 +61,7 @@ class AgnelageState extends State<AgnelageDialog> {
   @override
   void initState() {
     _agnelage = this.widget._currentLevel;
+    super.initState();
   }
 
 

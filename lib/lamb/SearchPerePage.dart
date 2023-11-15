@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 
@@ -32,16 +32,16 @@ class _SearchPerePageState  extends State<SearchPerePage> {
         bottomNavigationBar:
         BottomNavigationBar(
             items: [
-              BottomNavigationBarItem(icon: Image.asset("assets/Lot.png"),label:"Lots"),
-              BottomNavigationBarItem(icon: Image.asset("assets/saillie.png"),  label: "Saillie"),
-              BottomNavigationBarItem(icon: Image.asset("assets/ram_inactif.png"), label: "Tout beliers"),
+              BottomNavigationBarItem(icon: Image.asset("assets/Lot.png"),label: S.of(context).batch),
+              BottomNavigationBarItem(icon: Image.asset("assets/saillie.png"),  label: S.of(context).mating),
+              BottomNavigationBarItem(icon: Image.asset("assets/ram_inactif.png"), label: S.of(context).all_ram),
             ],
             currentIndex: _curIndex,
             onTap: (index) =>{ _changePage(index)}
         ),
         appBar: new AppBar(
           title:
-          Text("Recherche du père") ,
+          Text(S.of(context).search_ram) ,
         ),
         body:
         _listBelierWidget()
@@ -80,8 +80,8 @@ class _SearchPerePageState  extends State<SearchPerePage> {
           return Center( child:
           ListTile(
             leading: Icon(Icons.info_outline),
-            title: Text('Liste vide'),
-            subtitle: Text("Pas de bélier trouvé avec les critères choisis"),
+            title: Text(S.of(context).title_empty_list),
+            subtitle: Text(S.of(context).no_ram_found),
           ),);
 
         return ListView.builder(

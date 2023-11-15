@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:intl/intl.dart';
+
 
 class MemoPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -25,7 +27,7 @@ class MemoPageState extends State<MemoPage> {
   TextEditingController _noteCtl = TextEditingController();
   MemoClasse  _classe = MemoClasse.INFO;
 
-  final _df = new DateFormat('dd/MM/yyyy');
+  final _df =  new DateFormat('dd/MM/yyyy');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool _isSaving = false;
 
@@ -34,7 +36,7 @@ class MemoPageState extends State<MemoPage> {
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: const Text("Note"),
+        title: Text(S.of(context).memo),
         //leading: Text(this.widget._bete.numBoucle),
       ),
       body:
@@ -52,11 +54,11 @@ class MemoPageState extends State<MemoPage> {
                           keyboardType: TextInputType.datetime,
                           controller: _dateDebutCtl,
                           decoration: InputDecoration(
-                              labelText: "Date début",
+                              labelText: S.of(context).date_debut,
                               hintText: 'jj/mm/aaaa'),
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return "Pas de date de début";
+                              return S.of(context).no_date_debut;
                             }},
                           onSaved: (value) {
                             setState(() {
@@ -67,7 +69,7 @@ class MemoPageState extends State<MemoPage> {
                             DateTime ? date = DateTime.now();
                             FocusScope.of(context).requestFocus(new FocusNode());
                             date = await showDatePicker(
-                                locale: const Locale("fr","FR"),
+                                //locale: const Locale("fr","FR"),
                                 context: context,
                                 initialDate:DateTime.now(),
                                 firstDate:DateTime(1900),
@@ -84,7 +86,7 @@ class MemoPageState extends State<MemoPage> {
                           keyboardType: TextInputType.datetime,
                           controller: _dateFinCtl,
                           decoration: InputDecoration(
-                              labelText: "Date fin",
+                              labelText: S.of(context).date_fin,
                               hintText: 'jj/mm/aaaa'),
                           onSaved: (value) {
                             setState(() {
@@ -95,7 +97,7 @@ class MemoPageState extends State<MemoPage> {
                             DateTime ? date = DateTime.now();
                             FocusScope.of(context).requestFocus(new FocusNode());
                             date = await showDatePicker(
-                                locale: const Locale("fr","FR"),
+                                //locale: const Locale("fr","FR"),
                                 context: context,
                                 initialDate:DateTime.now(),
                                 firstDate:DateTime(1900),
@@ -115,19 +117,19 @@ class MemoPageState extends State<MemoPage> {
                       _classe = value!;
                     });
                   }),
-                  Icon(Icons.warning_amber_outlined),  Text(" Alerte"),Spacer(),
+                  Icon(Icons.warning_amber_outlined),  Text( S.of(context).alert),Spacer(),
                   Radio(value: MemoClasse.WARNING, groupValue: _classe, onChanged: (MemoClasse ? value) {
                     setState(() {
                       _classe = value!;
                     });
                   }),
-                  Icon(Icons.error_outline),  Text(" Warning"),Spacer(),
+                  Icon(Icons.error_outline),  Text(S.of(context).warning),Spacer(),
                   Radio(value: MemoClasse.INFO, groupValue: _classe, onChanged: (MemoClasse ? value) {
                     setState(() {
                       _classe = value!;
                     });
                   }),
-                  Icon(Icons.info_outlined),  Text(" Info"),Spacer(),
+                  Icon(Icons.info_outlined),  Text(S.of(context).info),Spacer(),
                 ],
               ),
               TextFormField(
@@ -135,11 +137,11 @@ class MemoPageState extends State<MemoPage> {
                   maxLines: 3,
                   controller: _noteCtl,
                   decoration: InputDecoration(
-                      labelText: "Note",
-                      hintText: 'Information sur cette bête'),
+                      labelText: S.of(context).note_label,
+                      hintText: S.of(context).note_hint),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return "Pas de note saisi";
+                      return S.of(context).no_note;
                     }},
                   onSaved: (value) {
                     setState(() {
@@ -149,7 +151,7 @@ class MemoPageState extends State<MemoPage> {
               ),
               (_isSaving) ? CircularProgressIndicator():
               ElevatedButton(
-                  child: Text('Enregistrer',),
+                  child: Text(S.of(context).bt_save,),
                   //style: new TextStyle(color: Colors.white, ),),
                   style : ButtonStyle(
                     textStyle: MaterialStateProperty.all( TextStyle(color: Colors.white, ) ),
@@ -168,9 +170,9 @@ class MemoPageState extends State<MemoPage> {
     if (this.widget._currentNote == null)
       _dateDebutCtl.text = _df.format(DateTime.now());
     else {
-      _dateDebutCtl.text = this.widget._currentNote!.debut!;
+      _dateDebutCtl.text = DateFormat.yMd().format(this.widget._currentNote!.debut!);
       if (this.widget._currentNote!.fin != null)
-        _dateFinCtl.text = this.widget._currentNote!.fin!;
+        _dateFinCtl.text = DateFormat.yMd().format(this.widget._currentNote!.fin!);
       _noteCtl.text = this.widget._currentNote!.note!;
       this._classe = this.widget._currentNote!.classe!;
     }
@@ -183,9 +185,9 @@ class MemoPageState extends State<MemoPage> {
     });
     if (this.widget._currentNote == null)
       this.widget._currentNote = new MemoModel();
-    this.widget._currentNote!.debut = _dateDebutCtl.text;
+    this.widget._currentNote!.debut = DateFormat.yMd().parse(_dateDebutCtl.text);
     if (_dateFinCtl.text.isNotEmpty)
-      this.widget._currentNote!.fin = _dateFinCtl.text;
+      this.widget._currentNote!.fin = DateFormat.yMd().parse(_dateFinCtl.text);
     else
       this.widget._currentNote!.fin = null;
     this.widget._currentNote!.note = _noteCtl.text;

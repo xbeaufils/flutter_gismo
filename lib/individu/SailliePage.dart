@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:intl/intl.dart';
@@ -37,7 +38,7 @@ class _SailliePageState extends State<SailliePage> {
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: const Text("Saillie"),
+        title: Text(S.of(context).mating),
         leading: Text(this.widget._bete.numBoucle),
       ),
       body:
@@ -47,11 +48,11 @@ class _SailliePageState extends State<SailliePage> {
                 keyboardType: TextInputType.datetime,
                 controller: _dateSaillieCtl,
                 decoration: InputDecoration(
-                    labelText: "Date de saillie",
+                    labelText: S.of(context).mating_date,
                     hintText: 'jj/mm/aaaa'),
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return "Pas de date saisie";
+                    return S.of(context).no_mating_date;
                   }},
                 onSaved: (value) {
                   setState(() {
@@ -76,8 +77,8 @@ class _SailliePageState extends State<SailliePage> {
             Card(
               child: Column(children: [
                 ListTile(
-                  title: Text("Mâle") ,
-                  subtitle: Text("Si vide, la saillie ne sera pas enregistrée ou sera supprimée"),
+                  title: Text(S.of(context).male) ,
+                  subtitle: Text(S.of(context).mating_male_text),
                 ),
                 ListTile(
                   title: Text(_numBouclePere) ,
@@ -91,7 +92,7 @@ class _SailliePageState extends State<SailliePage> {
             ),
             (_isSaving) ? CircularProgressIndicator():
               ElevatedButton(
-                child: Text('Enregistrer',),
+                child: Text(S.of(context).bt_save,),
                   //style: new TextStyle(color: Colors.white, ),),
                 style : ButtonStyle(
                     textStyle: MaterialStateProperty.all( TextStyle(color: Colors.white, ) ),
@@ -110,7 +111,7 @@ class _SailliePageState extends State<SailliePage> {
       _dateSaillieCtl.text = _df.format(DateTime.now());
     }
     else {
-      _dateSaillieCtl.text = this.widget._currentSaillie!.dateSaillie!;
+      _dateSaillieCtl.text = DateFormat.yMd().format(this.widget._currentSaillie!.dateSaillie!);
       _numBouclePere = (this.widget._currentSaillie!.numBouclePere != null) ? this.widget._currentSaillie!.numBouclePere! : "";
       _numMarquagePere =(this.widget._currentSaillie!.numMarquagePere != null) ? this.widget._currentSaillie!.numMarquagePere! : "";
     }
@@ -149,7 +150,7 @@ class _SailliePageState extends State<SailliePage> {
     if (this.widget._currentSaillie == null)
       this.widget._currentSaillie = new SaillieModel();
     this.widget._currentSaillie!.idMere = this.widget._bete.idBd!;
-    this.widget._currentSaillie!.dateSaillie = _dateSaillieCtl.text;
+    this.widget._currentSaillie!.dateSaillie = DateFormat.yMd().parse(_dateSaillieCtl.text);
     this.widget._currentSaillie!.idPere = _idPere!;
     message =
       await this._bloc.saveSaillie(this.widget._currentSaillie!);

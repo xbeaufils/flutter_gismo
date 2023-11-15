@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/PeseePage.dart';
 import 'package:flutter_gismo/lamb/Bouclage.dart';
 import 'package:flutter_gismo/lamb/Mort.dart';
@@ -41,7 +42,7 @@ class LambPageState extends State<LambPage> {
           Column(
               children: <Widget>[
                 new TextField(
-                  decoration: InputDecoration(labelText: 'Marquage provisoire'),
+                  decoration: InputDecoration(labelText: S.of(context).provisional_number),
                   controller: _marquageCtrl,
                 ),
                 new Row(
@@ -51,7 +52,7 @@ class LambPageState extends State<LambPage> {
                     children: <Widget>[
                       new Flexible (child:
                         RadioListTile<Sex>(
-                          title: const Text('Male'),
+                          title: Text(S.of(context).male),
                           value: Sex.male,
                           groupValue: _sex,
                           onChanged: (Sex ? value) { setState(() { _sex = value! ; }); },
@@ -59,7 +60,7 @@ class LambPageState extends State<LambPage> {
                       ),
                       new Flexible( child:
                         RadioListTile<Sex>(
-                          title: const Text('Femelle'),
+                          title: Text(S.of(context).female),
                           value: Sex.femelle,
                           groupValue: _sex,
                           onChanged: (Sex ? value) { setState(() { _sex = value!; }); },
@@ -72,24 +73,24 @@ class LambPageState extends State<LambPage> {
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text("Etat de santé"),
+                      Text(S.of(context).health),
                         RadioListTile<Sante>(
                           dense: true,
-                          title: const Text('Vivant'),
+                          title: Text(S.of(context).alive),
                           value: Sante.VIVANT,
                           groupValue: _sante,
                           onChanged: (Sante ? value) { setState(() { _sante = value!; }); },
                         ),
                         RadioListTile<Sante>(
                           dense: true,
-                          title: const Text('Mort-né'),
+                          title: Text(S.of(context).stillborn),
                           value: Sante.MORT_NE,
                           groupValue: _sante,
                           onChanged: (Sante ? value) { setState(() { _sante = value!; }); },
                         ),
                         RadioListTile<Sante>(
                           dense: true,
-                          title: const Text('Avorté'),
+                          title: Text(S.of(context).aborted),
                           value: Sante.AVORTE,
                           groupValue: _sante,
                           onChanged: (Sante ? value) { setState(() { _sante = value!; }); },
@@ -100,7 +101,7 @@ class LambPageState extends State<LambPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    new Text("Mode d'allaitement: "),
+                    new Text(S.of(context).breastfeeding_mode),
                     new Container(
                       padding: new EdgeInsets.all(16.0),
                     ),
@@ -111,13 +112,7 @@ class LambPageState extends State<LambPage> {
                     )
                   ],
                 ),
-                //new Row(
-                //    mainAxisAlignment: MainAxisAlignment.center,
-                //    mainAxisSize: MainAxisSize.max,
-                //    children: <Widget>[
                       this._mainButton(),
-                //    ]
-                //),
                 SizedBox(
                     height: 200,
                     child : (this.widget._lamb == null) ? Container() : _buildEvents())
@@ -151,10 +146,10 @@ class LambPageState extends State<LambPage> {
   @override
   void initState() {
     List<DropdownMenuItem<MethodeAllaitement>> items = [];
-    items.add(new DropdownMenuItem( value: MethodeAllaitement.ALLAITEMENT_MATERNEL, child: new Text(MethodeAllaitement.ALLAITEMENT_MATERNEL.libelle)));
-    items.add(new DropdownMenuItem( value: MethodeAllaitement.ALLAITEMENT_ARTIFICIEL, child: new Text(MethodeAllaitement.ALLAITEMENT_ARTIFICIEL.libelle)));
-    items.add(new DropdownMenuItem( value: MethodeAllaitement.ADOPTE, child: new Text(MethodeAllaitement.ADOPTE.libelle)));
-    items.add(new DropdownMenuItem( value: MethodeAllaitement.BIBERONNE, child: new Text(MethodeAllaitement.BIBERONNE.libelle)));
+      items.add(new DropdownMenuItem( value: MethodeAllaitement.ALLAITEMENT_MATERNEL, child: new Text(MethodeAllaitement.ALLAITEMENT_MATERNEL.libelle)));
+      items.add(new DropdownMenuItem( value: MethodeAllaitement.ALLAITEMENT_ARTIFICIEL, child: new Text(MethodeAllaitement.ALLAITEMENT_ARTIFICIEL.libelle)));
+      items.add(new DropdownMenuItem( value: MethodeAllaitement.ADOPTE, child: new Text(MethodeAllaitement.ADOPTE.libelle)));
+      items.add(new DropdownMenuItem( value: MethodeAllaitement.BIBERONNE, child: new Text(MethodeAllaitement.BIBERONNE.libelle)));
     _dropDownMenuItems = items;
     if (this.widget._lamb != null) {
       _currentAllaitement = this.widget._lamb!.allaitement;
@@ -181,8 +176,7 @@ class LambPageState extends State<LambPage> {
           onPressed:_addLamb,
           //color: Colors.lightGreen[900],
           child:
-          new Text(
-            "Ajouter",
+          new Text(S.of(context).bt_add,
             style: new TextStyle(color: Colors.white),
           )
       );
@@ -191,7 +185,7 @@ class LambPageState extends State<LambPage> {
         onPressed:_saveLamb,
       //color: Colors.lightGreen[900],
         icon: Icon(Icons.save),
-        label: Text("Enregistrer"),
+        label: Text(S.of(context).bt_save),
       ) ;
   }
 
@@ -349,7 +343,7 @@ class LambPageState extends State<LambPage> {
   // set up the buttons
   Widget _cancelButton() {
     return TextButton(
-      child: Text("Annuler"),
+      child: Text(S.of(context).bt_cancel),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -358,7 +352,7 @@ class LambPageState extends State<LambPage> {
 
   Widget _continueButton(Event event) {
     return TextButton(
-      child: Text("Continuer"),
+      child: Text(S.of(context).bt_continue),
       onPressed: () {
         if (event.type == EventType.pesee || event.type == EventType.traitement)
           _deleteEvent(event);
@@ -368,18 +362,12 @@ class LambPageState extends State<LambPage> {
   }
 
   Future _showDialog(BuildContext context, Event event) {
-    String message ="Voulez vous supprimer ";
-    if (event.type == EventType.traitement)
-      message += "ce traitement ?";
-    if (event.type == EventType.pesee)
-      message += "cette pesée ?";
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Suppression"),
-          content: Text(
-              message),
+          title: Text(S.of(context).title_delete),
+          content: Text(S.of(context).text_delete),
           actions: [
             _cancelButton(),
             _continueButton(event),

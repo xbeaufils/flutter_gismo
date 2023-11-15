@@ -2,9 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-//import 'package:admob_flutter/admob_flutter.dart';
-//import 'package:facebook_audience_network/facebook_audience_network.dart';
-//import 'package:dio/dio.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Exception/EventException.dart';
@@ -27,9 +24,7 @@ import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/model/User.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-//import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
-//import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -225,14 +220,14 @@ class GismoBloc {
     return this._repository.dataProvider.saveLamb(lambs);
   }
   */
-  Future<String> saveSortie(String date, String motif, List<Bete> betes ) async {
-    debug.log("Motif " + motif + " date " + date + " nb Betes " + betes.length.toString(), name: "GismoBloc::saveSortie");
+  Future<String> saveSortie(DateTime date, String motif, List<Bete> betes ) async {
+    debug.log("Motif " + motif + " date " + date.toString() + " nb Betes " + betes.length.toString(), name: "GismoBloc::saveSortie");
     this._repository!.dataProvider.saveSortie(date, motif, betes);
     return "Enregistrement effectué";
   }
 
-  Future<String> saveEntree(String date, String motif, List<Bete> betes ) async {
-    debug.log("Motif " + motif + " date " + date + " nb Betes " + betes.length.toString(), name: "GismoBloc::saveEntree");
+  Future<String> saveEntree(DateTime date, String motif, List<Bete> betes ) async {
+    debug.log("Motif " + motif + " date " + date.toString() + " nb Betes " + betes.length.toString(), name: "GismoBloc::saveEntree");
     this._repository!.dataProvider.saveEntree(this._currentUser!.cheptel!, date, motif, betes);
     return "OK";
   }
@@ -285,22 +280,22 @@ class GismoBloc {
       List<EchographieModel> lstEcho = await this._repository!.dataProvider.getEcho(bete);
       List<SaillieModel> lstSaillie = await this._repository!.dataProvider.getSaillies(bete);
       List<MemoModel> lstMemos = await this._repository!.dataProvider.getMemos(bete);
-      lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd!, EventType.agnelage, lambing.dateAgnelage!, lambing.lambs.length.toString()))});
-      lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement, traitement.debut, traitement.medicament))});
-      lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd!, EventType.NEC, note.date, note.note.toString()))});
-      lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id!, EventType.pesee, poids.datePesee, poids.poids.toString()))});
+      lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd!, EventType.agnelage, DateFormat.yMd().format(lambing.dateAgnelage!), lambing.lambs.length.toString()))});
+      lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement, DateFormat.yMd().format(traitement.debut), traitement.medicament))});
+      lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd!, EventType.NEC, DateFormat.yMd().format(note.date), note.note.toString()))});
+      lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id!, EventType.pesee, DateFormat.yMd().format(poids.datePesee), poids.poids.toString()))});
       lstAffect.forEach( (affect) => {lstEvents.addAll ( _makeEventforAffectation(affect) )});
-      lstEcho.forEach((echo) {lstEvents.add(new Event.name(echo.idBd!, EventType.echo, echo.dateEcho, echo.nombre.toString())); });
+      lstEcho.forEach((echo) {lstEvents.add(new Event.name(echo.idBd!, EventType.echo, DateFormat.yMd().format(echo.dateEcho), echo.nombre.toString())); });
       lstSaillie.forEach((saillie) {
         String numBoucleConjoint;
         if (bete.sex == Sex.male)
           numBoucleConjoint = saillie.numBoucleMere!;
         else
           numBoucleConjoint = saillie.numBouclePere!;
-        lstEvents.add(new Event.name(saillie.idBd!, EventType.saillie, saillie.dateSaillie!, numBoucleConjoint));
+        lstEvents.add(new Event.name(saillie.idBd!, EventType.saillie, DateFormat.yMd().format(saillie.dateSaillie!), numBoucleConjoint));
 
       });
-      lstMemos.forEach((note) {lstEvents.add(new Event.name(note.id!, EventType.memo, note.debut!, note.note!)); });
+      lstMemos.forEach((note) {lstEvents.add(new Event.name(note.id!, EventType.memo, DateFormat.yMd().format(note.debut!), note.note!)); });
       lstEvents.sort((a, b) =>  _compareDate(a, b));
       return lstEvents;
     }
@@ -314,9 +309,9 @@ class GismoBloc {
     try {
       List<Event> lstEvents = [];
       List<Pesee> lstPoids  = await this._repository!.dataProvider.getPeseeForLamb(lamb);
-      lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id!, EventType.pesee, poids.datePesee, poids.poids.toString()))});
+      lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id!, EventType.pesee, DateFormat.yMd().format( poids.datePesee) , poids.poids.toString()))});
       List<TraitementModel> lstTraits = await this._repository!.dataProvider.getTraitementsForLamb(lamb);
-      lstTraits.forEach((traitement) {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement,  traitement.debut, traitement.medicament)); });
+      lstTraits.forEach((traitement) {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement,  DateFormat.yMd().format(traitement.debut), traitement.medicament)); });
       return lstEvents;
     }
     catch(e, stackTrace) {
@@ -463,7 +458,7 @@ class GismoBloc {
      */
   }
 
-  Future<String> saveNec(Bete bete, NEC nec, String date) async{
+  Future<String> saveNec(Bete bete, NEC nec, DateTime date) async{
     try {
       //await Future.delayed(Duration(seconds: 3), () => print('Large Latte'));
       NoteModel note = new NoteModel();
@@ -480,7 +475,7 @@ class GismoBloc {
     }
   }
 
-  Future<String> savePesee(Bete bete, double poids, String date ) async {
+  Future<String> savePesee(Bete bete, double poids, DateTime date ) async {
     try {
       Pesee pesee = new Pesee();
       pesee.bete_id = bete.idBd;
@@ -495,7 +490,7 @@ class GismoBloc {
     }
   }
 
-  Future<String> savePeseeLamb(LambModel lamb, double poids, String date ) async {
+  Future<String> savePeseeLamb(LambModel lamb, double poids, DateTime date ) async {
     try {
       Pesee pesee = new Pesee();
       pesee.lamb_id = lamb.idBd!;

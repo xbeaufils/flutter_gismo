@@ -10,10 +10,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.core.app.ActivityCompat;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -43,7 +41,7 @@ public class LocationMethod extends MethodChannel {
             this.mContext = context;
         }
         @Override
-        public void onMethodCall(@NonNull @NotNull MethodCall call, @NonNull @NotNull MethodChannel.Result result) {
+        public void onMethodCall(MethodCall call, MethodChannel.Result result) {
             locationManager = (LocationManager) this.mContext.getSystemService(Context.LOCATION_SERVICE);
 
             if (call.method.contentEquals("startLocation")) {

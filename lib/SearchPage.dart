@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as debug;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/bloc/BluetoothBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/individu/NECPage.dart';
 import 'package:flutter_gismo/individu/PeseePage.dart';
@@ -16,7 +18,6 @@ import 'package:flutter_gismo/lamb/lambing.dart';
 import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
-import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
 import 'package:sentry/sentry.dart';
 
@@ -70,16 +71,20 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   void initState() {
     this._getBetes();
     super.initState();
-    if (this._bloc.isLogged()!)
-      this._startService();
+    if (this._bloc.isLogged()! && defaultTargetPlatform == TargetPlatform.android)
+      new Future.delayed(Duration.zero,() {
+        this._startService(context);
+      });
     }
 
   @override
   void dispose() {
-    PLATFORM_CHANNEL.invokeMethod<String>('stop');
-    this._bloc.stopReadBluetooth();
-    if (this._bluetoothSubscription != null)
-      this._bluetoothSubscription?.cancel();
+    if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
+      PLATFORM_CHANNEL.invokeMethod<String>('stop');
+      this._bloc.stopReadBluetooth();
+      if (this._bluetoothSubscription != null)
+        this._bluetoothSubscription?.cancel();
+    }
     super.dispose();
   }
 
@@ -90,23 +95,23 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       body:
         Column(
           children: [
-            _statusBluetoothBar(),
-            Expanded(child: _buildList() ),
+            _statusBluetoothBar(context),
+            Expanded(child: _buildList(context) ),
           ],
         ),
-      floatingActionButton: _buildRfid(),
+      floatingActionButton: _buildRfid(context),
       resizeToAvoidBottomInset: false,
     );
   }
 
-  Widget _statusBluetoothBar()  {
+  Widget _statusBluetoothBar(BuildContext context)  {
     if ( ! this._bloc.isLogged()!)
       return Container();
     List<Widget> status = <Widget>[]; //new List();
     switch (_bluetoothState) {
       case "NONE":
         status.add(Icon(Icons.bluetooth));
-        status.add(Text("Non connecté"));
+        status.add(Text(S.of(context).not_connected));
         break;
       case "WAITING":
         status.add(Icon(Icons.bluetooth));
@@ -114,30 +119,30 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         break;
       case "AVAILABLE":
         status.add(Icon(Icons.bluetooth));
-        status.add(Text("Données reçues"));
+        status.add(Text(S.of(context).data_available));
     }
     return Row(children: status,);
   }
 
-  Widget _buildRfid() {
+  Widget _buildRfid(BuildContext context) {
     if (_bloc.isLogged()! && this._rfidPresent) {
       return FloatingActionButton(
           child: Icon(Icons.wifi),
           backgroundColor: Colors.green,
-          onPressed: _readRFID);
+          onPressed: () => _readRFID(context));
     }
     else
       return Container();
   }
 
-  void _readRFID() async {
+  void _readRFID(BuildContext context) async {
     try {
       String response = await PLATFORM_CHANNEL.invokeMethod("startRead");
       await Future.delayed(Duration(seconds: 4));
       response = await PLATFORM_CHANNEL.invokeMethod("data");
       Map<String, dynamic> mpResponse = jsonDecode(response);
       if (mpResponse.length > 0) {
-        _searchPressed();
+        _searchPressed(context);
         setState(() {
           // _searchText = mpResponse['boucle'];
           _filter.text = mpResponse['boucle'];
@@ -156,23 +161,24 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   }
 
-  Future<String> _startService() async{
+  Future<String> _startService(BuildContext context) async{
     try {
       debug.log("Start service ", name: "_SearchPageState::_startService");
       BluetoothState _bluetoothState =  await this._bloc.startReadBluetooth();
-      debug.log("Start status " + _bluetoothState.status, name: "_SearchPageState::_startService");
+      if (_bluetoothState.status != null)
+        debug.log("Start status " + _bluetoothState.status!, name: "_SearchPageState::_startService");
       if (_bluetoothState.status == BluetoothBloc.CONNECTED
       || _bluetoothState.status == BluetoothBloc.STARTED) {
         this._bluetoothStream = this._btBloc.streamReadBluetooth();
         this._bluetoothSubscription = this._bluetoothStream!.listen(
-                (BluetoothState event) {
-              debug.log("Status " + event.status,
-                  name: "_SearchPageState::_startService");
+            (BluetoothState event) {
+              if ( event.status != null)
+                debug.log("Status " + event.status!, name: "_SearchPageState::_startService");
               if (this._bluetoothState != event.status)
                 setState(() {
-                  this._bluetoothState = event.status;
+                  this._bluetoothState = event.status!;
                   if (event.status == 'AVAILABLE') {
-                    String _foundBoucle = event.data;
+                    String _foundBoucle = event.data!;
                     if (_foundBoucle.length > 15)
                       _foundBoucle =
                           _foundBoucle.substring(_foundBoucle.length - 15);
@@ -180,7 +186,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                         _foundBoucle.substring(_foundBoucle.length - 5);
                     _searchText = _foundBoucle;
                     _filter.text = _foundBoucle;
-                    _searchPressed();
+                    _searchPressed(context);
                   }
                 });
             });
@@ -195,20 +201,21 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   AppBar _buildBar(BuildContext context) {
+    //this._appBarTitle = new Text( S.of(context).earring_search );
     return new AppBar(
       centerTitle: true,
       title: _appBarTitle,
       actions: <Widget>[
         IconButton(
             icon: const Icon(Icons.search),
-            tooltip: 'Recherche',
-            onPressed: _searchPressed
+            tooltip: S.of(context).search,
+            onPressed: () => _searchPressed(context)
             ),
       ],
     );
   }
 
-  Widget _buildList() {
+  Widget _buildList(BuildContext context) {
     if (_searchText.isNotEmpty) {
       List<Bete> tempList = <Bete>[]; // new List();
       for (int i = 0; i < _filteredBetes.length; i++) {
@@ -222,8 +229,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       return Center( child:
         ListTile(
           leading: Icon(Icons.info_outline),
-          title: Text('Liste vide'),
-          subtitle: Text("Pour saisir l'effectif, veuillez faire une entrée depuis l'écran principal."),
+          title: Text(S.of(context).title_empty_list),
+          subtitle: Text(S.of(context).text_empty_list),
       ),);
     }
     return ListView.builder(
@@ -300,7 +307,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     //_scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
-  void _searchPressed() {
+  void _searchPressed(BuildContext context) {
     setState(() {
       if (this._searchIcon.icon == Icons.search) {
         this._searchIcon = new Icon(Icons.close);
@@ -310,12 +317,12 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           keyboardType: TextInputType.number,
           decoration: new InputDecoration(
               prefixIcon: new Icon(Icons.search),
-              hintText: 'Boucle...'
+              hintText: S.of(context).earring
           ),
         );
       } else {
         this._searchIcon = new Icon(Icons.search);
-        this._appBarTitle = new Text( 'Recherche boucle' );
+        this._appBarTitle = new Text( S.of(context).earring_search );
         _filteredBetes = _betes;
         _filter.clear();
       }

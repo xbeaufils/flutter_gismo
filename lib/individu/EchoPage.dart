@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:intl/intl.dart';
@@ -25,7 +26,7 @@ class EchoPageState extends State<EchoPage> {
 
   int _nombre = 0;
 
-  final _df = new DateFormat('dd/MM/yyyy');
+  //final _df = new DateFormat('dd/MM/yyyy');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool _isSaving = false;
 
@@ -34,7 +35,7 @@ class EchoPageState extends State<EchoPage> {
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: const Text("Echographie"),
+        title: Text(S.of(context).ultrasound),
         leading: Text(this.widget._bete.numBoucle),
       ),
       body:
@@ -44,11 +45,11 @@ class EchoPageState extends State<EchoPage> {
                 keyboardType: TextInputType.datetime,
                 controller: _dateEchoCtl,
                 decoration: InputDecoration(
-                    labelText: "Date d\'echographie",
+                    labelText: S.of(context).date_ultrasound,
                     hintText: 'jj/mm/aaaa'),
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return "Pas de date saisie";
+                    return S.of(context).no_ultrasound_date;
                   }},
                 onSaved: (value) {
                   setState(() {
@@ -66,12 +67,12 @@ class EchoPageState extends State<EchoPage> {
                       lastDate: DateTime(2100)) as DateTime;
                   if (date != null) {
                     setState(() {
-                      _dateEchoCtl.text = _df.format(date);
+                      _dateEchoCtl.text = DateFormat.yMd().format(date);
                     });
                   }
                 }),
             new Text(
-              'Résultat :',
+              S.of(context).result,
               style: new TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18.0,
@@ -86,7 +87,7 @@ class EchoPageState extends State<EchoPage> {
                   onChanged: _handleRdNombreChange,
                 ),
                 new Text(
-                  'Vide',
+                  S.of(context).empty,
                   style: new TextStyle(fontSize: 16.0),
                 ),
                 new Radio(
@@ -95,7 +96,7 @@ class EchoPageState extends State<EchoPage> {
                   onChanged: _handleRdNombreChange,
                 ),
                 new Text(
-                  'simple',
+                  S.of(context).simple,
                   style: new TextStyle(
                     fontSize: 16.0,
                   ),
@@ -110,7 +111,7 @@ class EchoPageState extends State<EchoPage> {
                   onChanged: _handleRdNombreChange,
                 ),
                 new Text(
-                  'Double',
+                  S.of(context).double,
                   style: new TextStyle(fontSize: 16.0),
                 ),
                 new Radio(
@@ -119,7 +120,7 @@ class EchoPageState extends State<EchoPage> {
                   onChanged: _handleRdNombreChange,
                 ),
                 new Text(
-                  'Triple et +',
+                  S.of(context).triplet,
                   style: new TextStyle(fontSize: 16.0),
                 ),
               ],
@@ -128,7 +129,7 @@ class EchoPageState extends State<EchoPage> {
                 keyboardType: TextInputType.datetime,
                 controller: _dateSaillieCtl,
                 decoration: InputDecoration(
-                    labelText: "Date de saillie estimée",
+                    labelText: S.of(context).estimated_mating_date,
                     hintText: 'jj/mm/aaaa'),
                 onSaved: (value) {
                   setState(() {
@@ -145,7 +146,7 @@ class EchoPageState extends State<EchoPage> {
                       lastDate: DateTime(2100)) as DateTime;
                   if (date != null) {
                     setState(() {
-                      _dateSaillieCtl.text = _df.format(date);
+                      _dateSaillieCtl.text = DateFormat.yMd().format(date);
                     });
                   }
                 }),
@@ -153,7 +154,7 @@ class EchoPageState extends State<EchoPage> {
                 keyboardType: TextInputType.datetime,
                 controller: _dateAgnelageCtl,
                 decoration: InputDecoration(
-                    labelText: "Date d'agnelage prévu",
+                    labelText: S.of(context).expected_lambing_date,
                     hintText: 'jj/mm/aaaa'),
                 onSaved: (value) {
                   setState(() {
@@ -170,7 +171,7 @@ class EchoPageState extends State<EchoPage> {
                       lastDate: DateTime(2100));
                   if (date != null) {
                     setState(() {
-                      _dateAgnelageCtl.text = _df.format(date);
+                      _dateAgnelageCtl.text = DateFormat.yMd().format(date);
                     });
                   }
                 }),
@@ -184,10 +185,10 @@ class EchoPageState extends State<EchoPage> {
                     (this.widget._currentEcho != null) ?
                       TextButton(
                         onPressed: () => _showDialog(context),
-                        child: Text("Supprimer")):
+                        child: Text(S.of(context).bt_delete)):
                       Container(),
                     ElevatedButton(
-                      child: Text('Enregistrer',
+                      child: Text(S.of(context).bt_save,
                       style: new TextStyle(color: Colors.white, ),),
                     //color: Colors.lightGreen[700],
                       onPressed: _saveEcho)
@@ -200,7 +201,7 @@ class EchoPageState extends State<EchoPage> {
   // set up the buttons
   Widget _cancelButton() {
     return TextButton(
-      child: Text("Annuler"),
+      child: Text(S.of(context).bt_cancel),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -209,7 +210,7 @@ class EchoPageState extends State<EchoPage> {
 
   Widget _continueButton() {
     return TextButton(
-      child: Text("Continuer"),
+      child: Text(S.of(context).bt_continue),
       onPressed: () {
         _delete();
         Navigator.of(context).pop();
@@ -222,9 +223,8 @@ class EchoPageState extends State<EchoPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Suppression"),
-          content: Text(
-              "Voulez vous supprimer cet enregistrement ?"),
+          title: Text(S.of(context).title_delete),
+          content: Text(S.of(context).text_delete),
           actions: [
             _cancelButton(),
             _continueButton(),
@@ -247,14 +247,14 @@ class EchoPageState extends State<EchoPage> {
   void initState() {
     super.initState();
     if (this.widget._currentEcho == null)
-      _dateEchoCtl.text = _df.format(DateTime.now());
+      _dateEchoCtl.text = DateFormat.yMd().format(DateTime.now());
     else {
       _nombre = this.widget._currentEcho!.nombre;
-      _dateEchoCtl.text = this.widget._currentEcho!.dateEcho;
+      _dateEchoCtl.text = DateFormat.yMd().format(this.widget._currentEcho!.dateEcho);
       if (this.widget._currentEcho!.dateAgnelage != null)
-        _dateAgnelageCtl.text = this.widget._currentEcho!.dateAgnelage!;
+        _dateAgnelageCtl.text = DateFormat.yMd().format(this.widget._currentEcho!.dateAgnelage!);
       if (this.widget._currentEcho!.dateSaillie != null)
-      _dateSaillieCtl.text = this.widget._currentEcho!.dateSaillie!;
+      _dateSaillieCtl.text = DateFormat.yMd().format(this.widget._currentEcho!.dateSaillie!);
     }
    // _nec = this.widget._currentLevel;
   }
@@ -268,7 +268,7 @@ class EchoPageState extends State<EchoPage> {
   void _saveEcho() async {
     String message;
     if (_nombre == null) {
-      message = "Le nombre de foetus est vide";
+      message = S.of(context).number_fetuses_empty;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
       return;
     }
@@ -278,14 +278,14 @@ class EchoPageState extends State<EchoPage> {
     if (this.widget._currentEcho == null)
       this.widget._currentEcho = new EchographieModel();
     this.widget._currentEcho!.bete_id = this.widget._bete.idBd!;
-    this.widget._currentEcho!.dateEcho = _dateEchoCtl.text;
+    this.widget._currentEcho!.dateEcho = DateFormat.yMd().parse(_dateEchoCtl.text);
     this.widget._currentEcho!.nombre = _nombre;
     if (_dateSaillieCtl.text.isNotEmpty)
-      this.widget._currentEcho!.dateSaillie = _dateSaillieCtl.text;
+      this.widget._currentEcho!.dateSaillie = DateFormat.yMd().parse(_dateSaillieCtl.text);
     else
       this.widget._currentEcho!.dateSaillie = null;
     if (_dateAgnelageCtl.text.isNotEmpty )
-      this.widget._currentEcho!.dateAgnelage = _dateAgnelageCtl.text;
+      this.widget._currentEcho!.dateAgnelage = DateFormat.yMd().parse(_dateAgnelageCtl.text);
     else
       this.widget._currentEcho!.dateAgnelage = null;
     message =

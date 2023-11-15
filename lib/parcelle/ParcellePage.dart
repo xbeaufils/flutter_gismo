@@ -3,8 +3,7 @@ import 'dart:convert';
 import 'dart:developer' as debug;
 
 import 'dart:math';
-
-import 'package:flutter/foundation.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/bloc/LocationBloc.dart';
@@ -206,7 +205,7 @@ class _ParcellePageState extends State<ParcellePage> {
     if (parcelleJson['features'].length == 0)
       return;
     Map<String, dynamic> feature = parcelleJson['features'][0];
-    Parcelle ? myParcelle = this._myParcelles.firstWhere((parcelle) => parcelle!.idu == feature['properties']['id'], orElse: () => null);
+    Parcelle ? myParcelle = this._myParcelles.firstWhereOrNull((parcelle) => parcelle!.idu == feature['properties']['id']);
     if (myParcelle == null)
       return;
 

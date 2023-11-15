@@ -1,10 +1,13 @@
+import 'package:intl/intl.dart';
+
 class EchographieModel {
   int ? _idBd;
-  late String _dateEcho;
-  String ? _dateAgnelage;
-  String ? _dateSaillie;
+  late DateTime _dateEcho;
+  DateTime ? _dateAgnelage;
+  DateTime ? _dateSaillie;
   late int _nombre;
   late int _bete_id;
+  final _df = new DateFormat('dd/MM/yyyy');
 
   EchographieModel();
 
@@ -12,9 +15,9 @@ class EchographieModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (_idBd != null)
       data["id"] = _idBd ;
-    data["dateEcho"] = _dateEcho;
-    data["dateAgnelage"] = _dateAgnelage;
-    data["dateSaillie"] = _dateSaillie;
+    data["dateEcho"] = _df.format(_dateEcho);
+    data["dateAgnelage"] = (_dateAgnelage == null)?null:_df.format(_dateAgnelage!);
+    data["dateSaillie"] = (_dateSaillie == null)?null:_df.format( _dateSaillie! );
     data["nombre"] = _nombre.toString();
     data["bete_id"] = _bete_id.toString();
     return data;
@@ -22,9 +25,9 @@ class EchographieModel {
 
   EchographieModel.fromResult(result) {
     _idBd = result["id"] ;
-    _dateEcho = result["dateEcho"];
-    _dateAgnelage = result["dateAgnelage"];
-    _dateSaillie = result["dateSaillie"];
+    _dateEcho = _df.parse(result["dateEcho"]);
+    _dateAgnelage = (result["dateAgnelage"]==null)?null:_df.parse(result["dateAgnelage"]);
+    _dateSaillie = (result["dateSaillie"] == null)?null:_df.parse(result["dateSaillie"]);
     _nombre = result["nombre"];
     _bete_id = result["bete_id"];
   }
@@ -33,14 +36,14 @@ class EchographieModel {
     _bete_id = value;
   }
 
-  set dateEcho(String value) {
+  set dateEcho(DateTime value) {
     _dateEcho = value;
   }
 
   set idBd(int ? value) {
     _idBd = value;
   }
-  set dateAgnelage(String ? value) {
+  set dateAgnelage(DateTime ? value) {
     _dateAgnelage = value;
   }
 
@@ -48,7 +51,7 @@ class EchographieModel {
     _nombre = value;
   }
 
-  set dateSaillie(String ? value) {
+  set dateSaillie(DateTime ? value) {
     _dateSaillie = value;
   }
 
@@ -56,11 +59,11 @@ class EchographieModel {
 
   int get nombre => _nombre;
 
-  String ? get dateSaillie => _dateSaillie;
+  DateTime ? get dateSaillie => _dateSaillie;
 
-  String ? get dateAgnelage => _dateAgnelage;
+  DateTime ? get dateAgnelage => _dateAgnelage;
 
-  String get dateEcho => _dateEcho;
+  DateTime get dateEcho => _dateEcho;
 
   int ? get idBd => _idBd;
 

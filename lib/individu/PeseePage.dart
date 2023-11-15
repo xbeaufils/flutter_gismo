@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:intl/intl.dart';
@@ -30,7 +31,7 @@ class PeseePageState extends State<PeseePage> {
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: const Text("Pesée"),
+        title: Text(S.of(context).weighing),
         //leading: Text(this.widget._bete.numBoucle),
       ),
       body:
@@ -40,11 +41,11 @@ class PeseePageState extends State<PeseePage> {
                 keyboardType: TextInputType.datetime,
                 controller: _datePeseeCtl,
                 decoration: InputDecoration(
-                    labelText: "Date de pesée",
-                    hintText: 'jj/mm/aaaa'),
+                    labelText: S.of(context).weighing_date),
+                    //hintText: 'jj/mm/aaaa'),
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return "Pas de date de pesée";
+                    return S.of(context).no_weighing_date;
                   }},
                 onSaved: (value) {
                   setState(() {
@@ -55,7 +56,7 @@ class PeseePageState extends State<PeseePage> {
                   DateTime ? date = DateTime.now();
                   FocusScope.of(context).requestFocus(new FocusNode());
                   date = await showDatePicker(
-                      locale: const Locale("fr","FR"),
+                      //locale: const Locale("fr","FR"),
                       context: context,
                       initialDate:DateTime.now(),
                       firstDate:DateTime(1900),
@@ -70,11 +71,11 @@ class PeseePageState extends State<PeseePage> {
                 keyboardType: TextInputType.number,
                 controller: _poidsCtl,
               decoration: InputDecoration(
-                  labelText: "Poids",
-                  hintText: 'Poids en kg'),
+                  labelText: S.of(context).weight,
+                  hintText: S.of(context).weighing_hint),
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return "Pas de poids saisi";
+                    return S.of(context).no_weight_entered;
                   }},
                 onSaved: (value) {
                   setState(() {
@@ -84,7 +85,7 @@ class PeseePageState extends State<PeseePage> {
             ),
             (_isSaving) ? CircularProgressIndicator():
               ElevatedButton(
-                child: Text('Enregistrer',
+                child: Text(S.of(context).bt_save,
                   style: new TextStyle(color: Colors.white, ),),
                 //color: Colors.lightGreen[700],
                 onPressed: _savePesee)
@@ -96,24 +97,24 @@ class PeseePageState extends State<PeseePage> {
   @override
   void initState() {
     super.initState();
-    _datePeseeCtl.text = _df.format(DateTime.now());
+    _datePeseeCtl.text = DateFormat.yMd().format(DateTime.now());
   }
 
   void _savePesee() async {
     double? poids = double.tryParse(_poidsCtl.text);
     String message="";
     if (poids == null) {
-      message = "Le poids n'est pas au format numérique";
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      message = "";
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).weighing_error)));
       return;
     }
     setState(() {
       _isSaving = true;
     });
     if (this.widget._bete != null)
-      message = await this._bloc.savePesee(this.widget._bete!, poids, _datePeseeCtl.text);
+      message = await this._bloc.savePesee(this.widget._bete!, poids, DateFormat.yMd().parse( _datePeseeCtl.text) );
     if (this.widget._lamb != null)
-      message = await this._bloc.savePeseeLamb(this.widget._lamb!, poids, _datePeseeCtl.text);
+      message = await this._bloc.savePeseeLamb(this.widget._lamb!, poids, DateFormat.yMd().parse( _datePeseeCtl.text ) );
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)))
           .closed
           .then((e) => {Navigator.of(context).pop()});
