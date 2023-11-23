@@ -65,7 +65,6 @@ class _MortPageState extends State<MortPage> {
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
     return new Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(
@@ -84,11 +83,11 @@ class _MortPageState extends State<MortPage> {
                         keyboardType: TextInputType.datetime,
                         controller: _dateMortCtl,
                         decoration: InputDecoration(
-                            labelText: appLocalizations!.death_date,
+                            labelText: S.of(context).death_date,
                             hintText: 'jj/mm/aaaa'),
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return appLocalizations.no_death_date;
+                            return S.of(context).no_death_date;
                           }},
                         onSaved: (value) {
                           setState(() {
@@ -113,14 +112,14 @@ class _MortPageState extends State<MortPage> {
                     new DropdownButton<String>(
                       value: _currentMotif,
                       items: _getCauseMortItems(),
-                      hint: Text(appLocalizations.select_death_cause,style: TextStyle(color: Colors.lightGreen,)),
+                      hint: Text(S.of(context).select_death_cause,style: TextStyle(color: Colors.lightGreen,)),
                       onChanged: _changedCauseDecesItem,
                     )
 
                   ],
                 )),
             ElevatedButton (
-                child: Text(appLocalizations.bt_save,
+                child: Text(S.of(context).bt_save,
                   style: new TextStyle(color: Colors.white, ),),
 
                 // color: Colors.lightGreen[700],

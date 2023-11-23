@@ -168,7 +168,7 @@ class _SearchLambPageState extends State<SearchLambPage> {
   }
 
   void _selectLambs(CompleteLambModel lamb) async  {
-    LambModel newLamb = await Navigator.push(
+    LambModel ? newLamb = await Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => LambPage.edit( this._bloc, lamb)),
