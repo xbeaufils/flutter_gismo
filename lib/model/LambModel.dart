@@ -254,7 +254,7 @@ class LambModel {
     _numBoucle = result["numBoucle"];
     //_idAgnelage= result["agnelage_id"];
     //_idDevenir = result["devenir_id"];
-    if (result["dataDeces"] != null)
+    if (result["dateDeces"] != null)
       _dateDeces = _df.parse( result["dateDeces"] );
     _motifDeces = result["motifDeces"];
     _allaitement = MethodeAllaitement.getMethodeAllaitement(result["allaitement"]);

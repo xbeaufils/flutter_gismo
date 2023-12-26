@@ -375,7 +375,7 @@ class _LambingPageState extends State<LambingPage> {
    }
 
   void _openEdit(LambModel lamb, String dateNaissance) async {
-    LambModel newLamb = await Navigator.push(
+    LambModel? newLamb = await Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => LambPage.edit( this._bloc, lamb)),
