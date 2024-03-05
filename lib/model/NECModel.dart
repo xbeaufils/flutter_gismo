@@ -69,7 +69,7 @@ class NoteModel {
   NoteModel.fromResult(result) {
     _idBd= result["idBd"] ;
     if (result["date"] != null)
-      _date = result["date"];
+      _date = _df.parse(result["date"]);
     else
       _date =_df.parse("01/01/1900");
     _note = result["note"];
