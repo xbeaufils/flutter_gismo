@@ -318,7 +318,7 @@ class BluetoothAskPermissions extends StatelessWidget {
             ),
             child: Text(
               'Autorisation BlueTooth',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ),
           Container(
