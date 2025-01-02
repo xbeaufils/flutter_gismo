@@ -166,8 +166,8 @@ class LambPageState extends State<LambPage> {
 
   Widget _mainTitle() {
     if (this.widget._lamb == null)
-      return Text('Nouvel agneau');
-    return Text("Modification");
+      return Text( S.current.new_lamb);
+    return Text(S.current.edit_lamb);
   }
 
   Widget _mainButton() {

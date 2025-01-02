@@ -20,7 +20,6 @@ class NECPageState extends State<NECPage> {
   NECPageState(this._bloc);
   int _nec = 0;
   TextEditingController _dateNoteCtl = TextEditingController();
-  final _df = new DateFormat('dd/MM/yyyy');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool _isSaving = false;
 
@@ -61,7 +60,7 @@ class NECPageState extends State<NECPage> {
                       lastDate: DateTime(2100));
                   if (date != null) {
                     setState(() {
-                      _dateNoteCtl.text = _df.format(date!);
+                      _dateNoteCtl.text =  DateFormat.yMd().format(date!);
                     });
                   }
                 }),
@@ -103,7 +102,7 @@ class NECPageState extends State<NECPage> {
   @override
   void initState() {
     super.initState();
-    _dateNoteCtl.text = _df.format(DateTime.now());
+    _dateNoteCtl.text = DateFormat.yMd().format(DateTime.now());
    // _nec = this.widget._currentLevel;
   }
 

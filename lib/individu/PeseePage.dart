@@ -22,7 +22,7 @@ class PeseePageState extends State<PeseePage> {
   //double _pesee = 0.0;
   TextEditingController _datePeseeCtl = TextEditingController();
   TextEditingController _poidsCtl = TextEditingController();
-  final _df = new DateFormat('dd/MM/yyyy');
+  //final _df = new DateFormat('dd/MM/yyyy');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool _isSaving = false;
 
@@ -63,7 +63,7 @@ class PeseePageState extends State<PeseePage> {
                       lastDate: DateTime(2100));
                   if (date != null) {
                     setState(() {
-                      _datePeseeCtl.text = _df.format(date!);
+                      _datePeseeCtl.text =  DateFormat.yMd().format(date!);
                     });
                   }
                 }),

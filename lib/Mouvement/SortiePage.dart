@@ -18,7 +18,7 @@ class _SortiePageState extends State<SortiePage> {
   final GismoBloc _bloc;
   _SortiePageState(this._bloc);
   TextEditingController _dateSortieCtl = TextEditingController();
-  final _df = new DateFormat('dd/MM/yyyy');
+  //final _df = new DateFormat('dd/MM/yyyy');
   late List<Bete> _sheeps;
   String ? _currentMotif;
   late List<DropdownMenuItem<String>> _motifSortieItems;
@@ -85,7 +85,7 @@ class _SortiePageState extends State<SortiePage> {
                           lastDate: DateTime(2100)) as DateTime;
                         if (date != null) {
                           setState(() {
-                            _dateSortieCtl.text = _df.format(date);
+                            _dateSortieCtl.text =  DateFormat.yMd().format(date);
                           });
                         }
                       }),
@@ -177,7 +177,7 @@ class _SortiePageState extends State<SortiePage> {
   void initState() {
     super.initState();
     _sheeps = [];
-    _dateSortieCtl.text = _df.format(DateTime.now());
+    _dateSortieCtl.text =  DateFormat.yMd().format(DateTime.now());
   }
 
   void removeBete(int index) {

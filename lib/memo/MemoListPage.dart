@@ -9,6 +9,7 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/menu/MenuPage.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
+import 'package:intl/intl.dart';
 
 class MemoListPage extends StatefulWidget {
   GismoBloc _bloc;
@@ -91,7 +92,7 @@ class _MemoListPageState extends State<MemoListPage> {
           MemoModel _note = _notes[index];
           return ListTile(
             leading: _status(_note),
-            title: Row(children: [ Text(_note.numBoucle!), Spacer(), Text("${_note.debut}"),]),
+            title: Row(children: [ Text(_note.numBoucle!), Spacer(), Text( DateFormat.yMd().format(_note.debut!)),]),
             subtitle: Text(_note.note!),
             isThreeLine: true,
             trailing: SizedBox(

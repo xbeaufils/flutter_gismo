@@ -39,7 +39,6 @@ class _SanitairePageState extends State<SanitairePage> {
   TextEditingController _motifCtl = TextEditingController();
   TextEditingController _observationCtl = TextEditingController();
 
-  final df = new DateFormat('dd/MM/yyyy');
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +78,7 @@ class _SanitairePageState extends State<SanitairePage> {
                                     firstDate:DateTime(1900),
                                     lastDate: DateTime(2100));
                                 if (date != null)
-                                  _dateDebutCtl.text = df.format(date);
+                                  _dateDebutCtl.text = DateFormat.yMd().format(date);
                                 },
                             ),
                           ),
@@ -99,7 +98,7 @@ class _SanitairePageState extends State<SanitairePage> {
                                     firstDate:DateTime(1900),
                                     lastDate: DateTime(2100));
                                 if (date != null)
-                                  _dateFinCtl.text = df.format(date);
+                                  _dateFinCtl.text = DateFormat.yMd().format(date);
                               },
                             ),
                           )
@@ -332,8 +331,8 @@ class _SanitairePageState extends State<SanitairePage> {
       _voieCtl.text = this.widget._currentTraitement?.voie  as String;
     }
     else {
-      _dateDebutCtl.text = df.format(selectedDate);
-      _dateFinCtl.text = df.format(selectedDate);
+      _dateDebutCtl.text = DateFormat.yMd().format(selectedDate);
+      _dateFinCtl.text = DateFormat.yMd().format(selectedDate);
     }
   }
 }

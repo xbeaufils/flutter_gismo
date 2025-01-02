@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as debug;
+import 'dart:io';
 
+import 'package:facebook_audience_network/ad/ad_banner.dart';
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +22,7 @@ import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sentry/sentry.dart';
 
 class SearchPage extends StatefulWidget {
@@ -39,7 +43,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GismoBloc _bloc;
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
-
+  BannerAd ? _adBanner;
   String _searchText = "";
   List<Bete> _betes = <Bete>[]; //new List();
   List<Bete> _filteredBetes = <Bete>[]; //new List();
@@ -50,7 +54,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   final BluetoothBloc _btBloc= new BluetoothBloc();
   bool _rfidPresent = false;
   Icon _searchIcon = new Icon(Icons.search);
-  Widget _appBarTitle = new Text( 'Recherche boucle' );
+  Widget _appBarTitle = new Text( S.current.earring_search);
 
   _SearchPageState(this._bloc) {
     _filter.addListener(() {
@@ -75,7 +79,32 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       new Future.delayed(Duration.zero,() {
         this._startService(context);
       });
+    if ( ! _bloc.isLogged()!) {
+      this._adBanner = BannerAd(
+        adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
+        size: AdSize.banner,
+        request: AdRequest(),
+        listener: BannerAdListener(),
+      )..load();
+      // See in https://dev-yakuza.posstree.com/en/flutter/admob/#configure-app-id-on-android
+      debug.log("Load Ad Banner");
+      //this._adBanner!.load();
+      FacebookAudienceNetwork.init(
+        testingId: "a77955ee-3304-4635-be65-81029b0f5201",
+        iOSAdvertiserTrackingEnabled: true,
+      );
     }
+  }
+
+  String _getBannerAdUnitId() {
+    if (Platform.isIOS) {
+      return 'ca-app-pub-9699928438497749/2969884909';
+    } else if (Platform.isAndroid) {
+      return 'ca-app-pub-9699928438497749/5554017347';
+    }
+    debug.log("Unable to find plateform");
+    return "";
+  }
 
   @override
   void dispose() {
@@ -97,6 +126,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
           children: [
             _statusBluetoothBar(context),
             Expanded(child: _buildList(context) ),
+            this._getAdmobAdvice(),
+            this._getFacebookAdvice(),
           ],
         ),
       floatingActionButton: _buildRfid(context),
@@ -133,6 +164,38 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     }
     else
       return Container();
+  }
+
+  Widget _getAdmobAdvice() {
+    if (this._bloc.isLogged() ! ) {
+      return Container();
+    }
+    if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
+      return Card(
+          child: Container(
+              height:  this._adBanner!.size.height.toDouble(),
+              width:  this._adBanner!.size.width.toDouble(),
+              child: AdWidget(ad:  this._adBanner!)));
+    }
+    return Container();
+  }
+
+  Widget _getFacebookAdvice() {
+    if ( this._bloc.isLogged()!  ) {
+      return SizedBox(height: 0,width: 0,);
+    }
+    if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
+      return
+        //Card(child:
+        FacebookBannerAd(
+            placementId: '212596486937356_212596826937322',
+            bannerSize: BannerSize.STANDARD,
+            keepAlive: true,
+            listener: (result, value) {}
+          //  ),
+        );
+    }
+    return Container();
   }
 
   void _readRFID(BuildContext context) async {

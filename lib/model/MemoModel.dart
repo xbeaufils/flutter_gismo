@@ -21,7 +21,8 @@ class MemoModel {
   MemoModel.fromResult(result) {
     id = result["id"];
     debut = _df.parse( result["debut"]);
-    fin = _df.parse(result["fin"]);
+    if (result["fin"] != null)
+      fin = _df.parse(result["fin"]);
     numBoucle = result["numBoucle"];
     numMarquage = result["numMarquage"];
     note = result["note"];

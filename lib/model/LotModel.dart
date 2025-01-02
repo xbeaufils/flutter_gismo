@@ -1,22 +1,17 @@
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:intl/intl.dart';
 
 class LotModel {
   int ? _idb;
   String ? _cheptel;
   String ? _codeLotLutte;
   String ? _campagne;
-  //<xsd:element name="DateDebutLutte" type="xsd:date"/>
-  String ? _dateDebutLutte;
-  //<xsd:element name="DateFinLutte" type="xsd:date"/>
-  String ? _dateFinLutte;
-  //<xsd:element name="CodeReproduction" type="CODEMETHODEREPRODUCTION:TypeCodeMethodeReproduction"/>
-  //<xsd:element name="CodeLutteMain" type="xsd:boolean"/>
+  DateTime ? _dateDebutLutte;
+  DateTime ? _dateFinLutte;
   bool ? _codeLutteMain;
-  //<xsd:element name="NombreDeBrebis" type="Nombre4Chiffres" minOccurs="0"/>
-  //<xsd:element name="NombreDeBeliers" type="Nombre4Chiffres" minOccurs="0"/>
-  //<xsd:element name="CodeRacePereSuppose" type="CODERACEOVIN:TypeCodeRacePhenotypiqueOvin" minOccurs="0"/>
   late List<Bete> _brebis;
   late List<Bete> _beliers;
+  final _df = new DateFormat('dd/MM/yyyy');
 
   int ? get idb => _idb;
 
@@ -30,8 +25,8 @@ class LotModel {
     _idb = result["idBd"];
     _campagne = result["campagne"];
     _codeLotLutte = result["codeLotLutte"];
-    _dateDebutLutte = result["dateDebutLutte"];
-    _dateFinLutte = result["dateFinLutte"];
+    _dateDebutLutte = _df.parse(result["dateDebutLutte"]);
+    _dateFinLutte = _df.parse(result["dateFinLutte"]);
     _cheptel = result["cheptel"];
   }
 
@@ -41,7 +36,7 @@ class LotModel {
       data["idBd"] = _idb ;
     data["campagne"] = _campagne;
     data["codeLotLutte"] = _codeLotLutte;
-    data["dateDebutLutte"] = _dateDebutLutte;
+    data["dateDebutLutte"] = _df.format(_dateDebutLutte!);
     data["dateFinLutte"] = _dateFinLutte;
     data["cheptel"] = _cheptel ;
     return data;
@@ -53,15 +48,15 @@ class LotModel {
     _codeLotLutte = value;
   }
 
-  String ? get dateDebutLutte => _dateDebutLutte;
+  DateTime ? get dateDebutLutte => _dateDebutLutte;
 
-  set dateDebutLutte(String ? value) {
+  set dateDebutLutte(DateTime ? value) {
     _dateDebutLutte = value;
   }
 
-  String ? get dateFinLutte => _dateFinLutte;
+  DateTime ? get dateFinLutte => _dateFinLutte;
 
-  set dateFinLutte(String ? value) {
+  set dateFinLutte(DateTime ? value) {
     _dateFinLutte = value;
   }
 

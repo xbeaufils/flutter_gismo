@@ -221,6 +221,7 @@ class _EntreePageState extends State<EntreePage> {
   }
 
   void didChangeDependencies() {
+    super.didChangeDependencies();
     _motifEntreeItems  = this._getMotifEntreeItems(context);
   }
 

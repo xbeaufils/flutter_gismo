@@ -180,6 +180,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   void initState() {
+    super.initState();
     if ( ! _bloc.isLogged()!) {
       this._adBanner = BannerAd(
         adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',

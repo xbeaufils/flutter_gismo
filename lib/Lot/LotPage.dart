@@ -5,6 +5,7 @@ import 'package:flutter_gismo/Lot/LotAffectationViewPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
+import 'package:intl/intl.dart';
 
 
 class LotPage extends StatefulWidget {
@@ -64,7 +65,7 @@ class _LotPageState extends State<LotPage> {
               ListTile(
                 leading:  IconButton(icon: Icon(Icons.delete), onPressed: () =>  _showDialog(context, lot), ),
                 title: Text(lot.codeLotLutte!),
-                subtitle: Text(lot.dateDebutLutte!),
+                subtitle: Text(DateFormat.yMd().format( lot.dateDebutLutte!)),
                 trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () => _viewDetails(lot), )
               )
             );

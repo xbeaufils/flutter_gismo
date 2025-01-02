@@ -25,7 +25,7 @@ class BetePage extends StatefulWidget {
 class _BetePageState extends State<BetePage> {
   final GismoBloc _bloc;
   DateTime _selectedDate = DateTime.now();
-  final df = new DateFormat('dd/MM/yyyy');
+  //final df = new DateFormat('dd/MM/yyyy');
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   //BluetoothWidget btWidget;
@@ -296,7 +296,7 @@ class _BetePageState extends State<BetePage> {
     super.initState();
     //this.btWidget = new BluetoothWidget(this.widget._bloc);
     if (_bete == null )
-      _dateEntreCtrl.text = df.format(_selectedDate);
+      _dateEntreCtrl.text = DateFormat.yMd().format(_selectedDate);
     else {
       _dateEntreCtrl.text = DateFormat.yMd().format(_bete!.dateEntree);
       _numBoucleCtrl.text = _bete!.numBoucle;

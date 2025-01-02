@@ -137,8 +137,6 @@ class _LambingPageState extends State<LambingPage> {
                     )
                   ]
                 ),
-                (this._bloc.isLogged()!) ?
-                Container():_getAdmobAdvice(),
             ],),
           ) ,
       floatingActionButton: (this._lambing.idBd == null)?
@@ -148,29 +146,6 @@ class _LambingPageState extends State<LambingPage> {
         child: new Icon(Icons.add),
       ): null,
     );
-  }
-
-  Widget _getAdmobAdvice() {
-    if (this._bloc.isLogged() ! ) {
-      return Container();
-    }
-    if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
-      return Card(
-          child: Container(
-              height:  this._adBanner!.size.height.toDouble(),
-              width:  this._adBanner!.size.width.toDouble(),
-              child: AdWidget(ad:  this._adBanner!)));
-    }
-    return Container();
-  }
-
-  String _getBannerAdUnitId() {
-    if (Platform.isIOS) {
-      return 'ca-app-pub-9699928438497749/2969884909';
-    } else if (Platform.isAndroid) {
-      return 'ca-app-pub-9699928438497749/4514368033';
-    }
-    return "";
   }
 
   void _addLamb(LambModel newLamb){
@@ -329,15 +304,6 @@ class _LambingPageState extends State<LambingPage> {
         _obsCtl.text = _lambing.observations!;
       _adoption = AdoptionHelper.getAdoption(_lambing.adoption!);
       _agnelage = AgnelageHelper.getAgnelage(_lambing.qualite!);
-    }
-    if ( ! _bloc.isLogged()!) {
-      this._adBanner = BannerAd(
-        adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
-        size: AdSize.banner,
-        request: AdRequest(),
-        listener: BannerAdListener(),
-      )
-        ..load();
     }
   }
 

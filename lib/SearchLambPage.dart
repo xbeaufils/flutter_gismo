@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/LambPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -27,7 +28,7 @@ class _SearchLambPageState extends State<SearchLambPage> {
   List<CompleteLambModel> _lambs =<CompleteLambModel>[];// new List();
 
   Icon _searchIcon = new Icon(Icons.search);
-  Widget _appBarTitle = new Text( 'Numéro provisoire' );
+  Widget _appBarTitle = new Text( S.current.provisional_number );
 
   _SearchLambPageState(this._bloc) {
     _filter.addListener(() {

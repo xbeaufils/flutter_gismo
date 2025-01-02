@@ -29,7 +29,7 @@ class _SailliePageState extends State<SailliePage> {
   String _numBouclePere = "";
   String _numMarquagePere = "";
 
-  final _df = new DateFormat('dd/MM/yyyy');
+ // final _df = new DateFormat('dd/MM/yyyy');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool _isSaving = false;
 
@@ -70,7 +70,7 @@ class _SailliePageState extends State<SailliePage> {
                       lastDate: DateTime(2100)) as DateTime;
                   if (date != null) {
                     setState(() {
-                      _dateSaillieCtl.text = _df.format(date);
+                      _dateSaillieCtl.text = DateFormat.yMd().format(date);
                     });
                   }
                 }),
@@ -108,7 +108,7 @@ class _SailliePageState extends State<SailliePage> {
   void initState() {
     super.initState();
     if (this.widget._currentSaillie == null) {
-      _dateSaillieCtl.text = _df.format(DateTime.now());
+      _dateSaillieCtl.text = DateFormat.yMd().format(DateTime.now());
     }
     else {
       _dateSaillieCtl.text = DateFormat.yMd().format(this.widget._currentSaillie!.dateSaillie!);

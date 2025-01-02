@@ -43,9 +43,9 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
     if (currentLot.codeLotLutte != null)
       _codeLotCtl.text = currentLot.codeLotLutte!;
     if (currentLot.dateDebutLutte != null)
-      _dateDebutCtl.text = currentLot.dateDebutLutte!;
+      _dateDebutCtl.text = DateFormat.yMd().format(currentLot.dateDebutLutte!);
     if (currentLot.dateFinLutte != null)
-    _dateFinCtl.text = currentLot.dateFinLutte!;
+      _dateFinCtl.text = DateFormat.yMd().format(currentLot.dateFinLutte!);
     if (currentLot.campagne == null)
       _campagneCtrl.text = DateTime.now().year.toString();
     else
@@ -266,11 +266,11 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
             subtitle:
               Column(children: <Widget>[
                 bete.dateEntree == null ? Text(
-                    this.widget._currentLot.dateDebutLutte!) : Text(
+                    DateFormat.yMd().format(this.widget._currentLot.dateDebutLutte!)) : Text(
                   "Entrée le : " + bete.dateEntree!,),
                 SizedBox(width: 20,),
                 bete.dateSortie == null ? Text(
-                    this.widget._currentLot.dateFinLutte!) : Text(
+                    DateFormat.yMd().format(this.widget._currentLot.dateFinLutte!)) : Text(
                     "Sortie le : " + bete.dateSortie!)
               ], ),
             trailing:
@@ -341,7 +341,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
   }
 
   void _save() async {
-   currentLot.dateDebutLutte = _dateDebutCtl.text;
+   currentLot.dateDebutLutte = DateFormat.yMd().parse(_dateDebutCtl.text);
     if (currentLot.dateDebutLutte == "") {
       this._showMessage("La date de début est obligatoire");
       return;
@@ -350,7 +350,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
       this._showMessage("L'année de la date de début doit être égale à la campagne");
       return;
     }
-    currentLot.dateFinLutte =  _dateFinCtl.text;
+    currentLot.dateFinLutte =  DateFormat.yMd().parse(_dateFinCtl.text);
     if (currentLot.dateFinLutte == "") {
       this._showMessage("La date de fin est obligatoire");
       return;

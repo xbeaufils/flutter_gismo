@@ -27,7 +27,6 @@ class MemoPageState extends State<MemoPage> {
   TextEditingController _noteCtl = TextEditingController();
   MemoClasse  _classe = MemoClasse.INFO;
 
-  final _df =  new DateFormat('dd/MM/yyyy');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool _isSaving = false;
 
@@ -76,7 +75,7 @@ class MemoPageState extends State<MemoPage> {
                                 lastDate: DateTime(2100));
                             if (date != null) {
                               setState(() {
-                                _dateDebutCtl.text = _df.format(date!);
+                                _dateDebutCtl.text = DateFormat.yMd().format(date!);
                               });
                             }
                           }),
@@ -104,7 +103,7 @@ class MemoPageState extends State<MemoPage> {
                                 lastDate: DateTime(2100));
                             if (date != null) {
                               setState(() {
-                                _dateFinCtl.text = _df.format(date!);
+                                _dateFinCtl.text = DateFormat.yMd().format(date!);
                               });
                             }
                           }),
@@ -168,7 +167,7 @@ class MemoPageState extends State<MemoPage> {
   void initState() {
     super.initState();
     if (this.widget._currentNote == null)
-      _dateDebutCtl.text = _df.format(DateTime.now());
+      _dateDebutCtl.text = DateFormat.yMd().format(DateTime.now());
     else {
       _dateDebutCtl.text = DateFormat.yMd().format(this.widget._currentNote!.debut!);
       if (this.widget._currentNote!.fin != null)
