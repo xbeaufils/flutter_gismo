@@ -71,6 +71,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "bt_delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "bt_edition": MessageLookupByLibrary.simpleMessage("Edit"),
         "bt_save": MessageLookupByLibrary.simpleMessage("Save"),
+        "caprin": MessageLookupByLibrary.simpleMessage("Goats"),
         "collective_treatment":
             MessageLookupByLibrary.simpleMessage("Collective treatment"),
         "configuration": MessageLookupByLibrary.simpleMessage("Configuration"),
@@ -265,6 +266,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "output_select":
             MessageLookupByLibrary.simpleMessage("Select a departure reason"),
         "output_unknown": MessageLookupByLibrary.simpleMessage("Unknown"),
+        "ovin": MessageLookupByLibrary.simpleMessage("Sheep"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "place_earring":
             MessageLookupByLibrary.simpleMessage("Place the ear tag"),

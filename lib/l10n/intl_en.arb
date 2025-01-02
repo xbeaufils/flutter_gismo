@@ -17,6 +17,8 @@
   "configuration" : "Configuration",
   "localuser" : "Local user",
   "user_error" : "User error",
+  "ovin": "Sheep",
+  "caprin": "Goats",
 
   "earring" : "Ear tag",
   "earring_search": "Search ear tag",

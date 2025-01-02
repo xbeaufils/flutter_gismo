@@ -1,3 +1,10 @@
+plugins {
+    id "com.android.application"
+    // id "kotlin-android"
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -21,8 +28,8 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-apply plugin: 'com.android.application'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+//apply plugin: 'com.android.application'
+//apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
@@ -31,7 +38,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
 
     lintOptions {
         disable 'InvalidPackage'
@@ -40,8 +47,8 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "nemesys.fr.flutter_gismo"
-        minSdkVersion 20
-        targetSdkVersion 33
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -67,7 +74,7 @@ android {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            //storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
             storePassword keystoreProperties['storePassword']
         }
     }
@@ -97,12 +104,12 @@ android {
     }
  }
 
-dependencies {
-    implementation 'io.sentry:sentry-android:6.9.1'
-    //implementation 'io.sentry:sentry-android:4.2.0'
-    //implementation 'com.google.android.gms:play-services-location:18.0.0'
-    //implementation 'com.mapbox.maps:android:10.3.0'
-}
+//dependencies {
+//    implementation 'io.sentry:sentry-android:6.9.1'
+//    //implementation 'io.sentry:sentry-android:4.2.0'
+//    //implementation 'com.google.android.gms:play-services-location:18.0.0'
+//    //implementation 'com.mapbox.maps:android:10.3.0'
+//}
 flutter {
     source '../..'
 }

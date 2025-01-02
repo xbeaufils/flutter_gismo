@@ -21,6 +21,14 @@ class GismoDrawer extends StatelessWidget {
                 onTap:() { _homePressed(context);},
               ),
               ListTile(
+                title: (Text(S.of(context).ovin)),
+                leading:Image.asset("assets/brebis.png") ,
+              ),
+              ListTile(
+                title: (Text(S.of(context).caprin)),
+                leading: Image.asset("assets/chevre.png"),
+              ),
+              ListTile(
                 title: Text(S.of(context).memo),
                 leading: Icon(Icons.note),
                 onTap: () { _notePressed(context);},

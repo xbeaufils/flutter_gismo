@@ -108,6 +108,7 @@ class _WelcomePageState extends State<WelcomePage> {
               this._getAdmobAdvice(),
               this._getFacebookAdvice(),
             ]),
+
         drawer: GismoDrawer(_bloc),);
   }
 
@@ -180,6 +181,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   void initState() {
+    super.initState();
     if ( ! _bloc.isLogged()!) {
       this._adBanner = BannerAd(
         adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',

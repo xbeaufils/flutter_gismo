@@ -17,6 +17,8 @@
   "memo" : "Memo",
   "configuration" : "Configuration",
   "user_error" : "User error",
+  "ovin" : "Ovins",
+  "caprin" : "Caprins",
 
   "earring" : "Boucle",
   "earring_search": "Recherche boucle",

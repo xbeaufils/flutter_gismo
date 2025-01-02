@@ -20,7 +20,6 @@ import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
-import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/model/User.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

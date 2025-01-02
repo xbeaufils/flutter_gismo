@@ -220,6 +220,26 @@ class S {
     );
   }
 
+  /// `Sheep`
+  String get ovin {
+    return Intl.message(
+      'Sheep',
+      name: 'ovin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Goats`
+  String get caprin {
+    return Intl.message(
+      'Goats',
+      name: 'caprin',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Ear tag`
   String get earring {
     return Intl.message(

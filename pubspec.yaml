@@ -26,21 +26,17 @@ dependencies:
   # cupertino_icons: ^0.1.2
 
   http: ^0.13.3
-  intl: ^0.18.0
+  intl: ^0.19.0
   sqflite:
   permission_handler: ^11.0.1
   provider: ^6.1.1
   path_provider: ^2.0.9
   flutter_secure_storage:
-  #location: ^4.1.1
-  # geolocator: ^8.1.1
-  mapbox_gl: ^0.16.0
-  #rts500plugin:
-  #  path: ../rts500_plugin/
-  sentry: ^5.0.0
+  # sentry: ^5.0.0
+  sentry_flutter: ^8.2.0
   google_mobile_ads: ^2.3.0
-  #admob_flutter: 3.0.0
   facebook_audience_network: ^1.0.1
+  mapbox_gl: ^0.16.0
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +65,7 @@ flutter:
     - assets/Lot_entree.png
     - assets/Lot_sortie.png
     - assets/brebis.png
+    - assets/chevre.png
     - assets/lamb.png
     - assets/etat_corporel.png
     - assets/syringe.png
