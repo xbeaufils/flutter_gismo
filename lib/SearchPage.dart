@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:developer' as debug;
 import 'dart:io';
 
-import 'package:facebook_audience_network/ad/ad_banner.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

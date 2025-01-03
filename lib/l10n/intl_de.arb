@@ -177,6 +177,7 @@
   "rythme": "Rhythmus",
   "contributor": "Behandelnder",
   "reason": "Grund",
+  "treatment_explanation" : "Fügen Sie alle Schafe hinzu, die behandelt werden sollen, bevor Sie fortfahren",
 
   "mating_date": "Deckdatum",
   "no_mating_date": "Kein Datum eingegeben",

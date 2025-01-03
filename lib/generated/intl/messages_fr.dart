@@ -170,6 +170,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "mort_accident": MessageLookupByLibrary.simpleMessage("Accident"),
         "mort_arthrite_gros_nombril":
             MessageLookupByLibrary.simpleMessage("Arthrite/gros nombril"),
+        "mort_autre": MessageLookupByLibrary.simpleMessage("Autre"),
         "mort_autres": MessageLookupByLibrary.simpleMessage("Autres"),
         "mort_ballonne_enterotoxemie":
             MessageLookupByLibrary.simpleMessage("Ballonné ou entérotoxémie"),
@@ -310,6 +311,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Ajouter une bête"),
         "tooltip_search": MessageLookupByLibrary.simpleMessage("Recherche"),
         "treatment": MessageLookupByLibrary.simpleMessage("Traitement"),
+        "treatment_explanation": MessageLookupByLibrary.simpleMessage(
+            "Ajoutez tous les individus qui vont recevoir le traitement avant de continuer"),
         "triplet": MessageLookupByLibrary.simpleMessage("Triplet et +"),
         "ultrasound": MessageLookupByLibrary.simpleMessage("Echographie"),
         "user_error": MessageLookupByLibrary.simpleMessage("User error"),

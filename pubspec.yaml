@@ -38,7 +38,8 @@ dependencies:
   mapbox_gl: ^0.16.0
   #rts500plugin:
   #  path: ../rts500_plugin/
-  sentry: ^5.0.0
+  #sentry: ^5.0.0
+  sentry_flutter: ^8.12.0
   google_mobile_ads: ^2.3.0
   #admob_flutter: 3.0.0
   facebook_audience_network: ^1.0.1

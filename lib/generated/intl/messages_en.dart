@@ -169,7 +169,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "mort_accident": MessageLookupByLibrary.simpleMessage("Accident"),
         "mort_arthrite_gros_nombril":
             MessageLookupByLibrary.simpleMessage("Arthritis/Big navel"),
-        "mort_autres": MessageLookupByLibrary.simpleMessage("Other"),
+        "mort_autre": MessageLookupByLibrary.simpleMessage("Other"),
+        "mort_autres": MessageLookupByLibrary.simpleMessage("Others"),
         "mort_ballonne_enterotoxemie":
             MessageLookupByLibrary.simpleMessage("Bloating or enterotoxemia"),
         "mort_baveur_colibacilose":
@@ -303,6 +304,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Add a beast"),
         "tooltip_search": MessageLookupByLibrary.simpleMessage("Search"),
         "treatment": MessageLookupByLibrary.simpleMessage("Treatment"),
+        "treatment_explanation": MessageLookupByLibrary.simpleMessage(
+            "Add all individuals who will receive treatment before continuing"),
         "triplet": MessageLookupByLibrary.simpleMessage("Triplet and +"),
         "ultrasound": MessageLookupByLibrary.simpleMessage("Ultrasound"),
         "user_error": MessageLookupByLibrary.simpleMessage("User error"),

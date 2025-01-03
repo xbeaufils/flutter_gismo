@@ -172,6 +172,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "mort_accident": MessageLookupByLibrary.simpleMessage("Unfall"),
         "mort_arthrite_gros_nombril": MessageLookupByLibrary.simpleMessage(
             "Arthritis/vergrößerter Nabel"),
+        "mort_autre": MessageLookupByLibrary.simpleMessage("Sonstiges"),
         "mort_autres": MessageLookupByLibrary.simpleMessage("Andere"),
         "mort_ballonne_enterotoxemie": MessageLookupByLibrary.simpleMessage(
             "Aufgebläht oder Enterotoxämie"),
@@ -317,6 +318,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Tier hinzufügen"),
         "tooltip_search": MessageLookupByLibrary.simpleMessage("Suche"),
         "treatment": MessageLookupByLibrary.simpleMessage("Behandlung"),
+        "treatment_explanation": MessageLookupByLibrary.simpleMessage(
+            "Fügen Sie alle Schafe hinzu, die behandelt werden sollen, bevor Sie fortfahren"),
         "triplet": MessageLookupByLibrary.simpleMessage("Drillinge und mehr"),
         "ultrasound": MessageLookupByLibrary.simpleMessage("Ultraschall"),
         "user_error": MessageLookupByLibrary.simpleMessage("Benutzerfehler"),
