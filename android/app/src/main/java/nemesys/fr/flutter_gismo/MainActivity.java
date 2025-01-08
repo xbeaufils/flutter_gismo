@@ -127,7 +127,11 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         intent.getType();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("nemesys.rfid.LF134.result");
-        registerReceiver(this.receiver, intentFilter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            super.registerReceiver(this.receiver, intentFilter, Context.RECEIVER_EXPORTED);
+        } else {
+            super.registerReceiver(this.receiver, intentFilter);
+        }
         this.context = this.getContext();
     }
 

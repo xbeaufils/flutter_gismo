@@ -1,5 +1,7 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
@@ -49,38 +51,47 @@ class _SelectionPageState extends State<SelectionPage> {
     );
   }
 
-  Widget _listBeteWidget() {
+
+  Widget _fullListBeteWidget() {
     return Column(children: [
       Expanded(child:
-        ListView.builder(
-          itemCount: lstBete.length,
-          itemBuilder: (context, index) {
-            if (lstBete.length == 0)
-              return Center(child: Text(""),);
-            Bete bete = lstBete[index];
-            return
-              ListTile(
-                title:
-                  Text(bete.numBoucle,
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle:
-                  Text(bete.numMarquage,
-                      style: TextStyle(fontStyle: FontStyle.italic),),
-                trailing: IconButton(
-                  icon: Icon(Icons.cancel), onPressed: () => { _removeBete(bete)},)
-              );
-          }
-        ),
+          this._listBeteWidget()
       ),
       Center(child:
         ElevatedButton(
             child: Text( S.of(context).bt_continue, style: new TextStyle(color: Colors.white, ),),
             //color: Colors.lightGreen[700],
-            onPressed: _openTraitement),
+            onPressed: this._openTraitement),
       )
     ],
-
     );
+  }
+
+  Widget _listBeteWidget() {
+    if (lstBete.length == 0)
+      return Center(child: Text(S.current.treatment_explanation),);
+    return _listBeteBuilder();
+  }
+
+  Widget _listBeteBuilder() {
+    return ListView.builder(
+        itemCount: lstBete.length,
+        itemBuilder: (context, index) {
+          Bete bete = lstBete[index];
+          return
+            ListTile(
+                title:
+                Text(bete.numBoucle,
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                subtitle:
+                Text(bete.numMarquage,
+                  style: TextStyle(fontStyle: FontStyle.italic),),
+                trailing: IconButton(
+                  icon: Icon(Icons.cancel), onPressed: () => { _removeBete(bete)},)
+            );
+        }
+    );
+
   }
 
   Future _addBete() async {

@@ -1471,10 +1471,10 @@ class S {
   }
 
   /// `Other`
-  String get mort_autres {
+  String get mort_autre {
     return Intl.message(
       'Other',
-      name: 'mort_autres',
+      name: 'mort_autre',
       desc: '',
       args: [],
     );
@@ -1525,6 +1525,16 @@ class S {
     return Intl.message(
       'Unknown',
       name: 'mort_inconnue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Others`
+  String get mort_autres {
+    return Intl.message(
+      'Others',
+      name: 'mort_autres',
       desc: '',
       args: [],
     );
@@ -1815,6 +1825,16 @@ class S {
     return Intl.message(
       'Reason',
       name: 'reason',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add all individuals who will receive treatment before continuing`
+  String get treatment_explanation {
+    return Intl.message(
+      'Add all individuals who will receive treatment before continuing',
+      name: 'treatment_explanation',
       desc: '',
       args: [],
     );
