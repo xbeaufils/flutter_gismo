@@ -37,7 +37,7 @@ class LotModel {
     data["campagne"] = _campagne;
     data["codeLotLutte"] = _codeLotLutte;
     data["dateDebutLutte"] = _df.format(_dateDebutLutte!);
-    data["dateFinLutte"] = _dateFinLutte;
+    data["dateFinLutte"] = _df.format(_dateFinLutte!);
     data["cheptel"] = _cheptel ;
     return data;
   }

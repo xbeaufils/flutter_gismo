@@ -77,7 +77,7 @@ class _LotPageState extends State<LotPage> {
   }
 
   void _viewDetails(LotModel lot ) async {
-    String message = await Navigator.push(
+    String? message = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => LotAffectationViewPage(this._bloc, lot ),
