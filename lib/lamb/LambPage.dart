@@ -8,6 +8,7 @@ import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
+import 'package:intl/intl.dart';
 
 class LambPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -248,7 +249,7 @@ class LambPageState extends State<LambPage> {
             return new ListTile(
                 leading: _getImageType(event.type),
                 title: Text(event.eventName),
-                subtitle: Text(event.date),
+                subtitle: Text(DateFormat.yMd().format(event.date)),
                 trailing: IconButton(icon: Icon(Icons.delete), onPressed: () =>  _showDialog(context, event), )
             );
           },

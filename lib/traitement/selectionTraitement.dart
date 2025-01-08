@@ -51,26 +51,33 @@ class _SelectionPageState extends State<SelectionPage> {
     );
   }
 
-
   Widget _fullListBeteWidget() {
     return Column(children: [
       Expanded(child:
-          this._listBeteWidget()
+          this._listBeteBuilder()
       ),
+      Container(
+        padding: const EdgeInsets.all(10.0),
+        child:
+          Center(
+            child: Text(S.current.treatment_explanation),)),
       Center(child:
         ElevatedButton(
             child: Text( S.of(context).bt_continue, style: new TextStyle(color: Colors.white, ),),
             //color: Colors.lightGreen[700],
             onPressed: this._openTraitement),
-      )
+      ),
     ],
     );
   }
 
   Widget _listBeteWidget() {
     if (lstBete.length == 0)
-      return Center(child: Text(S.current.treatment_explanation),);
-    return _listBeteBuilder();
+      return Container(
+          padding: const EdgeInsets.all(10.0),
+          child:
+          Center(child: Text(S.current.treatment_explanation),));
+    return _fullListBeteWidget();
   }
 
   Widget _listBeteBuilder() {
@@ -105,7 +112,12 @@ class _SelectionPageState extends State<SelectionPage> {
       ));
       if (selectedBete != null) {
          setState(() {
+           Iterable<Bete> existingBete  = lstBete.where((element) => element.idBd == selectedBete.idBd);
+           if (existingBete.isEmpty)
             lstBete.add(selectedBete);
+           else
+             ScaffoldMessenger.of(context)
+                 .showSnackBar(SnackBar(content: Text(S.of(context).identity_number_error)));
         });
       }
   }

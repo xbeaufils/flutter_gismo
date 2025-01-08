@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class Affectation {
   int ? idAffectation;
   String ? numBoucle;
@@ -5,8 +7,8 @@ class Affectation {
   late int brebisId;
   late int lotId;
   String ? lotName;
-  String ? dateEntree;
-  String ? dateSortie;
+  DateTime ? dateEntree;
+  DateTime ? dateSortie;
 
   Affectation();
 
@@ -29,6 +31,8 @@ class Affectation {
 
   Affectation.fromResult(Map result) {
     //result.containsKey("dateFinLutte")
+    final _df = new DateFormat('dd/MM/yyyy');
+
     idAffectation = result["idBd"];
     numBoucle = result["numBoucle"];
     numMarquage = result["numMarquage"];
@@ -37,13 +41,9 @@ class Affectation {
     lotName = result["lotName"];
     dateEntree = result["dateEntree"];
     if (dateEntree == null)
-      dateEntree = result["dateDebutLutte"];
-    else if (dateEntree!.isEmpty)
-      dateEntree = result["dateDebutLutte"];
+      dateEntree = _df.parse(result["dateDebutLutte"]);
     dateSortie = result["dateSortie"];
     if (dateSortie == null)
-      dateSortie = result["dateFinLutte"];
-    else if (dateSortie!.isEmpty)
-      dateSortie = result["dateFinLutte"];
+      dateSortie = _df.parse(result["dateFinLutte"]);
   }
 }

@@ -267,11 +267,11 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
               Column(children: <Widget>[
                 bete.dateEntree == null ? Text(
                     DateFormat.yMd().format(this.widget._currentLot.dateDebutLutte!)) : Text(
-                  "Entrée le : " + bete.dateEntree!,),
+                  "Entrée le : " + DateFormat.yMd().format(bete.dateEntree!),),
                 SizedBox(width: 20,),
                 bete.dateSortie == null ? Text(
                     DateFormat.yMd().format(this.widget._currentLot.dateFinLutte!)) : Text(
-                    "Sortie le : " + bete.dateSortie!)
+                    "Sortie le : " + DateFormat.yMd().format(bete.dateSortie!))
               ], ),
             trailing:
             Row(

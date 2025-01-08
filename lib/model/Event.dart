@@ -3,7 +3,7 @@ enum EventType {entree, agnelage, traitement, sortie, NEC, entreeLot, sortieLot,
 class Event {
    int _idBd;
    EventType _type;
-   String _date;
+   DateTime _date;
    String _eventName;
 
 
@@ -19,9 +19,9 @@ class Event {
      _type = value;
    }
 
-   String get date => _date;
+   DateTime get date => _date;
 
-   set date(String value) {
+   set date(DateTime value) {
      _date = value;
    }
 

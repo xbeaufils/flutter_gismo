@@ -125,7 +125,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
             return new ListTile(
               leading: _getImageType(event.type),
               title: Text(event.eventName),
-              subtitle: Text(event.date),
+              subtitle: Text(DateFormat.yMd().format(event.date)),
               trailing:this._eventButton(event),
             );
           },

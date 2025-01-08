@@ -280,22 +280,22 @@ class GismoBloc {
       List<EchographieModel> lstEcho = await this._repository!.dataProvider.getEcho(bete);
       List<SaillieModel> lstSaillie = await this._repository!.dataProvider.getSaillies(bete);
       List<MemoModel> lstMemos = await this._repository!.dataProvider.getMemos(bete);
-      lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd!, EventType.agnelage, DateFormat.yMd().format(lambing.dateAgnelage!), lambing.lambs.length.toString()))});
-      lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement, DateFormat.yMd().format(traitement.debut), traitement.medicament))});
-      lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd!, EventType.NEC, DateFormat.yMd().format(note.date), note.note.toString()))});
-      lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id!, EventType.pesee, DateFormat.yMd().format(poids.datePesee), poids.poids.toString()))});
+      lstLambs.forEach((lambing) => { lstEvents.add( new Event.name(lambing.idBd!, EventType.agnelage, lambing.dateAgnelage!, lambing.lambs.length.toString()))});
+      lstTraitement.forEach( (traitement) => {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement, traitement.debut, traitement.medicament))});
+      lstNotes.forEach( (note) => {lstEvents.add(new Event.name(note.idBd!, EventType.NEC, note.date, note.note.toString()))});
+      lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id!, EventType.pesee, poids.datePesee, poids.poids.toString()))});
       lstAffect.forEach( (affect) => {lstEvents.addAll ( _makeEventforAffectation(affect) )});
-      lstEcho.forEach((echo) {lstEvents.add(new Event.name(echo.idBd!, EventType.echo, DateFormat.yMd().format(echo.dateEcho), echo.nombre.toString())); });
+      lstEcho.forEach((echo) {lstEvents.add(new Event.name(echo.idBd!, EventType.echo, echo.dateEcho, echo.nombre.toString())); });
       lstSaillie.forEach((saillie) {
         String numBoucleConjoint;
         if (bete.sex == Sex.male)
           numBoucleConjoint = saillie.numBoucleMere!;
         else
           numBoucleConjoint = saillie.numBouclePere!;
-        lstEvents.add(new Event.name(saillie.idBd!, EventType.saillie, DateFormat.yMd().format(saillie.dateSaillie!), numBoucleConjoint));
+        lstEvents.add(new Event.name(saillie.idBd!, EventType.saillie, saillie.dateSaillie!, numBoucleConjoint));
 
       });
-      lstMemos.forEach((note) {lstEvents.add(new Event.name(note.id!, EventType.memo, DateFormat.yMd().format(note.debut!), note.note!)); });
+      lstMemos.forEach((note) {lstEvents.add(new Event.name(note.id!, EventType.memo, note.debut!, note.note!)); });
       lstEvents.sort((a, b) =>  _compareDate(a, b));
       return lstEvents;
     }
@@ -309,9 +309,9 @@ class GismoBloc {
     try {
       List<Event> lstEvents = [];
       List<Pesee> lstPoids  = await this._repository!.dataProvider.getPeseeForLamb(lamb);
-      lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id!, EventType.pesee, DateFormat.yMd().format( poids.datePesee) , poids.poids.toString()))});
+      lstPoids.forEach( (poids) => {lstEvents.add(new Event.name(poids.id!, EventType.pesee,  poids.datePesee , poids.poids.toString()))});
       List<TraitementModel> lstTraits = await this._repository!.dataProvider.getTraitementsForLamb(lamb);
-      lstTraits.forEach((traitement) {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement,  DateFormat.yMd().format(traitement.debut), traitement.medicament)); });
+      lstTraits.forEach((traitement) {lstEvents.add(new Event.name(traitement.idBd!, EventType.traitement,  traitement.debut, traitement.medicament)); });
       return lstEvents;
     }
     catch(e, stackTrace) {
@@ -342,14 +342,13 @@ class GismoBloc {
 
   List<Event> _makeEventforAffectation(Affectation affect) {
     List<Event> lstEvents = [];
-    lstEvents.add(new Event.name(affect.idAffectation!, EventType.entreeLot, (affect.dateEntree !=null) ?affect.dateEntree!: "", affect.lotName!));
-    lstEvents.add(new Event.name(affect.idAffectation!, EventType.sortieLot, (affect.dateSortie!=null)?affect.dateSortie!:"", affect.lotName!));
+    lstEvents.add(new Event.name(affect.idAffectation!, EventType.entreeLot, affect.dateEntree!, affect.lotName!));
+    lstEvents.add(new Event.name(affect.idAffectation!, EventType.sortieLot, affect.dateSortie!, affect.lotName!));
     return lstEvents;
   }
 
   int _compareDate(Event a, Event b) {
-    DateFormat df = new DateFormat("dd/MM/yyyy");
-    return df.parse(b.date).compareTo( df.parse(a.date));
+    return b.date.compareTo( a.date);
   }
 
   Future<String> boucler (LambModel lamb, Bete bete ) {
@@ -557,7 +556,7 @@ class GismoBloc {
   }
 
   Future<String> removeFromLot(Affectation affect, String dateSortie) {
-    affect.dateSortie = dateSortie;
+    affect.dateSortie = DateFormat.yMd().parse(dateSortie);
     return this._repository!.dataProvider.remove(affect);
   }
 
