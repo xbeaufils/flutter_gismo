@@ -259,7 +259,7 @@ class LambPageState extends State<LambPage> {
   }
 
   void _openBoucle(LambModel lamb) async {
-    Bete bete = await Navigator.push(
+    Bete? bete = await Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => BouclagePage(lamb, this.widget._bloc)),

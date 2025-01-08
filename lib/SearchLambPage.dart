@@ -7,6 +7,7 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/LambPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:intl/intl.dart';
 
 class SearchLambPage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -108,7 +109,7 @@ class _SearchLambPageState extends State<SearchLambPage> {
                     children: <Widget>[
                       Text(_filteredLambs[index].numBoucleMere,),
                       SizedBox(width: 16,),
-                      Text(_filteredLambs[index].dateAgnelage),
+                      Text(DateFormat.yMd().format(_filteredLambs[index].dateAgnelage)),
                     ],),
                   trailing:
                   IconButton(
@@ -154,7 +155,7 @@ class _SearchLambPageState extends State<SearchLambPage> {
               children: <Widget>[
                 Text( _filteredLambs[index].numBoucleMere, ),
                 SizedBox(width: 16,),
-                Text(_filteredLambs[index].dateAgnelage),
+                Text(DateFormat.yMd().format(_filteredLambs[index].dateAgnelage)),
             ],),
           trailing:
             IconButton(

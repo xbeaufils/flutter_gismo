@@ -305,19 +305,20 @@ class LambModel {
 }
 
 class CompleteLambModel extends LambModel {
+  final _df = new DateFormat('dd/MM/yyyy');
   late String _numBoucleMere;
   late String _numMarquageMere;
-  late String _dateAgnelage;
+  late DateTime _dateAgnelage;
 
   String get numBoucleMere => _numBoucleMere;
 
   String get numMarquageMere => _numMarquageMere;
 
-  String get dateAgnelage => _dateAgnelage;
+  DateTime get dateAgnelage => _dateAgnelage;
 
   CompleteLambModel.fromResult(result) : super.fromResult(result) {
     _numBoucleMere = result["numBoucleMere"];
     _numMarquageMere = result["numMarquageMere"];
-    _dateAgnelage = result["dateAgnelage"];
+    _dateAgnelage = _df.parse(result["dateAgnelage"]);
   }
 }

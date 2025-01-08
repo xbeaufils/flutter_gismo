@@ -348,7 +348,8 @@ class GismoBloc {
   }
 
   int _compareDate(Event a, Event b) {
-    return DateFormat.yMd().parse(b.date).compareTo( DateFormat.yMd().parse(a.date));
+    DateFormat df = new DateFormat("dd/MM/yyyy");
+    return df.parse(b.date).compareTo( df.parse(a.date));
   }
 
   Future<String> boucler (LambModel lamb, Bete bete ) {
