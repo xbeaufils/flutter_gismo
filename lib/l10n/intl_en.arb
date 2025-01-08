@@ -226,5 +226,7 @@
   "restore_bd" : "Restore database",
   "restore_bd_text" : "Current data will be overwritten.",
   "with_subscription" : "With subscription",
-  "save_config" : "save configuration"
+  "save_config" : "save configuration",
+
+  "bluetooth_autorisation": "Bluetooth authorization"
 }

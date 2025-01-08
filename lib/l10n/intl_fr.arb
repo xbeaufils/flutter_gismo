@@ -227,5 +227,7 @@
   "restore_bd" : "Restauration de la BD",
   "restore_bd_text" : "Les données actuelles seront remplacées.",
   "with_subscription" : "Avec abonnement",
-  "save_config" : "Enregistrer la configuration"
+  "save_config" : "Enregistrer la configuration",
+
+  "bluetooth_autorisation": "Autorisation bluetooth"
 }

@@ -58,6 +58,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "batch_name": MessageLookupByLibrary.simpleMessage("Nom lot"),
         "batch_warning": MessageLookupByLibrary.simpleMessage(
             "Vous devez enregistrer le lot avant d\'ajouter"),
+        "bluetooth_autorisation":
+            MessageLookupByLibrary.simpleMessage("Autorisation bluetooth"),
         "body_cond": MessageLookupByLibrary.simpleMessage("Etat corp."),
         "body_cond_full":
             MessageLookupByLibrary.simpleMessage("Note d\'état corporel"),

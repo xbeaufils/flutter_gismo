@@ -217,6 +217,7 @@
   "restore_bd": "Datenbank wiederherstellen",
   "restore_bd_text": "Die aktuellen Daten werden ersetzt.",
   "with_subscription": "Mit Abonnement",
-  "save_config": "Konfiguration speichern"
+  "save_config": "Konfiguration speichern",
 
+  "bluetooth_autorisation": "Bluetooth-Autorisierung"
 }

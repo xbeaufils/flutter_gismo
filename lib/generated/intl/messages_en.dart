@@ -58,6 +58,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "batch_name": MessageLookupByLibrary.simpleMessage("Batch name"),
         "batch_warning": MessageLookupByLibrary.simpleMessage(
             "You must save the batch before add"),
+        "bluetooth_autorisation":
+            MessageLookupByLibrary.simpleMessage("Bluetooth authorization"),
         "body_cond": MessageLookupByLibrary.simpleMessage("Body cond."),
         "body_cond_full":
             MessageLookupByLibrary.simpleMessage("Body condition note"),

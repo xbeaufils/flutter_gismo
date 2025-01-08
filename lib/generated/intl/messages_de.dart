@@ -59,6 +59,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Name der Teilherde"),
         "batch_warning": MessageLookupByLibrary.simpleMessage(
             "Sie müssen die Teilherde speichern, bevor Sie sie hinzufügen können"),
+        "bluetooth_autorisation":
+            MessageLookupByLibrary.simpleMessage("Bluetooth-Autorisierung"),
         "body_cond": MessageLookupByLibrary.simpleMessage("Körperzustand"),
         "body_cond_full":
             MessageLookupByLibrary.simpleMessage("Körperkonditionsnote"),

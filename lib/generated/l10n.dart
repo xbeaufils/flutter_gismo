@@ -2159,6 +2159,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Bluetooth authorization`
+  String get bluetooth_autorisation {
+    return Intl.message(
+      'Bluetooth authorization',
+      name: 'bluetooth_autorisation',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
