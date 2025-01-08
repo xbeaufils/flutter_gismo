@@ -112,8 +112,6 @@ class _EntreePageState extends State<EntreePage> {
             child: Text(S.of(context).bt_save,
                 style: new TextStyle(color: Colors.white, ),),
             onPressed: _saveEntree),
-          (this._bloc.isLogged()!) ?
-            Container():_getAdmobAdvice()
           ]
 
       ),
@@ -186,12 +184,12 @@ class _EntreePageState extends State<EntreePage> {
   }
 
   Future _openAddEntryDialog() async {
-      Bete selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
+      Bete? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
           builder: (BuildContext context) {
             return new BetePage(this._bloc, null);
           },
           fullscreenDialog: true
-      )) as Bete;
+      )) ;
       if (selectedBete != null) {
         setState(() {
           _sheeps.add(selectedBete);
