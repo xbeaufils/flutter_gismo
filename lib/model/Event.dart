@@ -31,7 +31,7 @@ class Event {
      _eventName = value;
    }
 
-   Event.name(this._idBd, this._type, this._date, this._eventName);
+   Event(this._idBd, this._type, this._date, this._eventName);
 
 
 }

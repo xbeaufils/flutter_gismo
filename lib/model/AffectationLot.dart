@@ -39,10 +39,10 @@ class Affectation {
     brebisId = result["brebisId"];
     lotId = result["lotId"];
     lotName = result["lotName"];
-    dateEntree = result["dateEntree"];
+    dateEntree = _df.parse(result["dateEntree"]);
     if (dateEntree == null)
       dateEntree = _df.parse(result["dateDebutLutte"]);
-    dateSortie = result["dateSortie"];
+    dateSortie = _df.parse(result["dateSortie"]);
     if (dateSortie == null)
       dateSortie = _df.parse(result["dateFinLutte"]);
   }

@@ -357,7 +357,7 @@ class WebDataProvider extends DataProvider {
   Future<String> mort(LambModel lamb, String motif, String date) async {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data["idBb"] = lamb.idBd;
-    data["dateDeces"] = date;
+    data["dateDeces"] = _df.format(DateFormat.yMd().parse(date));
     data["motifDeces"] = motif;
     try {
       final response = await _gismoHttp.doPostMessage(
@@ -467,6 +467,7 @@ class WebDataProvider extends DataProvider {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
+
   @override
   Future<List<SaillieModel>> getSaillies(Bete bete) async {
     String ? sex;
@@ -610,7 +611,7 @@ class WebDataProvider extends DataProvider {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data["lotId"] = lot.idb;
     data["brebisId"] = bete.idBd;
-    data["dateEntree"] = dateEntree;
+    data["dateEntree"] = _df.format(DateFormat.yMd().parse(dateEntree));
     try {
       final response = await _gismoHttp.doPostMessage(
           '/lot/add', data);
@@ -802,6 +803,7 @@ class WebDataProvider extends DataProvider {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
+
   Future<String> savePature(Pature pature) async {
     try {
       final response = await _gismoHttp.doPostMessage(

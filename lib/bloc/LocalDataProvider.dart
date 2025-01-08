@@ -672,7 +672,7 @@ class LocalDataProvider extends DataProvider{
   Future<void> mort(LambModel lamb,  String motif, String date) async {
       Database db = await this.database;
       final Map<String, dynamic> data = new Map<String, dynamic>();
-      data["dateDeces"] = date;
+      data["dateDeces"] = _df.format(DateFormat.yMd().parse(date));
       data["motifDeces"] = motif;
       db.update("agneaux", data, where: "id = ?", whereArgs: <int>[lamb.idBd!]);
   }
@@ -747,7 +747,6 @@ class LocalDataProvider extends DataProvider{
     return tempList;
   }
 
-
   @override
   Future<String> deletePesee(int idBd) async {
     Database db = await this.database;
@@ -777,7 +776,6 @@ class LocalDataProvider extends DataProvider{
         where: "idBd = ?", whereArgs: <int>[idBd]);
     return "Suppression effectuée";
   }
-
 
   @override
   Future<List<SaillieModel>> getSaillies(Bete bete) async {
@@ -810,11 +808,7 @@ class LocalDataProvider extends DataProvider{
     }
     return tempList;
   }
-  /*
-  Future List<Map<String, dynamic>> _getSaillieForFemale () {
 
-  }
-*/
   @override
   Future<String> saveEcho(EchographieModel echo) async {
     try {
@@ -968,7 +962,7 @@ class LocalDataProvider extends DataProvider{
       affect.brebisId = bete.idBd!;
       if (dateEntree != null)
         if (dateEntree.isNotEmpty)
-          affect.dateEntree = dateEntree;
+          affect.dateEntree = DateFormat.yMd().parse(dateEntree);
       Map<String, dynamic> dataDb = new Map.from(affect.toJson());
       dataDb.remove("numBoucle");
       dataDb.remove("numMarquage");
