@@ -116,7 +116,9 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
     return FutureBuilder(
       builder: (context, AsyncSnapshot lstEvents){
         if (lstEvents.data == null)
-          return Container();
+          return Container( child:
+            Center(
+              child: CircularProgressIndicator()),);
         return ListView.builder(
           shrinkWrap: true,
           itemCount: lstEvents.data.length,
