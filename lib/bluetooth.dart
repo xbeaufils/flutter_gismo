@@ -4,9 +4,10 @@ import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gismo/bloc/BluetoothBloc.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_gismo/bloc/BluetoothBloc.dart' as gismo_bluetooth;
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/model/BuetoothModel.dart';
+import 'package:flutter_gismo/model/BuetoothModel.dart' as bluetooth_model;
 import 'package:flutter_gismo/model/DeviceModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +24,7 @@ class BluetoothPermissionPage extends StatefulWidget {
 }
 class BluetoothPermissionPageState extends State<BluetoothPermissionPage> {
   final GismoBloc _bloc;
-  late final BluetoothModel _model;
+  late final bluetooth_model.BluetoothModel _model;
 
   BluetoothPermissionPageState(this._bloc);
 
@@ -31,7 +32,7 @@ class BluetoothPermissionPageState extends State<BluetoothPermissionPage> {
   void initState() {
     super.initState();
 
-    _model = BluetoothModel();
+    _model = bluetooth_model.BluetoothModel();
     _model.checkBlueToothPermission();
   }
 
@@ -39,15 +40,15 @@ class BluetoothPermissionPageState extends State<BluetoothPermissionPage> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
         value: _model,
-        child: Consumer<BluetoothModel>(
+        child: Consumer<bluetooth_model.BluetoothModel>(
             builder: (context, model, child) {
               Widget widget;
               switch (_model.permission) {
-                case BluetoothPermission.noBluetoothConnectPermission:
-                case BluetoothPermission.noBluetoothScanPermission :
+                case bluetooth_model.BluetoothPermission.noBluetoothConnectPermission:
+                case bluetooth_model.BluetoothPermission.noBluetoothScanPermission :
                   widget = new BluetoothAskPermissions(onPressed: _checkPermissions,);
                   break;
-                case BluetoothPermission.bluetoothOkPermission:
+                case bluetooth_model.BluetoothPermission.bluetoothOkPermission:
                   widget = new BluetoothPage(this._bloc);
               }
               return Scaffold(
@@ -115,13 +116,13 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GismoBloc _bloc;
   static const  BLUETOOTH_CHANNEL = const MethodChannel('nemesys.rfid.bluetooth');
-  late Stream<BluetoothState> _bluetoothStream;
-  StreamSubscription<BluetoothState> ? _bluetoothSubscription;
+  late Stream<bluetooth_model.BluetoothState> _bluetoothStream;
+  StreamSubscription<bluetooth_model.BluetoothState> ? _bluetoothSubscription;
   StreamSubscription<StatusBlueTooth> ? _bluetoothStatusSubscription;
 
-  BluetoothBloc _btBloc = new BluetoothBloc();
+  gismo_bluetooth.BluetoothBloc _btBloc = new gismo_bluetooth.BluetoothBloc();
 
-  String _bluetoothState = BluetoothBloc.NONE;
+  String _bluetoothState = gismo_bluetooth.BluetoothBloc.NONE;
 
   _BluetoothPagePageState(this._bloc);
   DeviceModel ? _selectedDevice;
@@ -176,18 +177,18 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   Widget _stateButton(DeviceModel device) {
     if ( this._isDeviceSelected(device)) {
       switch( this._bluetoothState) {
-        case BluetoothBloc.NONE:
+        case gismo_bluetooth.BluetoothBloc.NONE:
           return Switch(value: false, onChanged: (value) { _startBlueTooth(value);
               //_switchBluetooth(value, device.address);
           } );
-        case BluetoothBloc.CONNECTING:
+        case gismo_bluetooth.BluetoothBloc.CONNECTING:
           return CircularProgressIndicator();
-        case BluetoothBloc.LISTEN:
-        case BluetoothBloc.CONNECTED :
+        case gismo_bluetooth.BluetoothBloc.LISTEN:
+        case gismo_bluetooth.BluetoothBloc.CONNECTED :
           return Switch(value: true, onChanged: (value) { _startBlueTooth(value);
           //_switchBluetooth(value, device.address);
           } );
-        case BluetoothBloc.ERROR:
+        case gismo_bluetooth.BluetoothBloc.ERROR:
           this._stopBluetoothStream();
            return Switch(value: false, onChanged: (value) { _startBlueTooth(value);
            //_switchBluetooth(value, device.address);
@@ -199,38 +200,45 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
   }
 
   Future<List<DeviceModel>> _getDeviceList() async {
-    BluetoothModel model = new BluetoothModel();
-    //final bool permission = await model.requestBlueToothPermission();
-    //if (permission)
-    debug.log("Get device List ", name: "_getDeviceList");
-    String response = await BLUETOOTH_CHANNEL.invokeMethod("listBlueTooth");
-    this._lstDevice = ( jsonDecode(response) as List).map( (i) => DeviceModel.fromResult(i)).toList();
-    List<DeviceModel> lstReturnDevice = this._lstDevice!;
-    //this._preferredAddress = await this._bloc.configBt();
-    this._lstDevice!.forEach((device) => {
-      if (device.connected )
-        this._selectedDevice = device
-    });
-    if (_selectedDevice != null)
-      try {
-        _bluetoothStatusSubscription = this._btBloc.streamStatusBluetooth().listen((event) {
-          if (_bluetoothState  !=  event.connect) {
-            _bluetoothState = event.connect;
-            setState(() {
-              if (event.connect == BluetoothBloc.CONNECTED) {
-                this._selectedDevice!.connected = true;
-                //this._bluetoothStatusSubscription!.cancel();
-              }
-            });
-            if (this._bluetoothState == BluetoothBloc.ERROR )
-              ScaffoldMessenger.of(context).showSnackBar(new SnackBar(content: Text("Erreur bluetooth"),));
-          }
-        });
-      } on Exception catch (e, stackTrace) {
-        Sentry.captureException(e, stackTrace : stackTrace);
-        debug.log(e.toString());
+
+    List<BluetoothDevice> _systemDevices = [];
+    try {
+      // `withServices` is required on iOS for privacy purposes, ignored on android.
+      var withServices = [Guid("180f")]; // Battery Level Service
+      _systemDevices = await FlutterBluePlus.systemDevices(withServices);
+    } catch (e) {
+      print(e);
+    }
+    // listen to scan results
+    // Note: `onScanResults` clears the results between scans. You should use
+    //  `scanResults` if you want the current scan results *or* the results from the previous scan.
+    var subscription = FlutterBluePlus.onScanResults.listen((results) {
+      if (results.isNotEmpty) {
+        ScanResult r = results.last; // the most recently found device
+        print('${r.device.remoteId}: "${r.advertisementData.advName}" found!');
       }
-    return lstReturnDevice;
+    },
+      onError: (e) => print(e),
+    );
+
+    // cleanup: cancel subscription when scanning stops
+    FlutterBluePlus.cancelWhenScanComplete(subscription);
+
+    // Wait for Bluetooth enabled & permission granted
+    // In your real app you should use `FlutterBluePlus.adapterState.listen` to handle all states
+    await FlutterBluePlus.adapterState.where((val) => val == BluetoothAdapterState.on).first;
+
+    // Start scanning w/ timeout
+    // Optional: use `stopScan()` as an alternative to timeout
+    await FlutterBluePlus.startScan(
+        withServices:[Guid("180D")], // match any of the specified services
+        //withNames:["Bluno"], // *or* any of the specified names
+        timeout: Duration(seconds:15));
+
+    // wait for scanning to stop
+    await FlutterBluePlus.isScanning.where((val) => val == false).first;
+
+    return [];
   }
 /*
   void _switchBluetooth(bool on, String address) {
@@ -261,10 +269,10 @@ class _BluetoothPagePageState extends State<BluetoothPage> {
     }
     try {
       this._bluetoothStream = this._bloc.streamConnectBluetooth(this._selectedDevice!.address);
-      this._bluetoothSubscription = this._bluetoothStream.listen((BluetoothState event) {
+      this._bluetoothSubscription = this._bluetoothStream.listen((bluetooth_model.BluetoothState event) {
         setState(() {
           _bluetoothState = event.status!;
-          if (event.status == BluetoothBloc.STARTED) {
+          if (event.status == gismo_bluetooth.BluetoothBloc.STARTED) {
             debug.log("Change connected " + value.toString(),  name: "_startBlueTooth");
             this._selectedDevice!.connected = value;
           }
