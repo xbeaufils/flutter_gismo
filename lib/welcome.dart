@@ -13,13 +13,30 @@ import 'package:flutter_gismo/menu/MenuPage.dart';
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+class WelcomeMainPage extends StatelessWidget {
+  GismoBloc _bloc;
+  String ? _message;
 
+  WelcomeMainPage(this._bloc, this._message);
+
+  @override
+  Widget build(BuildContext context) {
+    return PageView(
+      children: [
+        WelcomePage(_bloc, FlavorOvin(), _message),
+        WelcomePage(_bloc, FlavorCaprin(), _message)
+      ],
+    );
+  }
+
+}
 
 class WelcomePage extends StatefulWidget {
   GismoBloc _bloc;
   String ? _message;
+  Flavor _flavor;
 
-  WelcomePage(this._bloc, this._message, {Key ? key}) : super(key: key);
+  WelcomePage(this._bloc, this._flavor, this._message, {Key ? key}) : super(key: key);
 
   @override
   _WelcomePageState createState() => new _WelcomePageState(_bloc);
@@ -61,8 +78,8 @@ class _WelcomePageState extends State<WelcomePage> {
                       buttonMinWidth: 90.0,
                       children: <Widget>[
                         _buildButton(S.of(context).batch, "assets/Lot.png",_lotPressed),
-                        _buildButton(S.of(context).sheep, "assets/brebis.png", _individuPressed),
-                        _buildButton(S.of(context).lambs, 'assets/jumping_lambs.png', _lambPressed),
+                        _buildButton(S.of(context).sheep, this.widget._flavor.individuAsset, _individuPressed),
+                        _buildButton(this.widget._flavor.enfantLibelle, this.widget._flavor.enfantAsset, _lambPressed),
                       ])))),
               Card(
                 child: Center(
@@ -273,4 +290,22 @@ class _WelcomePageState extends State<WelcomePage> {
   void _sailliePressed() {
     Navigator.pushNamed(context, '/saillie');
   }
+}
+
+abstract class Flavor {
+  String get enfantLibelle ;
+  String get enfantAsset;
+  String get individuAsset;
+}
+
+class FlavorOvin extends Flavor {
+  String get enfantLibelle => S.current.lambs;
+  String get enfantAsset => "assets/jumping_lambs.png";
+  String get individuAsset => "assets/brebis.png";
+}
+
+class FlavorCaprin extends Flavor {
+  String get enfantLibelle => S.current.kids;
+  String get enfantAsset => "assets/chevreau.png";
+  String get individuAsset => "assets/chevre.png";
 }

@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 
 enum Sex { male, femelle }
 //enum Motif_Entree {bouclage, achat}
+enum CodeEspece {Ovin, Caprin}
 
 class Bete  {
   int ? _idBd;
@@ -14,6 +15,7 @@ class Bete  {
   String ? _observations;
   String ? _motifEntree ;
   String ? _cheptel;
+  CodeEspece ? _espece;
 
   Bete( this._idBd, this._numBoucle, this._numMarquage, this._nom, this._observations, this._dateEntree, this._sex, this._motifEntree);
 
@@ -29,6 +31,11 @@ class Bete  {
       _sex= Sex.values.firstWhere((e) => e.toString() == 'Sex.' + result["sex"]);
     _motifEntree = result["motifEntree"]; //Motif_Entree.values.firstWhere((e) => e.toString() == 'Motif_Entree.' + result["motifEntree"]);
     _cheptel = result["cheptel"];
+    if (result['espece'] != null)
+      if (result['espece'] == 'C')
+        _espece = CodeEspece.Caprin;
+      if (result['espece'] == 'O')
+        _espece = CodeEspece.Ovin;
   }
 
   Map<String, dynamic> toJson() {
@@ -45,6 +52,8 @@ class Bete  {
     data["sex"]= _sex.toString().split('.').last;
     data["motifEntree"] = _motifEntree.toString().split('.').last;
     data["cheptel"] = _cheptel ;
+    if (_espece != null)
+      data['espece'] = _espece;
     return data;
   }
 

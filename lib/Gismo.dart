@@ -55,7 +55,7 @@ class GismoApp extends StatelessWidget {
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
        // '/config':(context) => ConfigPage(this._bloc),
-        '/welcome': (context) => WelcomePage(this._bloc, null),
+        '/welcome': (context) => WelcomeMainPage(this._bloc, null),
         '/note' : (context) => MemoListPage(this._bloc),
         '/login': (context) => LoginPage(this._bloc),
         '/nec': (context) => SearchPage(this._bloc, GismoPage.etat_corporel),
