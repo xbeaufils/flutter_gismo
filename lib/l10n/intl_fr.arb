@@ -5,6 +5,7 @@
   "lambing" : "Agnelage",
   "lambs" : "Agneaux",
   "kids" : "Chevreaux",
+  "kidding": "Chevrotage",
   "mating" : "Saillie",
   "ultrasound" : "Echographie",
   "weighing" : "Pesée",
@@ -214,6 +215,10 @@
   "info" : "Info",
   "dateDeNotation": "Date de notation",
 
+  "cheptel_type": "Composition du cheptel",
+  "only_caprins": "Uniquement des caprins",
+  "only_ovins": "Uniquement des ovins",
+  "ovins_caprins": "Ovins et caprins",
   "connected_mode" : "Mode connecté",
   "connected_mode_text" : "Dans ce mode, les données seront enregistrées sur le serveur.\nCe mode nécesite un compte sur gismo",
   "email" : "Email",

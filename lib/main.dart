@@ -98,7 +98,9 @@ void startApp()
     }
     gismoBloc = new GismoBloc();
     Environnement.init(
-        "https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api",
+        "http://10.0.2.2:8080/gismoWeb/bd", "http://192.168.1.86:8080/gismoApp/api",
+        // "http://10.0.2.2:8080/gismoWeb/bd", "http://192.168.1.90:8080/gismoApp/api",
+        //"https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api",
         new FlavorOvin());
     String nextPage = '/splash';
     if (kIsWeb)

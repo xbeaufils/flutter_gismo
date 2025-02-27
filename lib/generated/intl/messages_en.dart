@@ -73,6 +73,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "bt_delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "bt_edition": MessageLookupByLibrary.simpleMessage("Edit"),
         "bt_save": MessageLookupByLibrary.simpleMessage("Save"),
+        "cheptel_type":
+            MessageLookupByLibrary.simpleMessage("Livestock composition"),
         "collective_treatment":
             MessageLookupByLibrary.simpleMessage("Collective treatment"),
         "configuration": MessageLookupByLibrary.simpleMessage("Configuration"),
@@ -100,7 +102,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "death_date": MessageLookupByLibrary.simpleMessage("Death date"),
         "dose": MessageLookupByLibrary.simpleMessage("Dose"),
         "double": MessageLookupByLibrary.simpleMessage("Double"),
-        "earring": MessageLookupByLibrary.simpleMessage("Ear tag"),
+        "earring": MessageLookupByLibrary.simpleMessage("Ear  tag"),
         "earring_search":
             MessageLookupByLibrary.simpleMessage("Search ear tag"),
         "echelle_connasse":
@@ -153,6 +155,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Identity number missing"),
         "info": MessageLookupByLibrary.simpleMessage("Info"),
         "input": MessageLookupByLibrary.simpleMessage("Entry"),
+        "kidding": MessageLookupByLibrary.simpleMessage("Kidding"),
+        "kids": MessageLookupByLibrary.simpleMessage("Kids"),
         "lambing": MessageLookupByLibrary.simpleMessage("Lambing"),
         "lambing_date": MessageLookupByLibrary.simpleMessage("Lambing date"),
         "lambing_default":
@@ -250,6 +254,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "number_fetuses_empty": MessageLookupByLibrary.simpleMessage(
             "The number of fetuses is empty"),
         "observations": MessageLookupByLibrary.simpleMessage("Observations"),
+        "only_caprins": MessageLookupByLibrary.simpleMessage("Goats only"),
+        "only_ovins": MessageLookupByLibrary.simpleMessage("Sheep only"),
         "output": MessageLookupByLibrary.simpleMessage("Departure"),
         "output_auto": MessageLookupByLibrary.simpleMessage("Automatic output"),
         "output_boucherie":
@@ -268,6 +274,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "output_select":
             MessageLookupByLibrary.simpleMessage("Select a departure reason"),
         "output_unknown": MessageLookupByLibrary.simpleMessage("Unknown"),
+        "ovins_caprins":
+            MessageLookupByLibrary.simpleMessage("Sheep and goats"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "place_earring":
             MessageLookupByLibrary.simpleMessage("Place the ear tag"),

@@ -16,12 +16,14 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class WelcomeMainPage extends StatelessWidget {
   GismoBloc _bloc;
   String ? _message;
+  PageController controller = PageController();
 
   WelcomeMainPage(this._bloc, this._message);
 
   @override
   Widget build(BuildContext context) {
     return PageView(
+      controller: controller,
       children: [
         WelcomePage(_bloc, FlavorOvin(), _message),
         WelcomePage(_bloc, FlavorCaprin(), _message)
@@ -48,7 +50,6 @@ class _WelcomePageState extends State<WelcomePage> {
 
   _WelcomePageState(this._bloc);
   BannerAd ? _adBanner;
-
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +93,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     children: <Widget>[
                       _buildButton(S.of(context).mating, "assets/saillie.png", _sailliePressed),
                       _buildButton(S.of(context).ultrasound, 'assets/ultrasound.png', _echoPressed),
-                      _buildButton( S.of(context).lambing, 'assets/lamb.png', _lambingPressed),
+                      _buildButton( this.widget._flavor.mise_baslibelle, this.widget._flavor.mise_basAsset, _lambingPressed),
                     ])))),
               Card(
                 child: Center(
@@ -296,16 +297,23 @@ abstract class Flavor {
   String get enfantLibelle ;
   String get enfantAsset;
   String get individuAsset;
+  String get mise_basAsset;
+  String get mise_baslibelle;
+
 }
 
 class FlavorOvin extends Flavor {
   String get enfantLibelle => S.current.lambs;
   String get enfantAsset => "assets/jumping_lambs.png";
   String get individuAsset => "assets/brebis.png";
+  String get mise_basAsset =>  'assets/lamb.png';
+  String get mise_baslibelle => S.current.lambing;
 }
 
 class FlavorCaprin extends Flavor {
   String get enfantLibelle => S.current.kids;
-  String get enfantAsset => "assets/chevreau.png";
+  String get enfantAsset => "assets/jumping_kids.png";
   String get individuAsset => "assets/chevre.png";
+  String get mise_basAsset =>  'assets/chevrotage.png';
+  String get mise_baslibelle => S.current.kidding;
 }

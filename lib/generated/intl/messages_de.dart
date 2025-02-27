@@ -155,6 +155,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Ohrmarkennummer fehlt"),
         "info": MessageLookupByLibrary.simpleMessage("Info"),
         "input": MessageLookupByLibrary.simpleMessage("Eingabe"),
+        "kidding": MessageLookupByLibrary.simpleMessage("Ziegengeburt"),
+        "kids": MessageLookupByLibrary.simpleMessage("Zicklein"),
         "lambing": MessageLookupByLibrary.simpleMessage("Lammen"),
         "lambing_date":
             MessageLookupByLibrary.simpleMessage("Lammgeburtszeitpunkt"),

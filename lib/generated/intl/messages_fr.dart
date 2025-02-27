@@ -73,6 +73,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "bt_delete": MessageLookupByLibrary.simpleMessage("Supprimer"),
         "bt_edition": MessageLookupByLibrary.simpleMessage("Edition"),
         "bt_save": MessageLookupByLibrary.simpleMessage("Enregistrer"),
+        "cheptel_type":
+            MessageLookupByLibrary.simpleMessage("Composition du cheptel"),
         "collective_treatment":
             MessageLookupByLibrary.simpleMessage("Traitement collectif"),
         "configuration": MessageLookupByLibrary.simpleMessage("Configuration"),
@@ -153,6 +155,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Numéro de boucle absent"),
         "info": MessageLookupByLibrary.simpleMessage("Info"),
         "input": MessageLookupByLibrary.simpleMessage("Entrée"),
+        "kidding": MessageLookupByLibrary.simpleMessage("Chevrotage"),
+        "kids": MessageLookupByLibrary.simpleMessage("Chevreaux"),
         "lambing": MessageLookupByLibrary.simpleMessage("Agnelage"),
         "lambing_date":
             MessageLookupByLibrary.simpleMessage("Date d\'agnelage"),
@@ -254,6 +258,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "number_fetuses_empty": MessageLookupByLibrary.simpleMessage(
             "Le nombre de foetus est vide"),
         "observations": MessageLookupByLibrary.simpleMessage("Observations"),
+        "only_caprins":
+            MessageLookupByLibrary.simpleMessage("Uniquement des caprins"),
+        "only_ovins":
+            MessageLookupByLibrary.simpleMessage("Uniquement des ovins"),
         "output": MessageLookupByLibrary.simpleMessage("Sortie"),
         "output_auto":
             MessageLookupByLibrary.simpleMessage("Sortie Automatique"),
@@ -274,6 +282,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "output_select": MessageLookupByLibrary.simpleMessage(
             "Sélectionnez une cause de sortie"),
         "output_unknown": MessageLookupByLibrary.simpleMessage("Inconnue"),
+        "ovins_caprins":
+            MessageLookupByLibrary.simpleMessage("Ovins et caprins"),
         "password": MessageLookupByLibrary.simpleMessage("Mot de passe"),
         "place_earring":
             MessageLookupByLibrary.simpleMessage("Poser la boucle"),

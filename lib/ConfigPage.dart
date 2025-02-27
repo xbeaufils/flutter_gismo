@@ -25,6 +25,7 @@ class ConfigPage extends StatefulWidget {
 class _ConfigPageState extends State<ConfigPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GismoBloc _bloc;
+  int _compositionCheptel = 1;
 
   _ConfigPageState(this._bloc);
 
@@ -91,7 +92,8 @@ class _ConfigPageState extends State<ConfigPage> {
                     )
                   ]
               ),
-            )
+            ),
+
           ]
       );
 
@@ -267,7 +269,49 @@ class _ConfigPageState extends State<ConfigPage> {
           SingleChildScrollView(
             child:
               Column(children: <Widget>[
-                    Row(children: <Widget>[
+                Row(children: <Widget>[
+                  Expanded(child:
+                    Text(S.of(context).cheptel_type)),]),
+                Row(children: [
+                  Expanded(child:
+                    Column(children: [
+                      ListTile(
+                        title: Text(S.of(context).only_ovins),
+                        leading: Radio(
+                          value: 1,
+                          groupValue: _compositionCheptel,
+                          onChanged: ( value) {
+                            setState(() {
+                              _compositionCheptel = value!;
+                            });
+                          },
+                        ),),
+                      ListTile(
+                          title: Text(S.of(context).only_caprins),
+                          leading: Radio(
+                            value: 2,
+                            groupValue: _compositionCheptel,
+                            onChanged: ( value) {
+                              setState(() {
+                                _compositionCheptel = value!;
+                              });
+                            },
+                          )),
+                      ListTile(
+                          title: Text(S.of(context).ovins_caprins),
+                          leading: Radio(
+                            value: 3,
+                            groupValue: _compositionCheptel,
+                            onChanged: ( value) {
+                              setState(() {
+                                _compositionCheptel = value!;
+                              });
+                            },
+                          ))
+                    ],)
+                  ,)
+                ],),
+                Row(children: <Widget>[
                       Expanded(
                           child: Text(S.of(context).with_subscription)
                       ),
@@ -276,11 +320,11 @@ class _ConfigPageState extends State<ConfigPage> {
                         onChanged: (value) {switched(value);},
                       ),
                     ]),
-                    AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        child: _isSubscribed ? _loginPage(): _autonomePage(),
-                      ),
-                   ])
+                AnimatedSwitcher(
+                    duration: Duration(milliseconds: 1000),
+                    child: _isSubscribed ? _loginPage(): _autonomePage(),
+                  ),
+               ])
           ),
         drawer: GismoDrawer(_bloc),);
   }

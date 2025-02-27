@@ -5,6 +5,7 @@
   "lambing" : "Lambing",
   "lambs" : "Lambs",
   "kids" : "Kids",
+  "kidding": "Kidding",
   "ultrasound" : "Ultrasound",
   "mating" : "Mating",
   "weighing" : "Weighing",
@@ -19,7 +20,7 @@
   "localuser" : "Local user",
   "user_error" : "User error",
 
-  "earring" : "Ear tag",
+  "earring" : "Ear  tag",
   "earring_search": "Search ear tag",
   "place_earring" : "Place the ear tag",
   "search" : "Search",
@@ -213,6 +214,10 @@
   "info" : "Info",
   "dateDeNotation": "Body cond date",
 
+  "cheptel_type": "Livestock composition",
+  "only_caprins": "Goats only",
+  "only_ovins": "Sheep only",
+  "ovins_caprins": "Sheep and goats",
   "connected_mode" : "Connected mode",
   "connected_mode_text" : "In this mode, the data will be saved on the server.\nThis mode requires an account on gismo",
   "email" : "Email",
