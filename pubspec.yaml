@@ -72,6 +72,7 @@ flutter:
     - assets/brebis.png
     - assets/chevre.png
     - assets/lamb.png
+    - assets/chevrotage.png
     - assets/etat_corporel.png
     - assets/syringe.png
     - assets/boucle.png
@@ -94,6 +95,7 @@ flutter:
     - assets/male.png
     - assets/female.png
     - assets/jumping_lambs.png
+    - assets/jumping_kids.png
     - assets/chevreau.png
     - assets/sheep_lamb.png
     - assets/saillie.png

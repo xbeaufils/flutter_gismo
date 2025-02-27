@@ -90,6 +90,26 @@ class S {
     );
   }
 
+  /// `Kids`
+  String get kids {
+    return Intl.message(
+      'Kids',
+      name: 'kids',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kidding`
+  String get kidding {
+    return Intl.message(
+      'Kidding',
+      name: 'kidding',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Ultrasound`
   String get ultrasound {
     return Intl.message(
@@ -220,10 +240,10 @@ class S {
     );
   }
 
-  /// `Ear tag`
+  /// `Ear  tag`
   String get earring {
     return Intl.message(
-      'Ear tag',
+      'Ear  tag',
       name: 'earring',
       desc: '',
       args: [],
@@ -2015,6 +2035,46 @@ class S {
     return Intl.message(
       'Body cond date',
       name: 'dateDeNotation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Livestock composition`
+  String get cheptel_type {
+    return Intl.message(
+      'Livestock composition',
+      name: 'cheptel_type',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Goats only`
+  String get only_caprins {
+    return Intl.message(
+      'Goats only',
+      name: 'only_caprins',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sheep only`
+  String get only_ovins {
+    return Intl.message(
+      'Sheep only',
+      name: 'only_ovins',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sheep and goats`
+  String get ovins_caprins {
+    return Intl.message(
+      'Sheep and goats',
+      name: 'ovins_caprins',
       desc: '',
       args: [],
     );
