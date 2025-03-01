@@ -280,6 +280,16 @@ class S {
     );
   }
 
+  /// `Herd size`
+  String get herd_size {
+    return Intl.message(
+      'Herd size',
+      name: 'herd_size',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Not connected`
   String get not_connected {
     return Intl.message(

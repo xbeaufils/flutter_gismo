@@ -143,6 +143,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "flock_number_warn":
             MessageLookupByLibrary.simpleMessage("Flock number missing"),
         "health": MessageLookupByLibrary.simpleMessage("Health"),
+        "herd_size": MessageLookupByLibrary.simpleMessage("Herd size"),
         "identity_number":
             MessageLookupByLibrary.simpleMessage("Identity number"),
         "identity_number_error": MessageLookupByLibrary.simpleMessage(

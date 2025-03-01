@@ -208,7 +208,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
         return  Column(
             mainAxisSize: MainAxisSize.max,
             children:  [
-          _showCount(belierSnap.data!.length.toString() + " béliers"),
+          _showCount( (belierSnap.data == null? "0 ": belierSnap.data!.length.toString()) + " béliers"),
           Expanded(child: _showList(belierSnap))
             ]);
       },
@@ -229,7 +229,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
             Column(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-              _showCount(brebisSnap.data!.length.toString() + " brebis"),
+              _showCount((brebisSnap.data == null? "0 ": brebisSnap.data!.length.toString()) + " brebis"),
               Expanded(child: _showList(brebisSnap))
             ],);
         },
@@ -249,6 +249,8 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
   }
 
   Widget _showList(AsyncSnapshot<List<Affectation>> snap) {
+    if (snap.data == null)
+      return Container();
     return ListView.builder(
       itemCount: snap.data!.length,
       itemBuilder: (context, index) {

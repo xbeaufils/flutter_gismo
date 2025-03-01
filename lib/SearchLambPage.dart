@@ -57,13 +57,27 @@ class _SearchLambPageState extends State<SearchLambPage> {
       appBar: _buildBar(context),
       key: _scaffoldKey,
       body:
-        Container (
-          child: _buildListLamb(),// _buildFutureLambs(), //
-        ),
+        Column(children: [
+          _showCount(S.current.herd_size + ": " + _filteredLambs.length.toString()),
+          Expanded (
+            child: _buildListLamb(),// _buildFutureLambs(), //
+          ),
+        ],),
       resizeToAvoidBottomInset: false,
     );
   }
 
+  Widget _showCount(String libelle) {
+    return Row(children: <Widget>[
+      Expanded(child:
+        Card( color: Theme.of(context).primaryColor,  child:
+          Center(child:
+            Text( libelle, style: TextStyle(fontSize: 16.0, color: Colors.white),),
+          ),
+        ),
+      ),
+    ],);
+  }
 
   AppBar _buildBar(BuildContext context) {
     return new AppBar(
@@ -76,50 +90,6 @@ class _SearchLambPageState extends State<SearchLambPage> {
             onPressed: _searchPressed
             ),
       ],
-    );
-  }
-
-  Widget _buildFutureLambs() {
-    return FutureBuilder(
-        builder: (context, lambSnap) {
-          if (lambSnap.connectionState == ConnectionState.none && lambSnap.hasData == null) {
-            return Container();
-          }
-          if (lambSnap.connectionState == ConnectionState.waiting)
-            return Center(child:CircularProgressIndicator());
-          return ListView.builder(
-              itemCount: _lambs == null ? 0 : _filteredLambs.length,
-              itemBuilder: (BuildContext context, int index) {
-                return new ListTile(
-                  leading: (_filteredLambs[index].sex == Sex.male) ? ImageIcon(
-                      AssetImage("assets/male.png")) : ImageIcon(
-                      AssetImage("assets/female.png")),
-                  title: Row(
-                    children: <Widget>[
-                      Expanded(child:
-                        (_filteredLambs[index].marquageProvisoire == null) ? Text(''): Text(_filteredLambs[index].marquageProvisoire!),
-                      ),
-                      IconButton(icon: new Icon(Icons.delete),
-                          onPressed: () =>
-                              _showDialog(context, _filteredLambs[index])),
-                    ],),
-                  subtitle:
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(_filteredLambs[index].numBoucleMere,),
-                      SizedBox(width: 16,),
-                      Text(DateFormat.yMd().format(_filteredLambs[index].dateAgnelage)),
-                    ],),
-                  trailing:
-                  IconButton(
-                    icon: new Icon(Icons.keyboard_arrow_right),
-                    onPressed: () => _selectLambs(_filteredLambs[index]),),
-                  //          onTap: () => _selectLambs(_filteredLambs[index]),
-                );
-              });
-            },
-      future: _getAllLambs()
     );
   }
 

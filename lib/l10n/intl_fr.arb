@@ -24,6 +24,7 @@
   "search" : "Recherche",
   "title_empty_list" : "Liste vide",
   "text_empty_list" : "Pour saisir l'effectif, veuillez faire une entrée depuis l'écran principal.",
+  "herd_size": "Effectif",
   "not_connected" : "Non connecté",
   "data_available" : "Données reçues",
   "no_earring_read" : "Pas de boucle lue",

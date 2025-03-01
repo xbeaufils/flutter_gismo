@@ -144,6 +144,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "flock_number_warn":
             MessageLookupByLibrary.simpleMessage("Numéro de marquage absent"),
         "health": MessageLookupByLibrary.simpleMessage("Etat de santé"),
+        "herd_size": MessageLookupByLibrary.simpleMessage("Effectif"),
         "identity_number":
             MessageLookupByLibrary.simpleMessage("Numero boucle"),
         "identity_number_error": MessageLookupByLibrary.simpleMessage(
