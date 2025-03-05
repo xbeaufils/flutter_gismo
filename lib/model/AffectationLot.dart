@@ -42,10 +42,10 @@ class Affectation {
     if (result['dateEntree'] != null)
       dateEntree = _df.parse(result["dateEntree"]);
     else
-      dateEntree = _df.parse(result["dateDebutLutte"]);
+      dateEntree = null;
     if (result["dateSortie"] != null)
       dateSortie = _df.parse(result["dateSortie"]);
     else
-      dateSortie = _df.parse(result["dateFinLutte"]);
+      dateSortie = null;
   }
 }

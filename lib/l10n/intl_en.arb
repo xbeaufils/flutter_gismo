@@ -26,6 +26,7 @@
   "search" : "Search",
   "title_empty_list" : "Empty list",
   "text_empty_list" : "To enter lifestock, make an entry from the main screen.",
+  "herd_size": "Herd size",
   "not_connected" : "Not connected",
   "data_available" : "Data available",
   "no_earring_read" : "No ear tag read",

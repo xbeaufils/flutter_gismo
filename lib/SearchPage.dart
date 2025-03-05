@@ -124,6 +124,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         Column(
           children: [
             _statusBluetoothBar(context),
+            this._showCount(S.current.herd_size + ": " + _filteredBetes.length.toString()),
             Expanded(child: _buildList(context) ),
             this._getAdmobAdvice(),
             this._getFacebookAdvice(),
@@ -307,6 +308,17 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         );
       },
     );
+  }
+
+  Widget _showCount(String libelle) {
+    return Row(children: <Widget>[
+      Expanded(child:
+        Card( color: Theme.of(context).primaryColor,  child:
+          Center(child:
+            Text( libelle, style: TextStyle(fontSize: 16.0, color: Colors.white),),),
+        ),
+      ),
+    ],);
   }
 
   void _selectBete(Bete bete) {
