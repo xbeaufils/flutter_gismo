@@ -1,4 +1,9 @@
+enum Espece {
+  ovin, caprins
+}
+
 abstract class Flavor {
+  Espece get espece;
   String get appName;
   String get entreeLibelle => "Entree";
   String get sortieLibelle => "Sortie";

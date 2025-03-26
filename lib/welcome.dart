@@ -1,10 +1,13 @@
 import 'dart:io';
 
-//import 'package:admob_flutter/admob_flutter.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/env/Environnement.dart';
+import 'package:flutter_gismo/flavor/Flavor.dart';
+import 'package:flutter_gismo/flavor/FlavorCaprin.dart';
+import 'package:flutter_gismo/flavor/FlavorOvin.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 
 import 'dart:developer' as debug;
@@ -47,7 +50,8 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GismoBloc _bloc;
-
+  final FlavorManager flavorManager = FlavorManager();
+  //final isSelected = <bool>[false, false];
   _WelcomePageState(this._bloc);
   BannerAd ? _adBanner;
 
@@ -56,6 +60,35 @@ class _WelcomePageState extends State<WelcomePage> {
     return new Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.lightGreen,
+        bottomNavigationBar: BottomAppBar(
+          child:
+            Center(child:
+                /*
+                  ToggleButtons(children: [ Image.asset("assets/brebis.png"), Image.asset("assets/chevre.png")],
+                    onPressed: (index) {
+                      // Respond to button selection
+                      setState(() {
+                        isSelected[index] = !isSelected[index];
+                      });
+                    },
+                    isSelected: isSelected),
+
+                 */
+            ToggleButtons(children: [
+              Image.asset("assets/brebis.png"),
+              Image.asset("assets/chevre.png")],
+                isSelected: flavorManager.getFlavorButton(),
+                onPressed:(int index){ this._selectEspece(index);}),
+/*              Container( child:
+                Row(
+                  children: [
+                    IconButton(onPressed: _selectEspece, icon: Image.asset("assets/brebis.png")),
+                    IconButton(onPressed: _selectEspece, icon:Image.asset("assets/chevre.png"))
+                ],),
+                decoration: BoxDecoration(color: Colors.deepOrange),
+              ),*/
+          ),
+        ),
         appBar: new AppBar(
             title: (_bloc.user != null) ?
               new Text('Gismo ' + _bloc.user!.cheptel!):
@@ -68,6 +101,7 @@ class _WelcomePageState extends State<WelcomePage> {
           ListView(
             scrollDirection: Axis.vertical,
             children: <Widget>[
+//              ToggleButtons(children: [ Image.asset("assets/brebis.png"), Image.asset("assets/chevre.png")], isSelected: [true, false]),
               Card(
                 child: Center(
                   child : SingleChildScrollView (
@@ -78,9 +112,9 @@ class _WelcomePageState extends State<WelcomePage> {
                         alignment: MainAxisAlignment.center,
                       buttonMinWidth: 90.0,
                       children: <Widget>[
-                        _buildButton(S.of(context).batch, "assets/Lot.png",_lotPressed),
-                        _buildButton(S.of(context).sheep, this.widget._flavor.individuAsset, _individuPressed),
-                        _buildButton(this.widget._flavor.enfantLibelle, this.widget._flavor.enfantAsset, _lambPressed),
+                        _buildButton(S.of(context).batch, Environnement.getFlavor().lotAsset,_lotPressed),
+                        _buildButton(S.of(context).sheep, Environnement.getFlavor().individuAsset, _individuPressed),
+                        _buildButton( Environnement.getFlavor().enfantLibelle, this.widget._flavor.enfantAsset, _lambPressed),
                       ])))),
               Card(
                 child: Center(
@@ -93,7 +127,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     children: <Widget>[
                       _buildButton(S.of(context).mating, "assets/saillie.png", _sailliePressed),
                       _buildButton(S.of(context).ultrasound, 'assets/ultrasound.png', _echoPressed),
-                      _buildButton( this.widget._flavor.mise_baslibelle, this.widget._flavor.mise_basAsset, _lambingPressed),
+                      _buildButton( Environnement.getFlavor().miseBasLibelle, Environnement.getFlavor().miseBasAsset, _lambingPressed),
                     ])))),
               Card(
                 child: Center(
@@ -223,6 +257,19 @@ class _WelcomePageState extends State<WelcomePage> {
       this._adBanner!.dispose();
   }
 
+  void _selectEspece(int index) {
+    setState(() {
+      if (index == 0) {
+        Environnement.setFlavor( FlavorOvin() as Flavor);
+        debug.log("Ovin index $index " );
+      }
+      if (index == 1 ) {
+        Environnement.setFlavor( FlavorCaprin() as Flavor);
+        debug.log("caprin index $index ");
+      }
+    });
+  }
+
   void _parcellePressed() {
     if (_bloc.user!.subscribe!)
       Navigator.pushNamed(context, '/parcelle');
@@ -293,7 +340,17 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 }
 
-abstract class Flavor {
+class FlavorManager {
+
+  List <bool> getFlavorButton() {
+    if (Environnement.getFlavor().espece == Espece.ovin)
+      return [true, false];
+    if (Environnement.getFlavor().espece == Espece.caprins)
+      return [false, true];
+    return [false, false];
+  }
+}
+abstract class Flavor2 {
   String get enfantLibelle ;
   String get enfantAsset;
   String get individuAsset;
@@ -302,7 +359,7 @@ abstract class Flavor {
 
 }
 
-class FlavorOvin extends Flavor {
+class FlavorOvin2 extends Flavor2 {
   String get enfantLibelle => S.current.lambs;
   String get enfantAsset => "assets/jumping_lambs.png";
   String get individuAsset => "assets/brebis.png";
@@ -310,7 +367,7 @@ class FlavorOvin extends Flavor {
   String get mise_baslibelle => S.current.lambing;
 }
 
-class FlavorCaprin extends Flavor {
+class FlavorCaprin2 extends Flavor2 {
   String get enfantLibelle => S.current.kids;
   String get enfantAsset => "assets/jumping_kids.png";
   String get individuAsset => "assets/chevre.png";

@@ -240,12 +240,12 @@ class _LambingPageState extends State<LambingPage> {
   }
 
   Future _openAgnelageDialog() async {
-    int qualiteAgnelage = await Navigator.of(context).push(new MaterialPageRoute<int>(
+    int? qualiteAgnelage = await Navigator.of(context).push(new MaterialPageRoute<int>(
         builder: (BuildContext context) {
           return new AgnelageDialog(this._agnelage.key);
         },
         fullscreenDialog: true
-    ))as int;
+    ));
     if (qualiteAgnelage != null) {
       setState(() {
         _agnelage = AgnelageHelper.getAgnelage(qualiteAgnelage);

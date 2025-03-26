@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
@@ -15,8 +16,10 @@ class GismoHttp  {
   Map<String, String> _getHeaders() {
     Map<String, String> _headers = new Map();
     _headers['Content-Type'] = "application/json";
-    if (this._bloc.user!.token != null)
+    _headers["Accept-Language"] = Platform.localeName;
+    if (this._bloc.user!.token != null) {
       _headers['token'] = this._bloc.user!.token!;
+    }
     return _headers;
   }
 
@@ -74,7 +77,7 @@ class GismoHttp  {
       var response = await http.post(
           Uri.parse(Environnement.getUrlTarget() + url),
           headers: _getHeaders(),
-          body: jsonEncode(body)).timeout(Duration(seconds: 5) ).timeout(Duration(seconds: 10));
+          body: jsonEncode(body)).timeout(Duration(seconds: 10));
       Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
       if (msg.error) {
         throw (msg.error);

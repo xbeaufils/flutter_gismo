@@ -124,6 +124,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         Column(
           children: [
             _statusBluetoothBar(context),
+            ToggleButtons(children: [ Image.asset("assets/brebis.png"), Image.asset("assets/chevre.png")], isSelected: [true, false]),
             this._showCount(S.current.herd_size + ": " + _filteredBetes.length.toString()),
             Expanded(child: _buildList(context) ),
             this._getAdmobAdvice(),

@@ -1,13 +1,14 @@
 import 'package:flutter_gismo/bloc/certificatLetsEncrypt.dart';
 import 'package:flutter_gismo/flavor/Flavor.dart';
 
+
 class Environnement {
   static Environnement ? _instance;
-  Environnement(this._urlTarget, this._urlWebTarget, this.flavor);
+  Environnement(this._urlTarget, this._urlWebTarget, this._flavor);
   static CertificatLetsEncrypt certif = new CertificatLetsEncrypt();
   String _urlWebTarget;
   String _urlTarget;
-  Flavor flavor;
+  Flavor _flavor;
 
   static void init(String urlWeb, String url, Flavor flavor) {
     if(_instance == null) {
@@ -28,7 +29,10 @@ class Environnement {
     return _instance!;
   }
 
+  static void setFlavor(Flavor flavor) {
+    _instance!._flavor = flavor;
+  }
   static Flavor getFlavor() {
-    return _instance!.flavor;
+    return _instance!._flavor;
   }
 }
