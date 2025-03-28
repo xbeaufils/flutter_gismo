@@ -8,6 +8,7 @@ import 'package:flutter_gismo/Exception/EventException.dart';
 import 'package:flutter_gismo/bloc/GismoRepository.dart';
 import 'package:flutter_gismo/bloc/LocalDataProvider.dart';
 import 'package:flutter_gismo/bloc/WebDataProvider.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
@@ -380,7 +381,7 @@ class GismoBloc {
       return this._repository!.dataProvider.getPere(bete);
   }
 
-  Future<String> saveConfig(bool isSubscribe, String email, String password) async {
+  Future<String> saveConfig(bool isSubscribe, String email, String password, int? composeCheptel) async {
     try {
       final storage = new FlutterSecureStorage();
       if (isSubscribe) {
@@ -389,6 +390,7 @@ class GismoBloc {
         this._repository = new GismoRepository(this, RepositoryType.web);
         storage.write(key: "email", value: email);
         storage.write(key: "password", value: password);
+        storage.write(key: "cheptel", value: composeCheptel.toString());
       }
       else {
         this._currentUser = new User(null, null);
@@ -397,8 +399,9 @@ class GismoBloc {
         this._repository = new GismoRepository(this, RepositoryType.local);
         storage.delete(key: "email");
         storage.delete(key: "password");
+        storage.delete(key: "cheptel");
       }
-      return "Configuration enregistrée";
+      return S.current.config_saved;
     }
     catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);

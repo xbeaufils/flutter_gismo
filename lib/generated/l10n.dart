@@ -2230,6 +2230,16 @@ class S {
     );
   }
 
+  /// `Configuration saved`
+  String get config_saved {
+    return Intl.message(
+      'Configuration saved',
+      name: 'config_saved',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Bluetooth authorization`
   String get bluetooth_autorisation {
     return Intl.message(

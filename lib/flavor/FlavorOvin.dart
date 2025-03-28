@@ -15,20 +15,20 @@ class FlavorOvin extends Flavor {
   String get enfantAsset => "assets/jumping_lambs.png";
   @override
   // TODO: implement miseBasLibelle
-  String get miseBasLibelle => "Agnelage";
+  String get miseBasLibelle => S.current.lambing;
   String get miseBasAsset => "assets/lamb.png";
   @override
   // TODO: implement femelleLibelle
-  String get femelleLibelle => "Brebis";
+  String get femelleLibelle => S.current.ewe;
 
   @override
   // TODO: implement maleLibelle
-  String get maleLibelle => "Bélier";
+  String get maleLibelle => S.current.ram;
 
   @override
   String get individuAsset => "assets/brebis.png";
 
-  String get parentAsset => "sheep_lamb.png";
+  String get parentAsset => "assets/sheep_lamb.png";
   String get lotAsset => "assets/Lot.png";
 
   String get splashAsset => "gismo.png";

@@ -226,8 +226,7 @@ class _ConfigPageState extends State<ConfigPage> {
   }
 
   void _saveConfig() {
-    //AuthService service = new AuthService();
-    this._bloc.saveConfig(this._isSubscribed, _emailCtrl.text, _passwordCtrl.text)
+    this._bloc.saveConfig(this._isSubscribed, _emailCtrl.text, _passwordCtrl.text, _compositionCheptel)
         .then((message) {_confirmSave();})
         .catchError((e) {_onError(e);});
    }

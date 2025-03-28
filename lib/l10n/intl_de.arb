@@ -221,6 +221,7 @@
   "restore_bd_text": "Die aktuellen Daten werden ersetzt.",
   "with_subscription": "Mit Abonnement",
   "save_config": "Konfiguration speichern",
+  "config_saved" : "Konfiguration gespeichert",
 
   "bluetooth_autorisation": "Bluetooth-Autorisierung"
 }

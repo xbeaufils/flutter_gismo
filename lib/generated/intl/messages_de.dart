@@ -76,6 +76,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "bt_save": MessageLookupByLibrary.simpleMessage("Speichern"),
         "collective_treatment":
             MessageLookupByLibrary.simpleMessage("Kollektive Behandlung"),
+        "config_saved":
+            MessageLookupByLibrary.simpleMessage("Konfiguration gespeichert"),
         "configuration": MessageLookupByLibrary.simpleMessage("Einstellung"),
         "connected_mode":
             MessageLookupByLibrary.simpleMessage("Verbundener Modus"),

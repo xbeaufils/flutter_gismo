@@ -77,6 +77,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Livestock composition"),
         "collective_treatment":
             MessageLookupByLibrary.simpleMessage("Collective treatment"),
+        "config_saved":
+            MessageLookupByLibrary.simpleMessage("Configuration saved"),
         "configuration": MessageLookupByLibrary.simpleMessage("Configuration"),
         "connected_mode":
             MessageLookupByLibrary.simpleMessage("Connected mode"),

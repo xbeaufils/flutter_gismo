@@ -2,6 +2,10 @@ enum Espece {
   ovin, caprins
 }
 
+enum CompositionCheptel {
+  ovin, caprins, ovins_caprin
+}
+
 abstract class Flavor {
   Espece get espece;
   String get appName;

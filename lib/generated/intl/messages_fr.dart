@@ -77,6 +77,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Composition du cheptel"),
         "collective_treatment":
             MessageLookupByLibrary.simpleMessage("Traitement collectif"),
+        "config_saved":
+            MessageLookupByLibrary.simpleMessage("Configuration enregistrée"),
         "configuration": MessageLookupByLibrary.simpleMessage("Configuration"),
         "connected_mode": MessageLookupByLibrary.simpleMessage("Mode connecté"),
         "connected_mode_text": MessageLookupByLibrary.simpleMessage(
