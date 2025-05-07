@@ -13,6 +13,7 @@ class Affectation {
   Affectation();
 
   Map<String, dynamic> toJson() {
+    final _df = new DateFormat('dd/MM/yyyy');
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (idAffectation != null)
       data["idBd"] = idAffectation;
@@ -20,12 +21,10 @@ class Affectation {
     data["numMarquage"] = numMarquage;
     data["brebisId"] = brebisId;
     data["lotId"] = lotId;
-    //if (dateEntree != null)
-    //  if (dateEntree.isNotEmpty)
-    data["dateEntree"] = dateEntree;
-    //  if (dateSortie != null)
-    //    if (dateSortie.isNotEmpty)
-    data["dateSortie"] = dateSortie;
+    if (dateEntree != null)
+      data["dateEntree"] = _df.format(dateEntree!) ;
+    if (dateSortie != null)
+      data["dateSortie"] = _df.format(dateSortie!);
     return data;
   }
 

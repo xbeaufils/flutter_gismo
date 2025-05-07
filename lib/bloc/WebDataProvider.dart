@@ -611,7 +611,8 @@ class WebDataProvider extends DataProvider {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data["lotId"] = lot.idb;
     data["brebisId"] = bete.idBd;
-    data["dateEntree"] = _df.format(DateFormat.yMd().parse(dateEntree));
+    if (dateEntree.isNotEmpty)
+      data["dateEntree"] = _df.format(DateFormat.yMd().parse(dateEntree));
     try {
       final response = await _gismoHttp.doPostMessage(
           '/lot/add', data);
