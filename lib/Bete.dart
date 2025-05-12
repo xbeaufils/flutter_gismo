@@ -87,11 +87,14 @@ class _BetePageState extends State<BetePage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   _statusBluetoothBar(),
-                  new TextFormField(
-                    controller: _numBoucleCtrl,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(labelText: S.of(context).identity_number, hintText: S.of(context).flock_number_hint),
-                    validator: (value) {
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    child:
+                    TextFormField(
+                      controller: _numBoucleCtrl,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(labelText: S.of(context).identity_number, hintText: S.of(context).flock_number_hint),
+                      validator: (value) {
                         if (value!.isEmpty) {
                           return S.of(context).identity_number_warn;
                         }
@@ -102,33 +105,42 @@ class _BetePageState extends State<BetePage> {
                             _numBoucleCtrl.text = value!;
                         });
                       }
+                    ),
                   ),
-                  new TextFormField(
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    child:
+                    new TextFormField(
                       //keyboardType: TextInputType.number,
-                    controller: _numMarquageCtrl,
-                    decoration: InputDecoration(labelText: S.of(context).flock_number, hintText: S.of(context).flock_number_hint),
-                    validator: (value) {
+                      controller: _numMarquageCtrl,
+                      decoration: InputDecoration(labelText: S.of(context).flock_number, hintText: S.of(context).flock_number_hint),
+                      validator: (value) {
                         if (value!.isEmpty) {
                           return S.of(context).enter_flock_number;
                         }
                         return "";
                         },
-                    onSaved: (value) {
+                      onSaved: (value) {
                         setState(() {
                         _numMarquageCtrl.text = value!;
                         });
                       }
+                    ),
                   ),
-                  new TextFormField(
-                    //keyboardType: TextInputType.number,
-                      initialValue: _nom,
-                      decoration: InputDecoration(labelText: S.of(context).name, hintText: S.of(context).name_hint),
-                      onSaved: (value) {
-                        setState(() {
-                          _nom = value;
-                        });
-                      }
-                  ),
+                  Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child:
+                      new TextFormField(
+                        //keyboardType: TextInputType.number,
+                          initialValue: _nom,
+                          decoration: InputDecoration(labelText: S.of(context).name, hintText: S.of(context).name_hint),
+                          onSaved: (value) {
+                            setState(() {
+                              _nom = value;
+                            });
+                          }
+                      ),),
+                  Divider(),
                   new Row(
                      children: <Widget>[
                       new Flexible (child:
@@ -150,21 +162,24 @@ class _BetePageState extends State<BetePage> {
                           ),
                       ),]
                   ),
-                  new TextFormField(
-                    //keyboardType: TextInputType.number,
-                      initialValue: _obs,
-                      decoration: InputDecoration(
-                          labelText: S.of(context).observations,
-                          hintText: 'Obs',
-                          border: OutlineInputBorder(),
-                          enabledBorder: OutlineInputBorder()),
-                      maxLines: 3,
-                      onSaved: (value) {
-                        setState(() {
-                          _obs = value;
-                        });
-                      }
-                  ),
+                  Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child:
+                      new TextFormField(
+                        //keyboardType: TextInputType.number,
+                          initialValue: _obs,
+                          decoration: InputDecoration(
+                              labelText: S.of(context).observations,
+                              hintText: 'Obs',
+                              border: OutlineInputBorder(),
+                              enabledBorder: OutlineInputBorder()),
+                          maxLines: 3,
+                          onSaved: (value) {
+                            setState(() {
+                              _obs = value;
+                            });
+                          }
+                  ),),
                   ElevatedButton (
                   // RaisedButton(
                       child: new Text(
