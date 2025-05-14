@@ -61,7 +61,7 @@ class GismoApp extends StatelessWidget {
         '/nec': (context) => SearchPage(this._bloc, GismoPage.etat_corporel),
         '/pesee': (context) => SearchPage(this._bloc, GismoPage.pesee),
         '/search': (context) => SearchPage(this._bloc, GismoPage.individu),
-        '/sanitaire' : (context) => SelectionPage(this._bloc),
+        '/sanitaire' : (context) => SelectionPage(this._bloc, []),
         '/echo' : (context) => SearchPage(this._bloc, GismoPage.echo),
         '/lambing' : (context) => SearchPage(this._bloc, GismoPage.lamb),
         '/lamb' : (context) => SearchLambPage(this._bloc),

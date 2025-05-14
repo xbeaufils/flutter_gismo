@@ -9,6 +9,7 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
+import 'package:flutter_gismo/search/SelectMultiplePage.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
 import 'package:intl/intl.dart';
 
@@ -16,17 +17,18 @@ enum View {fiche, ewe, ram}
 
 class SelectionPage extends StatefulWidget {
    final GismoBloc _bloc;
+   final List<Bete> _lstBete;
 
-  SelectionPage(this._bloc,{Key ? key}) : super(key: key);
+  SelectionPage(this._bloc, this._lstBete, {Key ? key}) : super(key: key);
   @override
-  _SelectionPageState createState() => new _SelectionPageState(this._bloc);
+  _SelectionPageState createState() => new _SelectionPageState(this._bloc, this._lstBete);
 }
 
 class _SelectionPageState extends State<SelectionPage> {
   final GismoBloc _bloc;
-  _SelectionPageState(this._bloc);
+  List<Bete> _lstBete;
+  _SelectionPageState(this._bloc, this._lstBete);
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  List<Bete> lstBete = [];
   TextEditingController _codeLotCtl = TextEditingController();
   TextEditingController _dateDebutCtl = TextEditingController();
   TextEditingController _dateFinCtl = TextEditingController();
@@ -72,7 +74,7 @@ class _SelectionPageState extends State<SelectionPage> {
   }
 
   Widget _listBeteWidget() {
-    if (lstBete.length == 0)
+    if (_lstBete.length == 0)
       return Container(
           padding: const EdgeInsets.all(10.0),
           child:
@@ -82,9 +84,9 @@ class _SelectionPageState extends State<SelectionPage> {
 
   Widget _listBeteBuilder() {
     return ListView.builder(
-        itemCount: lstBete.length,
+        itemCount: _lstBete.length,
         itemBuilder: (context, index) {
-          Bete bete = lstBete[index];
+          Bete bete = _lstBete[index];
           return
             ListTile(
                 title:
@@ -105,16 +107,16 @@ class _SelectionPageState extends State<SelectionPage> {
     //Future _openAddEntryDialog() async {
       Bete ? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
           builder: (BuildContext context) {
-            SearchPage search = new SearchPage(this._bloc, GismoPage.lot);
+            SelectMultiplePage search = new SelectMultiplePage(this._bloc, GismoPage.sanitaire);
             return search;
           },
           fullscreenDialog: true
       ));
       if (selectedBete != null) {
          setState(() {
-           Iterable<Bete> existingBete  = lstBete.where((element) => element.idBd == selectedBete.idBd);
+           Iterable<Bete> existingBete  = _lstBete.where((element) => element.idBd == selectedBete.idBd);
            if (existingBete.isEmpty)
-            lstBete.add(selectedBete);
+            _lstBete.add(selectedBete);
            else
              ScaffoldMessenger.of(context)
                  .showSnackBar(SnackBar(content: Text(S.of(context).identity_number_error)));
@@ -124,7 +126,7 @@ class _SelectionPageState extends State<SelectionPage> {
 
   Future _removeBete(Bete selectedBete) async {
     setState(() {
-      lstBete.remove(selectedBete);
+      _lstBete.remove(selectedBete);
     });
   }
 
@@ -142,7 +144,7 @@ class _SelectionPageState extends State<SelectionPage> {
     var navigationResult = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => SanitairePage.collectif(this.widget._bloc, lstBete )),
+          builder: (context) => SanitairePage.collectif(this.widget._bloc, _lstBete )),
     );
     print (navigationResult);
     Navigator

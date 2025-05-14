@@ -125,7 +125,7 @@ class _LambingPageState extends State<LambingPage> {
                   height: 200,
                   child: this._lambList(), //LambsPage(this._lambing.lambs, _dateAgnelageCtl.text)
                 ),
-                 ButtonBar(alignment: MainAxisAlignment.start,
+                ButtonBar(alignment: MainAxisAlignment.start,
                     children : [ ElevatedButton(key:null,
                         onPressed:saveLambing,
                         style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.lightGreen[700])),

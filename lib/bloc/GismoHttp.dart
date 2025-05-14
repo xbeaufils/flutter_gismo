@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
@@ -17,6 +18,7 @@ class GismoHttp  {
     _headers['Content-Type'] = "application/json";
     if (this._bloc.user!.token != null)
       _headers['token'] = this._bloc.user!.token!;
+    _headers[HttpHeaders.acceptLanguageHeader] = Platform.localeName;
     return _headers;
   }
 
