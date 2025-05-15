@@ -1,14 +1,15 @@
 
+import 'dart:async';
+import 'dart:developer' as debug;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/LotModel.dart';
+import 'package:flutter_gismo/search/SearchPage.dart';
 import 'package:flutter_gismo/search/SelectMultiplePage.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
 import 'package:intl/intl.dart';
@@ -48,7 +49,15 @@ class _SelectionPageState extends State<SelectionPage> {
       appBar: new AppBar(
         title: Text(S.of(context).collective_treatment),
        ),
-      floatingActionButton:  FloatingActionButton(child: Icon(Icons.add), onPressed: _addBete),
+      floatingActionButton: Column (
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(child: Icon(Icons.check_box), onPressed: _addMultipleBete, heroTag: null,),
+          SizedBox(
+            height: 10,
+          ),
+          FloatingActionButton(child: Icon(Icons.settings_remote), onPressed: _addBete, heroTag: null,),
+        ],),
       body: _listBeteWidget(),
     );
   }
@@ -103,12 +112,31 @@ class _SelectionPageState extends State<SelectionPage> {
 
   }
 
+  Future _addMultipleBete() async {
+    List<Bete>? betes = await Navigator
+        .of(context)
+        .push(new MaterialPageRoute<List<Bete>>(
+        builder: (BuildContext context) {
+          SelectMultiplePage search = new SelectMultiplePage(this._bloc, GismoPage.sanitaire, this._lstBete);
+          return search;
+        },
+        fullscreenDialog: true
+    ));
+    debug.log("List $betes");
+    if (betes != null)
+      setState(() {
+        this._lstBete =  List.from( betes as Iterable );
+      });
+  }
+
   Future _addBete() async {
     //Future _openAddEntryDialog() async {
-      Bete ? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
-          builder: (BuildContext context) {
-            SelectMultiplePage search = new SelectMultiplePage(this._bloc, GismoPage.sanitaire);
-            return search;
+      Bete ? selectedBete = await Navigator
+          .of(context)
+          .push(new MaterialPageRoute<Bete>(
+            builder: (BuildContext context) {
+              SearchPage search = new SearchPage(this._bloc, GismoPage.sanitaire);
+              return search;
           },
           fullscreenDialog: true
       ));

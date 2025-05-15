@@ -7,27 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/individu/EchoPage.dart';
-import 'package:flutter_gismo/individu/NECPage.dart';
-import 'package:flutter_gismo/individu/PeseePage.dart';
-import 'package:flutter_gismo/individu/SailliePage.dart';
-import 'package:flutter_gismo/individu/TimeLine.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/lamb/lambing.dart';
-import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/traitement/Sanitaire.dart';
 import 'package:flutter_gismo/traitement/selectionTraitement.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class SelectMultiplePage extends StatefulWidget {
   final GismoBloc _bloc;
   GismoPage _nextPage;
+  final List<Bete> _stillSelectedBetes;
   Sex ? searchSex;
   get nextPage => _nextPage;
-  SelectMultiplePage(this._bloc, this._nextPage, { Key? key }) : super(key: key);
+  SelectMultiplePage(this._bloc, this._nextPage, this._stillSelectedBetes, { Key? key }) : super(key: key);
   @override
-  _SelectMultiplePageState createState() => new _SelectMultiplePageState(_bloc);
+  _SelectMultiplePageState createState() => new _SelectMultiplePageState(this._bloc);
 }
 
 
@@ -38,32 +31,21 @@ class _SelectMultiplePageState extends State<SelectMultiplePage> with TickerProv
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GismoBloc _bloc;
   BannerAd ? _adBanner;
-  String _searchText = "";
   List<Bete> _betes = <Bete>[]; //new List();
-  List<Bete> _filteredBetes = <Bete>[]; //new List();
   Map<int, Bete> _selectedBete = Map();
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text( S.current.earring_search);
 
   _SelectMultiplePageState(this._bloc) {
-    _filter.addListener(() {
-      if (_filter.text.isEmpty) {
-        setState(() {
-          _searchText = "";
-          _filteredBetes = _betes;
-        });
-      } else {
-        setState(() {
-          _searchText = _filter.text;
-        });
-      }
-    });
   }
 
   @override
   void initState() {
     this._getBetes();
     super.initState();
+    this.widget._stillSelectedBetes.forEach( (bete) =>
+      _selectedBete[bete.idBd!] = bete
+    );
     if ( ! _bloc.isLogged()!) {
       this._adBanner = BannerAd(
         adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
@@ -106,7 +88,7 @@ class _SelectMultiplePageState extends State<SelectMultiplePage> with TickerProv
             Expanded(child:  _buildList(context) ),
             ButtonBar(alignment: MainAxisAlignment.start,
                 children : [ ElevatedButton(key:null,
-                    onPressed: ()=> _selectBete(_selectedBete.values.toList()),
+                    onPressed: ()=> _sendSelecttion(_selectedBete.values.toList()),
                     style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.lightGreen[700])),
                     //color: Colors.lightGreen[700],
                     child:
@@ -173,15 +155,6 @@ class _SelectMultiplePageState extends State<SelectMultiplePage> with TickerProv
   }
 
   Widget _buildList(BuildContext context) {
-    if (_searchText.isNotEmpty) {
-      List<Bete> tempList = <Bete>[]; // new List();
-      for (int i = 0; i < _filteredBetes.length; i++) {
-        if (_filteredBetes[i].numBoucle.toLowerCase().contains(_searchText.toLowerCase())) {
-          tempList.add(_filteredBetes[i]);
-        }
-      }
-      _filteredBetes = tempList;
-    }
     if (_betes.isEmpty) {
       return Center( child:
         ListTile(
@@ -218,11 +191,11 @@ class _SelectMultiplePageState extends State<SelectMultiplePage> with TickerProv
       });
   }
 
-  void _selectBete(List<Bete> betes) {
+  void _sendSelecttion(List<Bete> betes) {
     var page;
     switch (this.widget.nextPage) {
       case GismoPage.sanitaire:
-        page = SelectionPage(this._bloc, betes);
+        page = null; //SelectionPage(this._bloc, betes);
         break;
       case GismoPage.sortie:
       case GismoPage.lot:
@@ -235,12 +208,9 @@ class _SelectMultiplePageState extends State<SelectMultiplePage> with TickerProv
       Navigator.of(context).pop(betes);
     }
     else {
-      var navigationResult = Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => page,
-        ),
-      );
+      var navigationResult = Navigator
+        .of(context)
+        .pushReplacement(MaterialPageRoute(builder: (BuildContext context) => page));
 
       navigationResult.then((message) {
         if (message != null)
@@ -273,7 +243,6 @@ class _SelectMultiplePageState extends State<SelectMultiplePage> with TickerProv
       } else {
         this._searchIcon = new Icon(Icons.search);
         this._appBarTitle = new Text( S.of(context).earring_search );
-        _filteredBetes = _betes;
         _filter.clear();
       }
     });
@@ -303,7 +272,6 @@ class _SelectMultiplePageState extends State<SelectMultiplePage> with TickerProv
     setState(() {
       _betes = lstBetes;
       //names.shuffle();
-      _filteredBetes = _betes;
     });
   }
 }
