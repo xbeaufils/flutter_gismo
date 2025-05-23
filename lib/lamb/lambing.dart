@@ -22,19 +22,20 @@ import 'package:intl/intl.dart';
 import 'dart:developer' as debug;
 
 class LambingPage extends StatefulWidget {
-  final GismoBloc _bloc;
+  GismoBloc ? _bloc;
 
   Bete ? _mere;
   LambingModel ? _currentLambing;
   LambingPage(this._bloc, this._mere, {Key? key}) : super(key: key);
   LambingPage.edit(this._bloc, this._currentLambing);
+  LambingPage.modify(this._currentLambing);
 
   @override
   _LambingPageState createState() => new _LambingPageState(_bloc);
 }
 
 class _LambingPageState extends State<LambingPage> {
-  final GismoBloc _bloc;
+  GismoBloc ? _bloc;
   late LambingModel _lambing;
   BannerAd ? _adBanner;
 
@@ -171,12 +172,12 @@ class _LambingPageState extends State<LambingPage> {
   void _addPere() async {
     this._lambing.setDateAgnelage( DateFormat.yMd().parse(_dateAgnelageCtl.text) );
     Bete ? pere;
-    if (this._bloc.isLogged() != null) {
-      if (this._bloc.isLogged()!) {
+    if (this._bloc!.isLogged() != null) {
+      if (this._bloc!.isLogged()!) {
         pere = await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SearchPerePage(this._bloc, this._lambing),
+            builder: (context) => SearchPerePage(this._bloc!, this._lambing),
           ),
         ) as Bete;
       }
@@ -196,7 +197,7 @@ class _LambingPageState extends State<LambingPage> {
   Future<Bete ?> _searchPere() async {
     Bete ? pere = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
         builder: (BuildContext context) {
-          SearchPage search = new SearchPage(this._bloc, GismoPage.sailliePere);
+          SearchPage search = new SearchPage(this._bloc!, GismoPage.sailliePere);
           search.searchSex = Sex.male;
           return search;
         },
@@ -216,7 +217,7 @@ class _LambingPageState extends State<LambingPage> {
   Future _openAddEntryDialog() async {
     LambModel? newLamb = await Navigator.of(context).push(new MaterialPageRoute<LambModel>(
         builder: (BuildContext context) {
-          return new LambPage(this._bloc); // AddingLambDialog(this._bloc);
+          return new LambPage(this._bloc!); // AddingLambDialog(this._bloc);
         },
         fullscreenDialog: true
     ));
@@ -259,7 +260,7 @@ class _LambingPageState extends State<LambingPage> {
     _lambing.adoption = _adoption.key;
     _lambing.qualite = _agnelage.key;
 
-    var message  = this._bloc.saveLambing(this._lambing);
+    var message  = this._bloc!.saveLambing(this._lambing);
     message!
         .then( (message) {goodSaving(message);})
         .catchError( (message) {  _handleError(message); /*badSaving(message);*/});
@@ -344,11 +345,11 @@ class _LambingPageState extends State<LambingPage> {
     LambModel? newLamb = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => LambPage.edit( this._bloc, lamb)),
+          builder: (context) => LambPage.edit( this._bloc!, lamb)),
     );
     if (newLamb == null)
       return;
-    this._bloc.saveLamb(newLamb);
+    this._bloc!.saveLamb(newLamb);
     _lambing.lambs.forEach((aLamb) {
       if (aLamb.idBd == newLamb.idBd) {
         aLamb.sex = newLamb.sex;

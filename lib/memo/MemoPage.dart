@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 
 
 class MemoPage extends StatefulWidget {
-  final GismoBloc _bloc;
+  GismoBloc ? _bloc;
   late Bete _bete;
   MemoModel ? _currentNote;
 
@@ -16,10 +16,11 @@ class MemoPage extends StatefulWidget {
 
   MemoPage(this._bloc,this._bete);
   MemoPage.edit(this._bloc, this._currentNote) ;
+  MemoPage.modify(this._currentNote) ;
 }
 
 class MemoPageState extends State<MemoPage> {
-  final GismoBloc _bloc;
+  GismoBloc ? _bloc;
   MemoPageState(this._bloc);
 
   TextEditingController _dateDebutCtl = TextEditingController();
@@ -194,7 +195,7 @@ class MemoPageState extends State<MemoPage> {
       this.widget._currentNote!.bete_id = this.widget._bete.idBd;
     this.widget._currentNote!.classe = this._classe;
     //if (this.widget._bete != null)
-    message = await this._bloc.saveNote(this.widget._currentNote!);
+    message = await this._bloc!.saveNote(this.widget._currentNote!);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)))
         .closed
         .then((e) => {Navigator.of(context).pop()});

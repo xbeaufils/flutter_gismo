@@ -112,7 +112,7 @@ class GismoBloc {
         _currentUser!.setCheptel("00000000");
         _currentUser!.subscribe = false;
         _currentUser!.setToken("Nothing");
-        _repository = new GismoRepository(this, RepositoryType.local);
+        _repository = new GismoRepository(this._currentUser!, RepositoryType.local);
         debug.log("Mode autonome", name: "GismoBloc::init");
         // Ajout des pubs
         //Admob.initialize();
@@ -130,7 +130,7 @@ class GismoBloc {
       this._currentUser = new User(email, password);
       this._currentUser?.setCheptel("");
       this._currentUser?.setToken("Nothing");
-      _repository = new GismoRepository(this, RepositoryType.web);
+      _repository = new GismoRepository(this._currentUser!, RepositoryType.web);
       this._currentUser =
       await (_repository?.dataProvider as WebDataProvider).login(
           this._currentUser!);
@@ -143,7 +143,7 @@ class GismoBloc {
       this._currentUser = new User(null, null);
       _currentUser?.setCheptel("00000000");
       _currentUser?.subscribe = false;
-      _repository = new GismoRepository(this, RepositoryType.local);
+      _repository = new GismoRepository(this._currentUser!, RepositoryType.local);
       debug.log("Mode autonome", name: "GismoBloc::init");
       return "Mode autonome";
     }
@@ -164,19 +164,19 @@ class GismoBloc {
   }
 
   Future<User> auth(User user) async {
-    WebDataProvider aProvider = new WebDataProvider(this);
+    WebDataProvider aProvider = new WebDataProvider(this._currentUser!);
     this._currentUser = user;
     return aProvider.auth(user);
   }
 
   Future<User> login(User user) async {
-    WebDataProvider aProvider = new WebDataProvider(this);
+    WebDataProvider aProvider = new WebDataProvider(this._currentUser!);
     this._currentUser = user;
     return aProvider.login(user);
   }
 
   Future<void> loginWeb(User user ) async {
-    _repository = new GismoRepository(this, RepositoryType.web);
+    _repository = new GismoRepository(this._currentUser!, RepositoryType.web);
     this._currentUser = user;
     this._currentUser = await (_repository?.dataProvider as WebDataProvider).login(user);
   }
@@ -185,7 +185,7 @@ class GismoBloc {
     this._currentUser = new User(null, null);
     _currentUser?.setCheptel("00000000");
     _currentUser?.subscribe = false;
-    _repository = new GismoRepository(this, RepositoryType.local);
+    _repository = new GismoRepository(this._currentUser!, RepositoryType.local);
     debug.log("Mode autonome", name: "GismoBloc::init");
     return "Mode autonome";
   }
@@ -386,7 +386,7 @@ class GismoBloc {
       if (isSubscribe) {
         User user = User(email, password);
         this._currentUser = await this.login(user);
-        this._repository = new GismoRepository(this, RepositoryType.web);
+        this._repository = new GismoRepository(this._currentUser!, RepositoryType.web);
         storage.write(key: "email", value: email);
         storage.write(key: "password", value: password);
       }
@@ -394,7 +394,7 @@ class GismoBloc {
         this._currentUser = new User(null, null);
         this._currentUser!.setCheptel("00000000");
         this._currentUser!.subscribe = false;
-        this._repository = new GismoRepository(this, RepositoryType.local);
+        this._repository = new GismoRepository(this._currentUser!, RepositoryType.local);
         storage.delete(key: "email");
         storage.delete(key: "password");
       }
@@ -413,7 +413,7 @@ class GismoBloc {
       final storage = new FlutterSecureStorage();
       User user = User(email, password);
       this._currentUser = await this.login(user);
-      this._repository = new GismoRepository(this, RepositoryType.web);
+      this._repository = new GismoRepository(this._currentUser!, RepositoryType.web);
       storage.write(key: "email", value: email);
       storage.write(key: "password", value: password);
       return "Connexion réussie";

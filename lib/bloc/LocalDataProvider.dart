@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_gismo/Exception/EventException.dart';
 import 'package:flutter_gismo/bloc/AbstractDataProvider.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/bloc/GismoHttp.dart';
@@ -17,6 +16,7 @@ import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/ReportModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
+import 'package:flutter_gismo/model/User.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:sentry/sentry.dart';
@@ -30,8 +30,8 @@ class LocalDataProvider extends DataProvider{
   // only have a single app-wide reference to the database
   static Database ? _database;
 
-  LocalDataProvider(GismoBloc bloc) : super(bloc) {
-    _gismoHttp = new GismoHttp(bloc);
+  LocalDataProvider(User currentUser) : super(currentUser) {
+    _gismoHttp = new GismoHttp(currentUser);
   }
 
 

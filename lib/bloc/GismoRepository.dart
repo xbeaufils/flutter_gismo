@@ -14,21 +14,22 @@ import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
+import 'package:flutter_gismo/model/User.dart';
 
 enum RepositoryType {web, local}
+
 class GismoRepository {
   late DataProvider _dataProvider;
-  final GismoBloc _bloc;
   DataProvider get dataProvider => _dataProvider;
 
-  GismoRepository(this._bloc, RepositoryType type) {
+  GismoRepository(User user, RepositoryType type) {
     //_dataProvider = DummyDataProvider(_bloc);
     switch (type) {
       case RepositoryType.web :
-        _dataProvider = new WebDataProvider(_bloc);
+        _dataProvider = new WebDataProvider(user);
         break;
       case RepositoryType.local:
-        _dataProvider =  new LocalDataProvider(_bloc);
+        _dataProvider =  new LocalDataProvider(user);
         //( _dataProvider as LocalDataProvider).init();
         break;
     }
@@ -38,7 +39,7 @@ class GismoRepository {
 
 class DummyDataProvider extends DataProvider {
 
-  DummyDataProvider(GismoBloc bloc):super(bloc){}
+  DummyDataProvider(User currentUser) : super(currentUser){}
 
   @override
   Future<String> saveLambing(LambingModel lambing) {

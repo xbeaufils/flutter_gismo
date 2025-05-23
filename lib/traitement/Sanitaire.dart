@@ -9,7 +9,7 @@ import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:intl/intl.dart';
 
 class SanitairePage extends StatefulWidget {
-  final GismoBloc _bloc;
+  GismoBloc ? _bloc;
   Bete ? _malade;
   List<Bete> ? _betes;
   LambModel ? _bebeMalade;
@@ -17,6 +17,7 @@ class SanitairePage extends StatefulWidget {
 
   SanitairePage(this._bloc, this._malade, this._bebeMalade, {Key ? key}) : super(key: key);
   SanitairePage.edit(this._bloc, this._currentTraitement, {Key ? key}) : super(key: key);
+  SanitairePage.modify(this._currentTraitement, {Key ? key}) : super(key: key);
   SanitairePage.collectif(this._bloc, this._betes, {Key ? key}): super(key: key);
 
   @override
@@ -25,7 +26,7 @@ class SanitairePage extends StatefulWidget {
 
 class _SanitairePageState extends State<SanitairePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final GismoBloc _bloc;
+  GismoBloc ? _bloc;
   _SanitairePageState(this._bloc);
 
   TextEditingController _dateDebutCtl = TextEditingController();
@@ -272,7 +273,7 @@ class _SanitairePageState extends State<SanitairePage> {
 
   void _delete () async {
     if (this.widget._currentTraitement != null) {
-      var message  = await _bloc.deleteTraitement(this.widget._currentTraitement!.idBd!);
+      var message  = await _bloc!.deleteTraitement(this.widget._currentTraitement!.idBd!);
       Navigator.pop(context, message);
     }
     else
@@ -303,9 +304,9 @@ class _SanitairePageState extends State<SanitairePage> {
     traitement.voie = _voieCtl.text;
     var message = "";
     if (this.widget._betes != null)
-      message = await _bloc.saveTraitementCollectif(traitement, this.widget._betes!);
+      message = await _bloc!.saveTraitementCollectif(traitement, this.widget._betes!);
     else
-      message  = await _bloc.saveTraitement(traitement);
+      message  = await _bloc!.saveTraitement(traitement);
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)))
         .closed

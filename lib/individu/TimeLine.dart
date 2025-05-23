@@ -13,6 +13,7 @@ import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
+import 'package:flutter_gismo/presenter/BetePresenter.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
 import 'package:intl/intl.dart';
 
@@ -25,11 +26,16 @@ class TimeLinePage extends StatefulWidget {
   _TimeLinePageState createState() => new _TimeLinePageState(this._bloc, _bete);
 }
 
-class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderStateMixin {
+abstract class TimelineContract {
+  Future<String?> editPage(StatefulWidget page );
+  void showMessage(String message);
+}
+
+class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderStateMixin implements TimelineContract {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GismoBloc _bloc;
-
+  late BetePresenter _presenter;
   Bete _bete;
 
   _TimeLinePageState(this._bloc, this._bete);
@@ -61,6 +67,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   @override
   void initState() {
      super.initState();
+     this._presenter  = BetePresenter(this);
   }
 
   Widget _getMere() {
@@ -76,7 +83,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
               trailing: IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _viewMere(mere.data), )),
           );
         },
-        future: this._bloc.getMere(_bete),
+        future: this._presenter.getMere(_bete),
     );
   }
 
@@ -93,7 +100,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
               trailing: IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _viewMere(pere.data), )),
         );
       },
-      future: this._bloc.getPere(_bete),
+      future: this._presenter.getPere(_bete),
     );
   }
 
@@ -133,7 +140,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
           },
         );
       },
-      future: this._bloc.getEvents(_bete),
+      future: this._presenter.getEvents(_bete),
     );
   }
 
@@ -143,7 +150,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       case EventType.traitement:
       case EventType.echo:
       case EventType.memo:
-        return IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _searchEvent(event), );
+        return IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => this._presenter.searchEvent(event), );
         break;
       case EventType.saillie:
       case EventType.NEC:
@@ -183,9 +190,12 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   Widget _continueButton(Event event) {
     return TextButton(
       child: Text(S.of(context).bt_continue),
-      onPressed: () {
+      onPressed: ()  {
         if (event.type == EventType.pesee || event.type == EventType.NEC || event.type == EventType.saillie)
-          _deleteEvent(event);
+          setState(() async {
+            String message = await this._presenter.deleteEvent(event);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+          });
         Navigator.of(context).pop();
       },
     );
@@ -204,13 +214,13 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   void _searchEvent(Event event) {
     switch (event.type) {
       case EventType.agnelage :
-        _bloc.searchLambing(event.idBd).then( (lambing) => {_editLambing(lambing!)} );
+        _presenter.searchLambing(event.idBd).then( (lambing) => {_editLambing(lambing!)} );
         break;
       case EventType.traitement:
-        _bloc.searchTraitement(event.idBd).then( (traitement) => { _editTraitement(traitement!)});
+        _presenter.searchTraitement(event.idBd).then( (traitement) => { _editTraitement(traitement!)});
         break;
       case EventType.echo:
-        _bloc.searchEcho(event.idBd).then( (echo) => { _editEcho(echo!)});
+        _presenter.searchEcho(event.idBd).then( (echo) => { _editEcho(echo!)});
         break;
       case EventType.memo:
         _bloc.searchMemo(event.idBd).then( (memo) => { _editMemo(memo!) });
@@ -220,6 +230,16 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       case EventType.pesee:
        default:
     }
+  }
+
+  Future<String ?> editPage(StatefulWidget page ) async {
+    String ? message = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => page,
+      ),
+    );
+    return message;
   }
 
   void _editLambing(LambingModel lambing) {
@@ -325,5 +345,15 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
+
+  void showMessage(String message) {
+    setState(() {
+      final snackBar = SnackBar(
+        content: Text(message),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
+  }
+
 }
 

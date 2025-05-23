@@ -1,13 +1,18 @@
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/bloc/ConfigProvider.dart';
+import 'package:flutter_gismo/presenter/LotAffectationPresenter.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 enum View {fiche, ewe, ram}
 
@@ -15,13 +20,21 @@ class LotAffectationViewPage extends StatefulWidget {
   LotModel  _currentLot;
   final GismoBloc _bloc;
 
-  LotAffectationViewPage(this._bloc, this._currentLot, {Key? key}) : super(key: key);
+  LotAffectationViewPage(this._bloc, this._currentLot, {Key? key}) : super(key: key) ;
+
   @override
   _LotAffectationViewPageState createState() => new _LotAffectationViewPageState(this._bloc);
 }
 
-class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
+abstract class LotAffectationContract {
+  Future<Bete?> selectBete();
+  Future<String?> selectDateEntree();
+
+}
+
+class _LotAffectationViewPageState extends State<LotAffectationViewPage> implements LotAffectationContract {
   final GismoBloc _bloc;
+  late final LotAffectionPresenter _presenter ;
   _LotAffectationViewPageState(this._bloc);
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final _formFicheKey = GlobalKey<FormState>();
@@ -39,6 +52,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
   @override
   void initState(){
     super.initState();
+    _presenter = LotAffectionPresenter(this, this._bloc, this.currentLot);
     _currentView = View.fiche;
     if (currentLot.codeLotLutte != null)
       _codeLotCtl.text = currentLot.codeLotLutte!;
@@ -54,6 +68,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
 
   @override
   Widget build(BuildContext context) {
+    final providerUser = Provider.of<ConfigProvider>(context);
     return new Scaffold(
       key: _scaffoldKey,
             bottomNavigationBar:
@@ -287,44 +302,44 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
     );
   }
 
-  Future _addBete() async {
-    //Future _openAddEntryDialog() async {
-      Bete ? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
-          builder: (BuildContext context) {
-            SearchPage search = new SearchPage(this._bloc, GismoPage.lot);
-            switch (_currentView ) {
-              case View.ewe:
-                search.searchSex = Sex.femelle;
-                break;
-              case View.ram:
-                search.searchSex = Sex.male;
-                break;
-              default:
-            }
-            return search;
-          },
-          fullscreenDialog: true
-      ));
-      if (selectedBete != null) {
-        //if (_dateEntreeCtl.text.isEmpty)
-        //  _dateEntreeCtl.text = this.widget._currentLot.dateDebutLutte;
-        String ? dateEntree = await _showDateDialog(this.context,
-            S.of(context).dateEntry,
-            "Saisir une date d'entrée si différente de la date de début de lot",
-            S.of(context).dateEntry);
-        if (dateEntree != null) {
-          String message = await this._bloc.addBete(
-              currentLot, selectedBete, dateEntree);
-          final snackBar = SnackBar(
-            content: Text(message),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  Future<Bete?> selectBete() async {
+    Bete ? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
+        builder: (BuildContext context) {
+          SearchPage search = new SearchPage(this._bloc, GismoPage.lot);
+          switch (_currentView ) {
+            case View.ewe:
+              search.searchSex = Sex.femelle;
+              break;
+            case View.ram:
+              search.searchSex = Sex.male;
+              break;
+            default:
+          }
+          return search;
+        },
+        fullscreenDialog: true
+    ));
+    return selectedBete;
+  }
 
-          setState(() {
+  Future<String?> selectDateEntree() async {
+    String ? dateEntree = await _showDateDialog(this.context,
+        S.of(context).dateEntry,
+        "Saisir une date d'entrée si différente de la date de début de lot",
+        S.of(context).dateEntry);
+    return dateEntree;
+  }
 
-          });
-        }
+  void _addBete() async {
+    String ? message  = await _presenter.addBete();
+    setState(() {
+      if (message != null) {
+        final snackBar = SnackBar(
+          content: Text(message),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
+    });
   }
 
   Future _removeBete(Affectation affect) async {
@@ -333,11 +348,13 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
           "Saisir une date de sortie si différente de la date de fin de lot",
           S.of(context).dateDeparture);
       if (dateSortie != null ) {
-        String message = await this._bloc.removeFromLot(affect, dateSortie);
-        final snackBar = SnackBar(
-          content: Text(message),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        String ? message = await this._presenter.removeBete(affect, dateSortie);
+        if (message != null) {
+          final snackBar = SnackBar(
+            content: Text(message),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
         setState(() {});
       }
   }
@@ -407,20 +424,10 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
     return TextButton(
       child: Text(S.of(context).bt_delete),
       onPressed: () {
-          _deleteAffectation(affectation);
+          this._presenter.deleteAffectation(affectation);
         Navigator.of(context).pop();
       },
     );
-  }
-
-  void _deleteAffectation(Affectation event) async {
-    String message = await this.widget._bloc.deleteAffectation(event);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-    /*_scaffoldKey.currentState
-        .showSnackBar(SnackBar(content: Text(message)));*/
-    setState(() {
-
-    });
   }
 
   Future<String?> _showDateDialog(BuildContext context, String title, String helpMessage, String label) async {
@@ -498,6 +505,5 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> {
     _dateMvtCtl.dispose();
     super.dispose();
   }
-
-
 }
+

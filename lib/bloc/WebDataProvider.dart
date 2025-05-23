@@ -41,8 +41,8 @@ class WebDataProvider extends DataProvider {
 */
   late GismoHttp _gismoHttp; // = new GismoHttp(super.token);
 
-  WebDataProvider(GismoBloc bloc) : super(bloc) {
-    _gismoHttp = new GismoHttp(bloc);
+  WebDataProvider(User currentUser) : super(currentUser) {
+    _gismoHttp = new GismoHttp(currentUser);
   }
   final DateFormat _df = new DateFormat('dd/MM/yyyy');
 

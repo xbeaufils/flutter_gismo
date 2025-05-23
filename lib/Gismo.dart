@@ -7,6 +7,8 @@ import 'package:flutter_gismo/SearchLambPage.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/SplashScreen.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/bloc/ConfigProvider.dart';
+import 'package:flutter_gismo/bloc/NavigationService.dart';
 import 'package:flutter_gismo/bluetooth.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/loginPage.dart';
@@ -15,6 +17,7 @@ import 'package:flutter_gismo/parcelle/ParcellePage.dart';
 import 'package:flutter_gismo/traitement/selectionTraitement.dart';
 import 'package:flutter_gismo/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 
 
 enum GismoPage {lamb, sanitaire, etat_corporel, individu, sortie, lot, pesee, echo, saillie, sailliePere, note  }
@@ -27,7 +30,11 @@ class GismoApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    ConfigProvider provider = ConfigProvider();
+    provider.init();
+    return ChangeNotifierProvider(create: (context) => provider,
+    child: MaterialApp(
+      navigatorKey: NavigationService.navigatorKey,
       title: 'Gismo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -74,6 +81,6 @@ class GismoApp extends StatelessWidget {
         '/bluetooth' : (context) =>BluetoothPermissionPage(this._bloc),
         '/saillie' : (context) => SearchPage(this._bloc,GismoPage.saillie),
       },
-    );
+    ));
   }
 }

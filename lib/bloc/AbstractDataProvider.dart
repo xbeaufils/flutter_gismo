@@ -9,15 +9,14 @@ import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
+import 'package:flutter_gismo/model/User.dart';
 
 abstract class DataProvider {
-  GismoBloc _bloc;
 
-  GismoBloc get bloc => _bloc;
-
-  DataProvider(this._bloc);
-  String ? get cheptel => this._bloc.user!.cheptel;
-  String ? get token => this._bloc.user!.token;
+  final User _currentUser;
+  DataProvider(this._currentUser);
+  String ? get cheptel => this._currentUser.cheptel;
+  String ? get token => this._currentUser.token;
 
   //Future<String> saveLamb(List<LambModel> lambs );
   // Agnelage et agneaux

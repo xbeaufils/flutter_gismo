@@ -6,19 +6,19 @@ import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:intl/intl.dart';
 
 class EchoPage extends StatefulWidget {
-  final GismoBloc _bloc;
-  Bete _bete;
+  GismoBloc ? _bloc;
+  Bete ? _bete;
   EchographieModel ? _currentEcho;
   @override
   EchoPageState createState() => EchoPageState(this._bloc);
 
   EchoPage(this._bloc,this._bete);
   EchoPage.edit(this._bloc, this._currentEcho, this._bete, {Key ? key}) : super(key: key);
-
+  EchoPage.modify( this._currentEcho, {Key ? key}) : super(key: key);
 }
 
 class EchoPageState extends State<EchoPage> {
-  final GismoBloc _bloc;
+  GismoBloc ? _bloc;
   EchoPageState(this._bloc);
   TextEditingController _dateEchoCtl = TextEditingController();
   TextEditingController _dateSaillieCtl = TextEditingController();
@@ -36,7 +36,7 @@ class EchoPageState extends State<EchoPage> {
       key: _scaffoldKey,
       appBar: new AppBar(
         title: Text(S.of(context).ultrasound),
-        leading: Text(this.widget._bete.numBoucle),
+        leading: ( this.widget._bete == null) ? Text(""):Text(this.widget._bete!.numBoucle),
       ),
       body:
       new Column(
@@ -236,7 +236,7 @@ class EchoPageState extends State<EchoPage> {
 
   void _delete () async {
     if (this.widget._currentEcho != null) {
-      var message  = await _bloc.deleteEcho(this.widget._currentEcho!);
+      var message  = await _bloc!.deleteEcho(this.widget._currentEcho!);
       Navigator.pop(context, message);
     }
     else
@@ -277,7 +277,7 @@ class EchoPageState extends State<EchoPage> {
     });
     if (this.widget._currentEcho == null)
       this.widget._currentEcho = new EchographieModel();
-    this.widget._currentEcho!.bete_id = this.widget._bete.idBd!;
+    this.widget._currentEcho!.bete_id = this.widget._bete!.idBd!;
     this.widget._currentEcho!.dateEcho = DateFormat.yMd().parse(_dateEchoCtl.text);
     this.widget._currentEcho!.nombre = _nombre;
     if (_dateSaillieCtl.text.isNotEmpty)
@@ -289,7 +289,7 @@ class EchoPageState extends State<EchoPage> {
     else
       this.widget._currentEcho!.dateAgnelage = null;
     message =
-      await this._bloc.saveEcho(this.widget._currentEcho!);
+      await this._bloc!.saveEcho(this.widget._currentEcho!);
     ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(message)))
           .closed

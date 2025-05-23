@@ -1,24 +1,33 @@
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_gismo/env/Environnement.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/bloc/Message.dart';
-import 'package:flutter_gismo/model/User.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:sentry/sentry.dart';
+import 'package:flutter_gismo/bloc/Message.dart';
 
-class GismoHttp  {
-  //final http.Client _inner= http.Client();
-  final User _currentUser;
-  GismoHttp(this._currentUser) ;
+enum RepositoryType {web, local}
+
+abstract class AbstractRepository {
+
+}
+
+class WebRepository {
+  final DateFormat _df = new DateFormat('dd/MM/yyyy');
+
+  DateFormat get df => _df;
+
+  final String? _token;
+  WebRepository(this._token) ;
 
   Map<String, String> _getHeaders() {
     Map<String, String> _headers = new Map();
     _headers['Content-Type'] = "application/json";
-    if (this._currentUser.token != null)
-      _headers['token'] = this._currentUser.token!;
+    if (this._token != null)
+      _headers['token'] = this._token!;
     _headers[HttpHeaders.acceptLanguageHeader] = Platform.localeName;
     return _headers;
   }
@@ -39,7 +48,7 @@ class GismoHttp  {
     try {
       var response = await http.post(Uri.parse(Environnement.getUrlWebTarget() + url),
           headers: _getHeaders() ,
-        body: jsonEncode(body)).timeout(Duration(seconds: 10));
+          body: jsonEncode(body)).timeout(Duration(seconds: 10));
       return response.body;
     } on TimeoutException catch (e) {
       throw (e);
@@ -86,7 +95,7 @@ class GismoHttp  {
         return msg.message;
       }
     } on TimeoutException catch (e) {
-        throw (e);
+      throw (e);
     } on Error catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       throw (e);
@@ -119,10 +128,10 @@ class GismoHttp  {
 
   Future<Map<String, dynamic> > doGet(String url) async {
     try {
-     var response = await http.get(Uri.parse(Environnement.getUrlTarget() + url), headers: _getHeaders() ).timeout(Duration(seconds: 10));
-     if (response.bodyBytes.lengthInBytes == 0)
-       return jsonDecode("{}");
-     return jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      var response = await http.get(Uri.parse(Environnement.getUrlTarget() + url), headers: _getHeaders() ).timeout(Duration(seconds: 10));
+      if (response.bodyBytes.lengthInBytes == 0)
+        return jsonDecode("{}");
+      return jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
     } on TimeoutException catch (e) {
       throw (e);
     } on Error catch (e, stackTrace) {
@@ -144,4 +153,3 @@ class GismoHttp  {
   }
 
 }
-
