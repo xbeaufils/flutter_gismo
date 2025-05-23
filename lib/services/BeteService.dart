@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Exception/EventException.dart';
+import 'package:flutter_gismo/bloc/NavigationService.dart';
 import 'package:flutter_gismo/repository/BeteRepository.dart';
 import 'package:flutter_gismo/bloc/ConfigProvider.dart';
 import 'package:flutter_gismo/repository/EchoRepository.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
+import 'package:provider/provider.dart';
 import 'dart:developer' as debug;
 import 'package:sentry/sentry.dart';
 
@@ -26,7 +28,7 @@ import 'package:flutter_gismo/model/TraitementModel.dart';
 
 class BeteService {
 
-  final ConfigProvider _provider;
+  final ConfigProvider _provider = Provider.of<ConfigProvider>(NavigationService.navigatorKey.currentContext!, listen: false);
   late BeteRepository _repository;
   late PeseeRepository _peseeRepository;
   late Traitementrepository _traitementrepository;
@@ -39,7 +41,7 @@ class BeteService {
 
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  BeteService(this._provider) {
+  BeteService() {
     if (_provider.isSubscribing() ) {
       _repository = WebBeteRepository(_provider.getToken());
       _traitementrepository = WebTraitementRepository(_provider.getToken());

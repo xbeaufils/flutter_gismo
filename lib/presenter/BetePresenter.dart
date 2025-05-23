@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/individu/TimeLine.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
@@ -7,15 +5,11 @@ import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
-import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/services/BeteService.dart';
-import 'package:flutter_gismo/bloc/ConfigProvider.dart';
-import 'package:flutter_gismo/bloc/NavigationService.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
-import 'package:provider/provider.dart';
 
 class BetePresenter {
 
@@ -23,9 +17,7 @@ class BetePresenter {
   late TimelineContract _view;
 
   BetePresenter(this._view) {
-    ConfigProvider provider = Provider.of<ConfigProvider>(
-        NavigationService.navigatorKey.currentContext!, listen: false);
-    _beteService = BeteService(provider);
+    _beteService = BeteService();
   }
 
   Future<List<Bete>> getBetes() {
