@@ -63,7 +63,7 @@ class _MemoListPageState extends State<MemoListPage> {
     var navigationResult = Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SearchPage(this._bloc, GismoPage.note),
+        builder: (context) => SearchPage(GismoPage.note),
       ),
     );
     navigationResult.then( (message) {

@@ -7,28 +7,34 @@ import 'package:flutter_gismo/lamb/Mort.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/presenter/LambPresenter.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
 import 'package:intl/intl.dart';
 
 class LambPage extends StatefulWidget {
-  final GismoBloc _bloc;
   LambModel ? _lamb;
 
 
   @override
   LambPageState createState() => LambPageState();
 
-  LambPage.edit(this._bloc, this._lamb);
-  LambPage(this._bloc);
+  LambPage.edit( this._lamb);
+  LambPage();
 }
 
-class LambPageState extends State<LambPage> {
+abstract class LambContract {
+  Future <Bete?> showBouclage(LambModel lamb);
+  Future<String> showDeath(LambModel lamb);
+}
+
+class LambPageState extends State<LambPage> implements LambContract {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController _marquageCtrl = TextEditingController();
   Sex _sex = Sex.male;
   Sante _sante = Sante.VIVANT;
   late List<DropdownMenuItem<MethodeAllaitement>> _dropDownMenuItems;
   late MethodeAllaitement _currentAllaitement;
+  late LambPresenter _presenter;
 
   @override
   Widget build(BuildContext context) {
@@ -162,6 +168,7 @@ class LambPageState extends State<LambPage> {
     else {
       _currentAllaitement = _dropDownMenuItems[0].value!;
     }
+    this._presenter = LambPresenter(this);
     super.initState();
   }
 
@@ -218,13 +225,13 @@ class LambPageState extends State<LambPage> {
             IconButton(
               icon: Image.asset("assets/tomb.png"),
               onPressed: () {
-                _openDeath(this.widget._lamb!);
+                this._presenter.mort(this.widget._lamb!);
               },),);
           actionButtons.add(
               IconButton(
                 icon: Image.asset("assets/bouclage.png"),
                 onPressed: () {
-                  _openBoucle(this.widget._lamb!);
+                  this._presenter.boucle(this.widget._lamb!);
                 },));
         }
       }
@@ -255,11 +262,21 @@ class LambPageState extends State<LambPage> {
           },
         );
       },
-      future: this.widget._bloc.getEventsForLamb(this.widget._lamb!),
+      future: null //this.widget._bloc.getEventsForLamb(this.widget._lamb!),
     );
   }
 
+  Future <Bete?> showBouclage(LambModel lamb) async {
+    Bete? bete = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => BouclagePage(lamb)),
+    );
+    return bete;
+  }
+
   void _openBoucle(LambModel lamb) async {
+    /*
     Bete? bete = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -271,17 +288,26 @@ class LambPageState extends State<LambPage> {
         lamb.idDevenir = bete.idBd;
       lamb.numBoucle = bete.numBoucle;
       lamb.numMarquage = bete.numMarquage;
-    }
+    }*/
     Navigator
         .of(context)
         .pop(lamb);
   }
-  
+
+  Future<String> showDeath(LambModel lamb) async {
+    var navigationResult = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => MortPage(lamb)),
+    );
+    return "Toto";
+  }
+
   void _openDeath(LambModel lamb) async {
     var navigationResult = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => MortPage(lamb, this.widget._bloc)),
+          builder: (context) => MortPage(lamb)),
     );
     print (navigationResult);
     Navigator
@@ -293,7 +319,7 @@ class LambPageState extends State<LambPage> {
     var navigationResult = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => PeseePage(this.widget._bloc, null, lamb )),
+          builder: (context) => PeseePage(GismoBloc(), null, lamb )),
     );
     print (navigationResult);
     Navigator
@@ -305,7 +331,7 @@ class LambPageState extends State<LambPage> {
     var navigationResult = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => SanitairePage(this.widget._bloc, null, lamb )),
+          builder: (context) => SanitairePage(GismoBloc(), null, lamb )),
     );
     print (navigationResult);
     Navigator
@@ -379,7 +405,7 @@ class LambPageState extends State<LambPage> {
   }
 
   void _deleteEvent(Event event) async {
-    String message = await this.widget._bloc.deleteEvent(event);
+    String message = ""; //await this.widget._bloc.deleteEvent(event);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
     /*_scaffoldKey.currentState
         .showSnackBar(SnackBar(content: Text(message)));*/

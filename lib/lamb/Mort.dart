@@ -2,20 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/presenter/LambPresenter.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MortPage extends StatefulWidget {
   final LambModel _currentLamb ;
-  final GismoBloc _bloc;
-  MortPage( this._currentLamb, this._bloc, {Key ? key}) : super(key: key);
+  MortPage( this._currentLamb, {Key ? key}) : super(key: key);
 
   @override
   _MortPageState createState() => new _MortPageState();
 }
+abstract class MortContract {
+  void showError(String message);
+}
 
-class _MortPageState extends State<MortPage> {
+class _MortPageState extends State<MortPage> implements MortContract {
   String ? _currentMotif;
+  late DeathPresenter _presenter = DeathPresenter(this);
+
   TextEditingController _dateMortCtl = TextEditingController();
   final _df = new DateFormat('dd/MM/yyyy');
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -123,7 +128,7 @@ class _MortPageState extends State<MortPage> {
                   style: new TextStyle(color: Colors.white, ),),
 
                 // color: Colors.lightGreen[700],
-                onPressed: _saveDeath)
+                onPressed: () => this._presenter.saveDeath(widget._currentLamb, _dateMortCtl.text, _currentMotif ))
           ]
 
       ),
@@ -151,11 +156,13 @@ class _MortPageState extends State<MortPage> {
       showError(appLocalizations!.death_cause_mandatory);
       return;
     }
-
+/*
     var message  = this.widget._bloc.mort(this.widget._currentLamb, _currentMotif!, _dateMortCtl.text);
     message
         .then( (message) {goodSaving(message);})
         .catchError( (message) {showError(message);});
+
+ */
   }
 
   void showError(String message) {

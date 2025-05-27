@@ -1,11 +1,10 @@
-import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/SearchPage.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 
 import 'package:flutter_gismo/lamb/Adoption.dart';
@@ -17,27 +16,43 @@ import 'package:flutter_gismo/model/AdoptionQualite.dart';
 import 'package:flutter_gismo/model/AgnelageQualite.dart';
 import 'package:flutter_gismo/model/CauseMort.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:flutter_gismo/presenter/LambingPresenter.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer' as debug;
 
 class LambingPage extends StatefulWidget {
-  GismoBloc ? _bloc;
-
   Bete ? _mere;
-  LambingModel ? _currentLambing;
-  LambingPage(this._bloc, this._mere, {Key? key}) : super(key: key);
-  LambingPage.edit(this._bloc, this._currentLambing);
+  late LambingModel _currentLambing;
+
+  Bete ? get mere => _mere;
+
+  LambingPage(this._mere, {Key? key}) : super(key: key) {
+    _currentLambing = new LambingModel(this._mere!.idBd!);
+    _currentLambing.setDateAgnelage( DateTime.now());
+    _currentLambing.adoption = 0;
+    _currentLambing.qualite =  0;
+  }
+
+  LambingPage.edit( this._currentLambing);
   LambingPage.modify(this._currentLambing);
 
   @override
-  _LambingPageState createState() => new _LambingPageState(_bloc);
+  _LambingPageState createState() => new _LambingPageState();
+
+  LambingModel get currentLambing => _currentLambing;
 }
 
-class _LambingPageState extends State<LambingPage> {
-  GismoBloc ? _bloc;
-  late LambingModel _lambing;
-  BannerAd ? _adBanner;
+abstract class LambingContract {
+  Future<Bete ?> searchPere();
+  Future<Bete ?> showPerePage();
+  Future<LambModel?> addLamb();
+  void refreshLambing(LambingModel _lambing);
+  Future<LambModel?> editLamb (LambModel lamb, String dateNaissance);
+  LambingModel get currentLambing;
+}
+
+class _LambingPageState extends State<LambingPage> implements LambingContract {
+  late LambingPresenter _presenter;
 
   DateTime _selectedDate = DateTime.now();
   AdoptionEnum _adoption = AdoptionEnum.level0;
@@ -48,7 +63,11 @@ class _LambingPageState extends State<LambingPage> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  _LambingPageState(this._bloc);
+
+  _LambingPageState() {
+    _presenter = LambingPresenter(this);
+  }
+  LambingModel get currentLambing => this.widget._currentLambing;
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +147,7 @@ class _LambingPageState extends State<LambingPage> {
                 ),
                 ButtonBar(alignment: MainAxisAlignment.start,
                     children : [ ElevatedButton(key:null,
-                        onPressed:saveLambing,
+                        onPressed: () => this._presenter.saveLambing(_dateAgnelageCtl.text,  _obsCtl.text, _adoption.key, _agnelage.key),
                         style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.lightGreen[700])),
                         //color: Colors.lightGreen[700],
                         child:
@@ -140,7 +159,7 @@ class _LambingPageState extends State<LambingPage> {
                 ),
             ],),
           ) ,
-      floatingActionButton: (this._lambing.idBd == null)?
+      floatingActionButton: (currentLambing.idBd == null)?
       new FloatingActionButton(
         onPressed: _openAddEntryDialog,
         tooltip: S.of(context).add_lamb,
@@ -151,53 +170,63 @@ class _LambingPageState extends State<LambingPage> {
 
   void _addLamb(LambModel newLamb){
     setState(() {
-      _lambing.lambs.add(newLamb);
+      _presenter.currentLambing.lambs.add(newLamb);
       //_lambs.add(newLamb);
     });
   }
 
   Widget _buildPereWidget() {
     String identifPere = "";
-    if (_lambing.numBouclePere!=null ||_lambing.numMarquagePere!=null)  {
-      identifPere = _lambing.numBouclePere! + " " + _lambing.numMarquagePere!;
+    if (currentLambing.numBouclePere != null || currentLambing.numMarquagePere != null)  {
+      identifPere = currentLambing.numBouclePere! + " " + currentLambing.numMarquagePere!;
     }
     return ListTile(
       title: Text(S.of(context).ram) ,
       subtitle: Text(identifPere),
-      trailing: (_lambing.idPere == null ) ?
-      IconButton(icon: Icon(Icons.search), onPressed: () => _addPere(), ):
-      IconButton(icon: Icon(Icons.close), onPressed: () => _removePere(), ),);
+      trailing: (currentLambing.idPere == null ) ?
+      IconButton(icon: Icon(Icons.search), onPressed: () => this._presenter.addPere(), ):
+      IconButton(icon: Icon(Icons.close), onPressed: () => this._presenter.removePere(), ),);
   }
 
-  void _addPere() async {
-    this._lambing.setDateAgnelage( DateFormat.yMd().parse(_dateAgnelageCtl.text) );
+ /* void _addPere() async {
+    this.currentLambing.setDateAgnelage( DateFormat.yMd().parse(_dateAgnelageCtl.text) );
     Bete ? pere;
     if (this._bloc!.isLogged() != null) {
       if (this._bloc!.isLogged()!) {
         pere = await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SearchPerePage(this._bloc!, this._lambing),
+            builder: (context) => SearchPerePage(this._bloc!, currentLambing),
           ),
         ) as Bete;
       }
       else
-        pere = await this._searchPere();
+        pere = await this.searchPere();
     }
     else
-      pere = await this._searchPere();
+      pere = await this.searchPere();
     if (pere != null)
      setState(() {
-       _lambing.numBouclePere=  (pere == null)?null:pere.numBoucle;
-       _lambing.numMarquagePere = pere!.numMarquage;
-       _lambing.idPere = (pere == null)?null:pere.idBd;
+       currentLambing.numBouclePere=  (pere == null)?null:pere.numBoucle;
+       currentLambing.numMarquagePere = pere!.numMarquage;
+       currentLambing.idPere = (pere == null)?null:pere.idBd;
      });
+  }*/
+
+  Future<Bete ?> showPerePage() async {
+    Bete ? pere = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SearchPerePage( currentLambing),
+      ),
+    );
+    return pere;
   }
 
-  Future<Bete ?> _searchPere() async {
+  Future<Bete ?> searchPere() async {
     Bete ? pere = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
         builder: (BuildContext context) {
-          SearchPage search = new SearchPage(this._bloc!, GismoPage.sailliePere);
+          SearchPage search = new SearchPage( GismoPage.sailliePere);
           search.searchSex = Sex.male;
           return search;
         },
@@ -206,18 +235,20 @@ class _LambingPageState extends State<LambingPage> {
     return pere;
   }
 
-  void _removePere() {
-    setState(() {
-      _lambing.numBouclePere=  null;
-      _lambing.numMarquagePere = null;
-      _lambing.idPere = null;
-    });
+  Future<LambModel?> addLamb() async {
+    LambModel? newLamb = await Navigator.of(context).push(new MaterialPageRoute<LambModel>(
+        builder: (BuildContext context) {
+          return new LambPage(); // AddingLambDialog(this._bloc);
+        },
+        fullscreenDialog: true
+    ));
+    return newLamb;
   }
 
   Future _openAddEntryDialog() async {
     LambModel? newLamb = await Navigator.of(context).push(new MaterialPageRoute<LambModel>(
         builder: (BuildContext context) {
-          return new LambPage(this._bloc!); // AddingLambDialog(this._bloc);
+          return new LambPage(); // AddingLambDialog(this._bloc);
         },
         fullscreenDialog: true
     ));
@@ -227,12 +258,12 @@ class _LambingPageState extends State<LambingPage> {
   }
 
   Future _openAdoptionDialog() async {
-    int qualiteAdoption = await Navigator.of(context).push(new MaterialPageRoute<int>(
+    int ? qualiteAdoption = await Navigator.of(context).push(new MaterialPageRoute<int>(
         builder: (BuildContext context) {
           return new AdoptionDialog(this._adoption.key);
         },
         fullscreenDialog: true
-    )) as int;
+    ));
     if (qualiteAdoption != null) {
       setState(() {
         _adoption = AdoptionHelper.getAdoption(qualiteAdoption);
@@ -241,12 +272,12 @@ class _LambingPageState extends State<LambingPage> {
   }
 
   Future _openAgnelageDialog() async {
-    int qualiteAgnelage = await Navigator.of(context).push(new MaterialPageRoute<int>(
+    int ? qualiteAgnelage = await Navigator.of(context).push(new MaterialPageRoute<int>(
         builder: (BuildContext context) {
           return new AgnelageDialog(this._agnelage.key);
         },
         fullscreenDialog: true
-    ))as int;
+    ));
     if (qualiteAgnelage != null) {
       setState(() {
         _agnelage = AgnelageHelper.getAgnelage(qualiteAgnelage);
@@ -254,18 +285,18 @@ class _LambingPageState extends State<LambingPage> {
     }
   }
 
-  void saveLambing() {
-    _lambing.setDateAgnelage(DateFormat.yMd().parse(_dateAgnelageCtl.text));
-    _lambing.observations = _obsCtl.text;
-    _lambing.adoption = _adoption.key;
-    _lambing.qualite = _agnelage.key;
+ /* void saveLambing() {
+    currentLambing.setDateAgnelage(DateFormat.yMd().parse(_dateAgnelageCtl.text));
+    currentLambing.observations = _obsCtl.text;
+    currentLambing.adoption = _adoption.key;
+    currentLambing.qualite = _agnelage.key;
 
-    var message  = this._bloc!.saveLambing(this._lambing);
+    var message  = this._bloc!.saveLambing(currentLambing);
     message!
         .then( (message) {goodSaving(message);})
         .catchError( (message) {  _handleError(message); /*badSaving(message);*/});
   }
-
+*/
   void _handleError(Object obj) {
     debug.log("ERROR", name:"_LambPageState::_handleError", error: obj);
   }
@@ -292,30 +323,22 @@ class _LambingPageState extends State<LambingPage> {
   @override
   void initState() {
     super.initState();
-    if (this.widget._currentLambing == null) {
-      _lambing = new LambingModel(this.widget._mere!.idBd!);
-      _dateAgnelageCtl.text = DateFormat.yMd().format(_selectedDate);
-      _adoption = AdoptionEnum.level0;
-      _agnelage = AgnelageEnum.level0;
-    }
-    else {
-      _lambing = this.widget._currentLambing!;
-      _dateAgnelageCtl.text = DateFormat.yMd().format(_lambing.dateAgnelage!);
-      if (_lambing.observations != null)
-        _obsCtl.text = _lambing.observations!;
-      _adoption = AdoptionHelper.getAdoption(_lambing.adoption!);
-      _agnelage = AgnelageHelper.getAgnelage(_lambing.qualite!);
-    }
+    _dateAgnelageCtl.text = DateFormat.yMd().format(currentLambing.dateAgnelage!);
+    if (currentLambing.observations != null)
+      _obsCtl.text = currentLambing.observations!;
+    _adoption = AdoptionHelper.getAdoption(currentLambing.adoption!);
+    _agnelage = AgnelageHelper.getAgnelage(currentLambing.qualite!);
+    this._presenter = LambingPresenter(this);
   }
 
   Widget _buildLambItem(BuildContext context, int index) {
-    String sexe = (_lambing.lambs[index].sex == Sex.male) ? S.of(context).male : "";
-    sexe = (_lambing.lambs[index].sex == Sex.femelle) ? S.of(context).female : sexe;
+    String sexe = (currentLambing.lambs[index].sex == Sex.male) ? S.of(context).male : "";
+    sexe = (currentLambing.lambs[index].sex == Sex.femelle) ? S.of(context).female : sexe;
     return ListTile(
-      leading: (_lambing.lambs[index].marquageProvisoire == null) ? null : Text(_lambing.lambs[index].marquageProvisoire!),
+      leading: (currentLambing.lambs[index].marquageProvisoire == null) ? null : Text(currentLambing.lambs[index].marquageProvisoire!),
       title: Text(sexe) ,
-      subtitle: (_lambing.lambs[index].allaitement != null) ? Text(_lambing.lambs[index].allaitement.libelle): Text(S.of(context).breastfeeding_not_specified), // Text(_lambs[index].marquageProvisoire),
-      trailing:  _buildTrailing(_lambing.lambs[index]),);
+      subtitle: (currentLambing.lambs[index].allaitement != null) ? Text(currentLambing.lambs[index].allaitement.libelle): Text(S.of(context).breastfeeding_not_specified), // Text(_lambs[index].marquageProvisoire),
+      trailing:  _buildTrailing(currentLambing.lambs[index]),);
   }
 
   Widget ? _buildTrailing(LambModel lamb) {
@@ -338,19 +361,28 @@ class _LambingPageState extends State<LambingPage> {
     return
       IconButton(
         icon: new Icon(Icons.keyboard_arrow_right),
-        onPressed: () {_openEdit(lamb, this._dateAgnelageCtl.text);},);
-   }
+        onPressed: () { this._presenter.editLamb(lamb, this._dateAgnelageCtl.text);},);
+  }
 
+  Future<LambModel?> editLamb (LambModel lamb, String dateNaissance) async {
+    LambModel? newLamb = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => LambPage.edit( lamb)),
+    );
+    return newLamb;
+  }
+/*
   void _openEdit(LambModel lamb, String dateNaissance) async {
     LambModel? newLamb = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => LambPage.edit( this._bloc!, lamb)),
+          builder: (context) => LambPage.edit( lamb)),
     );
     if (newLamb == null)
       return;
-    this._bloc!.saveLamb(newLamb);
-    _lambing.lambs.forEach((aLamb) {
+    //this._bloc!.saveLamb(newLamb);
+    currentLambing.lambs.forEach((aLamb) {
       if (aLamb.idBd == newLamb.idBd) {
         aLamb.sex = newLamb.sex;
         aLamb.allaitement = newLamb.allaitement;
@@ -365,13 +397,21 @@ class _LambingPageState extends State<LambingPage> {
 
     });
   }
-
+*/
   Widget _lambList() {
     return ListView.builder(
       itemBuilder: _buildLambItem,
-      itemCount: _lambing.lambs.length,
+      itemCount: currentLambing.lambs.length,
     );
   }
+
+  @override
+  void refreshLambing(LambingModel  lambing) {
+    setState(() {
+
+    });
+  }
+
 }
 
 

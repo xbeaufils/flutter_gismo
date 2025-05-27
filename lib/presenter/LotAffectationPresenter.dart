@@ -1,10 +1,8 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter_gismo/Lot/LotAffectationViewPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
-import 'package:flutter_gismo/search/SearchPage.dart';
 import 'package:flutter_gismo/services/LotService.dart';
 import 'package:intl/intl.dart';
 

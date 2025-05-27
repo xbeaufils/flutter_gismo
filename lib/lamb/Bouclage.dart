@@ -9,25 +9,28 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/presenter/LambPresenter.dart';
 import 'package:intl/intl.dart';
 import 'package:sentry/sentry.dart';
 
 
 class BouclagePage extends StatefulWidget {
   LambModel _currentLamb ;
-  final GismoBloc _bloc;
-  //String _dateNaissance;
-  BouclagePage( this._currentLamb, this._bloc, {Key ? key}) : super(key: key);
+  BouclagePage( this._currentLamb, {Key ? key}) : super(key: key);
 
   @override
-  _BouclagePageState createState() => new _BouclagePageState(this._bloc);
+  _BouclagePageState createState() => new _BouclagePageState();
 }
 
-class _BouclagePageState extends State<BouclagePage> {
-  final GismoBloc _bloc;
+abstract class BouclageContract {
+  void returnBete(Bete bete);
+}
+
+class _BouclagePageState extends State<BouclagePage> implements BouclageContract {
   final df = new DateFormat('dd/MM/yyyy');
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  late BouclagePresenter _presenter = BouclagePresenter(this);
 
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
   bool _rfidPresent = false;
@@ -40,7 +43,7 @@ class _BouclagePageState extends State<BouclagePage> {
   TextEditingController _numBoucleCtrl = new TextEditingController();
   TextEditingController _numMarquageCtrl = new TextEditingController();
 
-  _BouclagePageState(this._bloc);
+  _BouclagePageState();
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +100,7 @@ class _BouclagePageState extends State<BouclagePage> {
                         S.of(context).place_earring,
                         style: new TextStyle(color: Colors.white),
                       ),
-                      onPressed: _createBete,
+                      onPressed: () => this._presenter.createBete(this.widget._currentLamb, _numBoucleCtrl.text, _numMarquageCtrl.text),
                       //color: Colors.lightGreen[900],
                     ),
                   ]
@@ -107,24 +110,24 @@ class _BouclagePageState extends State<BouclagePage> {
 
   @override
   void initState() {
-    if (this._bloc.isLogged()!)
-      this._startService();
+    /*if (this._bloc.isLogged()!)
+      this._startService();*/
     super.initState();
   }
 
   Widget _buildRfid() {
-    if (_bloc.isLogged()! && this._rfidPresent) {
+/*    if (_bloc.isLogged()! && this._rfidPresent) {
       return FloatingActionButton(
           child: Icon(Icons.wifi),
           backgroundColor: Colors.green,
           onPressed: _readRFID);
     }
-    else
+    else*/
       return Container();
   }
 
   Widget _statusBluetoothBar() {
-    if (! this._bloc.isLogged()!)
+  //  if (! this._bloc.isLogged()!)
       return Container();
     List<Widget> status = [];
     switch (_bluetoothState ) {
@@ -169,7 +172,7 @@ class _BouclagePageState extends State<BouclagePage> {
   void dispose() {
     _numBoucleCtrl.dispose();
     _numMarquageCtrl.dispose();
-    this.widget._bloc.stopReadBluetooth();
+    //this.widget._bloc.stopReadBluetooth();
     this._btBloc.stopStream();
     super.dispose();
   }
@@ -203,6 +206,7 @@ class _BouclagePageState extends State<BouclagePage> {
   }
 
   Future<String> _startService() async{
+    /*
     try {
       debug.log("Start service ", name: "_BouclagePageState::_startService");
       BluetoothState _bluetoothState =  await this._bloc.startReadBluetooth();
@@ -228,7 +232,7 @@ class _BouclagePageState extends State<BouclagePage> {
       }
     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
-    }
+    }*/
     String start= await PLATFORM_CHANNEL.invokeMethod("start");
     setState(() {
       _rfidPresent =  (start == "start");
@@ -236,4 +240,7 @@ class _BouclagePageState extends State<BouclagePage> {
     return start;
   }
 
+  void returnBete(Bete bete) {
+    Navigator.pop(context, bete);
+  }
 }

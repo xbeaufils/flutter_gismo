@@ -246,7 +246,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
     var navigationResult = Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => LambingPage.edit(_bloc, lambing),
+        builder: (context) => LambingPage.edit(lambing),
       ),
     );
     navigationResult.then( (message) {

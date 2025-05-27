@@ -69,6 +69,14 @@ class BeteService {
     return this._repository.getBetes(_provider.getCheptel()!);
   }
 
+  Future<List<Bete>> getBeliers() {
+    return this._repository.getBeliers();
+  }
+
+  Future<List<Bete>> getBrebis() {
+    return this._repository.getBrebis();
+  }
+
   Future<Bete?> getPere(Bete bete) {
     return this._repository.getPere(bete);
   }
@@ -162,5 +170,7 @@ class BeteService {
   Future<MemoModel?> searchMemo(int idBd) {
     return this._memorepository.searchMemo(idBd);
   }
+
+
 
 }

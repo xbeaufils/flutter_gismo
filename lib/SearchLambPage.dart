@@ -143,7 +143,7 @@ class _SearchLambPageState extends State<SearchLambPage> {
     LambModel ? newLamb = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => LambPage.edit( this._bloc, lamb)),
+          builder: (context) => LambPage.edit( lamb)),
     );
     if (newLamb == null)
       return;

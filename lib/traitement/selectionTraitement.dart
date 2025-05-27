@@ -135,7 +135,7 @@ class _SelectionPageState extends State<SelectionPage> {
           .of(context)
           .push(new MaterialPageRoute<Bete>(
             builder: (BuildContext context) {
-              SearchPage search = new SearchPage(this._bloc, GismoPage.sanitaire);
+              SearchPage search = new SearchPage( GismoPage.sanitaire);
               return search;
           },
           fullscreenDialog: true

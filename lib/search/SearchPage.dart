@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/bloc/BluetoothBloc.dart';
+import 'package:flutter_gismo/bloc/ConfigProvider.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/individu/NECPage.dart';
@@ -20,28 +21,31 @@ import 'package:flutter_gismo/lamb/lambing.dart';
 import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
+import 'package:flutter_gismo/presenter/SearchPresenter.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:provider/provider.dart';
 import 'package:sentry/sentry.dart';
 
 class SearchPage extends StatefulWidget {
-  final GismoBloc _bloc;
+
   GismoPage _nextPage;
   Sex ? searchSex;
   get nextPage => _nextPage;
-  SearchPage(this._bloc, this._nextPage, { Key? key }) : super(key: key);
+  SearchPage(this._nextPage, { Key? key }) : super(key: key);
   @override
-  _SearchPageState createState() => new _SearchPageState(_bloc);
+  _SearchPageState createState() => new _SearchPageState();
 }
 
+abstract class SearchContract {
+  void fillList(List<Bete> lstBetes);
+}
 
-class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
-  // final formKey = new GlobalKey<FormState>();
-  // final key = new GlobalKey<ScaffoldState>();
+class _SearchPageState extends State<SearchPage>  with TickerProviderStateMixin implements SearchContract{
   final TextEditingController _filter = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final GismoBloc _bloc;
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
+  late SearchPresenter _presenter ;
   BannerAd ? _adBanner;
   String _searchText = "";
   List<Bete> _betes = <Bete>[]; //new List();
@@ -55,7 +59,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text( S.current.earring_search);
 
-  _SearchPageState(this._bloc) {
+  _SearchPageState() {
+    _presenter = SearchPresenter(this);
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
         setState(() {
@@ -72,27 +77,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    this._getBetes();
+    this._presenter.getBetes(null);
     super.initState();
-    if (this._bloc.isLogged()! && defaultTargetPlatform == TargetPlatform.android)
-      new Future.delayed(Duration.zero,() {
-        this._startService(context);
-      });
-    if ( ! _bloc.isLogged()!) {
-      this._adBanner = BannerAd(
-        adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
-        size: AdSize.banner,
-        request: AdRequest(),
-        listener: BannerAdListener(),
-      )..load();
-      // See in https://dev-yakuza.posstree.com/en/flutter/admob/#configure-app-id-on-android
-      debug.log("Load Ad Banner");
-      //this._adBanner!.load();
-      FacebookAudienceNetwork.init(
-        testingId: "a77955ee-3304-4635-be65-81029b0f5201",
-        iOSAdvertiserTrackingEnabled: true,
-      );
-    }
   }
 
   String _getBannerAdUnitId() {
@@ -109,7 +95,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   void dispose() {
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
       PLATFORM_CHANNEL.invokeMethod<String>('stop');
-      this._bloc.stopReadBluetooth();
+      //this._bloc.stopReadBluetooth();
       if (this._bluetoothSubscription != null)
         this._bluetoothSubscription?.cancel();
     }
@@ -117,6 +103,26 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   Widget build(BuildContext context) {
+    final providerUser = Provider.of<ConfigProvider>(context);
+    if (providerUser.isSubscribing() && defaultTargetPlatform == TargetPlatform.android)
+      new Future.delayed(Duration.zero,() {
+        this._startService(context);
+      });
+    if ( ! providerUser.isSubscribing()) {
+      this._adBanner = BannerAd(
+        adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
+        size: AdSize.banner,
+        request: AdRequest(),
+        listener: BannerAdListener(),
+      )..load();
+      // See in https://dev-yakuza.posstree.com/en/flutter/admob/#configure-app-id-on-android
+      debug.log("Load Ad Banner");
+      //this._adBanner!.load();
+      FacebookAudienceNetwork.init(
+        testingId: "a77955ee-3304-4635-be65-81029b0f5201",
+        iOSAdvertiserTrackingEnabled: true,
+      );
+    }
     return Scaffold(
       appBar: _buildBar(context),
       key: _scaffoldKey,
@@ -136,7 +142,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   Widget _statusBluetoothBar(BuildContext context)  {
-    if ( ! this._bloc.isLogged()!)
+    final providerUser = Provider.of<ConfigProvider>(context);
+    if ( ! providerUser.isSubscribing())
       return Container();
     List<Widget> status = <Widget>[]; //new List();
     switch (_bluetoothState) {
@@ -156,7 +163,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   Widget _buildRfid(BuildContext context) {
-    if (_bloc.isLogged()! && this._rfidPresent) {
+    final providerUser = Provider.of<ConfigProvider>(context);
+    if (providerUser.isSubscribing() && this._rfidPresent) {
       return FloatingActionButton(
           child: Icon(Icons.wifi),
           backgroundColor: Colors.green,
@@ -167,7 +175,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   Widget _getAdmobAdvice() {
-    if (this._bloc.isLogged() ! ) {
+    final providerUser = Provider.of<ConfigProvider>(context);
+    if (providerUser.isSubscribing() ) {
       return Container();
     }
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
@@ -181,7 +190,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   Widget _getFacebookAdvice() {
-    if ( this._bloc.isLogged()!  ) {
+    final providerUser = Provider.of<ConfigProvider>(context);
+    if ( providerUser.isSubscribing()  ) {
       return SizedBox(height: 0,width: 0,);
     }
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
@@ -225,9 +235,9 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   }
 
   Future<String> _startService(BuildContext context) async{
-    try {
+ /*   try {
       debug.log("Start service ", name: "_SearchPageState::_startService");
-      BluetoothState _bluetoothState =  await this._bloc.startReadBluetooth();
+      BluetoothState _bluetoothState = BluetoothState.fromResult(null); //await this._bloc.startReadBluetooth();
       if (_bluetoothState.status != null)
         debug.log("Start status " + _bluetoothState.status!, name: "_SearchPageState::_startService");
       if (_bluetoothState.status == BluetoothBloc.CONNECTED
@@ -257,7 +267,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       debug.log(e.toString());
-    }
+    }*/
     String start= await PLATFORM_CHANNEL.invokeMethod("start");
     _rfidPresent =  (start == "start");
     return start;
@@ -325,28 +335,28 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     var page;
     switch (this.widget.nextPage) {
       case GismoPage.lamb:
-        page = LambingPage(this._bloc, bete);
+        page = LambingPage(bete);
         break;
       /*case GismoPage.sanitaire:
         page = SanitairePage(this._bloc, bete, null);
         break; */
       case GismoPage.individu:
-        page = TimeLinePage(_bloc, bete);
+        page = TimeLinePage(GismoBloc(), bete);
         break;
       case GismoPage.etat_corporel:
-        page = NECPage(this._bloc, bete);
+        page = NECPage(GismoBloc(), bete);
         break;
       case GismoPage.pesee:
-        page = PeseePage(this._bloc, bete, null);
+        page = PeseePage(GismoBloc(), bete, null);
         break;
       case GismoPage.echo:
-        page = EchoPage(this._bloc, bete);
+        page = EchoPage(GismoBloc(), bete);
         break;
       case GismoPage.saillie:
-        page = SailliePage(_bloc, bete);
+        page = SailliePage(GismoBloc(), bete);
         break;
       case GismoPage.note:
-        page = MemoPage(_bloc, bete);
+        page = MemoPage(GismoBloc(), bete);
         break;
       case GismoPage.sortie:
       case GismoPage.lot:
@@ -404,7 +414,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     });
   }
 
-  void _getBetes() async {
+ /* void _getBetes() async {
     List<Bete> ? lstBetes ;
     if (this.widget.searchSex == null) {
       lstBetes = await this._bloc.getBetes();
@@ -423,7 +433,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     }
     fillList(lstBetes);
    }
-
+  */
   void fillList(List<Bete> lstBetes) {
     setState(() {
       _betes = lstBetes;

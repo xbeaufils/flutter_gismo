@@ -4,7 +4,7 @@ import 'package:flutter_gismo/Lot/LotPage.dart';
 import 'package:flutter_gismo/Mouvement/EntreePage.dart';
 import 'package:flutter_gismo/Mouvement/SortiePage.dart';
 import 'package:flutter_gismo/SearchLambPage.dart';
-import 'package:flutter_gismo/SearchPage.dart';
+import 'package:flutter_gismo/search/SearchPage.dart';
 import 'package:flutter_gismo/SplashScreen.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/bloc/ConfigProvider.dart';
@@ -65,12 +65,12 @@ class GismoApp extends StatelessWidget {
         '/welcome': (context) => WelcomePage(this._bloc, null),
         '/note' : (context) => MemoListPage(this._bloc),
         '/login': (context) => LoginPage(this._bloc),
-        '/nec': (context) => SearchPage(this._bloc, GismoPage.etat_corporel),
-        '/pesee': (context) => SearchPage(this._bloc, GismoPage.pesee),
-        '/search': (context) => SearchPage(this._bloc, GismoPage.individu),
+        '/nec': (context) => SearchPage( GismoPage.etat_corporel),
+        '/pesee': (context) => SearchPage( GismoPage.pesee),
+        '/search': (context) => SearchPage( GismoPage.individu),
         '/sanitaire' : (context) => SelectionPage(this._bloc, []),
-        '/echo' : (context) => SearchPage(this._bloc, GismoPage.echo),
-        '/lambing' : (context) => SearchPage(this._bloc, GismoPage.lamb),
+        '/echo' : (context) => SearchPage( GismoPage.echo),
+        '/lambing' : (context) => SearchPage( GismoPage.lamb),
         '/lamb' : (context) => SearchLambPage(this._bloc),
         '/sortie': (context) => SortiePage(this._bloc),
         '/entree': (context) => EntreePage(this._bloc),
@@ -79,7 +79,7 @@ class GismoApp extends StatelessWidget {
         '/parcelle' : (context) =>ParcellePage(this._bloc),
         '/config' : (context) =>ConfigPage(this._bloc),
         '/bluetooth' : (context) =>BluetoothPermissionPage(this._bloc),
-        '/saillie' : (context) => SearchPage(this._bloc,GismoPage.saillie),
+        '/saillie' : (context) => SearchPage(GismoPage.saillie),
       },
     ));
   }

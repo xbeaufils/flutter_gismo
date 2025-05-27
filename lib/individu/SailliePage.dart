@@ -120,7 +120,7 @@ class _SailliePageState extends State<SailliePage> {
   Future _addPere() async {
     Bete ? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
         builder: (BuildContext context) {
-          SearchPage search = new SearchPage(this._bloc, GismoPage.sailliePere);
+          SearchPage search = new SearchPage(GismoPage.sailliePere);
           search.searchSex = Sex.male;
           return search;
         },

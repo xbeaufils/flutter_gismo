@@ -3,27 +3,30 @@ import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/presenter/LambingPresenter.dart';
 
 enum View {lot, saillie, all}
 
 class SearchPerePage extends StatefulWidget {
-  final GismoBloc _bloc;
   final LambingModel _lambing;
-  const SearchPerePage( this._bloc, this._lambing, {Key? key}) : super(key: key);
+  const SearchPerePage( this._lambing, {Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState()=> new _SearchPerePageState(this._bloc, this._lambing);
+  State<StatefulWidget> createState()=> new _SearchPerePageState(this._lambing);
+
+}
+abstract class SearchPereContract {
 
 }
 
-class _SearchPerePageState  extends State<SearchPerePage> {
-  final GismoBloc _bloc;
+class _SearchPerePageState  extends State<SearchPerePage> implements SearchPereContract{
   final LambingModel _lambing;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   int _curIndex=0;
   late View _currentView = View.lot;
+  late SearchPerePresenter _presenter = SearchPerePresenter(this);
 
-  _SearchPerePageState(this._bloc, this._lambing);
+  _SearchPerePageState(this._lambing);
 
   @override
   Widget build(BuildContext context) {
@@ -100,20 +103,10 @@ class _SearchPerePageState  extends State<SearchPerePage> {
                 );
             }
         );},
-      future: _getBeliers(),
+      future: this._presenter.getBeliers(_currentView, _lambing),
     );
   }
 
-  Future<List<Bete>> _getBeliers()  {
-    switch (_currentView) {
-      case View.lot:
-        return this._bloc.getLotBeliers(_lambing);
-       case View.saillie :
-        return  this._bloc.getSaillieBeliers(_lambing) ;
-      case View.all:
-        return this._bloc.getBeliers();
-    }
-  }
 
   void _selectBete(Bete bete) {
     Navigator

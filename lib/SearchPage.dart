@@ -25,13 +25,12 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sentry/sentry.dart';
 
 class SearchPage extends StatefulWidget {
-  final GismoBloc _bloc;
   GismoPage _nextPage;
   Sex ? searchSex;
   get nextPage => _nextPage;
-  SearchPage(this._bloc, this._nextPage, { Key? key }) : super(key: key);
+  SearchPage( this._nextPage, { Key? key }) : super(key: key);
   @override
-  _SearchPageState createState() => new _SearchPageState(_bloc);
+  _SearchPageState createState() => new _SearchPageState();
 }
 
 
@@ -40,7 +39,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   // final key = new GlobalKey<ScaffoldState>();
   final TextEditingController _filter = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final GismoBloc _bloc;
+  final GismoBloc  _bloc = GismoBloc();
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
   BannerAd ? _adBanner;
   String _searchText = "";
@@ -55,7 +54,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text( S.current.earring_search);
 
-  _SearchPageState(this._bloc) {
+  _SearchPageState() {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
         setState(() {
@@ -325,7 +324,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     var page;
     switch (this.widget.nextPage) {
       case GismoPage.lamb:
-        page = LambingPage(this._bloc, bete);
+        page = LambingPage(bete);
         break;
       case GismoPage.sanitaire:
         page = SanitairePage(this._bloc, bete, null);
