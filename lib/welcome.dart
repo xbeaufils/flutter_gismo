@@ -155,6 +155,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   Widget _buildButton(String title, String imageName, Function() press) {
     return new TextButton(
+        key: Key(title),
         style: textButtonStyle,
         onPressed: press,
         child: new Column(

@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
@@ -49,12 +47,13 @@ abstract class LambingContract {
   void refreshLambing(LambingModel _lambing);
   Future<LambModel?> editLamb (LambModel lamb, String dateNaissance);
   LambingModel get currentLambing;
+  void goodSaving(String message);
+  void badSaving(String message);
 }
 
 class _LambingPageState extends State<LambingPage> implements LambingContract {
   late LambingPresenter _presenter;
 
-  DateTime _selectedDate = DateTime.now();
   AdoptionEnum _adoption = AdoptionEnum.level0;
   AgnelageEnum _agnelage = AgnelageEnum.level0;
 
@@ -283,22 +282,6 @@ class _LambingPageState extends State<LambingPage> implements LambingContract {
         _agnelage = AgnelageHelper.getAgnelage(qualiteAgnelage);
       });
     }
-  }
-
- /* void saveLambing() {
-    currentLambing.setDateAgnelage(DateFormat.yMd().parse(_dateAgnelageCtl.text));
-    currentLambing.observations = _obsCtl.text;
-    currentLambing.adoption = _adoption.key;
-    currentLambing.qualite = _agnelage.key;
-
-    var message  = this._bloc!.saveLambing(currentLambing);
-    message!
-        .then( (message) {goodSaving(message);})
-        .catchError( (message) {  _handleError(message); /*badSaving(message);*/});
-  }
-*/
-  void _handleError(Object obj) {
-    debug.log("ERROR", name:"_LambPageState::_handleError", error: obj);
   }
 
   void badSaving(String message) {

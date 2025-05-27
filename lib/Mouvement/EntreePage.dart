@@ -98,6 +98,7 @@ class _EntreePageState extends State<EntreePage> {
                         }
                       }),
                   new DropdownButton<String>(
+                    key: Key("Motif_Key"),
                     value: _currentMotif,
                     items: _motifEntreeItems,
                     hint: Text(S.of(context).entree_select,style: TextStyle(color: Colors.lightGreen,)),

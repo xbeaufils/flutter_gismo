@@ -51,7 +51,10 @@ class LambingPresenter {
     currentLambing.observations = obs;
     currentLambing.adoption = adoption;
     currentLambing.qualite = qualite;
-    String ? message  = await this._service.saveLambing(this.currentLambing);
+    var message  =  this._service.saveLambing(this.currentLambing);
+    message
+        .then( (message) { if (message != null) this._view.goodSaving(message);})
+        .catchError( (message) {  if (message != null) this._view.badSaving(message);});
     return message;
   }
 

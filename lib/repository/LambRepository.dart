@@ -33,9 +33,10 @@ class WebLambRepository extends WebRepository implements LambRepository {
       final response = await super.doPostMessage('/lamb/add',lambing.toJson());
       return response;
     }
-    catch ( e) {
-      debug.log("Error " + e.toString());
-      return "Error " + e.toString();
+    on Exception catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debug.log(e.toString());
+      throw ("Erreur $e");
     }
   }
 
@@ -44,9 +45,10 @@ class WebLambRepository extends WebRepository implements LambRepository {
       final response = await super.doPostMessage('/lamb/save', lamb.toJson());
       return response;
     }
-    catch ( e) {
-      debug.log("Error " + e.toString());
-      return "Error " + e.toString();
+    on Exception catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debug.log(e.toString());
+      throw ("Erreur $e");
     }
   }
 
@@ -60,9 +62,10 @@ class WebLambRepository extends WebRepository implements LambRepository {
         return response['message'];
       }
     }
-    catch ( e) {
-      debug.log("Error " + e.toString());
-      return "Error " + e.toString();
+    on Exception catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debug.log(e.toString());
+      throw ("Erreur $e");
     }
   }
 
@@ -75,9 +78,13 @@ class WebLambRepository extends WebRepository implements LambRepository {
       final response = await super.doPostMessage(
           '/lamb/boucle',  data);
       return response;
-    } catch ( e) {
-      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
+    on Exception catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debug.log(e.toString());
+      throw ("Erreur $e");
+    }
+
   }
 
 
@@ -96,10 +103,13 @@ class WebLambRepository extends WebRepository implements LambRepository {
     data["motifDeces"] = motif;
     try {
       final response = await super.doPostMessage(
-          '/lamb/mort',  data);
+          '/lamb/mort', data);
       return response;
-    } catch ( e) {
-      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+    on Exception catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debug.log(e.toString());
+      throw ("Erreur $e");
     }
   }
 
@@ -127,15 +137,38 @@ class WebLambRepository extends WebRepository implements LambRepository {
 
 
   @override
-  Future<List<Bete>> getLotBeliers(LambingModel lambing) {
-    // TODO: implement getLotBeliers
-    throw UnimplementedError();
+  Future<List<Bete>> getLotBeliers(LambingModel lambing) async {
+    try {
+      final response = await super.doPostResult('/lamb/male/lot',lambing.toJson());
+      List<Bete> tempList = [];
+      for (int i = 0; i < response['beliers'].length; i++) {
+        tempList.add(new Bete.fromResult(response['beliers'][i]));
+      }
+      return tempList;
+    }
+    on Exception catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debug.log(e.toString());
+      throw ("Erreur $e");
+    }
   }
 
   @override
-  Future<List<Bete>> getSaillieBeliers(LambingModel lambing) {
-    // TODO: implement getSaillieBeliers
-    throw UnimplementedError();
+  Future<List<Bete>> getSaillieBeliers(LambingModel lambing) async {
+    try {
+      final response = await super.doPostResult('/lamb/male/saillie',lambing.toJson());
+      List<Bete> tempList = [];
+      //tempList = response['beliers'];
+      for (int i = 0; i < response['beliers'].length; i++) {
+        tempList.add(new Bete.fromResult(response['beliers'][i]));
+      }
+      return tempList;
+    }
+    on Exception catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace: stackTrace);
+      debug.log(e.toString());
+      throw ("Erreur $e");
+    }
   }
 }
 

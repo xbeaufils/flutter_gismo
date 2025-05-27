@@ -68,7 +68,7 @@ class SplashScreenState extends State<SplashScreen> {
       key: _scaffoldKey,
       backgroundColor: Colors.lightGreen[100],
       body:
-      new Center(
+      new Center(key: Key("splashScreen"),
         child:
         new Image(image: AssetImage('assets/gismo.png')),
         ),
