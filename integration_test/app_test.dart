@@ -27,6 +27,30 @@ void main() {
           await tester.pump();
           final btCreation = find.text("Creation");
           await tester.tap(btCreation);
+          await tester.pump();
+          await createBete(tester, "123", "456789", "brebis1", "obs1");
+          await createBete(tester, "456", "456789", "brebis2", "obs2");
+          await createBete(tester, "789", "456789", "brebis3", "obs3");
         });
    });
+}
+
+Future<void> createBete(WidgetTester tester, String numboucle, String numMarquage, String nom, String obs ) async {
+  final btPlus = find.byIcon(Icons.add);
+  await tester.tap(btPlus);
+  await tester.pumpAndSettle();
+  var numboucleTxt = find.ancestor(of: find.text('Numero boucle'),matching: find.byType(TextFormField),);
+  print (numboucleTxt);
+  await tester.enterText(numboucleTxt, numboucle);
+  var numMarquageTxt = find.ancestor(of: find.text('Numero marquage'),matching: find.byType(TextFormField),);
+  await tester.enterText(numMarquageTxt, numMarquage);
+  var nomTxt = find.ancestor(of: find.text('Petit nom'),matching: find.byType(TextFormField),);
+  await tester.enterText(nomTxt, nom);
+  var sexeRd = find.text("Femelle");
+  await tester.tap(sexeRd);
+  var obsTxt = find.ancestor(of: find.text('Observations'),matching: find.byType(TextFormField),);
+  await tester.enterText(obsTxt, obs);
+  var addBt = find.text("Ajouter");
+  await tester.tap(addBt);
+  await tester.pumpAndSettle();
 }
