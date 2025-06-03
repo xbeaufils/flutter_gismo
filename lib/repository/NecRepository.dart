@@ -9,15 +9,15 @@ import 'package:sentry/sentry.dart';
 import 'package:sqflite/sqflite.dart';
 
 abstract class NecRepository {
-  Future<String> saveNec(NoteModel node);
-  Future<List<NoteModel>> getNec(Bete bete);
-  Future<String> deleteNec(int idBd);
+  Future<String> save(NoteModel node);
+  Future<List<NoteModel>> get(Bete bete);
+  Future<String> delete(int idBd);
 }
 
 class WebNecRepository extends WebRepository implements NecRepository{
   WebNecRepository(super.token);
   @override
-  Future<String> saveNec(NoteModel note) async {
+  Future<String> save(NoteModel note) async {
     try {
       final response = await super.doPostMessage(
           '/nec/new', note.toJson());
@@ -28,7 +28,7 @@ class WebNecRepository extends WebRepository implements NecRepository{
   }
 
   @override
-  Future<List<NoteModel>> getNec(Bete bete) async {
+  Future<List<NoteModel>> get(Bete bete) async {
     final response = await super.doGetList(
         '/nec/get?idBete=' + bete.idBd.toString());
     List<NoteModel> tempList = List.empty(growable: true);
@@ -39,7 +39,7 @@ class WebNecRepository extends WebRepository implements NecRepository{
   }
 
   @override
-  Future<String> deleteNec(int idBd) async {
+  Future<String> delete(int idBd) async {
     try {
       final response = await super.doGet('/nec/del/' + idBd.toString());
       if (response['error']) {
@@ -59,7 +59,7 @@ class WebNecRepository extends WebRepository implements NecRepository{
 
 class LocalNecRepository extends LocalRepository implements NecRepository {
   @override
-  Future<String> saveNec(NoteModel note) async {
+  Future<String> save(NoteModel note) async {
     try {
       Database db = await this.database;
       await db.insert('NEC', note.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
@@ -73,7 +73,7 @@ class LocalNecRepository extends LocalRepository implements NecRepository {
   }
 
   @override
-  Future<List<NoteModel>> getNec(Bete bete) async {
+  Future<List<NoteModel>> get(Bete bete) async {
     Database db = await this.database;
     List<Map<String, dynamic>> futureMaps = await db.query('NEC',where: 'bete_id = ?', whereArgs: [bete.idBd]);
     List<NoteModel> tempList = [];
@@ -84,7 +84,7 @@ class LocalNecRepository extends LocalRepository implements NecRepository {
   }
 
   @override
-  Future<String> deleteNec(int idBd) async {
+  Future<String> delete(int idBd) async {
     Database db = await this.database;
     int res =   await db.delete("NEC",
         where: "idBd = ?", whereArgs: <int>[idBd]);

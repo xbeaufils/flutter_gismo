@@ -94,7 +94,16 @@ class BetePresenter {
       this._view.showMessage(message);
   }
 
-  Future<EchographieModel?> searchEcho(int idBd) {
-    return this._beteService.searchEcho(idBd);
+  void viewParent(Bete parent) async {
+    String ? message = await this._view.editPage(TimeLinePage( parent));
+    /*
+    var navigationResult = Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TimeLinePage(_bloc, mere),
+      ),
+    );
+     */
+     if (message != null) this._view.showMessage(message);
   }
 }

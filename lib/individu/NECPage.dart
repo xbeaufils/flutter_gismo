@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/individu/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
+import 'package:flutter_gismo/presenter/NECPresenter.dart';
 import 'package:intl/intl.dart';
 
 class NECPage extends StatefulWidget {
-  final GismoBloc _bloc;
   Bete _bete;
 
   @override
-  NECPageState createState() => NECPageState(this._bloc);
+  NECPageState createState() => NECPageState();
 
-  NECPage(this._bloc,this._bete);
+  NECPage(this._bete);
 }
 
-class NECPageState extends State<NECPage> {
-  final GismoBloc _bloc;
-  NECPageState(this._bloc);
+abstract class NECContract extends GismoContract {
+  Bete get bete;
+}
+
+class NECPageState extends GismoStatePage<NECPage> implements NECContract {
+  NECPageState();
+  late NECPresenter _presenter;
   int _nec = 0;
   TextEditingController _dateNoteCtl = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -75,7 +80,7 @@ class NECPageState extends State<NECPage> {
                 child: Text(S.of(context).bt_save,
                   style: new TextStyle(color: Colors.white, ),),
                 //color: Colors.lightGreen[700],
-                onPressed: _saveNote)
+                onPressed: () => this._presenter.saveNote(_dateNoteCtl.text, _nec) )
           ]),
 
     );
@@ -102,11 +107,12 @@ class NECPageState extends State<NECPage> {
   @override
   void initState() {
     super.initState();
+    this._presenter = NECPresenter(this);
     _dateNoteCtl.text = DateFormat.yMd().format(DateTime.now());
    // _nec = this.widget._currentLevel;
   }
 
-  void _saveNote() async {
+/*  void _saveNote() async {
     setState(() {
       _isSaving = true;
     });
@@ -115,6 +121,8 @@ class NECPageState extends State<NECPage> {
         .closed
         .then((e) => {Navigator.of(context).pop()});
   }
+ */
+  Bete get bete => this.widget._bete;
 }
 
 class HelpPage  extends StatefulWidget {

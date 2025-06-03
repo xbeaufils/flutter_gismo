@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
-abstract class SimpleGismoPage {
+abstract class GismoContract {
   void back();
   void backWithMessage(String message);
+  void showMessage(String message);
+  void showSaving();
 }
 
 class GismoStatePage<T extends StatefulWidget> extends  State<T> {

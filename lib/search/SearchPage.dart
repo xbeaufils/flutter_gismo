@@ -15,6 +15,7 @@ import 'package:flutter_gismo/individu/EchoPage.dart';
 import 'package:flutter_gismo/individu/NECPage.dart';
 import 'package:flutter_gismo/individu/PeseePage.dart';
 import 'package:flutter_gismo/individu/SailliePage.dart';
+import 'package:flutter_gismo/individu/SimpleGismoPage.dart';
 import 'package:flutter_gismo/individu/TimeLine.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
@@ -37,11 +38,11 @@ class SearchPage extends StatefulWidget {
   _SearchPageState createState() => new _SearchPageState();
 }
 
-abstract class SearchContract {
+abstract class SearchContract extends GismoContract {
   void fillList(List<Bete> lstBetes);
 }
 
-class _SearchPageState extends State<SearchPage>  with TickerProviderStateMixin implements SearchContract{
+class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderStateMixin implements SearchContract{
   final TextEditingController _filter = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
@@ -222,7 +223,7 @@ class _SearchPageState extends State<SearchPage>  with TickerProviderStateMixin 
         });
       }
       else {
-        _showMessage("Pas de boucle lue");
+        this._showMessage("Pas de boucle lue");
       }
     } on PlatformException catch (e) {
       _showMessage("Pas de boucle lue");
@@ -384,14 +385,14 @@ class _SearchPageState extends State<SearchPage>  with TickerProviderStateMixin 
     }
   }
 
-  void _showMessage(String message) {
+/*  void _showMessage(String message) {
     final snackBar = SnackBar(
       content: Text(message),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
     //_scaffoldKey.currentState.showSnackBar(snackBar);
   }
-
+*/
   void _searchPressed(BuildContext context) {
     setState(() {
       if (this._searchIcon.icon == Icons.search) {

@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/individu/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:intl/intl.dart';
 
 
 class MemoPage extends StatefulWidget {
-  GismoBloc ? _bloc;
   late Bete _bete;
   MemoModel ? _currentNote;
 
   @override
-  MemoPageState createState() => MemoPageState(this._bloc);
+  MemoPageState createState() => MemoPageState();
 
-  MemoPage(this._bloc,this._bete);
-  MemoPage.edit(this._bloc, this._currentNote) ;
+  MemoPage(this._bete);
+  MemoPage.edit(this._currentNote) ;
   MemoPage.modify(this._currentNote) ;
 }
 
-class MemoPageState extends State<MemoPage> {
-  GismoBloc ? _bloc;
-  MemoPageState(this._bloc);
+abstract class MemoContract extends GismoContract {
+  Bete get bete;
+  MemoModel ? get currentNote;
+  set currentNote(MemoModel ? value);
+}
+
+class MemoPageState extends GismoStatePage<MemoPage> implements MemoContract {
+  MemoPageState();
 
   TextEditingController _dateDebutCtl = TextEditingController();
   TextEditingController _dateFinCtl = TextEditingController();
@@ -177,7 +181,7 @@ class MemoPageState extends State<MemoPage> {
       this._classe = this.widget._currentNote!.classe!;
     }
   }
-
+/*
   void _saveNote() async {
     String message="";
     setState(() {
@@ -199,6 +203,11 @@ class MemoPageState extends State<MemoPage> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)))
         .closed
         .then((e) => {Navigator.of(context).pop()});
+  }*/
+  Bete get bete => this.widget._bete;
+  MemoModel ? get currentNote => this.widget._currentNote;
+  set currentNote(MemoModel ? value) {
+    this.widget._currentNote = value;
   }
 
 }

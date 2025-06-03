@@ -11,7 +11,7 @@ abstract class Memorepository {
   Future<List<MemoModel>> getCheptelMemos(String cheptel) ;
   Future<List<MemoModel>> getMemos(Bete bete) ;
   Future<MemoModel?> searchMemo(int id) ;
-  Future<String> saveMemo(MemoModel note);
+  Future<String> save(MemoModel note);
   Future<String> delete(MemoModel note) ;
 }
 
@@ -40,7 +40,7 @@ class WebMemoRepository extends WebRepository implements Memorepository {
 
   }
 
-  Future<String> saveMemo(MemoModel note) async {
+  Future<String> save(MemoModel note) async {
     try {
       final response = await super.doPostMessage(
           '/memo/new', note.toJson());
@@ -107,7 +107,7 @@ class LocalMemoRepository extends LocalRepository implements Memorepository {
 
   }
 
-  Future<String> saveMemo(MemoModel note) async {
+  Future<String> save(MemoModel note) async {
     try {
       Database db = await this.database;
       await db.insert("memo", note.toJson(),

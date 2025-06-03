@@ -23,7 +23,7 @@ class EchoPage extends StatefulWidget {
   EchoPage.modify( this._currentEcho, {Key ? key}) : super(key: key);
 }
 
-abstract class EchoContract extends SimpleGismoPage {
+abstract class EchoContract extends GismoContract {
   EchographieModel ?  get currentEcho;
   Bete ? get bete;
 

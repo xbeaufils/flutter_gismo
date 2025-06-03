@@ -5,6 +5,7 @@ import 'package:flutter_gismo/Bete.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/EchoPage.dart';
+import 'package:flutter_gismo/individu/SimpleGismoPage.dart';
 import 'package:flutter_gismo/lamb/lambing.dart';
 import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -20,25 +21,22 @@ import 'package:intl/intl.dart';
 
 class TimeLinePage extends StatefulWidget {
   final Bete _bete;
-  final GismoBloc _bloc;
-  TimeLinePage(this._bloc, this._bete, {Key ? key}) : super(key: key);
+  TimeLinePage(this._bete, {Key ? key}) : super(key: key);
   @override
-  _TimeLinePageState createState() => new _TimeLinePageState(this._bloc, _bete);
+  _TimeLinePageState createState() => new _TimeLinePageState(_bete);
 }
 
-abstract class TimelineContract {
+abstract class TimelineContract extends GismoContract {
   Future<String?> editPage(StatefulWidget page );
-  void showMessage(String message);
 }
 
-class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderStateMixin implements TimelineContract {
+class _TimeLinePageState extends GismoStatePage<TimeLinePage> with SingleTickerProviderStateMixin implements TimelineContract {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final GismoBloc _bloc;
   late BetePresenter _presenter;
   Bete _bete;
 
-  _TimeLinePageState(this._bloc, this._bete);
+  _TimeLinePageState( this._bete);
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +78,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
               leading: Image.asset("assets/sheep_lamb.png"),
               title: Text(mere.data.numBoucle + " " + mere.data.numMarquage),
               subtitle: Text(DateFormat.yMd().format(mere.data.dateEntree)),
-              trailing: IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _viewMere(mere.data), )),
+              trailing: IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => this._presenter.viewParent(mere.data), )),
           );
         },
         future: this._presenter.getMere(_bete),
@@ -97,7 +95,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
               leading: Image.asset("assets/belier.png"),
               title: Text(pere.data.numBoucle + " " + pere.data.numMarquage),
               subtitle: Text(DateFormat.yMd().format(pere.data.dateEntree)),
-              trailing: IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => _viewMere(pere.data), )),
+              trailing: IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () =>this._presenter.viewParent(pere.data), )),
         );
       },
       future: this._presenter.getPere(_bete),
@@ -108,7 +106,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
   Future _openIdentityDialog() async {
     Bete ? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
         builder: (BuildContext context) {
-          return new BetePage(this._bloc, _bete);
+          return new BetePage(_bete);
         },
         fullscreenDialog: true
     ));
@@ -200,7 +198,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       },
     );
   }
-
+/*
   void _deleteEvent(Event event) async {
     String message = await this.widget._bloc.deleteEvent(event);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
@@ -231,7 +229,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
        default:
     }
   }
-
+  */
   Future<String ?> editPage(StatefulWidget page ) async {
     String ? message = await Navigator.push(
       context,
@@ -241,7 +239,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
     );
     return message;
   }
-
+/*
   void _editLambing(LambingModel lambing) {
     var navigationResult = Navigator.push(
       context,
@@ -256,8 +254,8 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       });
     } );
 
-  }
-
+  }*/
+  /*
   void _editTraitement(TraitementModel traitement)  {
     var navigationResult = Navigator.push(
       context,
@@ -272,7 +270,8 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
         });
     } );
   }
-
+*/
+  /*
   void _editEcho(EchographieModel  echo)  {
     var navigationResult = Navigator.push(
       context,
@@ -286,8 +285,8 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
           _showMessage(message);
         });
      });
-  }
-
+  }*/
+/*
   void _editMemo(MemoModel memo)  {
     var navigationResult = Navigator.push(
       context,
@@ -302,7 +301,8 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
       });
     });
   }
-
+  */
+  /*
   void _viewMere(Bete mere) {
     var navigationResult = Navigator.push(
       context,
@@ -312,7 +312,7 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
     );
     navigationResult.then( (message) { if (message != null) _showMessage(message);} );
   }
-
+  */
   Widget _getImageType(EventType type) {
     switch (type) {
       case EventType.traitement :
@@ -339,21 +339,5 @@ class _TimeLinePageState extends State<TimeLinePage> with SingleTickerProviderSt
     return Container();
   }
 
-  void _showMessage(String message) {
-      final snackBar = SnackBar(
-        content: Text(message),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  void showMessage(String message) {
-    setState(() {
-      final snackBar = SnackBar(
-        content: Text(message),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    });
-  }
-
-}
+ }
 

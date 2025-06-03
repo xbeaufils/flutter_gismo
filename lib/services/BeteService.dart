@@ -95,7 +95,7 @@ class BeteService {
         message = await this._traitementrepository.deleteTraitement(event.idBd);
         break;
       case EventType.NEC:
-        message = await this._necRepository.deleteNec(event.idBd);
+        message = await this._necRepository.delete(event.idBd);
         break;
       case EventType.saillie:
         message = await this._saillieRepository.deleteSaillie(event.idBd);
@@ -114,7 +114,7 @@ class BeteService {
       debug.log("get lots", name: "GismoBloc::getEvents");
       List<Affectation> lstAffect = await this._lotRepository.getAffectationForBete(bete.idBd!);
       debug.log("get nec", name: "GismoBloc::getEvents");
-      List<NoteModel> lstNotes = await this._necRepository.getNec(bete);
+      List<NoteModel> lstNotes = await this._necRepository.get(bete);
       List<Pesee> lstPoids  = await this._peseeRepository.getPesee(bete);
       List<EchographieModel> lstEcho = await this._echoRepository.getEcho(bete);
       List<SaillieModel> lstSaillie = await this._saillieRepository.getSaillies(bete);
