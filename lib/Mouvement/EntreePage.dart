@@ -58,6 +58,16 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
 
   @override
   Widget build(BuildContext context) {
+    ConfigProvider provider = Provider.of<ConfigProvider>(context);
+    if ( ! provider.isSubscribing()) {
+      this._adBanner = BannerAd(
+        adUnitId: _getBannerAdUnitId()!, //'<ad unit ID>',
+        size: AdSize.banner,
+        request: AdRequest(),
+        listener: BannerAdListener(),
+      );
+      this._adBanner!.load();
+    }
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
@@ -224,6 +234,7 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
     new Future.delayed(Duration.zero,() {
       _motifEntreeItems = _getMotifEntreeItems(context);
     });*/
+    /*
     ConfigProvider provider = Provider.of<ConfigProvider>(context);
     if ( ! provider.isSubscribing()) {
       this._adBanner = BannerAd(
@@ -233,7 +244,7 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
         listener: BannerAdListener(),
       );
       this._adBanner!.load();
-    }
+    }*/
   }
 
   void didChangeDependencies() {

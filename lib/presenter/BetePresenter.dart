@@ -30,7 +30,6 @@ class BetePresenter {
     if (sex == null){
       throw MissingSex();
     }
-    bool _existant = false;
     if (this._view.bete == null) {
       this._view.bete = new Bete(
           null, numBoucle, numMarquage, nom, obs, DateFormat.yMd().parse(dateEntree), sex, motif);

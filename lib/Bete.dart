@@ -79,6 +79,9 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
 
   @override
   Widget build(BuildContext context) {
+    ConfigProvider provider = Provider.of<ConfigProvider>(context);
+    if (provider.isSubscribing())
+      this._startService();
     return new Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(
@@ -312,7 +315,6 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   void initState() {
     super.initState();
     this._presenter = BetePresenter(this);
-    ConfigProvider provider = Provider.of<ConfigProvider>(context);
     //this.btWidget = new BluetoothWidget(this.widget._bloc);
     if (_bete == null )
       _dateEntreCtrl.text = DateFormat.yMd().format(_selectedDate);
@@ -325,8 +327,6 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
       _motif = _bete!.motifEntree;
       _obs = _bete!.observations;
     }
-    if (provider.isSubscribing())
-      this._startService();
   }
 
   Future<String> _startService() async{
