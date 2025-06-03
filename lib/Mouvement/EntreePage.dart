@@ -3,22 +3,28 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Bete.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/bloc/ConfigProvider.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/individu/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/presenter/EntreePresenter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class EntreePage extends StatefulWidget {
-  final GismoBloc _bloc;
-  EntreePage(this._bloc, {Key ? key}) : super(key: key);
+  EntreePage();
   @override
-  _EntreePageState createState() => new _EntreePageState(_bloc);
+  _EntreePageState createState() => new _EntreePageState();
 }
 
-class _EntreePageState extends State<EntreePage> {
-  final GismoBloc _bloc;
-  _EntreePageState(this._bloc);
+abstract class EntreeContract extends GismoContract {
+
+}
+
+class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContract {
+
+  _EntreePageState();
 
   TextEditingController _dateEntreeCtl = TextEditingController();
   late List<Bete> _sheeps;
@@ -26,6 +32,7 @@ class _EntreePageState extends State<EntreePage> {
   late List<DropdownMenuItem<String>> _motifEntreeItems;
   BannerAd ? _adBanner;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  late EntreePresenter _presenter;
 
   List<DropdownMenuItem<String>> _getMotifEntreeItems(BuildContext context) {
     List<DropdownMenuItem<String>> items = [];
@@ -110,7 +117,17 @@ class _EntreePageState extends State<EntreePage> {
           ElevatedButton(
             child: Text(S.of(context).bt_save,
                 style: new TextStyle(color: Colors.white, ),),
-            onPressed: _saveEntree),
+            onPressed: () {
+              try {
+                this._presenter.save(_dateEntreeCtl.text, _currentMotif, this._sheeps);
+              } on MissingDate {
+                showError(S.of(context).noEntryDate);
+              } on MissingMotif {
+                showError(S.of(context).entree_reason_required);
+              } on MissingSheeps {
+                showError(S.of(context).empty_list);
+              }
+            }),
           ]
 
       ),
@@ -121,7 +138,7 @@ class _EntreePageState extends State<EntreePage> {
       ),
     );
   }
-
+/*
   Widget _getAdmobAdvice() {
     if (this._bloc.isLogged() ! ) {
       return Container();
@@ -136,7 +153,7 @@ class _EntreePageState extends State<EntreePage> {
     return Container();
   }
 
-
+*/
   String ? _getBannerAdUnitId() {
     if (Platform.isIOS) {
       return 'ca-app-pub-9699928438497749/2969884909';
@@ -145,7 +162,7 @@ class _EntreePageState extends State<EntreePage> {
     }
     return null;
   }
-
+/*
   void _saveEntree() {
     if (_dateEntreeCtl.text.isEmpty) {
       showError(S.of(context).noEntryDate);
@@ -164,12 +181,12 @@ class _EntreePageState extends State<EntreePage> {
       showError(S.of(context).empty_list);
       return;
     }
-    var message  = this._bloc.saveEntree(DateFormat.yMd().parse(_dateEntreeCtl.text), _currentMotif!, this._sheeps);
+    var message  = this.bloc.saveEntree(DateFormat.yMd().parse(_dateEntreeCtl.text), _currentMotif!, this._sheeps);
     message
       .then( (message) {goodSaving(message);})
       .catchError( (message) {showError(message);});
   }
-
+*/
   void showError(String message) {
     final snackBar = SnackBar(
       content: Text(message),
@@ -185,7 +202,7 @@ class _EntreePageState extends State<EntreePage> {
   Future _openAddEntryDialog() async {
       Bete? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
           builder: (BuildContext context) {
-            return new BetePage(this._bloc, null);
+            return new BetePage(null);
           },
           fullscreenDialog: true
       )) ;
@@ -199,6 +216,7 @@ class _EntreePageState extends State<EntreePage> {
   @override
   void initState() {
     super.initState();
+    _presenter = EntreePresenter(this);
     _sheeps = [];
     //_motifEntreeItems = _getMotifEntreeItems();
     _dateEntreeCtl.text = DateFormat.yMd().format(DateTime.now());
@@ -206,7 +224,8 @@ class _EntreePageState extends State<EntreePage> {
     new Future.delayed(Duration.zero,() {
       _motifEntreeItems = _getMotifEntreeItems(context);
     });*/
-    if ( ! _bloc.isLogged()!) {
+    ConfigProvider provider = Provider.of<ConfigProvider>(context);
+    if ( ! provider.isSubscribing()) {
       this._adBanner = BannerAd(
         adUnitId: _getBannerAdUnitId()!, //'<ad unit ID>',
         size: AdSize.banner,

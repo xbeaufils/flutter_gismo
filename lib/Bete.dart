@@ -5,25 +5,36 @@ import 'dart:developer' as debug;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/bloc/BluetoothBloc.dart';
+import 'package:flutter_gismo/bloc/ConfigProvider.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/individu/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
+import 'package:flutter_gismo/presenter/BetePresenter.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:sentry/sentry.dart';
 
 
 class BetePage extends StatefulWidget {
   Bete ? _bete;
+
   BetePage( this._bete, {Key ? key}) : super(key: key);
 
   @override
   _BetePageState createState() => new _BetePageState(_bete);
 }
 
-class _BetePageState extends State<BetePage> {
+abstract class BeteContract extends GismoContract {
+  Bete ? get bete;
+  set bete(Bete ? value);
+}
+
+class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
    DateTime _selectedDate = DateTime.now();
   //final df = new DateFormat('dd/MM/yyyy');
+   late BetePresenter _presenter;
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   //BluetoothWidget btWidget;
@@ -46,7 +57,8 @@ class _BetePageState extends State<BetePage> {
   _BetePageState(this._bete);
 
   Widget _statusBluetoothBar() {
-    if (! this._bloc.isLogged()!)
+    ConfigProvider provider = Provider.of<ConfigProvider>(context);
+    if (! provider.isSubscribing())
       return Container();
     List<Widget> status = [];
     switch (_bluetoothState ) {
@@ -169,7 +181,19 @@ class _BetePageState extends State<BetePage> {
                         (_bete == null)? S.of(context).bt_add: S.of(context).bt_save,
                         style: new TextStyle(color: Colors.white),
                       ),
-                      onPressed: _save,
+                      onPressed: () {
+                        try {
+                          this._presenter.save(_numBoucleCtrl.text, _numMarquageCtrl.text, _sex, _nom, _obs, _dateEntreCtrl.text, _motif);
+                        } on MissingNumBoucle {
+                          super.showMessage(S.of(context).identity_number_warn);
+                        } on MissingNumMarquage {
+                          super.showMessage(S.of(context).flock_number_warn);
+                        } on MissingSex {
+                          super.showMessage(S.of(context).sex_warn);
+                        } on ExistingBete {
+                          super.showMessage(S.of(context).identity_number_error);
+                        }
+                      } ,
                       //color: Colors.lightGreen[700],
                   ),
               ]
@@ -179,7 +203,8 @@ class _BetePageState extends State<BetePage> {
   }
 
   Widget _buildRfid() {
-    if (_bloc.isLogged()! && this._rfidPresent) {
+    ConfigProvider provider = Provider.of<ConfigProvider>(context);
+    if (provider.isSubscribing() && this._rfidPresent) {
       return FloatingActionButton(
           child: Icon(Icons.wifi),
           backgroundColor: Colors.green,
@@ -202,23 +227,16 @@ class _BetePageState extends State<BetePage> {
         });
       }
       else {
-        _showMessage("Pas de boucle lue");
+        showMessage("Pas de boucle lue");
       }
     } on PlatformException catch (e) {
-      _showMessage("Pas de boucle lue");
+      showMessage("Pas de boucle lue");
     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
     }
   }
 
-  void _showMessage(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    //_scaffoldKey.currentState.showSnackBar(snackBar);
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
+/*
   void _save() async {
     _formKey.currentState!.save();
     if (_numBoucleCtrl.text == null) {
@@ -275,7 +293,8 @@ class _BetePageState extends State<BetePage> {
     else
       _badSaving(S.of(context).identity_number_error);
   }
-
+*/
+  /*
   void _goodSaving(String message) {
     Navigator.pop(context, message);
   }
@@ -288,10 +307,12 @@ class _BetePageState extends State<BetePage> {
     //_scaffoldKey.currentState.showSnackBar(snackBar);
 
   }
-
+*/
   @override
   void initState() {
     super.initState();
+    this._presenter = BetePresenter(this);
+    ConfigProvider provider = Provider.of<ConfigProvider>(context);
     //this.btWidget = new BluetoothWidget(this.widget._bloc);
     if (_bete == null )
       _dateEntreCtrl.text = DateFormat.yMd().format(_selectedDate);
@@ -304,7 +325,7 @@ class _BetePageState extends State<BetePage> {
       _motif = _bete!.motifEntree;
       _obs = _bete!.observations;
     }
-    if (this._bloc.isLogged()!)
+    if (provider.isSubscribing())
       this._startService();
   }
 
@@ -312,7 +333,7 @@ class _BetePageState extends State<BetePage> {
     try {
       //if ( await this._bloc.configIsBt()) {
         debug.log("Start service ", name: "_BetePageState::_startService");
-        BluetoothState _bluetoothState =  await this._bloc.startReadBluetooth();
+        BluetoothState _bluetoothState =  await this._presenter.startReadBluetooth();
         if (_bluetoothState.status != null)
           debug.log("Start status " + _bluetoothState.status!, name: "_BetePageState::_startService");
         if (_bluetoothState.status == BluetoothBloc.CONNECTED
@@ -354,12 +375,18 @@ class _BetePageState extends State<BetePage> {
     // other dispose methods
     _numBoucleCtrl.dispose();
     _numMarquageCtrl.dispose();
-    this._bloc.stopReadBluetooth();
+    this._presenter.stopReadBluetooth();
     this._btBloc.stopStream();
     if (this._bluetoothSubscription != null)
       this._bluetoothSubscription?.cancel();
     super.dispose();
   }
 
+  @override
+  Bete ? get bete => this.widget._bete;
+
+   set bete(Bete ? value) {
+     _bete = value;
+   }
 
 }

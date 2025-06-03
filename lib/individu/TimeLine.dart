@@ -14,7 +14,7 @@ import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
-import 'package:flutter_gismo/presenter/BetePresenter.dart';
+import 'package:flutter_gismo/presenter/TimeLinePresenter.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
 import 'package:intl/intl.dart';
 
@@ -33,7 +33,7 @@ abstract class TimelineContract extends GismoContract {
 class _TimeLinePageState extends GismoStatePage<TimeLinePage> with SingleTickerProviderStateMixin implements TimelineContract {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  late BetePresenter _presenter;
+  late TimeLinePresenter _presenter;
   Bete _bete;
 
   _TimeLinePageState( this._bete);
@@ -65,7 +65,7 @@ class _TimeLinePageState extends GismoStatePage<TimeLinePage> with SingleTickerP
   @override
   void initState() {
      super.initState();
-     this._presenter  = BetePresenter(this);
+     this._presenter  = TimeLinePresenter(this);
   }
 
   Widget _getMere() {

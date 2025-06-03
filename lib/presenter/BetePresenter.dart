@@ -1,109 +1,70 @@
-import 'package:flutter_gismo/individu/EchoPage.dart';
-import 'package:flutter_gismo/individu/TimeLine.dart';
-import 'package:flutter_gismo/lamb/lambing.dart';
-import 'package:flutter_gismo/memo/MemoPage.dart';
-import 'package:flutter_gismo/model/EchographieModel.dart';
-import 'package:flutter_gismo/model/LambModel.dart';
-import 'package:flutter_gismo/model/MemoModel.dart';
-import 'package:flutter_gismo/model/TraitementModel.dart';
-import 'package:flutter_gismo/services/BeteService.dart';
+import 'package:flutter_gismo/Bete.dart';
+import 'package:flutter_gismo/bloc/BluetoothBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/Event.dart';
-import 'package:flutter_gismo/traitement/Sanitaire.dart';
+import 'package:flutter_gismo/model/BuetoothModel.dart';
+import 'package:flutter_gismo/services/BeteService.dart';
+import 'package:flutter_gismo/services/BluetoothService.dart';
+import 'package:intl/intl.dart';
 
 class BetePresenter {
 
-  late BeteService _beteService;
-  late TimelineContract _view;
+  final BeteContract _view;
+  final BeteService _service = BeteService();
+  final BluetoothService _bluetoothService = BluetoothService();
+  final BluetoothBloc _btBloc = new BluetoothBloc();
+  BetePresenter(this._view);
 
-  BetePresenter(this._view) {
-    _beteService = BeteService();
-  }
-
-  Future<List<Bete>> getBetes() {
-    return this._beteService.getBetes();
-  }
-
-  Future<Bete?> getMere(Bete bete) {
-    return this._beteService.getMere(bete);
-  }
-
-  Future<Bete?> getPere(Bete bete) {
-    return this._beteService.getPere(bete);
-  }
-
-  Future<String> deleteEvent(Event event) async {
-    String message = await this._beteService.deleteEvent(event);
-    return message;
-  }
-
-  Future<List<Event>> getEvents(Bete bete) async {
-    return this._beteService.getEvents(bete);
-  }
-
-  Future<LambingModel?> searchLambing(int idBd) {
-    return this._beteService.searchLambing(idBd);
-  }
-
-  Future<TraitementModel?> searchTraitement(int idBd) {
-    return this._beteService.searchTraitement(idBd);
-  }
-
-  void searchEvent(Event event) {
-    switch (event.type) {
-      case EventType.agnelage :
-        this._beteService.searchLambing(event.idBd).then( (lambing) => {_editLambing(lambing!)} );
-        break;
-      case EventType.traitement:
-        this._beteService.searchTraitement(event.idBd).then( (traitement) => { _editTraitement(traitement!)});
-        break;
-      case EventType.echo:
-        this._beteService.searchEcho(event.idBd).then( (echo) => { _editEcho(echo!)});
-        break;
-      case EventType.memo:
-        this._beteService.searchMemo(event.idBd).then( (memo) => { _editMemo(memo!) });
-        break;
-      case EventType.saillie:
-      case EventType.NEC:
-      case EventType.pesee:
-      default:
+  void save(String ? numBoucle, String ? numMarquage, Sex ? sex, String ? nom, String ? obs, String dateEntree, String ? motif) async {
+    if (numBoucle == null) {
+      throw MissingNumBoucle();
     }
+    if (numBoucle.isEmpty){
+      throw MissingNumBoucle();
+    }
+    if (numMarquage == null){
+      throw MissingNumMarquage();
+    }
+    if (numMarquage.isEmpty){
+      throw MissingNumMarquage();
+    }
+    if (sex == null){
+      throw MissingSex();
+    }
+    bool _existant = false;
+    if (this._view.bete == null) {
+      this._view.bete = new Bete(
+          null, numBoucle, numMarquage, nom, obs, DateFormat.yMd().parse(dateEntree), sex, motif);
+    }
+    else {
+      this._view.bete!.numBoucle = numBoucle;
+      this._view.bete!.numMarquage = numMarquage;
+      this._view.bete!.nom = nom;
+      this._view.bete!.observations = obs;
+      this._view.bete!.dateEntree =  DateFormat.yMd().parse(dateEntree);
+      this._view.bete!.sex = sex;
+      if (motif != null)
+        this._view.bete!.motifEntree = motif;
+    }
+    _service.save(this._view.bete!);
   }
 
-  void _editLambing(LambingModel lambing) async {
-    String ? message = await this._view.editPage(LambingPage.modify(lambing));
-    if (message != null)
-      this._view.showMessage(message);
+  Future<BluetoothState> startReadBluetooth() {
+    return _bluetoothService.startReadBluetooth();
   }
 
-  void _editTraitement(TraitementModel traitement) async {
-    String ? message = await this._view.editPage(SanitairePage.modify(traitement));
-    if (message != null)
-      this._view.showMessage(message);
+  void stopBluetooth() {
+    _bluetoothService.stopBluetooth();
   }
 
-  void _editEcho(EchographieModel echo) async {
-    String ? message = await this._view.editPage(EchoPage.modify(echo));
-    if (message != null)
-      this._view.showMessage(message);
-  }
-
-  void _editMemo(MemoModel note) async {
-    String ? message = await this._view.editPage(MemoPage.modify(note));
-    if (message != null)
-      this._view.showMessage(message);
-  }
-
-  void viewParent(Bete parent) async {
-    String ? message = await this._view.editPage(TimeLinePage( parent));
-    /*
-    var navigationResult = Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TimeLinePage(_bloc, mere),
-      ),
-    );
-     */
-     if (message != null) this._view.showMessage(message);
+  void stopReadBluetooth() {
+    _bluetoothService.startReadBluetooth();
   }
 }
+
+class MissingNumBoucle implements Exception {}
+
+class MissingNumMarquage implements Exception {}
+
+class MissingSex implements Exception {}
+
+class ExistingBete implements Exception {}

@@ -282,7 +282,7 @@ class _ConfigPageState extends State<ConfigPage> {
                       ),
                    ])
           ),
-        drawer: GismoDrawer(_bloc),);
+        drawer: GismoDrawer(),);
   }
 
   @override

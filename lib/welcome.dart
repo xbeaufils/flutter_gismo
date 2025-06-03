@@ -118,7 +118,7 @@ class _WelcomePageState extends State<WelcomePage> implements WelcomeContract {
               this._getAdmobAdvice(),
               this._getFacebookAdvice(),
             ]),
-        drawer: GismoDrawer(_bloc),);
+        drawer: GismoDrawer(),);
   }
 
   Widget _getAdmobAdvice() {

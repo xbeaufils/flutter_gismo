@@ -330,10 +330,10 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         page = SanitairePage(this._bloc, bete, null);
         break;
       case GismoPage.individu:
-        page = TimeLinePage(_bloc, bete);
+        page = TimeLinePage(bete);
         break;
       case GismoPage.etat_corporel:
-        page = NECPage(this._bloc, bete);
+        page = NECPage(bete);
         break;
       case GismoPage.pesee:
         page = PeseePage(bete, null);
@@ -345,7 +345,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         page = SailliePage(bete);
         break;
       case GismoPage.note:
-        page = MemoPage(_bloc, bete);
+        page = MemoPage(bete);
         break;
       case GismoPage.sortie:
       case GismoPage.lot:

@@ -1,3 +1,4 @@
+import 'package:flutter_gismo/memo/MemoListPage.dart';
 import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/services/MemoService.dart';
@@ -25,6 +26,23 @@ class MemoPresenter {
     //if (this.widget._bete != null)
     String message= await this._service.save(this._view.currentNote!);
     this._view.backWithMessage(message);
+  }
+
+}
+
+class MemoListPresenter {
+  final MemoService _service = MemoService();
+  final MemoListContract _view;
+
+  MemoListPresenter(this._view);
+
+  Future<List<MemoModel>> getNotes()  {
+    return this._service.getCheptelMemos();
+  }
+
+  void delete(MemoModel note) async {
+    String message = await this._service.delete(note);
+    this._view.showMessage(message);
   }
 
 }

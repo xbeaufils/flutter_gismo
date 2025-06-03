@@ -38,9 +38,9 @@ class SearchPresenter {
     this._view.fillList(lstBetes);
   }
 
-  void selectBete(Bete bete) {
+  void selectBete(Bete bete) async {
     var page;
-    switch (this.widget.nextPage) {
+    switch (this._view.nextPage) {
       case GismoPage.lamb:
         page = LambingPage(bete);
         break;
@@ -74,20 +74,13 @@ class SearchPresenter {
     }
 
     if (page  == null) {
-      Navigator.of(context).pop(bete);
+      this._view.goPreviousPage(bete);
+      //Navigator.of(context).pop(bete);
     }
     else {
-      var navigationResult = Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => page,
-        ),
-      );
-
-      navigationResult.then((message) {
-        if (message != null)
-          _showMessage(message);
-      });
+      String ? message = await this._view.goNextPage();
+      if (message != null)
+        this._view.showMessage(message);
     }
   }
 

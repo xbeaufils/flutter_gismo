@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/bloc/ConfigProvider.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:provider/provider.dart';
 
 class GismoDrawer extends StatelessWidget {
-  GismoBloc _bloc;
-
-  GismoDrawer(this._bloc);
+  GismoDrawer();
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +40,10 @@ class GismoDrawer extends StatelessWidget {
   }
 
   Widget _showBlueTooth(BuildContext context) {
-    if (_bloc.user == null)
+    ConfigProvider provider = Provider.of<ConfigProvider>(context);
+    if (provider.currentUser == null)
       return Container();
-    if (_bloc.user!.subscribe!)
+    if (provider.isSubscribing())
       return  ListTile(
         title: Text("Bluetooth"),
         leading: Icon(Icons.edit),
@@ -68,23 +69,24 @@ class GismoDrawer extends StatelessWidget {
   }
 
   Widget _userstatus(BuildContext context) {
+    ConfigProvider provider = Provider.of<ConfigProvider>(context);
     Icon iconConnexion = Icon(Icons.person);
     Text userName = new Text(S.of(context).localuser);
     Text cheptel = new Text("000000");
-    if (_bloc.user == null) {
+    if (provider.currentUser == null) {
       iconConnexion = Icon(Icons.error_outline);
       userName = new Text(S.of(context).user_error);
     } else
-    if (_bloc.user!.subscribe == null) {
-      iconConnexion = Icon(Icons.error_outline);
-      userName = new Text(S.of(context).user_error);
-    } else {
+      if (! provider.isSubscribing()) {
+        iconConnexion = Icon(Icons.error_outline);
+        userName = new Text(S.of(context).user_error);
+      } else {
 
-      if (_bloc.user!.subscribe!) {
-        iconConnexion = Icon(Icons.verified_user);
-        userName = new Text(_bloc.user!.email!);
-        cheptel = new Text(_bloc.user!.cheptel!);
-      }
+        if (provider.isSubscribing()) {
+          iconConnexion = Icon(Icons.verified_user);
+          userName = new Text(provider.currentUser!.email!);
+          cheptel = new Text(provider.currentUser!.cheptel!);
+        }
     }
     return DrawerHeader(
       decoration: BoxDecoration(

@@ -3,6 +3,7 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
+import 'package:flutter_gismo/presenter/MemoPresenter.dart';
 import 'package:intl/intl.dart';
 
 
@@ -26,14 +27,13 @@ abstract class MemoContract extends GismoContract {
 
 class MemoPageState extends GismoStatePage<MemoPage> implements MemoContract {
   MemoPageState();
-
+  late MemoPresenter _presenter;
   TextEditingController _dateDebutCtl = TextEditingController();
   TextEditingController _dateFinCtl = TextEditingController();
   TextEditingController _noteCtl = TextEditingController();
   MemoClasse  _classe = MemoClasse.INFO;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  bool _isSaving = false;
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +153,7 @@ class MemoPageState extends GismoStatePage<MemoPage> implements MemoContract {
                     });
                   }
               ),
-              (_isSaving) ? CircularProgressIndicator():
+              //(_isSaving) ? CircularProgressIndicator():
               ElevatedButton(
                   child: Text(S.of(context).bt_save,),
                   //style: new TextStyle(color: Colors.white, ),),
@@ -161,7 +161,7 @@ class MemoPageState extends GismoStatePage<MemoPage> implements MemoContract {
                     textStyle: MaterialStateProperty.all( TextStyle(color: Colors.white, ) ),
                     backgroundColor: MaterialStateProperty.all<Color>( (Colors.lightGreen[700])! ),),
                   //color: Colors.lightGreen[700],
-                  onPressed: _saveNote)
+                  onPressed: () => this._presenter.save( _dateDebutCtl.text, _dateFinCtl.text, _noteCtl.text, _classe))
             ]),
 
       )

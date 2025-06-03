@@ -22,4 +22,12 @@ class MemoService {
     return message;
   }
 
+  Future<String> delete(MemoModel memo) async {
+    String message = await _repository.delete(memo);
+    return message;
+  }
+
+  Future<List<MemoModel>> getCheptelMemos() {
+    return _repository.getCheptelMemos(_provider.getCheptel()!);
+  }
 }

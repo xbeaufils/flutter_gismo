@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Exception/EventException.dart';
 import 'package:flutter_gismo/bloc/NavigationService.dart';
+import 'package:flutter_gismo/presenter/BetePresenter.dart';
 import 'package:flutter_gismo/repository/BeteRepository.dart';
 import 'package:flutter_gismo/bloc/ConfigProvider.dart';
 import 'package:flutter_gismo/repository/EchoRepository.dart';
@@ -171,6 +172,11 @@ class BeteService {
     return this._memorepository.searchMemo(idBd);
   }
 
-
+  Future<String> save (Bete bete ) async {
+    bool existant = await this._repository.checkBete(bete);
+    if (existant)
+      throw ExistingBete();
+    return this._repository.saveBete(bete);
+  }
 
 }

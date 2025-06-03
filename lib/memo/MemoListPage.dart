@@ -4,27 +4,33 @@ import 'package:flutter_gismo/SearchPage.dart';
 
 import 'dart:developer' as debug;
 
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/individu/SimpleGismoPage.dart';
 import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/menu/MenuPage.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
+import 'package:flutter_gismo/presenter/MemoPresenter.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class MemoListPage extends StatefulWidget {
-  GismoBloc _bloc;
-
-
-  MemoListPage(this._bloc, {Key ? key}) : super(key: key);
+  MemoListPage( {Key ? key}) : super(key: key);
 
   @override
-  _MemoListPageState createState() => new _MemoListPageState(_bloc);
+  _MemoListPageState createState() => new _MemoListPageState();
 }
 
-class _MemoListPageState extends State<MemoListPage> {
-  final GismoBloc _bloc;
+abstract class MemoListContract extends GismoContract {
 
-  _MemoListPageState(this._bloc);
+}
+
+class _MemoListPageState extends GismoStatePage<MemoListPage> implements MemoListContract {
+
+  late MemoListPresenter _presenter;
+
+  _MemoListPageState() {
+    this._presenter = MemoListPresenter(this);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +43,7 @@ class _MemoListPageState extends State<MemoListPage> {
           onPressed: _createNote,
           backgroundColor: Colors.lightGreen[700],
           child: Icon(Icons.add),),
-    drawer: GismoDrawer(this._bloc)
+    drawer: GismoDrawer()
     );
   }
 
@@ -51,13 +57,10 @@ class _MemoListPageState extends State<MemoListPage> {
           return CircularProgressIndicator();
          return _notesList  (noteSnap.data ?? []);
       },
-      future: _getNotes(),
+      future: this._presenter.getNotes(),
     );
   }
 
-  Future<List<MemoModel>> _getNotes()  {
-    return this._bloc.getCheptelNotes();
-  }
 
   void _createNote(){
     var navigationResult = Navigator.push(
@@ -116,7 +119,7 @@ class _MemoListPageState extends State<MemoListPage> {
     var navigationResult = Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MemoPage.edit(_bloc, note)
+        builder: (context) => MemoPage.edit(note)
       ),
     );
 
@@ -127,7 +130,7 @@ class _MemoListPageState extends State<MemoListPage> {
       });
     });
   }
-
+/*
   void _delete(MemoModel note) async {
     String message = await this._bloc.deleteNote(note);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
@@ -135,7 +138,7 @@ class _MemoListPageState extends State<MemoListPage> {
 
     });
   }
-
+*/
   Future _showDialog(BuildContext context, MemoModel note) {
     return showDialog(
       context: context,
@@ -165,7 +168,7 @@ class _MemoListPageState extends State<MemoListPage> {
     return TextButton(
       child: Text(S.of(context).bt_continue),
       onPressed: () {
-          _delete(event);
+          this._presenter.delete(event);
         Navigator.of(context).pop();
       },
     );

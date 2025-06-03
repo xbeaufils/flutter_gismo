@@ -40,9 +40,12 @@ class SearchPage extends StatefulWidget {
 
 abstract class SearchContract extends GismoContract {
   void fillList(List<Bete> lstBetes);
+  void goPreviousPage(Bete bete);
+  Future<String?> goNextPage();
+  get nextPage;
 }
 
-class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderStateMixin implements SearchContract{
+class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderStateMixin implements SearchContract {
   final TextEditingController _filter = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
@@ -223,10 +226,10 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
         });
       }
       else {
-        this._showMessage("Pas de boucle lue");
+        this.showMessage("Pas de boucle lue");
       }
     } on PlatformException catch (e) {
-      _showMessage("Pas de boucle lue");
+      showMessage("Pas de boucle lue");
     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       //_bloc.reportError(e, stackTrace);
@@ -315,7 +318,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
           title: Text( _filteredBetes[index].numBoucle),
           subtitle: Text(_filteredBetes[index].numMarquage ),
           trailing: (_filteredBetes[index].nom != null) ? Text(_filteredBetes[index].nom! ) : SizedBox(width: 0,height: 0,),
-          onTap: () => _selectBete(_filteredBetes[index]),
+          onTap: () => this._presenter.selectBete(_filteredBetes[index]),
         );
       },
     );
@@ -331,7 +334,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
       ),
     ],);
   }
-
+/*
   void _selectBete(Bete bete) {
     var page;
     switch (this.widget.nextPage) {
@@ -342,10 +345,10 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
         page = SanitairePage(this._bloc, bete, null);
         break; */
       case GismoPage.individu:
-        page = TimeLinePage(GismoBloc(), bete);
+        page = TimeLinePage(bete);
         break;
       case GismoPage.etat_corporel:
-        page = NECPage(GismoBloc(), bete);
+        page = NECPage(bete);
         break;
       case GismoPage.pesee:
         page = PeseePage( bete, null);
@@ -357,7 +360,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
         page = SailliePage(bete);
         break;
       case GismoPage.note:
-        page = MemoPage(GismoBloc(), bete);
+        page = MemoPage(bete);
         break;
       case GismoPage.sortie:
       case GismoPage.lot:
@@ -384,7 +387,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
       });
     }
   }
-
+*/
 /*  void _showMessage(String message) {
     final snackBar = SnackBar(
       content: Text(message),
@@ -442,4 +445,19 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
       _filteredBetes = _betes;
     });
   }
+  void goPreviousPage(Bete bete) {
+    Navigator.of(context).pop(bete);
+  }
+
+  Future<String?> goNextPage() async {
+    String ? message = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => nextPage,
+      ),
+    );
+    return message;
+  }
+
+  get nextPage => this.widget._nextPage;
 }

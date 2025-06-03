@@ -67,7 +67,7 @@ class GismoApp extends StatelessWidget {
         // When navigating to the "/" route, build the FirstScreen widget.
        // '/config':(context) => ConfigPage(this._bloc),
         '/welcome': (context) => WelcomePage(this._bloc, null),
-        '/note' : (context) => MemoListPage(this._bloc),
+        '/note' : (context) => MemoListPage(),
         '/login': (context) => LoginPage(this._bloc),
         '/nec': (context) => SearchPage( GismoPage.etat_corporel),
         '/pesee': (context) => SearchPage( GismoPage.pesee),
@@ -77,7 +77,7 @@ class GismoApp extends StatelessWidget {
         '/lambing' : (context) => SearchPage( GismoPage.lamb),
         '/lamb' : (context) => SearchLambPage(this._bloc),
         '/sortie': (context) => SortiePage(this._bloc),
-        '/entree': (context) => EntreePage(this._bloc),
+        '/entree': (context) => EntreePage(),
         '/splash' : (context) => SplashScreen(this._bloc),
         '/lot' : (context) => LotPage(this._bloc),
         '/parcelle' : (context) =>ParcellePage(this._bloc),
