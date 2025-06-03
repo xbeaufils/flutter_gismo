@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
+import 'package:flutter_gismo/repository/LocalRepository.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_gismo/main.dart';
 import 'package:integration_test/integration_test.dart';
@@ -8,13 +10,19 @@ import 'package:intl/intl.dart';
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
    group('end-to-end test', () {
+     setUpAll(()  async {
+      LocalRepository repo = LocalRepository();
+      await repo.resetDatabase();
+      FlutterSecureStorage storage = new FlutterSecureStorage();
+      await storage.deleteAll();
+     });
+
+     /*
+    testWidgets('Start appli', (tester,) async {
+    });*/
     testWidgets(
         'Créez une entrée', (tester,) async {
-          // Load app widget.
-          await tester.pumpWidget(GismoApp(gismoBloc, initialRoute: '/splash'));
-          final splash = find.byKey(ValueKey('splashScreen'));
-          print(splash);
-          await tester.pumpAndSettle();
+          await startAppli(tester);
           final entree = find.text("Entrée");
           print(entree);
           await tester.tap(entree);
@@ -31,7 +39,28 @@ void main() {
           await createBete(tester, "123", "456789", "brebis1", "obs1");
           await createBete(tester, "456", "456789", "brebis2", "obs2");
           await createBete(tester, "789", "456789", "brebis3", "obs3");
+          final btSave = find.text("Enregistrer");
+          await tester.tap(btSave);
         });
+    testWidgets(
+        'Créez une echographie', (tester,) async {
+      await startAppli(tester);
+      final echo = find.text("Echographie");
+      print(echo);
+      await tester.tap(echo);
+      await tester.pumpAndSettle();
+      await selectBete(tester, "123");
+      DateTime now = DateTime.now();
+      expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
+      final resultat = find.text("Simple");
+      await tester.tap(resultat);
+      await tester.tap(find.byKey(Key("dateEcho")));
+      String dateEcho =  (now.day > 7) ? (now.day - 7).toString(): (now.day + 1).toString();
+      await tester.tap(find.text(dateEcho));
+      await tester.tap(find.text("OK"));
+      await tester.tap(find.byKey(Key("dateSaillie")));
+      await tester.tap(find.text("OK"));
+    });
    });
 }
 
@@ -53,4 +82,20 @@ Future<void> createBete(WidgetTester tester, String numboucle, String numMarquag
   var addBt = find.text("Ajouter");
   await tester.tap(addBt);
   await tester.pumpAndSettle();
+}
+
+Future<void> selectBete(WidgetTester tester, String numboucle) async {
+  final btSearch = find.byIcon(Icons.search);
+  await tester.tap(btSearch);
+  final rowBete = find.text(numboucle);
+  await tester.tap(rowBete);
+}
+
+Future<void> startAppli(WidgetTester tester) async {
+  // Load app widget.
+  await tester.pumpWidget(GismoApp(gismoBloc, RunningMode.test, initialRoute: '/splash'));
+  final splash = find.byKey(ValueKey('splashScreen'));
+  print(splash);
+  await tester.pumpAndSettle();
+
 }

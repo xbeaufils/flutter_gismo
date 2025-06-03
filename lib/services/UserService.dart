@@ -4,8 +4,8 @@ import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/model/User.dart';
 import 'package:flutter_gismo/repository/AbstractRepository.dart';
 
-class Userservice extends WebRepository{
-  Userservice(super.token);
+class UserService extends WebRepository{
+  UserService(super.token);
 
   Future<User> auth(User user) async {
     try {

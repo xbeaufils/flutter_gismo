@@ -19,19 +19,23 @@ import 'package:flutter_gismo/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
+enum RunningMode {test, run}
 
 enum GismoPage {lamb, sanitaire, etat_corporel, individu, sortie, lot, pesee, echo, saillie, sailliePere, note  }
 
 class GismoApp extends StatelessWidget {
   final String initialRoute;
+  final RunningMode mode;
   GismoBloc _bloc;
-  GismoApp(this._bloc,{required this.initialRoute}) ;
+  GismoApp(this._bloc, this.mode, {required this.initialRoute}) {
+
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     ConfigProvider provider = ConfigProvider();
-    provider.init();
+    provider.init(this.mode);
     return ChangeNotifierProvider(create: (context) => provider,
     child: MaterialApp(
       navigatorKey: NavigationService.navigatorKey,

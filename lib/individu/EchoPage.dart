@@ -1,29 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/individu/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/EchographieModel.dart';
+import 'package:flutter_gismo/presenter/EchoPresenter.dart';
 import 'package:intl/intl.dart';
 
 class EchoPage extends StatefulWidget {
-  GismoBloc ? _bloc;
   Bete ? _bete;
   EchographieModel ? _currentEcho;
-  @override
-  EchoPageState createState() => EchoPageState(this._bloc);
 
-  EchoPage(this._bloc,this._bete);
-  EchoPage.edit(this._bloc, this._currentEcho, this._bete, {Key ? key}) : super(key: key);
+  set currentEcho(EchographieModel value) {
+    _currentEcho = value;
+  }
+
+  @override
+  EchoPageState createState() => EchoPageState();
+
+  EchoPage(this._bete);
+  EchoPage.edit( this._currentEcho, this._bete, {Key ? key}) : super(key: key);
   EchoPage.modify( this._currentEcho, {Key ? key}) : super(key: key);
 }
 
-class EchoPageState extends State<EchoPage> {
-  GismoBloc ? _bloc;
-  EchoPageState(this._bloc);
+abstract class EchoContract extends SimpleGismoPage {
+  EchographieModel ?  get currentEcho;
+  Bete ? get bete;
+
+  set currentEcho(EchographieModel? value);
+}
+
+class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
+  EchoPageState();
   TextEditingController _dateEchoCtl = TextEditingController();
   TextEditingController _dateSaillieCtl = TextEditingController();
   TextEditingController _dateAgnelageCtl = TextEditingController();
 
+  late EchoPresenter _presenter;
   int _nombre = 0;
 
   //final _df = new DateFormat('dd/MM/yyyy');
@@ -42,6 +55,7 @@ class EchoPageState extends State<EchoPage> {
       new Column(
           children: <Widget> [
             new TextFormField(
+                key: Key("dateEcho"),
                 keyboardType: TextInputType.datetime,
                 controller: _dateEchoCtl,
                 decoration: InputDecoration(
@@ -126,6 +140,7 @@ class EchoPageState extends State<EchoPage> {
               ],
             ),
             new TextFormField(
+                key: Key("dateSaillie"),
                 keyboardType: TextInputType.datetime,
                 controller: _dateSaillieCtl,
                 decoration: InputDecoration(
@@ -151,6 +166,7 @@ class EchoPageState extends State<EchoPage> {
                   }
                 }),
             new TextFormField(
+                key: Key("dateAgnelage"),
                 keyboardType: TextInputType.datetime,
                 controller: _dateAgnelageCtl,
                 decoration: InputDecoration(
@@ -191,7 +207,7 @@ class EchoPageState extends State<EchoPage> {
                       child: Text(S.of(context).bt_save,
                       style: new TextStyle(color: Colors.white, ),),
                     //color: Colors.lightGreen[700],
-                      onPressed: _saveEcho)
+                      onPressed: () => {this._presenter.saveEcho(_dateEchoCtl.text, _dateSaillieCtl.text, _dateAgnelageCtl.text , _nombre) })
                   ])),
           ]),
 
@@ -212,7 +228,7 @@ class EchoPageState extends State<EchoPage> {
     return TextButton(
       child: Text(S.of(context).bt_continue),
       onPressed: () {
-        _delete();
+        this._presenter.delete();
         Navigator.of(context).pop();
       },
     );
@@ -233,7 +249,7 @@ class EchoPageState extends State<EchoPage> {
       },
     );
   }
-
+/*
   void _delete () async {
     if (this.widget._currentEcho != null) {
       var message  = await _bloc!.deleteEcho(this.widget._currentEcho!);
@@ -242,10 +258,11 @@ class EchoPageState extends State<EchoPage> {
     else
       Navigator.of(context).pop();
   }
-
+*/
   @override
   void initState() {
     super.initState();
+    this._presenter = EchoPresenter(this);
     if (this.widget._currentEcho == null)
       _dateEchoCtl.text = DateFormat.yMd().format(DateTime.now());
     else {
@@ -264,7 +281,7 @@ class EchoPageState extends State<EchoPage> {
       _nombre = value!;
     });
   }
-
+/*
   void _saveEcho() async {
     String message;
     if (_nombre == null) {
@@ -295,5 +312,19 @@ class EchoPageState extends State<EchoPage> {
           .closed
           .then((e) => {Navigator.of(context).pop()});
   }
+*/
 
+  @override
+  EchographieModel ? get currentEcho {
+    return this.widget._currentEcho;
+  }
+
+  @override
+  set currentEcho(EchographieModel? value) {
+    this.widget._currentEcho = value;
+  }
+  @override
+  Bete? get bete {
+    return this.widget._bete;
+  }
 }

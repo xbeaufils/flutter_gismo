@@ -4,9 +4,12 @@ import 'dart:developer' as debug;
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/bloc/GismoRepository.dart';
 import 'package:flutter_gismo/bloc/WebDataProvider.dart';
 import 'package:flutter_gismo/model/User.dart';
+import 'package:flutter_gismo/repository/LocalRepository.dart';
+import 'package:flutter_gismo/services/UserService.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ConfigProvider extends ChangeNotifier {
@@ -15,7 +18,7 @@ class ConfigProvider extends ChangeNotifier {
 
   User ? get currentUser => _currentUser;
 
-  GismoRepository ? _repository;
+  //GismoRepository ? _repository;
 
   // FRom https://flutter.dev/docs/cookbook/maintenance/error-reporting
   bool get isInDebugMode {
@@ -28,7 +31,7 @@ class ConfigProvider extends ChangeNotifier {
     return inDebugMode;
   }
 
-  Future<String> init() async {
+  Future<String> init(RunningMode mode) async {
     // Read value
     FlutterSecureStorage storage = new FlutterSecureStorage();
 
@@ -39,7 +42,6 @@ class ConfigProvider extends ChangeNotifier {
         _currentUser!.setCheptel("00000000");
         _currentUser!.subscribe = false;
         _currentUser!.setToken("Nothing");
-        _repository = new GismoRepository(this._currentUser!, RepositoryType.local);
         debug.log("Mode autonome", name: "GismoBloc::init");
         // Ajout des pubs
         //Admob.initialize();
@@ -50,17 +52,21 @@ class ConfigProvider extends ChangeNotifier {
         if (Platform.isIOS) {
           //await Admob.requestTrackingAuthorization();
         }
+        if (mode == RunningMode.test) {
+          LocalRepository repository = LocalRepository();
+          repository.resetDatabase();
+        }
         return "Mode autonome";
       }
       String? password = await storage.read(key: "password");
-
+      UserService service  = UserService("nothing");
       this._currentUser = new User(email, password);
       this._currentUser?.setCheptel("");
       this._currentUser?.setToken("Nothing");
-      _repository = new GismoRepository(this._currentUser!, RepositoryType.web);
-      this._currentUser =
+      this._currentUser = await service.auth(this._currentUser!);
+      /*this._currentUser =
       await (_repository?.dataProvider as WebDataProvider).login(
-          this._currentUser!);
+          this._currentUser!);*/
       debug.log(
           'Mode connecté email : $email - cheptel: $this._currentUser.cheptel',
           name: "GismoBloc::init");
@@ -70,7 +76,7 @@ class ConfigProvider extends ChangeNotifier {
       this._currentUser = new User(null, null);
       _currentUser?.setCheptel("00000000");
       _currentUser?.subscribe = false;
-      _repository = new GismoRepository(this._currentUser!, RepositoryType.local);
+      //_repository = new GismoRepository(this._currentUser!, RepositoryType.local);
       debug.log("Mode autonome", name: "GismoBloc::init");
       return "Mode autonome";
     }

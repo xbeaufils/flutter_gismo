@@ -8,7 +8,6 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 class EntreePage extends StatefulWidget {
   final GismoBloc _bloc;
@@ -22,7 +21,6 @@ class _EntreePageState extends State<EntreePage> {
   _EntreePageState(this._bloc);
 
   TextEditingController _dateEntreeCtl = TextEditingController();
-  final _df = new DateFormat('dd/MM/yyyy');
   late List<Bete> _sheeps;
   String ?  _currentMotif;
   late List<DropdownMenuItem<String>> _motifEntreeItems;

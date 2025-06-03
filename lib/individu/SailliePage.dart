@@ -3,25 +3,41 @@ import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/individu/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
+import 'package:flutter_gismo/presenter/SailliePresenter.dart';
 import 'package:intl/intl.dart';
 
 class SailliePage extends StatefulWidget {
-  final GismoBloc _bloc;
   Bete _bete;
-  SaillieModel ? _currentSaillie;
-  @override
-  _SailliePageState createState() => _SailliePageState(this._bloc);
 
-  SailliePage(this._bloc,this._bete);
-  SailliePage.edit(this._bloc, this._currentSaillie, this._bete, {Key ? key}) : super(key: key);
+  SaillieModel ? _currentSaillie;
+
+  set currentSaillie(SaillieModel value) {
+    _currentSaillie = value;
+  }
+
+  @override
+  _SailliePageState createState() => _SailliePageState();
+
+  SailliePage(this._bete);
+  SailliePage.edit(this._currentSaillie, this._bete, {Key ? key}) : super(key: key);
 
 }
 
-class _SailliePageState extends State<SailliePage> {
-  final GismoBloc _bloc;
-  _SailliePageState(this._bloc);
+abstract class SaillieContract {
+  Bete get bete;
+  SaillieModel ? get currentSaillie;
+  set currentSaillie(SaillieModel ? value);
+  Future<Bete?> selectPere();
+  void showSaving();
+  void backWithMessage(String message);
+}
+
+class _SailliePageState extends GismoStatePage<SailliePage> implements SaillieContract {
+  late SailliePresenter _presenter;
+  _SailliePageState();
   TextEditingController _dateSaillieCtl = TextEditingController();
 
   TextEditingController _idPereCtl = TextEditingController();
@@ -84,8 +100,14 @@ class _SailliePageState extends State<SailliePage> {
                   title: Text(_numBouclePere) ,
                   subtitle: Text(_numMarquagePere),
                   trailing: (_idPere == null ) ?
-                  IconButton(icon: Icon(Icons.search), onPressed: () => _addPere(), ):
-                  IconButton(icon: Icon(Icons.close), onPressed: () => _removePere(), ),
+                  IconButton(icon: Icon(Icons.search),
+                    onPressed: () => setState(() {
+                      this._presenter.addPere();
+                    }), ):
+                  IconButton(icon: Icon(Icons.close),
+                    onPressed: () => setState(() {
+                      this._presenter.removePere();
+                    }), ),
                 ),
 
               ],) ,
@@ -98,7 +120,7 @@ class _SailliePageState extends State<SailliePage> {
                     textStyle: MaterialStateProperty.all( TextStyle(color: Colors.white, ) ),
                     backgroundColor: MaterialStateProperty.all<Color>( (Colors.lightGreen[700])! ),),
                 //color: Colors.lightGreen[700],
-                onPressed: _saveSaillie)
+                onPressed: () => this._presenter.saveSaillie(_dateSaillieCtl.text))
           ]),
 
     );
@@ -115,9 +137,11 @@ class _SailliePageState extends State<SailliePage> {
       _numBouclePere = (this.widget._currentSaillie!.numBouclePere != null) ? this.widget._currentSaillie!.numBouclePere! : "";
       _numMarquagePere =(this.widget._currentSaillie!.numMarquagePere != null) ? this.widget._currentSaillie!.numMarquagePere! : "";
     }
+    _presenter = SailliePresenter(this);
   }
 
   Future _addPere() async {
+    this._presenter.addPere();
     Bete ? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
         builder: (BuildContext context) {
           SearchPage search = new SearchPage(GismoPage.sailliePere);
@@ -135,6 +159,18 @@ class _SailliePageState extends State<SailliePage> {
     }
   }
 
+  Future<Bete?> selectPere()  async{
+    Bete ? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
+        builder: (BuildContext context) {
+          SearchPage search = new SearchPage(GismoPage.sailliePere);
+          search.searchSex = Sex.male;
+          return search;
+        },
+        fullscreenDialog: true
+    ));
+    return selectedBete;
+  }
+
   void _removePere() {
     this.setState(() {
       this._idPere = null;
@@ -142,7 +178,8 @@ class _SailliePageState extends State<SailliePage> {
       this._numMarquagePere = "";
     });
   }
-  void _saveSaillie() async {
+
+/*  void _saveSaillie() async {
     String message;
     setState(() {
       _isSaving = true;
@@ -159,5 +196,12 @@ class _SailliePageState extends State<SailliePage> {
           .closed
           .then((e) => {Navigator.of(context).pop()});
   }
+ */
 
+
+  Bete get bete => this.widget._bete;
+  SaillieModel ? get currentSaillie => this.widget._currentSaillie;
+  set currentSaillie(SaillieModel ? value) {
+    this.widget._currentSaillie = value;
+  }
 }

@@ -18,6 +18,12 @@ class LocalRepository {
     return _database!;
   }
 
+  Future<void> resetDatabase() async{
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'gismo_database.db');
+    await deleteDatabase(path);
+  }
+
   Future<Database> _init() async{
     // Open the database and store the reference.
     Sqflite.setDebugModeOn(true);

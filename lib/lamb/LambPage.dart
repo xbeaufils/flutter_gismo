@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/PeseePage.dart';
+import 'package:flutter_gismo/individu/SimpleGismoPage.dart';
 import 'package:flutter_gismo/lamb/Bouclage.dart';
 import 'package:flutter_gismo/lamb/Mort.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -27,7 +28,7 @@ abstract class LambContract {
   Future<String> showDeath(LambModel lamb);
 }
 
-class LambPageState extends State<LambPage> implements LambContract {
+class LambPageState extends GismoStatePage<LambPage> implements LambContract {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController _marquageCtrl = TextEditingController();
   Sex _sex = Sex.male;
@@ -319,7 +320,7 @@ class LambPageState extends State<LambPage> implements LambContract {
     var navigationResult = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => PeseePage(GismoBloc(), null, lamb )),
+          builder: (context) => PeseePage( null, lamb )),
     );
     print (navigationResult);
     Navigator

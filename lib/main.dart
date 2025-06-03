@@ -46,7 +46,7 @@ void startApp()
       nextPage = '/login';
 
     initializeDateFormatting();
-    final GismoApp gismoApp = new GismoApp(gismoBloc,
+    final GismoApp gismoApp = new GismoApp(gismoBloc, RunningMode.run,
       initialRoute: nextPage, //isLogged ? '/welcome' : '/config',
     );
     runApp(gismoApp);

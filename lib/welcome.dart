@@ -4,14 +4,17 @@ import 'dart:io';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/bloc/ConfigProvider.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 
 import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/menu/MenuPage.dart';
+import 'package:flutter_gismo/presenter/WelcomePresenter.dart';
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:provider/provider.dart';
 
 
 
@@ -25,9 +28,15 @@ class WelcomePage extends StatefulWidget {
   _WelcomePageState createState() => new _WelcomePageState(_bloc);
 }
 
-class _WelcomePageState extends State<WelcomePage> {
+abstract class WelcomeContract {
+  void viewPage(String path);
+  void viewPageMessage(String path);
+}
+
+class _WelcomePageState extends State<WelcomePage> implements WelcomeContract {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GismoBloc _bloc;
+  late WelcomePresenter _presenter;
 
   _WelcomePageState(this._bloc);
   BannerAd ? _adBanner;
@@ -35,12 +44,13 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final providerUser = Provider.of<ConfigProvider>(context);
     return new Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.lightGreen,
         appBar: new AppBar(
-            title: (_bloc.user != null) ?
-              new Text('Gismo ' + _bloc.user!.cheptel!):
+            title: ( providerUser.isSubscribing() ) ?
+              new Text('Gismo ' + providerUser.getCheptel()!):
               new Text('Erreur de connexion'),
             // N'affiche pas la touche back (qui revient à la SplashScreen
             automaticallyImplyLeading: true,
@@ -60,9 +70,9 @@ class _WelcomePageState extends State<WelcomePage> {
                         alignment: MainAxisAlignment.center,
                       buttonMinWidth: 90.0,
                       children: <Widget>[
-                        _buildButton(S.of(context).batch, "assets/Lot.png",_lotPressed),
-                        _buildButton(S.of(context).sheep, "assets/brebis.png", _individuPressed),
-                        _buildButton(S.of(context).lambs, 'assets/jumping_lambs.png', _lambPressed),
+                        _buildButton(S.of(context).batch, "assets/Lot.png", _presenter.lotPressed),
+                        _buildButton(S.of(context).sheep, "assets/brebis.png", _presenter.individuPressed),
+                        _buildButton(S.of(context).lambs, 'assets/jumping_lambs.png', _presenter.lambPressed),
                       ])))),
               Card(
                 child: Center(
@@ -73,9 +83,9 @@ class _WelcomePageState extends State<WelcomePage> {
                     alignment: MainAxisAlignment.spaceEvenly,
                     buttonMinWidth: 90.0,
                     children: <Widget>[
-                      _buildButton(S.of(context).mating, "assets/saillie.png", _sailliePressed),
-                      _buildButton(S.of(context).ultrasound, 'assets/ultrasound.png', _echoPressed),
-                      _buildButton( S.of(context).lambing, 'assets/lamb.png', _lambingPressed),
+                      _buildButton(S.of(context).mating, "assets/saillie.png", _presenter.sailliePressed),
+                      _buildButton(S.of(context).ultrasound, 'assets/ultrasound.png', _presenter.echoPressed),
+                      _buildButton( S.of(context).lambing, 'assets/lamb.png', _presenter.lambingPressed),
                     ])))),
               Card(
                 child: Center(
@@ -86,9 +96,9 @@ class _WelcomePageState extends State<WelcomePage> {
                     alignment: MainAxisAlignment.spaceEvenly,
                     buttonMinWidth: 90.0,
                     children: <Widget>[
-                      _buildButton(S.of(context).treatment, "assets/syringe.png",_traitementPressed),
-                      _buildButton(S.of(context).body_cond, "assets/etat_corporel.png", _necPressed), //Etat corporel
-                      _buildButton(S.of(context).weighing, 'assets/peseur.png', _peseePressed), // Pesée
+                      _buildButton(S.of(context).treatment, "assets/syringe.png",_presenter.traitementPressed),
+                      _buildButton(S.of(context).body_cond, "assets/etat_corporel.png", _presenter.necPressed), //Etat corporel
+                      _buildButton(S.of(context).weighing, 'assets/peseur.png', _presenter.peseePressed), // Pesée
                   ])))),
               Card(
                 child: Center(
@@ -99,9 +109,9 @@ class _WelcomePageState extends State<WelcomePage> {
                     alignment: MainAxisAlignment.spaceEvenly,
                     buttonMinWidth: 90.0,
                     children: <Widget>[
-                      _buildButton(S.of(context).input, "assets/home.png", _entreePressed), // Entrée
-                      _buildButton(S.of(context).output, "assets/Truck.png", _sortiePressed),
-                      _buildButton("Parcelles", "assets/parcelles.png", _parcellePressed),
+                      _buildButton(S.of(context).input, "assets/home.png", _presenter.entreePressed), // Entrée
+                      _buildButton(S.of(context).output, "assets/Truck.png", _presenter.sortiePressed),
+                      _buildButton("Parcelles", "assets/parcelles.png", () => { (providerUser.isSubscribing() ? _presenter.parcellePressed: showMessage("Les parcelles ne sont pas visibles en mode autonome") )} ),
                     //  _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
                     ])))),
 
@@ -182,6 +192,7 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   void initState() {
     super.initState();
+    _presenter = WelcomePresenter(this);
     if ( ! _bloc.isLogged()!) {
       this._adBanner = BannerAd(
         adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
@@ -213,8 +224,22 @@ class _WelcomePageState extends State<WelcomePage> {
       this.showMessage("Les parcelles ne sont pas visibles en mode autonome");
   }
 
+  void viewPage(String path) {
+    Navigator.pushNamed(context, path);
+  }
+
   void _individuPressed() {
     Navigator.pushNamed(context, '/search');
+  }
+
+  void viewPageMessage(String path) {
+    Future<dynamic>  message = Navigator.pushNamed(context, path)  ;
+    message.then((message) {
+      showMessage(message);
+    }).catchError((message) {
+      showMessage(message);
+    });
+
   }
 
   void _sortiePressed() {

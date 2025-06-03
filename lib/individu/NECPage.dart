@@ -111,7 +111,7 @@ class NECPageState extends State<NECPage> {
       _isSaving = true;
     });
     String message = await this._bloc.saveNec(this.widget._bete,  NEC.getNEC(_nec), DateFormat.yMd().parse(_dateNoteCtl.text));
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)))
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(key: Key("SaveNoteMessage"), content: Text(message)))
         .closed
         .then((e) => {Navigator.of(context).pop()});
   }

@@ -1,24 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/individu/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/presenter/PeseePresenter.dart';
 import 'package:intl/intl.dart';
 
 class PeseePage extends StatefulWidget {
-  final GismoBloc _bloc;
   final Bete ? _bete;
+
   final LambModel ? _lamb;
 
   @override
-  PeseePageState createState() => PeseePageState(this._bloc);
+  PeseePageState createState() => PeseePageState();
 
-  PeseePage(this._bloc,this._bete, this._lamb);
+  PeseePage(this._bete, this._lamb);
+
 }
 
-class PeseePageState extends State<PeseePage> {
-  final GismoBloc _bloc;
-  PeseePageState(this._bloc);
+abstract class PeseeContract {
+  Bete ? get bete;
+  LambModel ? get lamb;
+  void showSaving ();
+  void showMessage(String message);
+  void showErrorWeighing();
+  void backWithMessage(String message);
+}
+
+class PeseePageState extends GismoStatePage<PeseePage> implements PeseeContract {
+  late PeseePresenter _presenter;
+  PeseePageState();
   //double _pesee = 0.0;
   TextEditingController _datePeseeCtl = TextEditingController();
   TextEditingController _poidsCtl = TextEditingController();
@@ -88,7 +99,7 @@ class PeseePageState extends State<PeseePage> {
                 child: Text(S.of(context).bt_save,
                   style: new TextStyle(color: Colors.white, ),),
                 //color: Colors.lightGreen[700],
-                onPressed: _savePesee)
+                onPressed:() => { this._presenter.savePesee(_datePeseeCtl.text, _poidsCtl.text)})
           ]),
 
     );
@@ -96,10 +107,11 @@ class PeseePageState extends State<PeseePage> {
 
   @override
   void initState() {
+    _presenter = PeseePresenter(this);
     super.initState();
     _datePeseeCtl.text = DateFormat.yMd().format(DateTime.now());
   }
-
+/*
   void _savePesee() async {
     double? poids = double.tryParse(_poidsCtl.text);
     String message="";
@@ -119,5 +131,34 @@ class PeseePageState extends State<PeseePage> {
           .closed
           .then((e) => {Navigator.of(context).pop()});
   }
+*/
+  void showSaving () {
+    setState(() {
+      _isSaving = true;
+    });
+
+  }
+
+  void showErrorWeighing () {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        key: Key("SnackBar"),
+        content: Text(S.of(context).weighing_error)));
+  }
+
+  void showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      key: Key("SnackBar"),
+      content: Text(message)));
+  }
+
+  void backWithMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)))
+        .closed
+        .then((e) => {Navigator.of(context).pop()});
+  }
+
+  LambModel ? get lamb => this.widget._lamb;
+
+  Bete ? get bete => this.widget._bete;
 
 }

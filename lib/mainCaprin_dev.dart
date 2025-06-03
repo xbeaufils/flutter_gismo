@@ -28,7 +28,7 @@ void main() async {
   if (kIsWeb)
     //if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))
     nextPage='/login';
-  final GismoApp gismoApp = new GismoApp(gismoBloc,
+  final GismoApp gismoApp = new GismoApp(gismoBloc, RunningMode.run,
      initialRoute: nextPage, //isLogged ? '/welcome' : '/config',
   );
   // Run app!

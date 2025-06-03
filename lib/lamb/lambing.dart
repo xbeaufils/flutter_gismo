@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/individu/SimpleGismoPage.dart';
 
 import 'package:flutter_gismo/lamb/Adoption.dart';
 import 'package:flutter_gismo/lamb/AgnelageQualityPage.dart';
@@ -51,7 +52,7 @@ abstract class LambingContract {
   void badSaving(String message);
 }
 
-class _LambingPageState extends State<LambingPage> implements LambingContract {
+class _LambingPageState extends GismoStatePage<LambingPage> implements LambingContract {
   late LambingPresenter _presenter;
 
   AdoptionEnum _adoption = AdoptionEnum.level0;

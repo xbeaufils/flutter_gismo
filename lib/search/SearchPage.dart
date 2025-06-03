@@ -347,13 +347,13 @@ class _SearchPageState extends State<SearchPage>  with TickerProviderStateMixin 
         page = NECPage(GismoBloc(), bete);
         break;
       case GismoPage.pesee:
-        page = PeseePage(GismoBloc(), bete, null);
+        page = PeseePage( bete, null);
         break;
       case GismoPage.echo:
-        page = EchoPage(GismoBloc(), bete);
+        page = EchoPage(bete);
         break;
       case GismoPage.saillie:
-        page = SailliePage(GismoBloc(), bete);
+        page = SailliePage(bete);
         break;
       case GismoPage.note:
         page = MemoPage(GismoBloc(), bete);

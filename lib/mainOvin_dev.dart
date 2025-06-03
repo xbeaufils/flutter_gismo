@@ -28,7 +28,7 @@ void main() async {
   String nextPage = '/splash';
   if (kIsWeb)
     nextPage='/login';
-  final GismoApp gismoApp = new GismoApp(gismoBloc,
+  final GismoApp gismoApp = new GismoApp(gismoBloc, RunningMode.run,
      initialRoute: nextPage,
   );
   // Run app!
