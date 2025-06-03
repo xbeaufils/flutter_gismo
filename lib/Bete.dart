@@ -14,17 +14,15 @@ import 'package:sentry/sentry.dart';
 
 
 class BetePage extends StatefulWidget {
-  final GismoBloc _bloc;
   Bete ? _bete;
-  BetePage(this._bloc, this._bete, {Key ? key}) : super(key: key);
+  BetePage( this._bete, {Key ? key}) : super(key: key);
 
   @override
-  _BetePageState createState() => new _BetePageState(_bloc, _bete);
+  _BetePageState createState() => new _BetePageState(_bete);
 }
 
 class _BetePageState extends State<BetePage> {
-  final GismoBloc _bloc;
-  DateTime _selectedDate = DateTime.now();
+   DateTime _selectedDate = DateTime.now();
   //final df = new DateFormat('dd/MM/yyyy');
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -45,7 +43,7 @@ class _BetePageState extends State<BetePage> {
   late Stream<BluetoothState> _bluetoothStream;
   StreamSubscription<BluetoothState> ? _bluetoothSubscription;
 
-  _BetePageState(this._bloc, this._bete);
+  _BetePageState(this._bete);
 
   Widget _statusBluetoothBar() {
     if (! this._bloc.isLogged()!)
