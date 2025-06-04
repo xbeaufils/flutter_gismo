@@ -41,7 +41,7 @@ class SearchPage extends StatefulWidget {
 abstract class SearchContract extends GismoContract {
   void fillList(List<Bete> lstBetes);
   void goPreviousPage(Bete bete);
-  Future<String?> goNextPage();
+  Future<String?> goNextPage(StatefulWidget page);
   get nextPage;
 }
 
@@ -239,7 +239,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   }
 
   Future<String> _startService(BuildContext context) async{
- /*   try {
+    try {
       debug.log("Start service ", name: "_SearchPageState::_startService");
       BluetoothState _bluetoothState = BluetoothState.fromResult(null); //await this._bloc.startReadBluetooth();
       if (_bluetoothState.status != null)
@@ -271,7 +271,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       debug.log(e.toString());
-    }*/
+    }
     String start= await PLATFORM_CHANNEL.invokeMethod("start");
     _rfidPresent =  (start == "start");
     return start;
@@ -449,11 +449,11 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
     Navigator.of(context).pop(bete);
   }
 
-  Future<String?> goNextPage() async {
+  Future<String?> goNextPage(StatefulWidget page) async {
     String ? message = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => nextPage,
+        builder: (context) => page,
       ),
     );
     return message;
