@@ -63,6 +63,7 @@ class BeteService {
       _saillieRepository = LocalSaillieRepository();
       _echoRepository = LocalEchoRepository();
       _memorepository = LocalMemoRepository();
+      _lotRepository = LocalLotRepository();
     }
   }
 
@@ -108,13 +109,13 @@ class BeteService {
   Future<List<Event>> getEvents(Bete bete) async {
     try {
       List<Event> lstEvents = [];
-      debug.log("get lambs", name: "GismoBloc::getEvents");
+      debug.log("get lambs", name: "BeteService::getEvents");
       List<LambingModel> lstLambs = await this._lambRepository.getLambs(bete.idBd!);
-      debug.log("get traitements", name: "GismoBloc::getEvents");
+      debug.log("get traitements", name: "BeteService::getEvents");
       List<TraitementModel> lstTraitement = await this._traitementrepository.getTraitements(bete);
-      debug.log("get lots", name: "GismoBloc::getEvents");
+      debug.log("get lots", name: "BeteService::getEvents");
       List<Affectation> lstAffect = await this._lotRepository.getAffectationForBete(bete.idBd!);
-      debug.log("get nec", name: "GismoBloc::getEvents");
+      debug.log("get nec", name: "BeteService::getEvents");
       List<NoteModel> lstNotes = await this._necRepository.get(bete);
       List<Pesee> lstPoids  = await this._peseeRepository.getPesee(bete);
       List<EchographieModel> lstEcho = await this._echoRepository.getEcho(bete);

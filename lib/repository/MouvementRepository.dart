@@ -33,6 +33,7 @@ class WebEntreeRepository  extends WebRepository  implements EntreeRepository {
 }
 
 class LocalEntreeRepository extends LocalRepository implements EntreeRepository {
+
   Future<String> save(String cheptel, DateTime date, String motif, List<Bete> lstBete) async {
     Database db = await this.database;
     Batch batch = db.batch();

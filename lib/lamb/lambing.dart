@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/SearchPage.dart';
+import 'package:flutter_gismo/search/SearchPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/SimpleGismoPage.dart';
 
@@ -105,27 +105,27 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
                                   });
                                 },
                       onTap: () async{
-                              DateTime date = DateTime.now();
+                              DateTime ? date = DateTime.now();
                               FocusScope.of(context).requestFocus(new FocusNode());
                               date = await showDatePicker(
                                   context: context,
                                   initialDate:DateTime.now(),
                                   firstDate:DateTime(1900),
-                                  lastDate: DateTime(2100)) as DateTime;
+                                  lastDate: DateTime(2100)) ;
                               if (date != null) {
                                 setState(() {
-                                  _dateAgnelageCtl.text = DateFormat.yMd().format(date);
+                                  _dateAgnelageCtl.text = DateFormat.yMd().format(date!);
                                 });
                               }
                             }),
                 ListTile(
                   title: Text(S.of(context).lambing_quality) ,
                   subtitle: Text(_agnelage.key.toString() + " : " + transAgnelage.translate(_agnelage)),
-                  trailing: new IconButton(onPressed: _openAgnelageDialog, icon: new Icon(Icons.create)),),
+                  trailing: new IconButton(key: Key("btQualite"), onPressed: _openAgnelageDialog, icon: new Icon(Icons.create)),),
                 ListTile(
                   title: Text(S.of(context).adoption_quality) ,
                   subtitle: Text(_adoption.key.toString() + " : " + transAdoption.translate(_adoption)),
-                  trailing: new IconButton(onPressed: _openAdoptionDialog, icon: new Icon(Icons.create)),),
+                  trailing: new IconButton(key: Key("btAdoption"), onPressed: _openAdoptionDialog, icon: new Icon(Icons.create)),),
                 TextFormField(
                   controller: _obsCtl,
                   decoration: InputDecoration(
@@ -188,30 +188,6 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
       IconButton(icon: Icon(Icons.close), onPressed: () => this._presenter.removePere(), ),);
   }
 
- /* void _addPere() async {
-    this.currentLambing.setDateAgnelage( DateFormat.yMd().parse(_dateAgnelageCtl.text) );
-    Bete ? pere;
-    if (this._bloc!.isLogged() != null) {
-      if (this._bloc!.isLogged()!) {
-        pere = await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SearchPerePage(this._bloc!, currentLambing),
-          ),
-        ) as Bete;
-      }
-      else
-        pere = await this.searchPere();
-    }
-    else
-      pere = await this.searchPere();
-    if (pere != null)
-     setState(() {
-       currentLambing.numBouclePere=  (pere == null)?null:pere.numBoucle;
-       currentLambing.numMarquagePere = pere!.numMarquage;
-       currentLambing.idPere = (pere == null)?null:pere.idBd;
-     });
-  }*/
 
   Future<Bete ?> showPerePage() async {
     Bete ? pere = await Navigator.push(

@@ -22,6 +22,7 @@ class LocalRepository {
     var databasesPath = await getDatabasesPath();
     String path = join(databasesPath, 'gismo_database.db');
     await deleteDatabase(path);
+    _database = null;
   }
 
   Future<Database> _init() async{

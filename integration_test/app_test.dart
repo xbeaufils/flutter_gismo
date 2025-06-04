@@ -9,13 +9,22 @@ import 'package:intl/intl.dart';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-   group('end-to-end test', () {
-     setUpAll(()  async {
+  int count = 0;
+  setUpAll(()  async {
+    print("---------");
+    print ("| count $count |");
+    if (count == 0 ) {
       LocalRepository repo = LocalRepository();
       await repo.resetDatabase();
       FlutterSecureStorage storage = new FlutterSecureStorage();
+      print("-------------------");
+      print("| Delete database |");
+      print("-------------------");
       await storage.deleteAll();
-     });
+    }
+    count ++;
+  });
+   group('end-to-end test', () {
 
      /*
     testWidgets('Start appli', (tester,) async {
@@ -42,6 +51,25 @@ void main() {
           final btSave = find.text("Enregistrer");
           await tester.tap(btSave);
         });
+    testWidgets("Créer un agnelage", (tester,) async {
+      await startAppli(tester);
+      await tester.tap(find.text("Agnelage"));
+      await tester.pumpAndSettle();
+      await selectBete(tester, "123");
+      // Passage à l'ecran Agnelage
+      await tester.pumpAndSettle();
+      DateTime now = DateTime.now();
+      expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
+      await tester.tap(find.byKey(Key("btQualite")));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("3"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key("btAdoption")));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("2"));
+      await tester.pumpAndSettle();
+
+    });
     testWidgets(
         'Créez une echographie', (tester,) async {
       await startAppli(tester);
@@ -50,16 +78,24 @@ void main() {
       await tester.tap(echo);
       await tester.pumpAndSettle();
       await selectBete(tester, "123");
+      // Passage à l'ecran Echo Graphie
+      await tester.pumpAndSettle();
       DateTime now = DateTime.now();
       expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
       final resultat = find.text("Simple");
       await tester.tap(resultat);
       await tester.tap(find.byKey(Key("dateEcho")));
+      await tester.pumpAndSettle();
       String dateEcho =  (now.day > 7) ? (now.day - 7).toString(): (now.day + 1).toString();
       await tester.tap(find.text(dateEcho));
       await tester.tap(find.text("OK"));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(Key("dateSaillie")));
+      await tester.pumpAndSettle();
       await tester.tap(find.text("OK"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("Enregistrer"));
+      await tester.pumpAndSettle();
     });
    });
 }

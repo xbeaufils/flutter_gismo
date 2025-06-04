@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/bloc/NavigationService.dart';
 import 'package:flutter_gismo/individu/EchoPage.dart';
@@ -39,7 +40,7 @@ class SearchPresenter {
   }
 
   void selectBete(Bete bete) async {
-    var page;
+    StatefulWidget ? page;
     switch (this._view.nextPage) {
       case GismoPage.lamb:
         page = LambingPage(bete);
@@ -78,7 +79,7 @@ class SearchPresenter {
       //Navigator.of(context).pop(bete);
     }
     else {
-      String ? message = await this._view.goNextPage();
+      String ? message = await this._view.goNextPage(page);
       if (message != null)
         this._view.showMessage(message);
     }

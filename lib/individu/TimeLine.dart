@@ -198,38 +198,7 @@ class _TimeLinePageState extends GismoStatePage<TimeLinePage> with SingleTickerP
       },
     );
   }
-/*
-  void _deleteEvent(Event event) async {
-    String message = await this.widget._bloc.deleteEvent(event);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-    /*_scaffoldKey.currentState
-        .showSnackBar(SnackBar(content: Text(message)));*/
-    setState(() {
 
-    });
-  }
-
-  void _searchEvent(Event event) {
-    switch (event.type) {
-      case EventType.agnelage :
-        _presenter.searchLambing(event.idBd).then( (lambing) => {_editLambing(lambing!)} );
-        break;
-      case EventType.traitement:
-        _presenter.searchTraitement(event.idBd).then( (traitement) => { _editTraitement(traitement!)});
-        break;
-      case EventType.echo:
-        _presenter.searchEcho(event.idBd).then( (echo) => { _editEcho(echo!)});
-        break;
-      case EventType.memo:
-        _bloc.searchMemo(event.idBd).then( (memo) => { _editMemo(memo!) });
-        break;
-      case EventType.saillie:
-      case EventType.NEC:
-      case EventType.pesee:
-       default:
-    }
-  }
-  */
   Future<String ?> editPage(StatefulWidget page ) async {
     String ? message = await Navigator.push(
       context,
@@ -239,80 +208,7 @@ class _TimeLinePageState extends GismoStatePage<TimeLinePage> with SingleTickerP
     );
     return message;
   }
-/*
-  void _editLambing(LambingModel lambing) {
-    var navigationResult = Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => LambingPage.edit(lambing),
-      ),
-    );
-    navigationResult.then( (message) {
-      setState(() {
-        if (message != null)
-          _showMessage(message);
-      });
-    } );
 
-  }*/
-  /*
-  void _editTraitement(TraitementModel traitement)  {
-    var navigationResult = Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SanitairePage.edit(_bloc, traitement),
-      ),
-    );
-    navigationResult.then( (message) {
-      if (message != null)
-        setState(() {
-          _showMessage(message);
-        });
-    } );
-  }
-*/
-  /*
-  void _editEcho(EchographieModel  echo)  {
-    var navigationResult = Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EchoPage.edit(echo, _bete),
-      ),
-    );
-    navigationResult.then( (message) {
-      setState(() {
-        if (message != null)
-          _showMessage(message);
-        });
-     });
-  }*/
-/*
-  void _editMemo(MemoModel memo)  {
-    var navigationResult = Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MemoPage.edit(_bloc, memo),
-      ),
-    );
-    navigationResult.then( (message) {
-      setState(() {
-        if (message != null)
-          _showMessage(message);
-      });
-    });
-  }
-  */
-  /*
-  void _viewMere(Bete mere) {
-    var navigationResult = Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TimeLinePage(_bloc, mere),
-      ),
-    );
-    navigationResult.then( (message) { if (message != null) _showMessage(message);} );
-  }
-  */
   Widget _getImageType(EventType type) {
     switch (type) {
       case EventType.traitement :

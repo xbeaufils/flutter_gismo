@@ -53,8 +53,8 @@ class ConfigProvider extends ChangeNotifier {
           //await Admob.requestTrackingAuthorization();
         }
         if (mode == RunningMode.test) {
-          LocalRepository repository = LocalRepository();
-          repository.resetDatabase();
+          //LocalRepository repository = LocalRepository();
+          //repository.resetDatabase();
         }
         return "Mode autonome";
       }
