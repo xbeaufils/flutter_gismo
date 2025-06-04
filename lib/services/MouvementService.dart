@@ -11,7 +11,12 @@ class EntreeService {
   final ConfigProvider _provider = Provider.of<ConfigProvider>(NavigationService.navigatorKey.currentContext!, listen: false);
 
   EntreeService() {
-
+    if (_provider.isSubscribing()) {
+      _repository = WebEntreeRepository(_provider.getToken());
+    }
+    else  {
+      _repository = LocalEntreeRepository();
+    }
   }
 
   Future<String> save(DateTime date, String motif, List<Bete> betes ) async {

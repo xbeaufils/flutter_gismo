@@ -30,9 +30,11 @@ class BetePresenter {
     if (sex == null){
       throw MissingSex();
     }
+    bool _existant = false;
     if (this._view.bete == null) {
       this._view.bete = new Bete(
           null, numBoucle, numMarquage, nom, obs, DateFormat.yMd().parse(dateEntree), sex, motif);
+      _existant = await _service.check(this._view.bete!);
     }
     else {
       this._view.bete!.numBoucle = numBoucle;
@@ -43,8 +45,15 @@ class BetePresenter {
       this._view.bete!.sex = sex;
       if (motif != null)
         this._view.bete!.motifEntree = motif;
+      _existant = await _service.check(this._view.bete!);
+      if (! _existant)
+        _service.save(this._view.bete!);
     }
-    _service.save(this._view.bete!);
+    if (! _existant)
+      this._view.backWithBete();
+    else
+      throw ExistingBete();
+
   }
 
   Future<BluetoothState> startReadBluetooth() {

@@ -23,25 +23,25 @@ class BetePage extends StatefulWidget {
   BetePage( this._bete, {Key ? key}) : super(key: key);
 
   @override
-  _BetePageState createState() => new _BetePageState(_bete);
+  _BetePageState createState() => new _BetePageState();
 }
 
 abstract class BeteContract extends GismoContract {
   Bete ? get bete;
   set bete(Bete ? value);
+  void backWithBete();
 }
 
 class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
    DateTime _selectedDate = DateTime.now();
   //final df = new DateFormat('dd/MM/yyyy');
-   late BetePresenter _presenter;
+  late BetePresenter _presenter;
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   //BluetoothWidget btWidget;
   TextEditingController _dateEntreCtrl = new TextEditingController();
   TextEditingController _numBoucleCtrl = new TextEditingController();
   TextEditingController _numMarquageCtrl = new TextEditingController();
-  Bete ? _bete;
   String ? _nom;
   String ? _obs;
   Sex ? _sex ;
@@ -54,7 +54,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   late Stream<BluetoothState> _bluetoothStream;
   StreamSubscription<BluetoothState> ? _bluetoothSubscription;
 
-  _BetePageState(this._bete);
+  _BetePageState();
 
   Widget _statusBluetoothBar() {
     ConfigProvider provider = Provider.of<ConfigProvider>(context);
@@ -181,7 +181,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                   ElevatedButton (
                   // RaisedButton(
                       child: new Text(
-                        (_bete == null)? S.of(context).bt_add: S.of(context).bt_save,
+                        (this.bete == null)? S.of(context).bt_add: S.of(context).bt_save,
                         style: new TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
@@ -316,16 +316,16 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
     super.initState();
     this._presenter = BetePresenter(this);
     //this.btWidget = new BluetoothWidget(this.widget._bloc);
-    if (_bete == null )
+    if (this.bete == null )
       _dateEntreCtrl.text = DateFormat.yMd().format(_selectedDate);
     else {
-      _dateEntreCtrl.text = DateFormat.yMd().format(_bete!.dateEntree);
-      _numBoucleCtrl.text = _bete!.numBoucle;
-      _numMarquageCtrl.text = _bete!.numMarquage;
-      _nom = _bete!.nom;
-      _sex = _bete!.sex;
-      _motif = _bete!.motifEntree;
-      _obs = _bete!.observations;
+      _dateEntreCtrl.text = DateFormat.yMd().format(this.bete!.dateEntree);
+      _numBoucleCtrl.text = this.bete!.numBoucle;
+      _numMarquageCtrl.text = this.bete!.numMarquage;
+      _nom = this.bete!.nom;
+      _sex = this.bete!.sex;
+      _motif = this.bete!.motifEntree;
+      _obs = this.bete!.observations;
     }
   }
 
@@ -382,11 +382,15 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
     super.dispose();
   }
 
+  void backWithBete() {
+    Navigator.of(context).pop(this.bete);
+  }
+
   @override
   Bete ? get bete => this.widget._bete;
 
    set bete(Bete ? value) {
-     _bete = value;
+     this.widget._bete = value;
    }
 
 }

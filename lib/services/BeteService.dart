@@ -172,10 +172,11 @@ class BeteService {
     return this._memorepository.searchMemo(idBd);
   }
 
+  Future<bool> check(Bete bete) async {
+    return this._repository.checkBete(bete);
+  }
+
   Future<String> save (Bete bete ) async {
-    bool existant = await this._repository.checkBete(bete);
-    if (existant)
-      throw ExistingBete();
     return this._repository.saveBete(bete);
   }
 
