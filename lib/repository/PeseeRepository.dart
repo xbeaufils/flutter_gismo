@@ -1,7 +1,7 @@
 import 'dart:developer' as debug;
 
-import 'package:flutter_gismo/repository/AbstractRepository.dart';
-import 'package:flutter_gismo/repository/LocalRepository.dart';
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
+import 'package:flutter_gismo/core/repository/LocalRepository.dart';
 import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';

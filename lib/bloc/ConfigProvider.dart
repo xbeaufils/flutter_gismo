@@ -8,7 +8,7 @@ import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/bloc/GismoRepository.dart';
 import 'package:flutter_gismo/bloc/WebDataProvider.dart';
 import 'package:flutter_gismo/model/User.dart';
-import 'package:flutter_gismo/repository/LocalRepository.dart';
+import 'package:flutter_gismo/core/repository/LocalRepository.dart';
 import 'package:flutter_gismo/services/UserService.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 

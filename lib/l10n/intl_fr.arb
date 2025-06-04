@@ -91,6 +91,7 @@
   "observations" : "Observations",
   "validate_lambing": "Valider l'agnelage",
   "add_lamb" : "Ajouter un agneau",
+  "no_lamb" : "Agnelage sans agneau ?",
   "breastfeeding_not_specified" : "Allaitement non spécifié",
   "health" : "Etat de santé",
   "alive" : "Vivant",

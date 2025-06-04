@@ -91,6 +91,7 @@
   "observations" : "Observations",
   "validate_lambing": "Validate lambing",
   "add_lamb" : "Add a lamb",
+  "no_lamb" : "Lambing without lamb ?",
   "breastfeeding_not_specified" : "Breastfeeding not specified",
   "health" : "Health",
   "alive" : "Alive",

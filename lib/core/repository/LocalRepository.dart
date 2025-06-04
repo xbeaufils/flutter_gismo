@@ -1,7 +1,7 @@
 import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/model/ReportModel.dart';
-import 'package:flutter_gismo/repository/AbstractRepository.dart';
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 
 import 'package:path/path.dart';
 import 'package:sentry/sentry.dart';

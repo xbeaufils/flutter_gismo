@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/search/SearchPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/individu/SimpleGismoPage.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 
 import 'package:flutter_gismo/lamb/Adoption.dart';
 import 'package:flutter_gismo/lamb/AgnelageQualityPage.dart';
@@ -16,6 +16,7 @@ import 'package:flutter_gismo/model/AgnelageQualite.dart';
 import 'package:flutter_gismo/model/CauseMort.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/presenter/LambingPresenter.dart';
+import 'package:flutter_gismo/services/LambingService.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer' as debug;
 
@@ -41,15 +42,13 @@ class LambingPage extends StatefulWidget {
   LambingModel get currentLambing => _currentLambing;
 }
 
-abstract class LambingContract {
+abstract class LambingContract extends GismoContract {
   Future<Bete ?> searchPere();
   Future<Bete ?> showPerePage();
   Future<LambModel?> addLamb();
   void refreshLambing(LambingModel _lambing);
   Future<LambModel?> editLamb (LambModel lamb, String dateNaissance);
   LambingModel get currentLambing;
-  void goodSaving(String message);
-  void badSaving(String message);
 }
 
 class _LambingPageState extends GismoStatePage<LambingPage> implements LambingContract {
@@ -77,7 +76,7 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
       appBar: new AppBar(
         title: (this.widget._mere != null) ? 
           new Text(this.widget._mere!.numBoucle + " (" + this.widget._mere!.numMarquage + ")") :
-          new Text(this.widget._currentLambing!.numBoucleMere! + " (" + this.widget._currentLambing!.numMarquageMere! + ")"),
+          new Text(this.widget._currentLambing.numBoucleMere! + " (" + this.widget._currentLambing.numMarquageMere! + ")"),
         key: _scaffoldKey,
       ),
       body:
@@ -147,8 +146,16 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
                 ),
                 ButtonBar(alignment: MainAxisAlignment.start,
                     children : [ ElevatedButton(key:null,
-                        onPressed: () => this._presenter.saveLambing(_dateAgnelageCtl.text,  _obsCtl.text, _adoption.key, _agnelage.key),
-                        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.lightGreen[700])),
+                        onPressed: () {
+                          try {
+                            this._presenter.saveLambing(
+                                _dateAgnelageCtl.text, _obsCtl.text,
+                                _adoption.key, _agnelage.key);
+                          } on NoLamb {
+                            super.showMessage(S.current.no_lamb);
+                          }
+                        },
+                        style: ButtonStyle(backgroundColor: WidgetStateProperty.all(Colors.lightGreen[700])),
                         //color: Colors.lightGreen[700],
                         child:
                           new Text(
@@ -260,19 +267,6 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
       });
     }
   }
-
-  void badSaving(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  void goodSaving(String message) {
-    message = "Agnelage : " + message;
-    Navigator.pop(context, message);
-  }
-  //void radioChanged(double value) {}
 
   @override
   void dispose() {

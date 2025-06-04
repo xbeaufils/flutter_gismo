@@ -237,6 +237,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Pas de date de décès"),
         "no_earring_read":
             MessageLookupByLibrary.simpleMessage("Pas de boucle lue"),
+        "no_lamb":
+            MessageLookupByLibrary.simpleMessage("Agnelage sans agneau ?"),
         "no_mating_date":
             MessageLookupByLibrary.simpleMessage("Pas de date saisie"),
         "no_note": MessageLookupByLibrary.simpleMessage("Pas de note saisie"),

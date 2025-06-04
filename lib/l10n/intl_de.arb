@@ -92,6 +92,7 @@
    "aborted": "Abgetrieben",
    "breastfeeding_mode": "Stillmodus",
    "new_lamb": "Neues Lamm",
+   "no_lamb" : "Lämmen ohne Lamm ?",
    "edit_lamb": "Bearbeiten",
    "all_ram": "Alle Widder",
    "no_ram_found": "Kein Widder mit den gewählten Kriterien gefunden",

@@ -46,16 +46,18 @@ class LambingPresenter {
       this._view.refreshLambing(currentLambing);
   }
 
-  Future<String ?> saveLambing(String dateAgnelage, String obs, int adoption, int qualite ) async {
+  void saveLambing(String dateAgnelage, String obs, int adoption, int qualite ) async {
     currentLambing.setDateAgnelage(DateFormat.yMd().parse(dateAgnelage));
     currentLambing.observations = obs;
     currentLambing.adoption = adoption;
     currentLambing.qualite = qualite;
-    var message  =  this._service.saveLambing(this.currentLambing);
-    message
-        .then( (message) { if (message != null) this._view.goodSaving(message);})
-        .catchError( (message) {  if (message != null) this._view.badSaving(message);});
-    return message;
+    String ? message  = null;
+    try {
+      String ? message  =  await this._service.saveLambing(this.currentLambing);
+      if (message != null) this._view.backWithMessage(message);
+    } on NoLamb catch(e){
+      throw e;
+    }
   }
 
   Future addLamb() async {

@@ -900,6 +900,16 @@ class S {
     );
   }
 
+  /// `Lambing without lamb ?`
+  String get no_lamb {
+    return Intl.message(
+      'Lambing without lamb ?',
+      name: 'no_lamb',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Breastfeeding not specified`
   String get breastfeeding_not_specified {
     return Intl.message(

@@ -2,7 +2,7 @@ import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/model/User.dart';
-import 'package:flutter_gismo/repository/AbstractRepository.dart';
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 
 class UserService extends WebRepository{
   UserService(super.token);

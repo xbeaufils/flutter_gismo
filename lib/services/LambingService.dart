@@ -21,6 +21,8 @@ class LambingService {
   }
 
   Future<String ?> saveLambing(LambingModel lambing) async {
+    if (lambing.lambs.isEmpty)
+      throw NoLamb();
     String ? message = await this._lambRepository.saveLambing(lambing);
     return message;
   }
@@ -55,3 +57,5 @@ class LambingService {
   }
 
 }
+
+class NoLamb implements Exception {}
