@@ -1,15 +1,14 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/bloc/NavigationService.dart';
 import 'package:flutter_gismo/individu/ui/EchoPage.dart';
 import 'package:flutter_gismo/individu/ui/NECPage.dart';
 import 'package:flutter_gismo/individu/ui/PeseePage.dart';
 import 'package:flutter_gismo/individu/ui/SailliePage.dart';
 import 'package:flutter_gismo/individu/ui/TimeLine.dart';
 import 'package:flutter_gismo/lamb/ui/lambing.dart';
-import 'package:flutter_gismo/memo/MemoPage.dart';
+import 'package:flutter_gismo/memo/ui/MemoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/search/SearchPage.dart';
+import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:flutter_gismo/services/BeteService.dart';
 
 class SearchPresenter {

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/SearchPage.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/individu/presenter/SailliePresenter.dart';
+import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:intl/intl.dart';
 
 class SailliePage extends StatefulWidget {
@@ -140,24 +139,6 @@ class _SailliePageState extends GismoStatePage<SailliePage> implements SaillieCo
     _presenter = SailliePresenter(this);
   }
 
-  Future _addPere() async {
-    this._presenter.addPere();
-    Bete ? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
-        builder: (BuildContext context) {
-          SearchPage search = new SearchPage(GismoPage.sailliePere);
-          search.searchSex = Sex.male;
-          return search;
-        },
-        fullscreenDialog: true
-    ));
-    if (selectedBete != null) {
-      this.setState(() {
-        this._idPere = selectedBete.idBd;
-        this._numBouclePere = selectedBete.numBoucle;
-        this._numMarquagePere = selectedBete.numMarquage;
-      });
-    }
-  }
 
   Future<Bete?> selectPere()  async{
     Bete ? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
@@ -170,34 +151,6 @@ class _SailliePageState extends GismoStatePage<SailliePage> implements SaillieCo
     ));
     return selectedBete;
   }
-
-  void _removePere() {
-    this.setState(() {
-      this._idPere = null;
-      this._numBouclePere = "";
-      this._numMarquagePere = "";
-    });
-  }
-
-/*  void _saveSaillie() async {
-    String message;
-    setState(() {
-      _isSaving = true;
-    });
-    if (this.widget._currentSaillie == null)
-      this.widget._currentSaillie = new SaillieModel();
-    this.widget._currentSaillie!.idMere = this.widget._bete.idBd!;
-    this.widget._currentSaillie!.dateSaillie = DateFormat.yMd().parse(_dateSaillieCtl.text);
-    this.widget._currentSaillie!.idPere = _idPere!;
-    message =
-      await this._bloc.saveSaillie(this.widget._currentSaillie!);
-    ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(message)))
-          .closed
-          .then((e) => {Navigator.of(context).pop()});
-  }
- */
-
 
   Bete get bete => this.widget._bete;
   SaillieModel ? get currentSaillie => this.widget._currentSaillie;

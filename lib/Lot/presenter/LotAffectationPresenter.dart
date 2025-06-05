@@ -1,27 +1,27 @@
+import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/Lot/ui/LotAffectationViewPage.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
+import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:flutter_gismo/services/LotService.dart';
 import 'package:intl/intl.dart';
 
 class LotAffectionPresenter {
 
   final _df = new DateFormat('dd/MM/yyyy');
-  final GismoBloc _bloc;
   final LotAffectationContract _view;
   LotModel  _currentLot;
-  LotAffectionPresenter(this._view, this._bloc, this._currentLot);
+  LotAffectionPresenter(this._view,  this._currentLot);
   final LotService _service = LotService();
 
   Future<String> deleteAffectation(Affectation event) async {
-    String message = await this._bloc.deleteAffectation(event);
+    String message = await this._service.deleteAffectation(event);
     return message;
   }
 
   Future<String?> addBete() async {
-    Bete? selectedBete = await this._view.selectBete();
+    Bete ? selectedBete = await this._view.goNextPage(SearchPage(GismoPage.lot));
     String ? dateEntree = await this._view.selectDateEntree();
     String? message;
     if (dateEntree != null) {
@@ -60,7 +60,7 @@ class LotAffectionPresenter {
     return currentLot;
   }
 
-  Future<List<Affectation>> getBeliers(int idLot)  {
+  Future<List<Affectation>> ? getBeliers(int idLot)  {
     return this._service.getBeliersForLot(idLot);
   }
 

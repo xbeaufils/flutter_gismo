@@ -3,7 +3,7 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
-import 'package:flutter_gismo/presenter/MemoPresenter.dart';
+import 'package:flutter_gismo/memo/presenter/MemoPresenter.dart';
 import 'package:intl/intl.dart';
 
 

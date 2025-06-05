@@ -1,11 +1,8 @@
 import 'dart:io';
 
-//import 'package:admob_flutter/admob_flutter.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/bloc/ConfigProvider.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 
@@ -16,7 +13,6 @@ import 'package:flutter_gismo/presenter/WelcomePresenter.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:provider/provider.dart';
 
 
 
@@ -48,9 +44,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
         key: _scaffoldKey,
         backgroundColor: Colors.lightGreen,
         appBar: new AppBar(
-            title: ( AuthService().subscribe ) ?
-              new Text('Gismo ' + AuthService().cheptel!):
-              new Text('Erreur de connexion'),
+            title: Text('Gismo ' + AuthService().cheptel!),
             // N'affiche pas la touche back (qui revient à la SplashScreen
             automaticallyImplyLeading: true,
              ),

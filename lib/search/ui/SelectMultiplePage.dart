@@ -6,47 +6,54 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Gismo.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/traitement/selectionTraitement.dart';
+import 'package:flutter_gismo/search/presenter/SelectMultiplePresenter.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class SelectMultiplePage extends StatefulWidget {
-  final GismoBloc _bloc;
   GismoPage _nextPage;
   final List<Bete> _stillSelectedBetes;
   Sex ? searchSex;
   get nextPage => _nextPage;
-  SelectMultiplePage(this._bloc, this._nextPage, this._stillSelectedBetes, { Key? key }) : super(key: key);
+  SelectMultiplePage( this._nextPage, this._stillSelectedBetes, { Key? key }) : super(key: key);
   @override
-  _SelectMultiplePageState createState() => new _SelectMultiplePageState(this._bloc);
+  _SelectMultiplePageState createState() => new _SelectMultiplePageState();
 }
 
+abstract class SelectMultipleContract extends GismoContract {
+  GismoPage get nextPage;
+  Sex ? get searchSex;
+  void goPreviousPage(List<Bete> betes);
+  List<Bete> get betes;
+  void fillList(List<Bete> lstBetes);
+}
 
-class _SelectMultiplePageState extends State<SelectMultiplePage> with TickerProviderStateMixin {
-  // final formKey = new GlobalKey<FormState>();
-  // final key = new GlobalKey<ScaffoldState>();
+class _SelectMultiplePageState extends GismoStatePage<SelectMultiplePage> with TickerProviderStateMixin  implements SelectMultipleContract {
   final TextEditingController _filter = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final GismoBloc _bloc;
+  late SelectMultiplePresenter _presenter;
   BannerAd ? _adBanner;
   List<Bete> _betes = <Bete>[]; //new List();
   Map<int, Bete> _selectedBete = Map();
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text( S.current.earring_search);
 
-  _SelectMultiplePageState(this._bloc) {
+  _SelectMultiplePageState() {
   }
 
   @override
   void initState() {
-    this._getBetes();
+    _presenter = SelectMultiplePresenter(this);
+    _presenter.getBetes();
     super.initState();
     this.widget._stillSelectedBetes.forEach( (bete) =>
       _selectedBete[bete.idBd!] = bete
     );
-    if ( ! _bloc.isLogged()!) {
+    if ( ! AuthService().subscribe) {
       this._adBanner = BannerAd(
         adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
         size: AdSize.banner,
@@ -108,7 +115,7 @@ class _SelectMultiplePageState extends State<SelectMultiplePage> with TickerProv
   }
 
   Widget _getAdmobAdvice() {
-    if (this._bloc.isLogged() ! ) {
+    if (AuthService().subscribe ) {
       return Container();
     }
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
@@ -122,7 +129,7 @@ class _SelectMultiplePageState extends State<SelectMultiplePage> with TickerProv
   }
 
   Widget _getFacebookAdvice() {
-    if ( this._bloc.isLogged()!  ) {
+    if ( AuthService().subscribe ) {
       return SizedBox(height: 0,width: 0,);
     }
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
@@ -248,25 +255,23 @@ class _SelectMultiplePageState extends State<SelectMultiplePage> with TickerProv
     });
   }
 
-  void _getBetes() async {
-    List<Bete> ? lstBetes ;
-    if (this.widget.searchSex == null) {
-      lstBetes = await this._bloc.getBetes();
-    }
-    else {
-      switch (this.widget.searchSex) {
-        case Sex.femelle:
-          lstBetes = await this._bloc.getBrebis();
-          break;
-        case Sex.male :
-          lstBetes = await this._bloc.getBeliers();
-          break;
-        default :
-          lstBetes = await this._bloc.getBetes();
-      }
-    }
-    fillList(lstBetes);
-   }
+  @override
+  List<Bete> get betes {
+    return this._betes;
+  }
+
+  @override
+  GismoPage get nextPage {
+    return this.widget._nextPage;
+  }
+
+  Sex ? get searchSex {
+    return this.widget.searchSex;
+  }
+
+  void goPreviousPage(List<Bete> betes) {
+    Navigator.of(context).pop(betes);
+  }
 
   void fillList(List<Bete> lstBetes) {
     setState(() {

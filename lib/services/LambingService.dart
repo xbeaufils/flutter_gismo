@@ -1,10 +1,7 @@
-import 'package:flutter_gismo/bloc/ConfigProvider.dart';
-import 'package:flutter_gismo/bloc/NavigationService.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/repository/LambRepository.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
-import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class LambingService {

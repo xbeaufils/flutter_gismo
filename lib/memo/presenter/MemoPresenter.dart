@@ -1,5 +1,5 @@
-import 'package:flutter_gismo/memo/MemoListPage.dart';
-import 'package:flutter_gismo/memo/MemoPage.dart';
+import 'package:flutter_gismo/memo/ui/MemoListPage.dart';
+import 'package:flutter_gismo/memo/ui/MemoPage.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/services/MemoService.dart';
 import 'package:intl/intl.dart';

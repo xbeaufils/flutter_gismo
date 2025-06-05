@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:intl/intl.dart';
 
 class SortiePage extends StatefulWidget {

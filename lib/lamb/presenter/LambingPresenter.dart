@@ -1,7 +1,4 @@
 
-import 'package:facebook_audience_network/constants.dart';
-import 'package:flutter_gismo/bloc/ConfigProvider.dart';
-import 'package:flutter_gismo/bloc/NavigationService.dart';
 import 'package:flutter_gismo/lamb/ui/SearchPerePage.dart';
 import 'package:flutter_gismo/lamb/ui/lambing.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -10,7 +7,6 @@ import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:flutter_gismo/services/BeteService.dart';
 import 'package:flutter_gismo/services/LambingService.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class LambingPresenter {
   final LambingService _service = LambingService();

@@ -7,35 +7,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/search/SearchPage.dart';
-import 'package:flutter_gismo/search/SelectMultiplePage.dart';
-import 'package:flutter_gismo/traitement/Sanitaire.dart';
+import 'package:flutter_gismo/search/ui/SearchPage.dart';
+import 'package:flutter_gismo/search/ui/SelectMultiplePage.dart';
+import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
 import 'package:intl/intl.dart';
 
 enum View {fiche, ewe, ram}
 
 class SelectionPage extends StatefulWidget {
-   final GismoBloc _bloc;
    final List<Bete> _lstBete;
 
-  SelectionPage(this._bloc, this._lstBete, {Key ? key}) : super(key: key);
+  SelectionPage(this._lstBete, {Key ? key}) : super(key: key);
   @override
-  _SelectionPageState createState() => new _SelectionPageState(this._bloc, this._lstBete);
+  _SelectionPageState createState() => new _SelectionPageState( this._lstBete);
 }
 
-class _SelectionPageState extends State<SelectionPage> {
-  final GismoBloc _bloc;
+abstract class SelectionContract extends GismoContract {
+  List<Bete> get betes;
+}
+
+class _SelectionPageState extends GismoStatePage<SelectionPage> implements SelectionContract {
   List<Bete> _lstBete;
-  _SelectionPageState(this._bloc, this._lstBete);
+  _SelectionPageState( this._lstBete);
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController _codeLotCtl = TextEditingController();
   TextEditingController _dateDebutCtl = TextEditingController();
   TextEditingController _dateFinCtl = TextEditingController();
   TextEditingController _dateMvtCtl = TextEditingController();
-  final _df = new DateFormat('dd/MM/yyyy');
-
 
   @override
   void initState(){
@@ -117,7 +118,7 @@ class _SelectionPageState extends State<SelectionPage> {
         .of(context)
         .push(new MaterialPageRoute<List<Bete>>(
         builder: (BuildContext context) {
-          SelectMultiplePage search = new SelectMultiplePage(this._bloc, GismoPage.sanitaire, this._lstBete);
+          SelectMultiplePage search = new SelectMultiplePage(GismoPage.sanitaire, this._lstBete);
           return search;
         },
         fullscreenDialog: true
@@ -172,12 +173,16 @@ class _SelectionPageState extends State<SelectionPage> {
     var navigationResult = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => SanitairePage.collectif(this.widget._bloc, _lstBete )),
+          builder: (context) => SanitairePage.collectif( _lstBete )),
     );
     print (navigationResult);
     Navigator
         .of(context)
         .pop(navigationResult);
+  }
+
+  List<Bete> get betes {
+    return this.widget._lstBete;
   }
 
 

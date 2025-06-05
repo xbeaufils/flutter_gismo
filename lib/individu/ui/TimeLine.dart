@@ -7,7 +7,7 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/ui/EchoPage.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/lamb/ui/lambing.dart';
-import 'package:flutter_gismo/memo/MemoPage.dart';
+import 'package:flutter_gismo/memo/ui/MemoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
@@ -15,7 +15,7 @@ import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/individu/presenter/TimeLinePresenter.dart';
-import 'package:flutter_gismo/traitement/Sanitaire.dart';
+import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
 import 'package:intl/intl.dart';
 
 

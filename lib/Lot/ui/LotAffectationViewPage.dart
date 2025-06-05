@@ -2,40 +2,33 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/SearchPage.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/bloc/ConfigProvider.dart';
 import 'package:flutter_gismo/Lot/presenter/LotAffectationPresenter.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
-import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 enum View {fiche, ewe, ram}
 
 class LotAffectationViewPage extends StatefulWidget {
   LotModel  _currentLot;
-  final GismoBloc _bloc;
 
-  LotAffectationViewPage(this._bloc, this._currentLot, {Key? key}) : super(key: key) ;
+
+  LotAffectationViewPage(this._currentLot, {Key? key}) : super(key: key) ;
 
   @override
-  _LotAffectationViewPageState createState() => new _LotAffectationViewPageState(this._bloc);
+  _LotAffectationViewPageState createState() => new _LotAffectationViewPageState();
 }
 
-abstract class LotAffectationContract {
-  Future<Bete?> selectBete();
+abstract class LotAffectationContract extends GismoContract {
   Future<String?> selectDateEntree();
 
 }
 
-class _LotAffectationViewPageState extends State<LotAffectationViewPage> implements LotAffectationContract {
-  final GismoBloc _bloc;
+class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage> implements LotAffectationContract {
   late final LotAffectionPresenter _presenter ;
-  _LotAffectationViewPageState(this._bloc);
+  _LotAffectationViewPageState();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final _formFicheKey = GlobalKey<FormState>();
   TextEditingController _codeLotCtl = TextEditingController();
@@ -52,7 +45,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> impleme
   @override
   void initState(){
     super.initState();
-    _presenter = LotAffectionPresenter(this, this._bloc, this.currentLot);
+    _presenter = LotAffectionPresenter(this, this.currentLot);
     _currentView = View.fiche;
     if (currentLot.codeLotLutte != null)
       _codeLotCtl.text = currentLot.codeLotLutte!;
@@ -205,7 +198,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> impleme
                   ElevatedButton(
                       //color: Colors.lightGreen[700],
                       child: new Text(S.of(context).bt_save,style: TextStyle( color: Colors.white)),
-                      onPressed: _save)
+                      onPressed: () { this._presenter.save(_campagneCtrl.text, _codeLotCtl.text, _dateDebutCtl.text, _dateFinCtl.text);})
                 ])
         ));
 
@@ -226,7 +219,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> impleme
           Expanded(child: _showList(belierSnap))
             ]);
       },
-      future: _getBeliers(this.widget._currentLot.idb!),
+      future: this._presenter.getBeliers(this.widget._currentLot.idb!),
     );
   }
 
@@ -247,7 +240,7 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> impleme
               Expanded(child: _showList(brebisSnap))
             ],);
         },
-      future: _getBrebis(this.widget._currentLot.idb!),
+      future: this._presenter.getBrebis(this.widget._currentLot.idb!),
     );
   }
 
@@ -301,25 +294,6 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> impleme
     );
   }
 
-  Future<Bete?> selectBete() async {
-    Bete ? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
-        builder: (BuildContext context) {
-          SearchPage search = new SearchPage(GismoPage.lot);
-          switch (_currentView ) {
-            case View.ewe:
-              search.searchSex = Sex.femelle;
-              break;
-            case View.ram:
-              search.searchSex = Sex.male;
-              break;
-            default:
-          }
-          return search;
-        },
-        fullscreenDialog: true
-    ));
-    return selectedBete;
-  }
 
   Future<String?> selectDateEntree() async {
     String ? dateEntree = await _showDateDialog(this.context,
@@ -356,41 +330,6 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> impleme
         }
         setState(() {});
       }
-  }
-
-  void _save() async {
-   currentLot.dateDebutLutte = DateFormat.yMd().parse(_dateDebutCtl.text);
-    if (currentLot.dateDebutLutte == "") {
-      this._showMessage("La date de début est obligatoire");
-      return;
-    }
-    if (_df.parse(_dateDebutCtl.text).year.toString() != _campagneCtrl.text) {
-      this._showMessage("L'année de la date de début doit être égale à la campagne");
-      return;
-    }
-    currentLot.dateFinLutte =  DateFormat.yMd().parse(_dateFinCtl.text);
-    if (currentLot.dateFinLutte == "") {
-      this._showMessage("La date de fin est obligatoire");
-      return;
-    }
-    currentLot.campagne = _campagneCtrl.text;
-    currentLot.codeLotLutte = _codeLotCtl.text;
-    if (currentLot.codeLotLutte == "") {
-      this._showMessage( "Le nom du lot est obligatoire");
-      return;
-    }
-    currentLot.campagne = _campagneCtrl.text;
-    this.widget._currentLot = (await this._bloc.saveLot(currentLot))!;
-    //Navigator.pop(context, "Lot enregistré");
-    this._showMessage("Lot enregistré");
-  }
-
-  Future<List<Affectation>> _getBeliers(int idLot)  {
-    return this._bloc.getBeliersForLot(idLot);
-  }
-
-  Future<List<Affectation>> _getBrebis(int idLot)  {
-    return this._bloc.getBrebisForLot(idLot);
   }
 
   Future _showDialog(BuildContext context, Affectation affect) {
@@ -485,14 +424,6 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> impleme
             },
           );
         });
-  }
-
-  void _showMessage(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    //_scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
   @override

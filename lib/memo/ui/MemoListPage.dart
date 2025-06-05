@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/SearchPage.dart';
 
 import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
-import 'package:flutter_gismo/memo/MemoPage.dart';
+import 'package:flutter_gismo/memo/ui/MemoPage.dart';
 import 'package:flutter_gismo/menu/MenuPage.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
-import 'package:flutter_gismo/presenter/MemoPresenter.dart';
+import 'package:flutter_gismo/memo/presenter/MemoPresenter.dart';
+import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class MemoListPage extends StatefulWidget {
   MemoListPage( {Key ? key}) : super(key: key);

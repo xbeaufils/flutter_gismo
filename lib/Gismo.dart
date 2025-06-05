@@ -4,18 +4,16 @@ import 'package:flutter_gismo/Lot/ui/LotPage.dart';
 import 'package:flutter_gismo/mouvement/ui/EntreePage.dart';
 import 'package:flutter_gismo/mouvement/ui/SortiePage.dart';
 import 'package:flutter_gismo/lamb/ui/SearchLambPage.dart';
-import 'package:flutter_gismo/search/SearchPage.dart';
+import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:flutter_gismo/SplashScreen.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/bloc/ConfigProvider.dart';
-import 'package:flutter_gismo/bloc/NavigationService.dart';
 import 'package:flutter_gismo/bluetooth.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/loginPage.dart';
-import 'package:flutter_gismo/memo/MemoListPage.dart';
+import 'package:flutter_gismo/memo/ui/MemoListPage.dart';
 import 'package:flutter_gismo/parcelle/ParcellePage.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
-import 'package:flutter_gismo/traitement/selectionTraitement.dart';
+import 'package:flutter_gismo/traitement/ui/selectionTraitement.dart';
 import 'package:flutter_gismo/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +35,6 @@ class GismoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthService.init();
     return MaterialApp(
-      navigatorKey: NavigationService.navigatorKey,
       title: 'Gismo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -71,14 +68,14 @@ class GismoApp extends StatelessWidget {
         '/nec': (context) => SearchPage( GismoPage.etat_corporel),
         '/pesee': (context) => SearchPage( GismoPage.pesee),
         '/search': (context) => SearchPage( GismoPage.individu),
-        '/sanitaire' : (context) => SelectionPage(this._bloc, []),
+        '/sanitaire' : (context) => SelectionPage([]),
         '/echo' : (context) => SearchPage( GismoPage.echo),
         '/lambing' : (context) => SearchPage( GismoPage.lamb),
         '/lamb' : (context) => SearchLambPage(),
         '/sortie': (context) => SortiePage(this._bloc),
         '/entree': (context) => EntreePage(),
         '/splash' : (context) => SplashScreen(this._bloc),
-        '/lot' : (context) => LotPage(this._bloc),
+        '/lot' : (context) => LotPage(),
         '/parcelle' : (context) =>ParcellePage(this._bloc),
         '/config' : (context) =>ConfigPage(this._bloc),
         '/bluetooth' : (context) =>BluetoothPermissionPage(this._bloc),

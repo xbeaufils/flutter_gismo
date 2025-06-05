@@ -2,32 +2,41 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
+import 'package:flutter_gismo/traitement/presenter/TraitementPresenter.dart';
 import 'package:intl/intl.dart';
 
 class SanitairePage extends StatefulWidget {
-  GismoBloc ? _bloc;
   Bete ? _malade;
   List<Bete> ? _betes;
   LambModel ? _bebeMalade;
   TraitementModel ? _currentTraitement;
 
-  SanitairePage(this._bloc, this._malade, this._bebeMalade, {Key ? key}) : super(key: key);
-  SanitairePage.edit(this._bloc, this._currentTraitement, {Key ? key}) : super(key: key);
+  SanitairePage( this._malade, this._bebeMalade, {Key ? key}) : super(key: key);
+  SanitairePage.edit( this._currentTraitement, {Key ? key}) : super(key: key);
   SanitairePage.modify(this._currentTraitement, {Key ? key}) : super(key: key);
-  SanitairePage.collectif(this._bloc, this._betes, {Key ? key}): super(key: key);
+  SanitairePage.collectif(this._betes, {Key ? key}): super(key: key);
 
   @override
-  _SanitairePageState createState() => new _SanitairePageState(_bloc);
+  _SanitairePageState createState() => new _SanitairePageState();
 }
 
-class _SanitairePageState extends State<SanitairePage> {
+abstract class SanitaireContract extends GismoContract {
+  Bete ? get malade;
+  List<Bete> ? get betes;
+  LambModel ? get bebeMalade;
+  TraitementModel ? get currentTraitement;
+
+}
+
+class _SanitairePageState extends GismoStatePage<SanitairePage> implements SanitaireContract {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  GismoBloc ? _bloc;
-  _SanitairePageState(this._bloc);
+  _SanitairePageState();
+  late TraitementPresenter _presenter;
 
   TextEditingController _dateDebutCtl = TextEditingController();
   TextEditingController _dateFinCtl = TextEditingController();
@@ -271,53 +280,12 @@ class _SanitairePageState extends State<SanitairePage> {
     );
   }
 
-  void _delete () async {
-    if (this.widget._currentTraitement != null) {
-      var message  = await _bloc!.deleteTraitement(this.widget._currentTraitement!.idBd!);
-      Navigator.pop(context, message);
-    }
-    else
-      Navigator.of(context).pop();
-  }
-
-  void _save() async {
-    TraitementModel traitement = new TraitementModel();
-    if (this.widget._currentTraitement != null) {
-      traitement.idBete = this.widget._currentTraitement?.idBete;
-      traitement.idBd = this.widget._currentTraitement?.idBd;
-    }
-    else {
-      if (this.widget._malade != null)
-        traitement.idBete = this.widget._malade?.idBd;
-      if (this.widget._bebeMalade != null)
-        traitement.idLamb = this.widget._bebeMalade?.idBd;
-    }
-    traitement.debut = DateFormat.yMd().parse(_dateDebutCtl.text);
-    traitement.dose = _doseCtl.text;
-    traitement.fin = DateFormat.yMd().parse(_dateFinCtl.text);
-    traitement.intervenant= _intervenantCtl.text;
-    traitement.observation = _observationCtl.text;
-    traitement.motif =_motifCtl.text;
-    traitement.medicament = _medicamentCtl.text;
-    traitement.ordonnance = _ordonnanceCtl.text;
-    traitement.rythme = _rythmeCtl.text;
-    traitement.voie = _voieCtl.text;
-    var message = "";
-    if (this.widget._betes != null)
-      message = await _bloc!.saveTraitementCollectif(traitement, this.widget._betes!);
-    else
-      message  = await _bloc!.saveTraitement(traitement);
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)))
-        .closed
-        .then((e) => {Navigator.of(context).pop()});
-
-  }
 
 
   @override
   void initState() {
     DateTime selectedDate = DateTime.now();
+    _presenter = TraitementPresenter(this);
     super.initState();
     if (this.widget._currentTraitement != null) {
       _dateDebutCtl.text = DateFormat.yMd().format(this.widget._currentTraitement!.debut);
@@ -335,5 +303,25 @@ class _SanitairePageState extends State<SanitairePage> {
       _dateDebutCtl.text = DateFormat.yMd().format(selectedDate);
       _dateFinCtl.text = DateFormat.yMd().format(selectedDate);
     }
+  }
+
+  @override
+  TraitementModel ? get currentTraitement {
+    return this.widget._currentTraitement;
+  }
+
+  @override
+  LambModel ? get bebeMalade {
+    return this.widget._bebeMalade;
+  }
+
+  @override
+  List<Bete> ? get betes {
+    return this.widget._betes;
+  }
+
+  @override
+  Bete ? get malade {
+    return this.widget._malade;
   }
 }

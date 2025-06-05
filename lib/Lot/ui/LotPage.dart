@@ -1,24 +1,35 @@
 import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/Lot/presenter/LotPresenter.dart';
 import 'package:flutter_gismo/Lot/ui/LotAffectationViewPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:intl/intl.dart';
 
 
 class LotPage extends StatefulWidget {
-  final GismoBloc _bloc;
 
-  LotPage(this._bloc,{Key ? key}) : super(key: key);
+  LotPage() ;
   @override
-  _LotPageState createState() => new _LotPageState(this._bloc);
+  _LotPageState createState() => new _LotPageState();
+}
+abstract class LotContract extends GismoContract {
+
 }
 
-class _LotPageState extends State<LotPage> {
-  final GismoBloc _bloc;
-  _LotPageState(this._bloc);
+class _LotPageState extends GismoStatePage<LotPage> implements LotContract {
+  _LotPageState();
+
+  late LotPresenter _presenter;
+
+  @override
+  void initState() {
+    super.initState();
+    _presenter = LotPresenter(this);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +52,7 @@ class _LotPageState extends State<LotPage> {
           ),
       floatingActionButton:
         FloatingActionButton(
-          onPressed: _createLot,
+          onPressed: this._presenter.createLot,
           backgroundColor: Colors.lightGreen[700],
           child: Icon(Icons.add),),
     );
@@ -66,61 +77,16 @@ class _LotPageState extends State<LotPage> {
                 leading:  IconButton(icon: Icon(Icons.delete), onPressed: () =>  _showDialog(context, lot), ),
                 title: Text(lot.codeLotLutte!),
                 subtitle: Text(DateFormat.yMd().format( lot.dateDebutLutte!)),
-                trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () => _viewDetails(lot), )
+                trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () => this._presenter.viewDetails(lot), )
               )
             );
           },
         );
       },
-      future: _getLots(),
+      future: this._presenter.getLots(),
     );
   }
 
-  void _viewDetails(LotModel lot ) async {
-    String? message = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => LotAffectationViewPage(this._bloc, lot ),
-      ),
-    ).whenComplete(() =>
-      setState(() {
-      })
-    );
-  }
-
-  void _delete(LotModel lot) async {
-    var message  = await _bloc.deleteLot(lot);
-    setState(() {
-      this._showMessage(message);
-    });
-  }
-
-  void _showMessage(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    //_scaffoldKey.currentState.showSnackBar(snackBar);
-  }
-
-
-  Future<List<LotModel>> _getLots()  {
-    return this._bloc.getLots();
-  }
-
-  void _createLot(){
-    var navigationResult = Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => LotAffectationViewPage(this._bloc, new LotModel()),
-      ),
-    );
-    navigationResult.then( (message) {
-      setState(() {
-        if (message != null) debug.log(message);
-      });
-    });
-  }
 
   Future _showDialog(BuildContext context, LotModel lot) {
     return showDialog(
@@ -150,7 +116,7 @@ class _LotPageState extends State<LotPage> {
     return TextButton(
       child: Text(S.of(context).bt_continue),
       onPressed: () {
-        _delete(lot);
+        this._presenter.delete(lot);
         Navigator.of(context).pop();
       },
     );

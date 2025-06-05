@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/search/SearchPage.dart';
+import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 

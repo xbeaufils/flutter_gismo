@@ -9,24 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/bloc/BluetoothBloc.dart';
-import 'package:flutter_gismo/bloc/ConfigProvider.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/individu/ui/EchoPage.dart';
-import 'package:flutter_gismo/individu/ui/NECPage.dart';
-import 'package:flutter_gismo/individu/ui/PeseePage.dart';
-import 'package:flutter_gismo/individu/ui/SailliePage.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
-import 'package:flutter_gismo/individu/ui/TimeLine.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/lamb/ui/lambing.dart';
-import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
-import 'package:flutter_gismo/presenter/SearchPresenter.dart';
+import 'package:flutter_gismo/search/presenter/SearchPresenter.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
-import 'package:flutter_gismo/traitement/Sanitaire.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:provider/provider.dart';
 import 'package:sentry/sentry.dart';
 
 class SearchPage extends StatefulWidget {
@@ -43,7 +32,7 @@ abstract class SearchContract extends GismoContract {
   void fillList(List<Bete> lstBetes);
   void goPreviousPage(Bete bete);
 
-  get nextPage;
+  GismoPage get nextPage;
 }
 
 class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderStateMixin implements SearchContract {
