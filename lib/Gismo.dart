@@ -35,11 +35,8 @@ class GismoApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    ConfigProvider provider = ConfigProvider();
     AuthService.init();
-    provider.init(this.mode);
-    return ChangeNotifierProvider(create: (context) => provider,
-    child: MaterialApp(
+    return MaterialApp(
       navigatorKey: NavigationService.navigatorKey,
       title: 'Gismo',
       theme: ThemeData(
@@ -87,6 +84,6 @@ class GismoApp extends StatelessWidget {
         '/bluetooth' : (context) =>BluetoothPermissionPage(this._bloc),
         '/saillie' : (context) => SearchPage(GismoPage.saillie),
       },
-    ));
+    );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/ConfigProvider.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:provider/provider.dart';
 
 class GismoDrawer extends StatelessWidget {
@@ -40,10 +41,7 @@ class GismoDrawer extends StatelessWidget {
   }
 
   Widget _showBlueTooth(BuildContext context) {
-    ConfigProvider provider = Provider.of<ConfigProvider>(context);
-    if (provider.currentUser == null)
-      return Container();
-    if (provider.isSubscribing())
+    if (AuthService().subscribe)
       return  ListTile(
         title: Text("Bluetooth"),
         leading: Icon(Icons.edit),
@@ -69,24 +67,13 @@ class GismoDrawer extends StatelessWidget {
   }
 
   Widget _userstatus(BuildContext context) {
-    ConfigProvider provider = Provider.of<ConfigProvider>(context);
     Icon iconConnexion = Icon(Icons.person);
     Text userName = new Text(S.of(context).localuser);
     Text cheptel = new Text("000000");
-    if (provider.currentUser == null) {
-      iconConnexion = Icon(Icons.error_outline);
-      userName = new Text(S.of(context).user_error);
-    } else
-      if (! provider.isSubscribing()) {
-        iconConnexion = Icon(Icons.error_outline);
-        userName = new Text(S.of(context).user_error);
-      } else {
-
-        if (provider.isSubscribing()) {
-          iconConnexion = Icon(Icons.verified_user);
-          userName = new Text(provider.currentUser!.email!);
-          cheptel = new Text(provider.currentUser!.cheptel!);
-        }
+    if (AuthService().subscribe) {
+      iconConnexion = Icon(Icons.verified_user);
+      userName = new Text(AuthService().email!);
+      cheptel = new Text(AuthService().cheptel!);
     }
     return DrawerHeader(
       decoration: BoxDecoration(

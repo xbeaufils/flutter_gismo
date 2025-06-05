@@ -28,8 +28,16 @@ class SplashScreenState extends State<SplashScreen> {
   void initState()  {
     super.initState();
     debug.log("initState" , name: "SplashScreenState:initState");
+    AuthService.init()
+        .then( (message) => route(message))
+        .catchError( (e)  {
+          _initError(e);
+        });
+    /*
     this._bloc.init().then( (message) => route(message))
         .catchError( (e)  {_initError(e);});
+
+     */
   }
 
   void _initError(e) {
@@ -52,7 +60,7 @@ class SplashScreenState extends State<SplashScreen> {
 
   void route(String message) {
     debug.log("Is logged $AuthService.subscribe ", name: "SplashScreenState::route");
-    Widget homePage = AuthService.subscribe ? WelcomePage( message):  ConfigPage(_bloc);
+    Widget homePage = AuthService().subscribe ? WelcomePage( message):  ConfigPage(_bloc);
     homePage = WelcomePage( message);
     Navigator.pushReplacement(
           context,

@@ -7,6 +7,7 @@ import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/core/repository/LocalRepository.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry/sentry.dart';
@@ -295,12 +296,11 @@ class LocalBeteRepository extends LocalRepository implements BeteRepository {
 
   @override
   Future<List<Bete>> getBeliers() async{
-    ConfigProvider provider = Provider.of<ConfigProvider>(NavigationService.navigatorKey.currentContext!, listen: false);
     Database db = await this.database;
     List<Map<String, dynamic>> maps = await db.rawQuery(
         'Select * from bete '
             + "WHERE bete.sex = 'male' "
-            "AND cheptel = '" + provider.currentUser!.cheptel! + "'");
+            "AND cheptel = '" + AuthService().cheptel! + "'");
     List<Bete> tempList = [];
     for (int i = 0; i < maps.length; i++) {
       tempList.add(new Bete.fromResult(maps[i]));
@@ -310,12 +310,11 @@ class LocalBeteRepository extends LocalRepository implements BeteRepository {
 
   @override
   Future<List<Bete>> getBrebis() async {
-    ConfigProvider provider = Provider.of<ConfigProvider>(NavigationService.navigatorKey.currentContext!, listen: false);
     Database db = await this.database;
     List<Map<String, dynamic>> maps = await db.rawQuery(
         'Select * from bete '
             + "WHERE bete.sex = 'femelle' "
-            "AND cheptel = '" + provider.currentUser!.cheptel! + "'");
+            "AND cheptel = '" + AuthService().cheptel! + "'");
     List<Bete> tempList = [];
     for (int i = 0; i < maps.length; i++) {
       tempList.add(new Bete.fromResult(maps[i]));

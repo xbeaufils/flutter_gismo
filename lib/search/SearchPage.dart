@@ -23,6 +23,7 @@ import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/presenter/SearchPresenter.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
@@ -107,12 +108,11 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   }
 
   Widget build(BuildContext context) {
-    final providerUser = Provider.of<ConfigProvider>(context);
-    if (providerUser.isSubscribing() && defaultTargetPlatform == TargetPlatform.android)
+    if (AuthService().subscribe && defaultTargetPlatform == TargetPlatform.android)
       new Future.delayed(Duration.zero,() {
         this._startService(context);
       });
-    if ( ! providerUser.isSubscribing()) {
+    if ( ! AuthService().subscribe ) {
       this._adBanner = BannerAd(
         adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
         size: AdSize.banner,
@@ -146,8 +146,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   }
 
   Widget _statusBluetoothBar(BuildContext context)  {
-    final providerUser = Provider.of<ConfigProvider>(context);
-    if ( ! providerUser.isSubscribing())
+    if ( ! AuthService().subscribe )
       return Container();
     List<Widget> status = <Widget>[]; //new List();
     switch (_bluetoothState) {
@@ -167,8 +166,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   }
 
   Widget _buildRfid(BuildContext context) {
-    final providerUser = Provider.of<ConfigProvider>(context);
-    if (providerUser.isSubscribing() && this._rfidPresent) {
+    if (AuthService().subscribe && this._rfidPresent) {
       return FloatingActionButton(
           child: Icon(Icons.wifi),
           backgroundColor: Colors.green,
@@ -179,8 +177,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   }
 
   Widget _getAdmobAdvice() {
-    final providerUser = Provider.of<ConfigProvider>(context);
-    if (providerUser.isSubscribing() ) {
+    if (AuthService().subscribe  ) {
       return Container();
     }
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
@@ -194,8 +191,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   }
 
   Widget _getFacebookAdvice() {
-    final providerUser = Provider.of<ConfigProvider>(context);
-    if ( providerUser.isSubscribing()  ) {
+    if ( AuthService().subscribe ) {
       return SizedBox(height: 0,width: 0,);
     }
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {

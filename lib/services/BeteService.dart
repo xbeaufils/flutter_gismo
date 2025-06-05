@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Exception/EventException.dart';
-import 'package:flutter_gismo/bloc/NavigationService.dart';
-import 'package:flutter_gismo/presenter/BetePresenter.dart';
 import 'package:flutter_gismo/repository/BeteRepository.dart';
-import 'package:flutter_gismo/bloc/ConfigProvider.dart';
 import 'package:flutter_gismo/repository/EchoRepository.dart';
 import 'package:flutter_gismo/repository/LambRepository.dart';
 import 'package:flutter_gismo/repository/LotRepository.dart';
@@ -16,7 +13,7 @@ import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'dart:developer' as debug;
 import 'package:sentry/sentry.dart';
 
@@ -29,7 +26,6 @@ import 'package:flutter_gismo/model/TraitementModel.dart';
 
 class BeteService {
 
-  final ConfigProvider _provider = Provider.of<ConfigProvider>(NavigationService.navigatorKey.currentContext!, listen: false);
   late BeteRepository _repository;
   late PeseeRepository _peseeRepository;
   late Traitementrepository _traitementrepository;
@@ -43,16 +39,16 @@ class BeteService {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   BeteService() {
-    if (_provider.isSubscribing() ) {
-      _repository = WebBeteRepository(_provider.getToken());
-      _traitementrepository = WebTraitementRepository(_provider.getToken());
-      _peseeRepository = WebPeseeRepository(_provider.getToken());
-      _necRepository = WebNecRepository(_provider.getToken());
-      _lambRepository = WebLambRepository(_provider.getToken());
-      _saillieRepository = WebSaillieRepository(_provider.getToken());
-      _echoRepository = WebEchoRepository(_provider.getToken());
-      _memorepository = WebMemoRepository(_provider.getToken());
-      _lotRepository = WebLotRepository(_provider.getToken());
+    if (AuthService().subscribe ) {
+      _repository = WebBeteRepository(AuthService().token);
+      _traitementrepository = WebTraitementRepository(AuthService().token);
+      _peseeRepository = WebPeseeRepository(AuthService().token);
+      _necRepository = WebNecRepository(AuthService().token);
+      _lambRepository = WebLambRepository(AuthService().token);
+      _saillieRepository = WebSaillieRepository(AuthService().token);
+      _echoRepository = WebEchoRepository(AuthService().token);
+      _memorepository = WebMemoRepository(AuthService().token);
+      _lotRepository = WebLotRepository(AuthService().token);
     }
     else {
       _repository = LocalBeteRepository();
@@ -68,7 +64,7 @@ class BeteService {
   }
 
   Future<List<Bete>> getBetes() {
-    return this._repository.getBetes(_provider.getCheptel()!);
+    return this._repository.getBetes(AuthService().cheptel!);
   }
 
   Future<List<Bete>> getBeliers() {

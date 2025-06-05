@@ -109,7 +109,7 @@ class GismoBloc {
       String? email = await storage.read(key: "email");
       if (email == null) {
         this._currentUser = new User(null, null);
-        _currentUser!.setCheptel("00000000");
+        _currentUser!.cheptel = "00000000";
         _currentUser!.subscribe = false;
         _currentUser!.setToken("Nothing");
         _repository = new GismoRepository(this._currentUser!, RepositoryType.local);
@@ -128,7 +128,7 @@ class GismoBloc {
       String? password = await storage.read(key: "password");
 
       this._currentUser = new User(email, password);
-      this._currentUser?.setCheptel("");
+      this._currentUser?.cheptel="";
       this._currentUser?.setToken("Nothing");
       _repository = new GismoRepository(this._currentUser!, RepositoryType.web);
       this._currentUser =
@@ -141,7 +141,7 @@ class GismoBloc {
     }
     on PlatformException catch(e) {
       this._currentUser = new User(null, null);
-      _currentUser?.setCheptel("00000000");
+      _currentUser?.cheptel="00000000";
       _currentUser?.subscribe = false;
       _repository = new GismoRepository(this._currentUser!, RepositoryType.local);
       debug.log("Mode autonome", name: "GismoBloc::init");
@@ -183,7 +183,7 @@ class GismoBloc {
 
   String logout() {
     this._currentUser = new User(null, null);
-    _currentUser?.setCheptel("00000000");
+    _currentUser?.cheptel="00000000";
     _currentUser?.subscribe = false;
     _repository = new GismoRepository(this._currentUser!, RepositoryType.local);
     debug.log("Mode autonome", name: "GismoBloc::init");
@@ -392,7 +392,7 @@ class GismoBloc {
       }
       else {
         this._currentUser = new User(null, null);
-        this._currentUser!.setCheptel("00000000");
+        this._currentUser!.cheptel = "00000000";
         this._currentUser!.subscribe = false;
         this._repository = new GismoRepository(this._currentUser!, RepositoryType.local);
         storage.delete(key: "email");

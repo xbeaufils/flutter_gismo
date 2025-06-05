@@ -3,17 +3,16 @@ import 'package:flutter_gismo/bloc/NavigationService.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/repository/LambRepository.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class LambingService {
-  final ConfigProvider _provider = Provider.of<ConfigProvider>(
-      NavigationService.navigatorKey.currentContext!, listen: false);
   late LambRepository _lambRepository;
 
   LambingService() {
-    if (_provider.isSubscribing()) {
-      _lambRepository = WebLambRepository(_provider.getToken());
+    if (AuthService().subscribe ) {
+      _lambRepository = WebLambRepository(AuthService().token);
     }
     else {
       _lambRepository = LocalLambRepository();
@@ -32,7 +31,7 @@ class LambingService {
   }
 
   Future<String ?> boucler(LambModel lamb, Bete bete) {
-    bete.cheptel = this._provider.getCheptel()!;
+    bete.cheptel = AuthService().cheptel!;
     return this._lambRepository.boucler(lamb, bete);
   }
 
@@ -61,7 +60,7 @@ class LambingService {
   }
 
   Future<List<CompleteLambModel>> getAllLambs() {
-    return this._lambRepository.getAllLambs(_provider.getCheptel()!);
+    return this._lambRepository.getAllLambs(AuthService().cheptel!);
   }
 
 

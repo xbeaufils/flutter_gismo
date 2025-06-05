@@ -2,15 +2,15 @@ import 'package:flutter_gismo/bloc/ConfigProvider.dart';
 import 'package:flutter_gismo/bloc/NavigationService.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/repository/MemoRepository.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:provider/provider.dart';
 
 class MemoService {
   late Memorepository _repository;
-  final ConfigProvider _provider = Provider.of<ConfigProvider>(NavigationService.navigatorKey.currentContext!, listen: false);
 
   MemoService() {
-    if (_provider.isSubscribing()) {
-      _repository = WebMemoRepository(_provider.getToken());
+    if (AuthService().subscribe ) {
+      _repository = WebMemoRepository(AuthService().token);
     }
     else {
       _repository = LocalMemoRepository();
@@ -28,6 +28,6 @@ class MemoService {
   }
 
   Future<List<MemoModel>> getCheptelMemos() {
-    return _repository.getCheptelMemos(_provider.getCheptel()!);
+    return _repository.getCheptelMemos(AuthService().cheptel!);
   }
 }

@@ -44,13 +44,12 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
 
   @override
   Widget build(BuildContext context) {
-    final providerUser = Provider.of<ConfigProvider>(context);
     return new Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.lightGreen,
         appBar: new AppBar(
-            title: ( AuthService.subscribe ) ?
-              new Text('Gismo ' + AuthService.cheptel!):
+            title: ( AuthService().subscribe ) ?
+              new Text('Gismo ' + AuthService().cheptel!):
               new Text('Erreur de connexion'),
             // N'affiche pas la touche back (qui revient à la SplashScreen
             automaticallyImplyLeading: true,
@@ -111,7 +110,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
                     children: <Widget>[
                       _buildButton(S.of(context).input, "assets/home.png", _presenter.entreePressed), // Entrée
                       _buildButton(S.of(context).output, "assets/Truck.png", _presenter.sortiePressed),
-                      _buildButton("Parcelles", "assets/parcelles.png", () => { (providerUser.isSubscribing() ? _presenter.parcellePressed: showMessage("Les parcelles ne sont pas visibles en mode autonome") )} ),
+                      _buildButton("Parcelles", "assets/parcelles.png", () => { (AuthService().subscribe ? _presenter.parcellePressed: showMessage("Les parcelles ne sont pas visibles en mode autonome") )} ),
                     //  _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
                     ])))),
 
@@ -122,7 +121,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
   }
 
   Widget _getAdmobAdvice() {
-    if (AuthService.subscribe ) {
+    if (AuthService().subscribe ) {
       return Container();
     }
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
@@ -136,7 +135,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
   }
 
   Widget _getFacebookAdvice() {
-    if ( AuthService.subscribe   ) {
+    if ( AuthService().subscribe   ) {
       return SizedBox(height: 0,width: 0,);
     }
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
@@ -193,7 +192,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
   void initState() {
     super.initState();
     _presenter = WelcomePresenter(this);
-    if (AuthService.subscribe ) {
+    if (! AuthService().subscribe ) {
       this._adBanner = BannerAd(
         adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
         size: AdSize.banner,

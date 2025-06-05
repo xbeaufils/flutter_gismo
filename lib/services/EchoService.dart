@@ -2,15 +2,15 @@ import 'package:flutter_gismo/bloc/ConfigProvider.dart';
 import 'package:flutter_gismo/bloc/NavigationService.dart';
 import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/repository/EchoRepository.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:provider/provider.dart';
 
 class EchoService {
   late Echorepository _echoRepository;
-  final ConfigProvider _provider = Provider.of<ConfigProvider>(NavigationService.navigatorKey.currentContext!, listen: false);
 
   EchoService() {
-    if (_provider.isSubscribing()) {
-       _echoRepository = WebEchoRepository(_provider.getToken());
+    if (AuthService().subscribe ) {
+       _echoRepository = WebEchoRepository(AuthService().token);
     }
     else {
       _echoRepository = LocalEchoRepository();

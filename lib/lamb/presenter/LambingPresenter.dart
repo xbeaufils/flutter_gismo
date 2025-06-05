@@ -6,6 +6,7 @@ import 'package:flutter_gismo/lamb/ui/SearchPerePage.dart';
 import 'package:flutter_gismo/lamb/ui/lambing.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:flutter_gismo/services/BeteService.dart';
 import 'package:flutter_gismo/services/LambingService.dart';
 import 'package:intl/intl.dart';
@@ -14,7 +15,6 @@ import 'package:provider/provider.dart';
 class LambingPresenter {
   final LambingService _service = LambingService();
   final LambingContract _view;
-  final ConfigProvider _provider = Provider.of<ConfigProvider>(NavigationService.navigatorKey.currentContext!, listen: false);
 
   LambingPresenter(this._view);
 
@@ -22,7 +22,7 @@ class LambingPresenter {
 
   void addPere() async {
     Bete ? pere;
-    if (this._provider.isSubscribing()) {
+    if (AuthService().subscribe) {
         pere = await this._view.showPerePage();
       }
       else

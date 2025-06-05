@@ -12,7 +12,7 @@ import 'package:flutter_gismo/core/repository/LocalRepository.dart';
 import 'package:flutter_gismo/services/UserService.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class ConfigProvider extends ChangeNotifier {
+class ConfigProviderZZZZ extends ChangeNotifier {
 
   User ? _currentUser;
 
@@ -39,7 +39,7 @@ class ConfigProvider extends ChangeNotifier {
       String? email = await storage.read(key: "email");
       if (email == null) {
         this._currentUser = new User(null, null);
-        _currentUser!.setCheptel("00000000");
+        _currentUser!.cheptel = "00000000";
         _currentUser!.subscribe = false;
         _currentUser!.setToken("Nothing");
         debug.log("Mode autonome", name: "GismoBloc::init");
@@ -61,7 +61,7 @@ class ConfigProvider extends ChangeNotifier {
       String? password = await storage.read(key: "password");
       UserService service  = UserService("nothing");
       this._currentUser = new User(email, password);
-      this._currentUser?.setCheptel("");
+      this._currentUser?.cheptel ="";
       this._currentUser?.setToken("Nothing");
       this._currentUser = await service.auth(this._currentUser!);
       /*this._currentUser =
@@ -74,7 +74,7 @@ class ConfigProvider extends ChangeNotifier {
     }
     on PlatformException catch(e) {
       this._currentUser = new User(null, null);
-      _currentUser?.setCheptel("00000000");
+      _currentUser?.cheptel = "00000000";
       _currentUser?.subscribe = false;
       //_repository = new GismoRepository(this._currentUser!, RepositoryType.local);
       debug.log("Mode autonome", name: "GismoBloc::init");

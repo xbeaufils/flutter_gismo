@@ -1,18 +1,15 @@
-import 'package:flutter_gismo/bloc/ConfigProvider.dart';
-import 'package:flutter_gismo/bloc/NavigationService.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/repository/NecRepository.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class NECService {
   late NecRepository _repository;
-  final ConfigProvider _provider = Provider.of<ConfigProvider>(NavigationService.navigatorKey.currentContext!, listen: false);
 
   NECService() {
-    if (_provider.isSubscribing()) {
-      _repository = WebNecRepository(_provider.getToken());
+    if (AuthService().subscribe ) {
+      _repository = WebNecRepository(AuthService().token);
     }
     else {
       _repository = LocalNecRepository();

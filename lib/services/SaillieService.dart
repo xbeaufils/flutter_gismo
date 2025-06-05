@@ -1,17 +1,14 @@
-import 'package:flutter_gismo/bloc/ConfigProvider.dart';
-import 'package:flutter_gismo/bloc/NavigationService.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/repository/SaillieRepository.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class SaillieService {
   late SaillieRepository _repository;
-  final ConfigProvider _provider = Provider.of<ConfigProvider>(NavigationService.navigatorKey.currentContext!, listen: false);
 
   SaillieService() {
-    if (_provider.isSubscribing()) {
-      _repository = WebSaillieRepository(_provider.getToken());
+    if (AuthService().subscribe)  {
+      _repository = WebSaillieRepository(AuthService().token);
     }
     else {
       _repository = LocalSaillieRepository();

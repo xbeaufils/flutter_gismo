@@ -1,19 +1,16 @@
-import 'package:flutter_gismo/bloc/ConfigProvider.dart';
-import 'package:flutter_gismo/bloc/NavigationService.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/repository/LotRepository.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class LotService {
   late LotRepository _lotRepository;
-  final ConfigProvider _provider = Provider.of<ConfigProvider>(NavigationService.navigatorKey.currentContext!, listen: false);
 
   LotService() {
-    if (_provider.isSubscribing()) {
-      _lotRepository  = WebLotRepository(_provider.getToken());
+    if (AuthService().subscribe ) {
+      _lotRepository  = WebLotRepository(AuthService().token);
     }
     else {
       _lotRepository = LocalLotRepository();
@@ -30,7 +27,7 @@ class LotService {
   }
 
   Future<LotModel ?> saveLot(LotModel lot) async {
-    lot.cheptel = this._provider.getCheptel();
+    lot.cheptel = AuthService().cheptel;
     LotModel ? newLot  = await this._lotRepository.saveLot(lot);
     return newLot;
   }

@@ -51,7 +51,7 @@ class WebDataProvider extends DataProvider {
       //final response = await _dio.post( Environnement.getUrlTarget() + '/user/auth', data: user.toMap());
       final response = await _gismoHttp.doPostResult( '/user/auth',  user.toMap());
       debug.log("Send authentication", name: "WebDataProvider::auth");
-        user.setCheptel(response["cheptel"]);
+        user.cheptel= response["cheptel"];
     }  catch (e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
@@ -202,7 +202,7 @@ class WebDataProvider extends DataProvider {
     try {
       final response = await _gismoHttp.doPostResult(
           '/user/login', user.toMap());
-      user.setCheptel (response["cheptel"]);
+      user.cheptel= (response["cheptel"]);
       user.setToken(response["token"]);
       user.subscribe = true;
     } catch ( e) {

@@ -68,7 +68,6 @@ class _LotAffectationViewPageState extends State<LotAffectationViewPage> impleme
 
   @override
   Widget build(BuildContext context) {
-    final providerUser = Provider.of<ConfigProvider>(context);
     return new Scaffold(
       key: _scaffoldKey,
             bottomNavigationBar:

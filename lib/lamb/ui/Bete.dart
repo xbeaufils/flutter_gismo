@@ -12,6 +12,7 @@ import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/presenter/BetePresenter.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry/sentry.dart';
@@ -57,8 +58,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   _BetePageState();
 
   Widget _statusBluetoothBar() {
-    ConfigProvider provider = Provider.of<ConfigProvider>(context);
-    if (! provider.isSubscribing())
+    if (! AuthService().subscribe)
       return Container();
     List<Widget> status = [];
     switch (_bluetoothState ) {
@@ -79,8 +79,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
 
   @override
   Widget build(BuildContext context) {
-    ConfigProvider provider = Provider.of<ConfigProvider>(context);
-    if (provider.isSubscribing())
+    if (AuthService().subscribe)
       this._startService();
     return new Scaffold(
         key: _scaffoldKey,
@@ -206,8 +205,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   }
 
   Widget _buildRfid() {
-    ConfigProvider provider = Provider.of<ConfigProvider>(context);
-    if (provider.isSubscribing() && this._rfidPresent) {
+    if (AuthService().subscribe && this._rfidPresent) {
       return FloatingActionButton(
           child: Icon(Icons.wifi),
           backgroundColor: Colors.green,
