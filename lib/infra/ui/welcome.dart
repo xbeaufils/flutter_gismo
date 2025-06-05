@@ -8,7 +8,7 @@ import 'package:flutter_gismo/generated/l10n.dart';
 
 import 'dart:developer' as debug;
 
-import 'package:flutter_gismo/menu/MenuPage.dart';
+import 'package:flutter_gismo/infra/ui/MenuPage.dart';
 import 'package:flutter_gismo/presenter/WelcomePresenter.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
 

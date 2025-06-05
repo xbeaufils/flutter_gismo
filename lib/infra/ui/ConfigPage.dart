@@ -2,13 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/menu/MenuPage.dart';
+import 'package:flutter_gismo/infra/ui/MenuPage.dart';
 import 'package:flutter_gismo/model/User.dart';
 
 import 'dart:developer' as debug;
 
-import 'package:flutter_gismo/welcome.dart';
+import 'package:flutter_gismo/infra/ui/welcome.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
@@ -22,14 +23,28 @@ class ConfigPage extends StatefulWidget {
   _ConfigPageState createState() => new _ConfigPageState(_bloc);
 }
 
-class _ConfigPageState extends State<ConfigPage> {
+abstract class ConfigContract extends GismoContract {
+  TestConfig get configTeste;
+  set configTeste(TestConfig value);
+}
+
+class _ConfigPageState extends GismoStatePage<ConfigPage> implements ConfigContract {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GismoBloc _bloc;
 
   _ConfigPageState(this._bloc);
 
   bool _isSubscribed = false;
-  TestConfig configTeste = TestConfig.NOT;
+  TestConfig _configTeste = TestConfig.NOT;
+
+  TestConfig get configTeste => _configTeste;
+
+  set configTeste(TestConfig value) {
+    setState(() {
+      _configTeste = value;
+    });
+  }
+
   final _cheptelCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
   final _tokenCtrl = TextEditingController();

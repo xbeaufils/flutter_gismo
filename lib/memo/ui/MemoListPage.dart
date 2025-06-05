@@ -6,7 +6,7 @@ import 'dart:developer' as debug;
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/memo/ui/MemoPage.dart';
-import 'package:flutter_gismo/menu/MenuPage.dart';
+import 'package:flutter_gismo/infra/ui/MenuPage.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/memo/presenter/MemoPresenter.dart';
 import 'package:flutter_gismo/search/ui/SearchPage.dart';

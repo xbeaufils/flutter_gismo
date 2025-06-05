@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:developer' as debug;
+import 'dart:io';
 
 import 'package:flutter_gismo/model/ReportModel.dart';
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
@@ -283,6 +285,75 @@ class LocalRepository {
         "`note` TEXT NULL DEFAULT NULL,"
         "`bete_id` INTEGER NULL DEFAULT NULL,"
         "PRIMARY KEY (`id`))");
+  }
+
+  Future<String> backupBd() async {
+    String databasePath = await getDatabasesPath();
+    String databaseFile = join(databasePath , 'gismo_database.db');
+    Database db = await this.database;
+    Map<String, dynamic> mapBase = new Map();
+    mapBase['lots'] = await db.query('lot');
+    mapBase['betes'] = await db.query('bete');
+    mapBase['agnelages'] = await db.query('agnelage');
+    mapBase['agneaux'] =  await db.query('agneaux');
+    mapBase['NEC'] =  await db.query('NEC');
+    mapBase['affectation'] =  await db.query('affectation');
+    mapBase['pesee'] =  await db.query('pesee');
+    mapBase['traitement'] =  await db.query('traitement');
+    mapBase['Echo'] =  await db.query('Echo');
+    mapBase['memo'] =  await db.query('memo');
+    return jsonEncode(mapBase);
+  }
+
+  Future<void> restoreBd(String fileName) async {
+
+    Database db = await this.database;
+    if (db.isOpen) {
+      db.close();
+    }
+    String path = join(join(await getDatabasesPath() , 'gismo_database.db'));
+    await deleteDatabase(path);
+    _database = null;
+    db = await this.database;
+    File jsonFile = new File(fileName);
+    try {
+      String base = jsonFile.readAsStringSync();
+      debug.log(base, name: "base" );
+      Map<String, dynamic> mapBase = jsonDecode(jsonFile.readAsStringSync());
+      debug.log(mapBase.toString(),name: "mapBase");
+      for (var i = 0; i < mapBase["betes"].length; i++) {
+        db.insert('bete', mapBase["betes"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (var i = 0; i < mapBase["agnelages"].length; i++) {
+        db.insert('agnelage', mapBase["agnelages"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (var i = 0; i < mapBase["agneaux"].length; i++) {
+        db.insert('agneaux', mapBase["agneaux"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (var i = 0; i < mapBase["lots"].length; i++) {
+        db.insert('lot', mapBase["lots"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (var i = 0; i < mapBase["affectation"].length; i++) {
+        db.insert('affectation', mapBase["affectation"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (var i = 0; i < mapBase["pesee"].length; i++) {
+        db.insert('pesee', mapBase["pesee"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (var i = 0; i < mapBase["traitement"].length; i++) {
+        db.insert('traitement', mapBase["traitement"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (var i = 0; i < mapBase["Echo"].length; i++) {
+        db.insert('Echo', mapBase["Echo"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (var i = 0; i < mapBase["memo"].length; i++) {
+        db.insert('memo', mapBase["memo"][i], conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+
+    }catch (e, stac) {
+      Sentry.captureException(e, stackTrace : stac);
+      //debug.log("Erreur", stackTrace: stac);
+    }
+    //mapBase['betes'].
   }
 
 

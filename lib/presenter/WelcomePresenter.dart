@@ -1,5 +1,5 @@
 
-import 'package:flutter_gismo/welcome.dart';
+import 'package:flutter_gismo/infra/ui/welcome.dart';
 
 class WelcomePresenter {
 

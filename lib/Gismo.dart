@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/ConfigPage.dart';
+import 'package:flutter_gismo/infra/ui/ConfigPage.dart';
 import 'package:flutter_gismo/Lot/ui/LotPage.dart';
 import 'package:flutter_gismo/mouvement/ui/EntreePage.dart';
 import 'package:flutter_gismo/mouvement/ui/SortiePage.dart';
 import 'package:flutter_gismo/lamb/ui/SearchLambPage.dart';
 import 'package:flutter_gismo/search/ui/SearchPage.dart';
-import 'package:flutter_gismo/SplashScreen.dart';
+import 'package:flutter_gismo/infra/ui/SplashScreen.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/bluetooth.dart';
+import 'package:flutter_gismo/infra/ui/bluetooth.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/loginPage.dart';
+import 'package:flutter_gismo/infra/ui/loginPage.dart';
 import 'package:flutter_gismo/memo/ui/MemoListPage.dart';
 import 'package:flutter_gismo/parcelle/ParcellePage.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:flutter_gismo/traitement/ui/selectionTraitement.dart';
-import 'package:flutter_gismo/welcome.dart';
+import 'package:flutter_gismo/infra/ui/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
