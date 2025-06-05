@@ -2,6 +2,7 @@ import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:flutter_gismo/search/ui/SelectMultiplePage.dart';
+import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
 import 'package:flutter_gismo/traitement/ui/selectionTraitement.dart';
 
 class SelectionPresenter {
@@ -9,33 +10,27 @@ class SelectionPresenter {
 
   SelectionPresenter(this._view);
 
+  void openTraitement() async {
+    String message = await this._view.goNextPage( SanitairePage.collectif( this._view.betes ));
+    this._view.backWithMessage(message);
+  }
+
   Future addMultipleBete() async {
     List<Bete>? betes = await this._view.goNextPage(SelectMultiplePage( GismoPage.sanitaire, this._view.betes));
-    debug.log("List $betes");
-    if (betes != null)
-      setState(() {
-        this._lstBete =  List.from( betes as Iterable );
-      });
+    this._view.betes = (betes!);
   }
 
   Future addBete() async {
     Bete ? selectedBete = await  this._view.goNextPage(SearchPage( GismoPage.sanitaire));
     if (selectedBete != null) {
-      setState(() {
-        Iterable<Bete> existingBete  = _lstBete.where((element) => element.idBd == selectedBete.idBd);
+        Iterable<Bete> existingBete  = this._view.betes.where((element) => element.idBd == selectedBete.idBd);
         if (existingBete.isEmpty)
-          _lstBete.add(selectedBete);
-        else
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(S.of(context).identity_number_error)));
-      });
-    }
+          this._view.betes.add(selectedBete);
+     }
   }
 
   Future removeBete(Bete selectedBete) async {
-    setState(() {
-      _lstBete.remove(selectedBete);
-    });
+    this._view.betes.remove(selectedBete);
   }
 
 

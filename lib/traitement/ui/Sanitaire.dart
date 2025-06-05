@@ -233,7 +233,10 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
                                 TextButton(
                                   onPressed: () => _showDialog(context),
                                   child: Text(S.of(context).bt_delete)),
-                            new ElevatedButton(key:null, onPressed:_save,
+                            new ElevatedButton(key:null, onPressed: () =>
+                                this._presenter.save(_dateDebutCtl.text, _dateFinCtl.text, _doseCtl.text,
+                                  _intervenantCtl.text, _observationCtl.text, _motifCtl.text, _medicamentCtl.text, _ordonnanceCtl.text,
+                                _rythmeCtl.text, _voieCtl.text),
                               //color: Colors.lightGreen[700],
                               child: new Text(S.of(context).bt_save,style: TextStyle( color: Colors.white)),)
                           ]
@@ -258,8 +261,7 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
     return TextButton(
       child: Text(S.of(context).bt_continue),
       onPressed: () {
-        _delete();
-        Navigator.of(context).pop();
+        this._presenter.delete();
       },
     );
   }
