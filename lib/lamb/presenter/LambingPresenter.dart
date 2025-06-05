@@ -2,8 +2,8 @@
 import 'package:facebook_audience_network/constants.dart';
 import 'package:flutter_gismo/bloc/ConfigProvider.dart';
 import 'package:flutter_gismo/bloc/NavigationService.dart';
-import 'package:flutter_gismo/lamb/SearchPerePage.dart';
-import 'package:flutter_gismo/lamb/lambing.dart';
+import 'package:flutter_gismo/lamb/ui/SearchPerePage.dart';
+import 'package:flutter_gismo/lamb/ui/lambing.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/services/BeteService.dart';

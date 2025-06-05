@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/individu/PeseePage.dart';
+import 'package:flutter_gismo/individu/ui/PeseePage.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
-import 'package:flutter_gismo/lamb/Bouclage.dart';
-import 'package:flutter_gismo/lamb/Mort.dart';
+import 'package:flutter_gismo/lamb/ui/Bouclage.dart';
+import 'package:flutter_gismo/lamb/ui/Mort.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
-import 'package:flutter_gismo/presenter/LambPresenter.dart';
+import 'package:flutter_gismo/lamb/presenter/LambPresenter.dart';
 import 'package:flutter_gismo/traitement/Sanitaire.dart';
 import 'package:intl/intl.dart';
 

@@ -237,7 +237,7 @@ class _ConfigPageState extends State<ConfigPage> {
       Navigator.pop(context, message);
     else
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (BuildContext context) => WelcomePage(this._bloc, null)));
+          context, MaterialPageRoute(builder: (BuildContext context) => WelcomePage(null)));
   }
 
   void _onError(e) {

@@ -1,6 +1,6 @@
-import 'package:flutter_gismo/individu/EchoPage.dart';
-import 'package:flutter_gismo/individu/TimeLine.dart';
-import 'package:flutter_gismo/lamb/lambing.dart';
+import 'package:flutter_gismo/individu/ui/EchoPage.dart';
+import 'package:flutter_gismo/individu/ui/TimeLine.dart';
+import 'package:flutter_gismo/lamb/ui/lambing.dart';
 import 'package:flutter_gismo/memo/MemoPage.dart';
 import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';

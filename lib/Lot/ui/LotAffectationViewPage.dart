@@ -6,7 +6,7 @@ import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/SearchPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/bloc/ConfigProvider.dart';
-import 'package:flutter_gismo/presenter/LotAffectationPresenter.dart';
+import 'package:flutter_gismo/Lot/presenter/LotAffectationPresenter.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';

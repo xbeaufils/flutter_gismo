@@ -1,5 +1,5 @@
 
-import 'package:flutter_gismo/individu/PeseePage.dart';
+import 'package:flutter_gismo/individu/ui/PeseePage.dart';
 import 'package:flutter_gismo/services/PeseeService.dart';
 import 'package:intl/intl.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
-import 'package:flutter_gismo/presenter/LambPresenter.dart';
+import 'package:flutter_gismo/lamb/presenter/LambPresenter.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

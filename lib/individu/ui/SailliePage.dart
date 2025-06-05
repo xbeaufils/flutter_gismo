@@ -6,7 +6,7 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
-import 'package:flutter_gismo/presenter/SailliePresenter.dart';
+import 'package:flutter_gismo/individu/presenter/SailliePresenter.dart';
 import 'package:intl/intl.dart';
 
 class SailliePage extends StatefulWidget {

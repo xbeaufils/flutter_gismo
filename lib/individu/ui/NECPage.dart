@@ -4,7 +4,7 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
-import 'package:flutter_gismo/presenter/NECPresenter.dart';
+import 'package:flutter_gismo/individu/presenter/NECPresenter.dart';
 import 'package:intl/intl.dart';
 
 class NECPage extends StatefulWidget {

@@ -1,4 +1,4 @@
-import 'package:flutter_gismo/Mouvement/EntreePage.dart';
+import 'package:flutter_gismo/mouvement/ui/EntreePage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/services/MouvementService.dart';
 import 'package:intl/intl.dart';

@@ -56,6 +56,15 @@ class LambingService {
     return this._lambRepository.getSaillieBeliers(lambing);
   }
 
+  Future<String> deleteLamb(LambModel lamb ) async {
+    return this._lambRepository.deleteLamb(lamb.idBd!);
+  }
+
+  Future<List<CompleteLambModel>> getAllLambs() {
+    return this._lambRepository.getAllLambs(_provider.getCheptel()!);
+  }
+
+
 }
 
 class NoLamb implements Exception {}

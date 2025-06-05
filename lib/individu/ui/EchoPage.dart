@@ -4,7 +4,7 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/EchographieModel.dart';
-import 'package:flutter_gismo/presenter/EchoPresenter.dart';
+import 'package:flutter_gismo/individu/presenter/EchoPresenter.dart';
 import 'package:intl/intl.dart';
 
 class EchoPage extends StatefulWidget {

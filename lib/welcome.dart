@@ -6,12 +6,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/ConfigProvider.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 
 import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/menu/MenuPage.dart';
 import 'package:flutter_gismo/presenter/WelcomePresenter.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
@@ -19,26 +21,24 @@ import 'package:provider/provider.dart';
 
 
 class WelcomePage extends StatefulWidget {
-  GismoBloc _bloc;
   String ? _message;
 
-  WelcomePage(this._bloc, this._message, {Key ? key}) : super(key: key);
+  WelcomePage(this._message, {Key ? key}) : super(key: key);
 
   @override
-  _WelcomePageState createState() => new _WelcomePageState(_bloc);
+  _WelcomePageState createState() => new _WelcomePageState();
 }
 
-abstract class WelcomeContract {
+abstract class WelcomeContract extends GismoContract {
   void viewPage(String path);
   void viewPageMessage(String path);
 }
 
-class _WelcomePageState extends State<WelcomePage> implements WelcomeContract {
+class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeContract {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final GismoBloc _bloc;
   late WelcomePresenter _presenter;
 
-  _WelcomePageState(this._bloc);
+  _WelcomePageState();
   BannerAd ? _adBanner;
 
 
@@ -49,8 +49,8 @@ class _WelcomePageState extends State<WelcomePage> implements WelcomeContract {
         key: _scaffoldKey,
         backgroundColor: Colors.lightGreen,
         appBar: new AppBar(
-            title: ( providerUser.isSubscribing() ) ?
-              new Text('Gismo ' + providerUser.getCheptel()!):
+            title: ( AuthService.subscribe ) ?
+              new Text('Gismo ' + AuthService.cheptel!):
               new Text('Erreur de connexion'),
             // N'affiche pas la touche back (qui revient à la SplashScreen
             automaticallyImplyLeading: true,
@@ -122,7 +122,7 @@ class _WelcomePageState extends State<WelcomePage> implements WelcomeContract {
   }
 
   Widget _getAdmobAdvice() {
-    if (this._bloc.isLogged() ! ) {
+    if (AuthService.subscribe ) {
       return Container();
     }
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
@@ -136,7 +136,7 @@ class _WelcomePageState extends State<WelcomePage> implements WelcomeContract {
   }
 
   Widget _getFacebookAdvice() {
-    if ( this._bloc.isLogged()!  ) {
+    if ( AuthService.subscribe   ) {
       return SizedBox(height: 0,width: 0,);
     }
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
@@ -193,7 +193,7 @@ class _WelcomePageState extends State<WelcomePage> implements WelcomeContract {
   void initState() {
     super.initState();
     _presenter = WelcomePresenter(this);
-    if ( ! _bloc.isLogged()!) {
+    if (AuthService.subscribe ) {
       this._adBanner = BannerAd(
         adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
         size: AdSize.banner,
@@ -217,19 +217,8 @@ class _WelcomePageState extends State<WelcomePage> implements WelcomeContract {
       this._adBanner!.dispose();
   }
 
-  void _parcellePressed() {
-    if (_bloc.user!.subscribe!)
-      Navigator.pushNamed(context, '/parcelle');
-    else
-      this.showMessage("Les parcelles ne sont pas visibles en mode autonome");
-  }
-
   void viewPage(String path) {
     Navigator.pushNamed(context, path);
-  }
-
-  void _individuPressed() {
-    Navigator.pushNamed(context, '/search');
   }
 
   void viewPageMessage(String path) {
@@ -242,61 +231,6 @@ class _WelcomePageState extends State<WelcomePage> implements WelcomeContract {
 
   }
 
-  void _sortiePressed() {
-    Future<dynamic>  message = Navigator.pushNamed(context, '/sortie')  ;
-    message.then((message) {
-      showMessage(message);
-    }).catchError((message) {
-      showMessage(message);
-    });
-  }
 
-  void _entreePressed() {
-    Future<dynamic>  message = Navigator.pushNamed(context, '/entree') ;
-    message.then((message) {
-      showMessage(message);
-    }).catchError((message) {
-      showMessage(message);
-    });
-  }
 
-  void showMessage(String ? message) {
-    if (message == null) return;
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  void _traitementPressed() {
-    Navigator.pushNamed(context, '/sanitaire');
-  }
-
-  void _echoPressed() {
-    Navigator.pushNamed(context, '/echo');
-  }
-
-  void _lambingPressed() {
-    Navigator.pushNamed(context, '/lambing');
-  }
-
-  void _lambPressed() {
-    Navigator.pushNamed(context, '/lamb');
-  }
-
-  void _necPressed() {
-    Navigator.pushNamed(context, '/nec');
-  }
-
-  void _peseePressed() {
-    Navigator.pushNamed(context, '/pesee');
-  }
-
-  void _lotPressed() {
-    Navigator.pushNamed(context, '/lot');
-  }
-
-  void _sailliePressed() {
-    Navigator.pushNamed(context, '/saillie');
-  }
 }

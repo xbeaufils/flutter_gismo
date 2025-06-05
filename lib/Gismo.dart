@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/ConfigPage.dart';
-import 'package:flutter_gismo/Lot/LotPage.dart';
-import 'package:flutter_gismo/Mouvement/EntreePage.dart';
-import 'package:flutter_gismo/Mouvement/SortiePage.dart';
-import 'package:flutter_gismo/SearchLambPage.dart';
+import 'package:flutter_gismo/Lot/ui/LotPage.dart';
+import 'package:flutter_gismo/mouvement/ui/EntreePage.dart';
+import 'package:flutter_gismo/mouvement/ui/SortiePage.dart';
+import 'package:flutter_gismo/lamb/ui/SearchLambPage.dart';
 import 'package:flutter_gismo/search/SearchPage.dart';
 import 'package:flutter_gismo/SplashScreen.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
@@ -14,6 +14,7 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/loginPage.dart';
 import 'package:flutter_gismo/memo/MemoListPage.dart';
 import 'package:flutter_gismo/parcelle/ParcellePage.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:flutter_gismo/traitement/selectionTraitement.dart';
 import 'package:flutter_gismo/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -35,6 +36,7 @@ class GismoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ConfigProvider provider = ConfigProvider();
+    AuthService.init();
     provider.init(this.mode);
     return ChangeNotifierProvider(create: (context) => provider,
     child: MaterialApp(
@@ -66,7 +68,7 @@ class GismoApp extends StatelessWidget {
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
        // '/config':(context) => ConfigPage(this._bloc),
-        '/welcome': (context) => WelcomePage(this._bloc, null),
+        '/welcome': (context) => WelcomePage(null),
         '/note' : (context) => MemoListPage(),
         '/login': (context) => LoginPage(this._bloc),
         '/nec': (context) => SearchPage( GismoPage.etat_corporel),
@@ -75,7 +77,7 @@ class GismoApp extends StatelessWidget {
         '/sanitaire' : (context) => SelectionPage(this._bloc, []),
         '/echo' : (context) => SearchPage( GismoPage.echo),
         '/lambing' : (context) => SearchPage( GismoPage.lamb),
-        '/lamb' : (context) => SearchLambPage(this._bloc),
+        '/lamb' : (context) => SearchLambPage(),
         '/sortie': (context) => SortiePage(this._bloc),
         '/entree': (context) => EntreePage(),
         '/splash' : (context) => SplashScreen(this._bloc),

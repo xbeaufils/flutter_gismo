@@ -1,4 +1,4 @@
-import 'package:flutter_gismo/Lot/LotAffectationViewPage.dart';
+import 'package:flutter_gismo/Lot/ui/LotAffectationViewPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';

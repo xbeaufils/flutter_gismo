@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/Bete.dart';
+import 'package:flutter_gismo/lamb/ui/Bete.dart';
 import 'package:flutter_gismo/bloc/ConfigProvider.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/presenter/EntreePresenter.dart';
+import 'package:flutter_gismo/mouvement/presenter/EntreePresenter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

@@ -6,6 +6,7 @@ import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/flavor/FlavorOvin.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:sentry/sentry.dart';

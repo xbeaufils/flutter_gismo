@@ -1,37 +1,54 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/lamb/LambPage.dart';
+import 'package:flutter_gismo/lamb/presenter/SearchLambPresenter.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:intl/intl.dart';
 
 class SearchLambPage extends StatefulWidget {
-  final GismoBloc _bloc;
-  SearchLambPage(this._bloc, { Key? key }) : super(key: key);
+  SearchLambPage( { Key? key }) : super(key: key);
   @override
-  _SearchLambPageState createState() => new _SearchLambPageState(_bloc);
+  _SearchLambPageState createState() => new _SearchLambPageState();
 }
 
+abstract class SearchLambContract extends GismoContract {
+  List<CompleteLambModel> get lambs;
+  set lambs(List<CompleteLambModel> value);
+  List<CompleteLambModel> get filteredLambs;
+  set filteredLambs(List<CompleteLambModel> value);
+}
 
-class _SearchLambPageState extends State<SearchLambPage> {
+class _SearchLambPageState extends GismoStatePage<SearchLambPage> implements SearchLambContract {
   // final formKey = new GlobalKey<FormState>();
   // final key = new GlobalKey<ScaffoldState>();
   final TextEditingController _filter = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final GismoBloc _bloc;
+  late SearchLambPresenter _presenter = SearchLambPresenter(this);
 
   String _searchText = "";
-  List<CompleteLambModel> _filteredLambs = <CompleteLambModel>[]; //new List();
-  List<CompleteLambModel> _lambs =<CompleteLambModel>[];// new List();
+  List<CompleteLambModel> _filteredLambs = <CompleteLambModel>[];
+
+  List<CompleteLambModel> get filteredLambs => _filteredLambs;
+
+  set filteredLambs(List<CompleteLambModel> value) {
+    setState(() {
+      _filteredLambs = value;
+    });
+  } //new List();
+  List<CompleteLambModel> _lambs =<CompleteLambModel>[];
+
+  set lambs(List<CompleteLambModel> value) {
+    _lambs = value;
+  }
+  List<CompleteLambModel> get lambs => _lambs; // new List();
 
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text( S.current.provisional_number );
 
-  _SearchLambPageState(this._bloc) {
+  _SearchLambPageState() {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
         setState(() {
@@ -48,7 +65,8 @@ class _SearchLambPageState extends State<SearchLambPage> {
 
   @override
   void initState() {
-    this._getLambs();
+
+    this._presenter.getLambs();
     super.initState();
   }
 
@@ -130,38 +148,17 @@ class _SearchLambPageState extends State<SearchLambPage> {
           trailing:
             IconButton(
               icon: new Icon(Icons.keyboard_arrow_right),
-              onPressed: () => _selectLambs(_filteredLambs[index]),),
+              onPressed: () {
+                setState(() {
+                  this._presenter.selectLambs(_filteredLambs[index]);
+                });
+                },),
 
 //          onTap: () => _selectLambs(_filteredLambs[index]),
         );
       },
     );
 
-  }
-
-  void _selectLambs(CompleteLambModel lamb) async  {
-    LambModel ? newLamb = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => LambPage.edit( lamb)),
-    );
-    if (newLamb == null)
-      return;
-    this._bloc.saveLamb(newLamb);
-    _lambs.forEach((aLamb) {
-      if (aLamb.idBd == newLamb.idBd) {
-        aLamb.sex = newLamb.sex;
-        aLamb.allaitement = newLamb.allaitement;
-        aLamb.marquageProvisoire = newLamb.marquageProvisoire;
-        aLamb.dateDeces = newLamb.dateDeces;
-        aLamb.motifDeces = newLamb.motifDeces;
-        aLamb.numBoucle = newLamb.numBoucle;
-        aLamb.numMarquage = newLamb.numMarquage;
-      }
-    });
-    setState(() {
-
-    });
   }
 
   // set up the buttons
@@ -178,7 +175,7 @@ class _SearchLambPageState extends State<SearchLambPage> {
     return TextButton(
       child: Text("Continuer"),
       onPressed: () {
-        _deleteLamb(lamb);
+        this._presenter.deleteLamb(lamb);
         Navigator.of(context).pop();
       },
     );
@@ -201,24 +198,6 @@ class _SearchLambPageState extends State<SearchLambPage> {
       );
     }
 
-  void _deleteLamb(CompleteLambModel lamb) async {
-    String message = await this._bloc.deleteLamb(lamb);
-    _lambs  = await this._bloc.getAllLambs();
-    setState(() {
-       _filteredLambs = _lambs;
-
-    });
-    this._showMessage(message);
-  }
-
-  void _showMessage(String message) {
-      final snackBar = SnackBar(
-        content: Text(message),
-      );
-      if (_scaffoldKey.currentState != null)
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-    }
 
   void _searchPressed() {
       setState(() {
@@ -241,18 +220,4 @@ class _SearchLambPageState extends State<SearchLambPage> {
         }
       });
     }
-
-  Future<List<CompleteLambModel>> _getAllLambs() async {
-    _lambs  = await this._bloc.getAllLambs();
-    _filteredLambs = _lambs;
-    return _filteredLambs;
-  }
-
-  void _getLambs() async {
-    _lambs = await this._bloc.getAllLambs();
-    setState(() {
-      _filteredLambs = _lambs;
-    });
-  }
-
 }

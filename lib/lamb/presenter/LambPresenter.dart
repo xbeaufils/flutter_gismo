@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter_gismo/lamb/Bouclage.dart';
-import 'package:flutter_gismo/lamb/LambPage.dart';
-import 'package:flutter_gismo/lamb/Mort.dart';
+import 'package:flutter_gismo/lamb/ui/Bouclage.dart';
+import 'package:flutter_gismo/lamb/ui/LambPage.dart';
+import 'package:flutter_gismo/lamb/ui/Mort.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/services/LambingService.dart';

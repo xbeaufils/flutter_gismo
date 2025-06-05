@@ -1,4 +1,4 @@
-import 'package:flutter_gismo/individu/EchoPage.dart';
+import 'package:flutter_gismo/individu/ui/EchoPage.dart';
 import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/services/EchoService.dart';
 import 'package:intl/intl.dart';

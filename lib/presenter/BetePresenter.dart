@@ -1,4 +1,4 @@
-import 'package:flutter_gismo/Bete.dart';
+import 'package:flutter_gismo/lamb/ui/Bete.dart';
 import 'package:flutter_gismo/bloc/BluetoothBloc.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';

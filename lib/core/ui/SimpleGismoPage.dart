@@ -5,6 +5,7 @@ abstract class GismoContract {
   void backWithMessage(String message);
   void showMessage(String message);
   void showSaving();
+  Future<dynamic> goNextPage(StatefulWidget page);
 }
 
 class GismoStatePage<T extends StatefulWidget> extends  State<T> {
@@ -14,6 +15,14 @@ class GismoStatePage<T extends StatefulWidget> extends  State<T> {
   Widget build(BuildContext context) {
     // TODO: implement build
     throw UnimplementedError();
+  }
+
+  Future<dynamic> goNextPage(StatefulWidget page) {
+    return Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => page),
+    );
   }
 
   void showMessage(String message) {

@@ -6,6 +6,7 @@ import 'package:flutter_gismo/ConfigPage.dart';
 import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:flutter_gismo/welcome.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -25,6 +26,7 @@ class SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState()  {
+    super.initState();
     debug.log("initState" , name: "SplashScreenState:initState");
     this._bloc.init().then( (message) => route(message))
         .catchError( (e)  {_initError(e);});
@@ -43,16 +45,15 @@ class SplashScreenState extends State<SplashScreen> {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) =>  WelcomePage(_bloc, e.toString()),
+          builder: (context) =>  WelcomePage(e.toString()),
         ));
 
   }
 
   void route(String message) {
-    bool _isLogged = this._bloc.isLogged()!;
-    debug.log("Is logged " + _isLogged.toString(), name: "SplashScreenState::route");
-    Widget homePage = _isLogged ? WelcomePage(_bloc, message):  ConfigPage(_bloc);
-    homePage = WelcomePage(_bloc, message);
+    debug.log("Is logged $AuthService.subscribe ", name: "SplashScreenState::route");
+    Widget homePage = AuthService.subscribe ? WelcomePage( message):  ConfigPage(_bloc);
+    homePage = WelcomePage( message);
     Navigator.pushReplacement(
           context,
           MaterialPageRoute(

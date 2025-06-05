@@ -1,7 +1,7 @@
 import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/Lot/LotAffectationViewPage.dart';
+import 'package:flutter_gismo/Lot/ui/LotAffectationViewPage.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
