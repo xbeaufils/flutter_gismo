@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
+import 'package:flutter_gismo/infra/presenter/LoginPresenter.dart';
 import 'package:flutter_gismo/model/User.dart';
 
 class LoginPage extends StatefulWidget {
-  final GismoBloc _bloc;
-  LoginPage(this._bloc, { Key? key}) : super(key: key);
   @override
-  _LoginPageState createState() => new _LoginPageState(_bloc);
+  _LoginPageState createState() => new _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  final GismoBloc _bloc;
+abstract class LoginContract extends GismoContract {
+
+}
+
+class _LoginPageState extends GismoStatePage<LoginPage> implements LoginContract {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  late LoginPresenter _presenter;
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
 
-  _LoginPageState(this._bloc);
+  _LoginPageState() {
+    _presenter = LoginPresenter(this);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                             border:
                             OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                        ),
-                      new ElevatedButton(key:null, onPressed:_loginWeb,
+                      new ElevatedButton(key:null, onPressed: this._presenter.loginWeb(_emailCtrl.text, _passwordCtrl.text),
                           //color: const Color(0xFFe0e0e0),
                           child:
                           new Text(
@@ -89,24 +95,4 @@ class _LoginPageState extends State<LoginPage> {
 
       );
   }
-  _loginWeb() async {
-    try {
-      User testUser  = User(_emailCtrl.text, _passwordCtrl.text);
-      await this._bloc.loginWeb(testUser);
-      Navigator.pushNamed(context,'/welcome');
-    }
-    catch(e) {
-      this.showMessage(e.toString());
-    }
-  }
-
-  void showMessage(String message) {
-    if (message == null)
-      return;
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
 }

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/bloc/BluetoothBloc.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/model/DeviceModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
@@ -19,8 +20,11 @@ class BluetoothPermissionPage extends StatefulWidget {
 
   @override
   BluetoothPermissionPageState createState() => new BluetoothPermissionPageState(_bloc);
+}
+abstract class BluetoothPermissionContract extends GismoContract {
 
 }
+
 class BluetoothPermissionPageState extends State<BluetoothPermissionPage> {
   final GismoBloc _bloc;
   late final BluetoothModel _model;

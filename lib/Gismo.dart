@@ -12,11 +12,9 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/infra/ui/loginPage.dart';
 import 'package:flutter_gismo/memo/ui/MemoListPage.dart';
 import 'package:flutter_gismo/parcelle/ParcellePage.dart';
-import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:flutter_gismo/traitement/ui/selectionTraitement.dart';
 import 'package:flutter_gismo/infra/ui/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:provider/provider.dart';
 
 enum RunningMode {test, run}
 
@@ -33,7 +31,6 @@ class GismoApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    AuthService.init();
     return MaterialApp(
       title: 'Gismo',
       theme: ThemeData(
@@ -64,7 +61,7 @@ class GismoApp extends StatelessWidget {
        // '/config':(context) => ConfigPage(this._bloc),
         '/welcome': (context) => WelcomePage(null),
         '/note' : (context) => MemoListPage(),
-        '/login': (context) => LoginPage(this._bloc),
+        '/login': (context) => LoginPage(),
         '/nec': (context) => SearchPage( GismoPage.etat_corporel),
         '/pesee': (context) => SearchPage( GismoPage.pesee),
         '/search': (context) => SearchPage( GismoPage.individu),
@@ -72,12 +69,12 @@ class GismoApp extends StatelessWidget {
         '/echo' : (context) => SearchPage( GismoPage.echo),
         '/lambing' : (context) => SearchPage( GismoPage.lamb),
         '/lamb' : (context) => SearchLambPage(),
-        '/sortie': (context) => SortiePage(this._bloc),
+        '/sortie': (context) => SortiePage(),
         '/entree': (context) => EntreePage(),
         '/splash' : (context) => SplashScreen(this._bloc),
         '/lot' : (context) => LotPage(),
         '/parcelle' : (context) =>ParcellePage(this._bloc),
-        '/config' : (context) =>ConfigPage(this._bloc),
+        '/config' : (context) =>ConfigPage(),
         '/bluetooth' : (context) =>BluetoothPermissionPage(this._bloc),
         '/saillie' : (context) => SearchPage(GismoPage.saillie),
       },

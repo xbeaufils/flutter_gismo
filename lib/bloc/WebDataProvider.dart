@@ -203,7 +203,7 @@ class WebDataProvider extends DataProvider {
       final response = await _gismoHttp.doPostResult(
           '/user/login', user.toMap());
       user.cheptel= (response["cheptel"]);
-      user.setToken(response["token"]);
+      user.token = (response["token"]);
       user.subscribe = true;
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());

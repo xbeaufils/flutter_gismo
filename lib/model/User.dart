@@ -20,7 +20,7 @@ class User {
     this._cheptel = cheptel;
   }
 
-  setToken(String ? value) {
+  set token(String ? value) {
     _token = value;
   }
 

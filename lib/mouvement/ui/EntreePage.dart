@@ -18,7 +18,8 @@ class EntreePage extends StatefulWidget {
 }
 
 abstract class EntreeContract extends GismoContract {
-
+  List<Bete> get sheeps;
+  set sheeps(List<Bete> value);
 }
 
 class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContract {
@@ -27,6 +28,13 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
 
   TextEditingController _dateEntreeCtl = TextEditingController();
   late List<Bete> _sheeps;
+
+  List<Bete> get sheeps => _sheeps;
+
+  set sheeps(List<Bete> value) {
+    _sheeps = value;
+  }
+
   String ?  _currentMotif;
   late List<DropdownMenuItem<String>> _motifEntreeItems;
   BannerAd ? _adBanner;
@@ -121,26 +129,26 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
                 ],
               )),
           Expanded(
-            child: Sheeps(this._sheeps, this)),
+            child: Sheeps(this)),
           ElevatedButton(
             child: Text(S.of(context).bt_save,
                 style: new TextStyle(color: Colors.white, ),),
             onPressed: () {
               try {
-                this._presenter.save(_dateEntreeCtl.text, _currentMotif, this._sheeps);
+                this._presenter.save(_dateEntreeCtl.text, _currentMotif);
               } on MissingDate {
-                showError(S.of(context).noEntryDate);
+                showMessage(S.of(context).noEntryDate);
               } on MissingMotif {
-                showError(S.of(context).entree_reason_required);
+                showMessage (S.of(context).entree_reason_required);
               } on MissingSheeps {
-                showError(S.of(context).empty_list);
+                showMessage(S.of(context).empty_list);
               }
             }),
           ]
 
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: _openAddEntryDialog,
+        onPressed: this._presenter.add,
         tooltip: S.of(context).tooltip_add_beast,
         child: new Icon(Icons.add),
       ),
@@ -169,56 +177,6 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
       return 'ca-app-pub-9699928438497749/7971231462';
     }
     return null;
-  }
-/*
-  void _saveEntree() {
-    if (_dateEntreeCtl.text.isEmpty) {
-      showError(S.of(context).noEntryDate);
-      return;
-    }
-
-    if ( _currentMotif == null) {
-      showError(S.of(context).entree_reason_required);
-      return;
-    }
-    if (_currentMotif!.isEmpty) {
-      showError(S.of(context).entree_reason_required);
-      return;
-    }
-    if (_sheeps.length == 0) {
-      showError(S.of(context).empty_list);
-      return;
-    }
-    var message  = this.bloc.saveEntree(DateFormat.yMd().parse(_dateEntreeCtl.text), _currentMotif!, this._sheeps);
-    message
-      .then( (message) {goodSaving(message);})
-      .catchError( (message) {showError(message);});
-  }
-*/
-  void showError(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    ScaffoldMessenger.of(context)..showSnackBar(snackBar);
-  }
-
-  void goodSaving(String message) {
-    message = S.of(context).input + " : " + message;
-    Navigator.pop(context, message);
-  }
-
-  Future _openAddEntryDialog() async {
-      Bete? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
-          builder: (BuildContext context) {
-            return new BetePage(null);
-          },
-          fullscreenDialog: true
-      )) ;
-      if (selectedBete != null) {
-        setState(() {
-          _sheeps.add(selectedBete);
-        });
-      }
   }
 
   @override
@@ -265,16 +223,15 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
 }
 
 class Sheeps extends StatelessWidget {
-  final List<Bete> _sheeps;
   _EntreePageState _entree;
-  Sheeps(this._sheeps, this._entree);
+  Sheeps(this._entree);
 
-  Widget _buildLambItem(BuildContext context, int index) {
+  Widget _buildSheepItem(BuildContext context, int index) {
     return Card(
       child: ListTile(
-            title: Text(_sheeps[index].numBoucle),
-            subtitle: Text(_sheeps[index].numMarquage),
-            trailing: IconButton(icon: Icon(Icons.clear), onPressed:() {  _entree.removeBete(index);} ),
+            title: Text(this._entree.sheeps[index].numBoucle),
+            subtitle: Text(this._entree.sheeps[index].numMarquage),
+            trailing: IconButton(icon: Icon(Icons.clear), onPressed:() {  _entree._presenter.remove(index);} ),
           ),
       );
   }
@@ -282,8 +239,8 @@ class Sheeps extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemBuilder: _buildLambItem,
-      itemCount: _sheeps.length,
+      itemBuilder: _buildSheepItem,
+      itemCount: _entree.sheeps.length,
     );
   }
 }

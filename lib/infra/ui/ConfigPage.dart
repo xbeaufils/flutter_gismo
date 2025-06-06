@@ -1,38 +1,33 @@
 import 'dart:io';
+import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/infra/presenter/ConfigPresenter.dart';
 import 'package:flutter_gismo/infra/ui/MenuPage.dart';
-import 'package:flutter_gismo/model/User.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 
-import 'dart:developer' as debug;
-
-import 'package:flutter_gismo/infra/ui/welcome.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
 enum TestConfig{NOT, DONE}
 enum ConfirmAction { CANCEL, ACCEPT }
 
 class ConfigPage extends StatefulWidget {
-  final GismoBloc _bloc;
-  ConfigPage(this._bloc, {Key ? key}) : super(key: key);
   @override
-  _ConfigPageState createState() => new _ConfigPageState(_bloc);
+  _ConfigPageState createState() => new _ConfigPageState();
 }
 
 abstract class ConfigContract extends GismoContract {
   TestConfig get configTeste;
   set configTeste(TestConfig value);
+  Future confirmRestore();
 }
 
 class _ConfigPageState extends GismoStatePage<ConfigPage> implements ConfigContract {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final GismoBloc _bloc;
-
-  _ConfigPageState(this._bloc);
+  late ConfigPresenter _presenter;
 
   bool _isSubscribed = false;
   TestConfig _configTeste = TestConfig.NOT;
@@ -96,7 +91,7 @@ class _ConfigPageState extends GismoStatePage<ConfigPage> implements ConfigContr
                           border:
                           OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                     ),
-                    new ElevatedButton(key:null, onPressed:_login,
+                    new ElevatedButton(key:null, onPressed:() => this._presenter.login(_emailCtrl.text, _passwordCtrl.text) ,
                         //color: const Color(0xFFe0e0e0),
                         child:
                         new Text(S.of(context).connection,
@@ -141,16 +136,19 @@ class _ConfigPageState extends GismoStatePage<ConfigPage> implements ConfigContr
                           children: <Widget>[
                             new ListTile(
                               title: Text(filename), 
-                              trailing: IconButton(icon: Icon(Icons.delete), onPressed: () => this._deleteBackup(filename) ,), 
-                              leading: IconButton(icon: Icon(Icons.restore), onPressed: () => this._restoreBackup(filename)) ,)
+                              trailing: IconButton(icon: Icon(Icons.delete), onPressed: ()  {
+                                setState( () {
+                                  this._presenter.deleteBackup(filename); });
+                              }  ,),
+                              leading: IconButton(icon: Icon(Icons.restore), onPressed: () => this._presenter.restoreBackup(filename)) ,)
                           ]);
                     },
                   );
               }
             },
-            future: _getFiles(),
+            future: this._presenter.getFiles(),
         ),
-      new ElevatedButton(key:null, onPressed:_copyBD,
+      new ElevatedButton(key:null, onPressed: this._presenter.copyBD,
           //color: const Color(0xFFe0e0e0),
           child:
           new Text(S.of(context).copy_base,
@@ -162,56 +160,8 @@ class _ConfigPageState extends GismoStatePage<ConfigPage> implements ConfigContr
     ],
     );
   }
-  
-  Future<List<FileSystemEntity>?>  _getFiles() async {
-    /*
-    var permission = Permission.storage;
-    final PermissionStatus status = await permission.request();
-     */
-    final Directory ? extDir = await getExternalStorageDirectory();
-    if (extDir == null)
-      return null;
-    final Directory backupDir = Directory(extDir.path + '/backup');
-    if (! backupDir.existsSync())
-      return [];
-    //final isPermissionStatusGranted = await _requestPermissions();
-    List<FileSystemEntity> files = backupDir.listSync();
-    return files;
-  }
 
-  void _deleteBackup(String nameFile) {
-      this._bloc.deleleteBackup(nameFile);
-      setState(() {
-
-      });
-  }
-
-  void _copyBD() {
-    this._bloc.copyBD();
-  }
-
-  void _restoreBackup(String filename) {
-      this._asyncConfirmDialog(context).then((value) => {
-        if (value == ConfirmAction.ACCEPT)
-          this._bloc.restoreBackup(filename)
-      }
-      );
-  }
-
-  void _login() async {
-      User testUser  = User(_emailCtrl.text, _passwordCtrl.text);
-      try {
-        User testedUser = await this._bloc.login(testUser);
-        setState(() {
-          configTeste = TestConfig.DONE;
-        });
-      } catch(e) {
-        _onError(e);
-      }
-
-  }
-
-  Future _asyncConfirmDialog(BuildContext context) async {
+  Future confirmRestore() async {
     return showDialog(
       context: context,
       barrierDismissible: false, // user must tap button for close dialog!
@@ -238,31 +188,6 @@ class _ConfigPageState extends GismoStatePage<ConfigPage> implements ConfigContr
     );
   }
 
-  void _saveConfig() {
-    //AuthService service = new AuthService();
-    this._bloc.saveConfig(this._isSubscribed, _emailCtrl.text, _passwordCtrl.text)
-        .then((message) {_confirmSave();})
-        .catchError((e) {_onError(e);});
-   }
-
-  void _confirmSave() {
-    debug.log("Cheptel is " , name: "_ConfigPageState::_confirmSave");
-    String message = "Parametres sauvegardés";
-    if (Navigator.canPop(context))
-      Navigator.pop(context, message);
-    else
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (BuildContext context) => WelcomePage(null)));
-  }
-
-  void _onError(e) {
-    final snackBar = SnackBar(content: Text(e),);
-    debug.log("Cheptel is " , name: "_ConfigPageState::_onError");
-    FocusScope.of(context).unfocus();
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    //_scaffoldKey.currentState.showSnackBar(snackBar);
-   }
-
   @override
   Widget build(BuildContext context) {
     debug.log("Build" , name: "_ConfigPageState:Build");
@@ -271,7 +196,7 @@ class _ConfigPageState extends GismoStatePage<ConfigPage> implements ConfigContr
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: (! _isSubscribed || configTeste == TestConfig.DONE)?
         FloatingActionButton.extended(
-            onPressed: _saveConfig,
+            onPressed: () => this._presenter.saveConfig(this._isSubscribed, _emailCtrl.text, _passwordCtrl.text, Navigator.canPop(context)),
             label: Text(S.of(context).save_config),
             icon: Icon(Icons.save),
         ): null ,
@@ -304,12 +229,13 @@ class _ConfigPageState extends GismoStatePage<ConfigPage> implements ConfigContr
   void initState() {
     debug.log("initState", name: "_ConfigPageState:initState");
     super.initState();
-    if (_bloc.user != null) {
-      if (_bloc.user!.email != null)
-        _emailCtrl.text = _bloc.user!.email!;
-      if (_bloc.user!.subscribe != null)
-        _isSubscribed = _bloc.user!.subscribe!;
+    this._presenter = ConfigPresenter(this);
+    if (AuthService().subscribe) {
+      if (AuthService().email != null)
+        _emailCtrl.text = AuthService().email!;
+        _isSubscribed = true;
     }
+    else _isSubscribed = false;
     if (_isSubscribed) {
       configTeste = TestConfig.DONE;
     }

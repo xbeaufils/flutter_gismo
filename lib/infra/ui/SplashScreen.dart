@@ -28,10 +28,11 @@ class SplashScreenState extends State<SplashScreen> {
   void initState()  {
     super.initState();
     debug.log("initState" , name: "SplashScreenState:initState");
+
     AuthService.init()
         .then( (message) => route(message))
         .catchError( (e)  {
-          _initError(e);
+      route(e);
         });
     /*
     this._bloc.init().then( (message) => route(message))
@@ -40,27 +41,10 @@ class SplashScreenState extends State<SplashScreen> {
      */
   }
 
-  void _initError(e) {
-    debug.log("Error is " + e.toString() , name: "SplashScreenState::_initError");
-    this._bloc.setUser(null);
-    SnackBar snackBar =SnackBar(content: Text(""),);;
-    if (e is String)
-      snackBar = SnackBar(content: Text(e),);
-    if (e is Exception)
-      snackBar = SnackBar(content: Text(e.toString()),);
-    FocusScope.of(context).unfocus();
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>  WelcomePage(e.toString()),
-        ));
-
-  }
 
   void route(String message) {
     debug.log("Is logged $AuthService.subscribe ", name: "SplashScreenState::route");
-    Widget homePage = AuthService().subscribe ? WelcomePage( message):  ConfigPage(_bloc);
+    Widget homePage = AuthService().subscribe ? WelcomePage( message):  ConfigPage();
     homePage = WelcomePage( message);
     Navigator.pushReplacement(
           context,

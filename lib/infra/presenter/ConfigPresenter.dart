@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_gismo/infra/ui/ConfigPage.dart';
+import 'package:flutter_gismo/infra/ui/welcome.dart';
 import 'package:flutter_gismo/model/User.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:flutter_gismo/services/UserService.dart';
@@ -31,12 +32,10 @@ class ConfigPresenter {
     this._userUservice.copyBD();
   }
 
-  void restoreBackup(String filename) {
-    this._asyncConfirmDialog(context).then((value) => {
-      if (value == ConfirmAction.ACCEPT)
-        this._userUservice.restoreBackup(filename)
-    }
-    );
+  void restoreBackup(String filename) async {
+    var value = await this._view.confirmRestore();
+    if (value == ConfirmAction.ACCEPT)
+      this._userUservice.restoreBackup(filename);
   }
 
   void login(String email, String password) async {
@@ -50,24 +49,12 @@ class ConfigPresenter {
 
   }
 
-  void saveConfig(bool isSubscribe, String email, String password) async {
-    //AuthService service = new AuthService();
+  void saveConfig(bool isSubscribe, String email, String password, bool canPop) async {
     String message = await this._userUservice.saveConfig(isSubscribe, email, password);
-    this._view.backWithMessage(message);
-    this._userUservice.saveConfig(isSubscribe, email, password)
-        .then((message) {_confirmSave();})
-        .catchError((e) {_onError(e);});
-  }
-
-  void confirmSave() {
-    debug.log("Cheptel is " , name: "_ConfigPageState::_confirmSave");
-    String message = "Parametres sauvegardés";
-    if (Navigator.canPop(context))
-      Navigator.pop(context, message);
+    if (canPop)
+      this._view.backWithMessage(message);
     else
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (BuildContext context) => WelcomePage(null)));
+      this._view.goNextPage(WelcomePage(null));
   }
-
 
 }

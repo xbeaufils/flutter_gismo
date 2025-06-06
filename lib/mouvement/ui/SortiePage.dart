@@ -1,25 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/search/ui/SearchPage.dart';
+import 'package:flutter_gismo/mouvement/presenter/SortiePresenter.dart';
 import 'package:intl/intl.dart';
 
 class SortiePage extends StatefulWidget {
-  final GismoBloc _bloc;
 
-  SortiePage(this._bloc,{Key ? key}) : super(key: key);
   @override
-  _SortiePageState createState() => new _SortiePageState(this._bloc);
+  _SortiePageState createState() => new _SortiePageState();
+}
+abstract class SortieContract extends GismoContract {
+  List<Bete> get sheeps;
+  set sheeps(List<Bete> value);
 }
 
-class _SortiePageState extends State<SortiePage> {
-  final GismoBloc _bloc;
-  _SortiePageState(this._bloc);
+class _SortiePageState extends GismoStatePage<SortiePage> implements SortieContract {
   TextEditingController _dateSortieCtl = TextEditingController();
+  late SortiePresenter _presenter;
   //final _df = new DateFormat('dd/MM/yyyy');
   late List<Bete> _sheeps;
+
+  List<Bete> get sheeps => _sheeps;
+
+  set sheeps(List<Bete> value) {
+    setState(() {
+      _sheeps = value;
+    });
+  }
+
   String ? _currentMotif;
   late List<DropdownMenuItem<String>> _motifSortieItems;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -104,68 +113,16 @@ class _SortiePageState extends State<SortiePage> {
                 //color: Colors.lightGreen[900],
                 child: Text(S.of(context).bt_save,
                   style: new TextStyle(color: Colors.white, ),),
-                onPressed: _saveSortie)
+                onPressed:() => this._presenter.save(_dateSortieCtl.text, _currentMotif) )
           ]
 
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: _openAddEntryDialog,
+        onPressed: this._presenter.add,
         tooltip: S.of(context).tooltip_add_beast,
         child: new Icon(Icons.add),
       ),
     );
-  }
-
-  void _saveSortie() {
-    if (_dateSortieCtl.text.isEmpty) {
-      showError(S.of(context).noDateDeparture);
-      return;
-    }
-
-    if ( _currentMotif == null) {
-      showError(S.of(context).output_reason_required);
-      return;
-    }
-    if (_currentMotif!.isEmpty) {
-      showError(S.of(context).output_reason_required);
-      return;
-    }
-    if (_sheeps.length == 0) {
-      showError(S.of(context).empty_list);
-      return;
-    }
-
-    var message  = this._bloc.saveSortie(DateFormat.yMd().parse(_dateSortieCtl.text), _currentMotif!, this._sheeps);
-    message
-      .then( (message) {goodSaving(message);})
-      .catchError( (message) {showError(message);});
-  }
-
-  void showError(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    //_scaffoldKey.currentState.showSnackBar(snackBar);
-  }
-
-  void goodSaving(String message) {
-    message = S.of(context).output + " : " + message;
-    Navigator.pop(context, message);
-  }
-
-  Future _openAddEntryDialog() async {
-      Bete selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
-          builder: (BuildContext context) {
-            return new SearchPage(GismoPage.sortie);
-          },
-          fullscreenDialog: true
-      )) as Bete;
-      if (selectedBete != null) {
-        setState(() {
-          _sheeps.add(selectedBete);
-        });
-      }
   }
 
   void didChangeDependencies() {
@@ -176,6 +133,7 @@ class _SortiePageState extends State<SortiePage> {
   @override
   void initState() {
     super.initState();
+    this._presenter = SortiePresenter(this);
     _sheeps = [];
     _dateSortieCtl.text =  DateFormat.yMd().format(DateTime.now());
   }

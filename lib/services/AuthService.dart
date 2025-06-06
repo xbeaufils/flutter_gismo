@@ -65,7 +65,7 @@ class AuthService {
       UserService service  = UserService("nothing");
       User _user = new User(email, password);
       _user.cheptel ="" ;
-      _user.setToken("Nothing");
+      _user.token = "Nothing";
       _user = await service.auth(_user);
       AuthService().cheptel = _user.cheptel;
       AuthService().token = _user.token!;

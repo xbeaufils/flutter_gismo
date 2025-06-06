@@ -19,9 +19,10 @@ class UserService extends WebRepository{
   Future<User> auth(User user) async {
     try {
       //final response = await _dio.post( Environnement.getUrlTarget() + '/user/auth', data: user.toMap());
-      final response = await super.doPostResult( '/user/auth',  user.toMap());
-      debug.log("Send authentication", name: "WebDataProvider::auth");
+      final response = await super.doPostResult( '/user/login',  user.toMap());
+      debug.log("Send authentication", name: "UserService::auth");
       user.cheptel=(response["cheptel"]);
+      user.token = response["token"];
     }  catch (e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
@@ -56,8 +57,8 @@ class UserService extends WebRepository{
       //this.reportError(e, stackTrace);
       throw e;
     }
-
   }
+
   Future<String ?> copyBD() async {
     //return (_repository.dataProvider as LocalDataProvider).copyBd();
     LocalRepository repository = LocalRepository();
