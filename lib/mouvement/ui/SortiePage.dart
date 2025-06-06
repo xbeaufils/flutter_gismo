@@ -13,6 +13,7 @@ class SortiePage extends StatefulWidget {
 abstract class SortieContract extends GismoContract {
   List<Bete> get sheeps;
   set sheeps(List<Bete> value);
+  onAddBete(Bete bete);
 }
 
 class _SortiePageState extends GismoStatePage<SortiePage> implements SortieContract {
@@ -143,6 +144,12 @@ class _SortiePageState extends GismoStatePage<SortiePage> implements SortieContr
       _sheeps.removeAt(index);
     });
 
+  }
+
+  void onAddBete(Bete bete) {
+    setState(() {
+      _sheeps.add(bete);
+    });
   }
 }
 

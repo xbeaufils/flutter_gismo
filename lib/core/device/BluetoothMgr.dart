@@ -2,10 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
+import 'package:flutter_gismo/model/DeviceModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'dart:developer' as debug;
 
-class BluetoothBloc {
+import 'package:sentry_flutter/sentry_flutter.dart';
+
+class BluetoothManager {
   bool _streamStatus = false;
   static const  BLUETOOTH_CHANNEL = const MethodChannel('nemesys.rfid.bluetooth');
   static const  String CONNECTED = "CONNECTED";
@@ -45,4 +48,13 @@ class BluetoothBloc {
   void stopStream() {
     _streamStatus = false;
   }
+
+  Future<List<DeviceModel>> getDeviceList() async {
+    BluetoothModel model = new BluetoothModel();
+    debug.log("Get device List ", name: "_getDeviceList");
+    String response = await BLUETOOTH_CHANNEL.invokeMethod("listBlueTooth");
+    List<DeviceModel> lstReturnDevice = ( jsonDecode(response) as List).map( (i) => DeviceModel.fromResult(i)).toList();
+    return lstReturnDevice;
+  }
+
 }
