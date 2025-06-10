@@ -56,21 +56,21 @@ class BluetoothPresenter {
     DeviceModel selectedDevice =  this._view.selectedDevice! ;
 
     if (! value) {
-      this.stopBluetoothStream();
-      this._service.stopBluetooth();
+      stopBluetoothStream();
+      _service.stopBluetooth();
       selectedDevice.connected = false;
-      this._view.selectedDevice = selectedDevice;
+      _view.selectedDevice = selectedDevice;
       return;
     }
     try {
-      this._bluetoothStream = this._service.streamConnectBluetooth(selectedDevice.address);
-      this._bluetoothSubscription = this._bluetoothStream.listen((BluetoothState event) {
-        this._view.bluetoothState = event.status!;
+      _bluetoothStream = _service.streamConnectBluetooth(selectedDevice.address);
+      _bluetoothSubscription = _bluetoothStream.listen((BluetoothState event) {
+        _view.bluetoothState = event.status!;
         if (event.status == BluetoothManager.STARTED) {
           debug.log("Change connected " + value.toString(),  name: "_startBlueTooth");
-          DeviceModel selectedDevice = this._view.selectedDevice!;
+          DeviceModel selectedDevice = _view.selectedDevice!;
           selectedDevice.connected = value;
-          this._view.selectedDevice = selectedDevice;
+          _view.selectedDevice = selectedDevice;
         }
       });
     } on Exception catch (e, stackTrace) {
@@ -80,16 +80,16 @@ class BluetoothPresenter {
   }
 
   void stopBluetoothStream()  {
-    if (this._bluetoothSubscription != null)
-      this._bluetoothSubscription?.cancel();
-    if (this._bluetoothStatusSubscription != null) {
-      this._bluetoothStatusSubscription!.cancel();
-      this._btBloc.stopStream();
+    if (_bluetoothSubscription != null)
+      _bluetoothSubscription?.cancel();
+    if (_bluetoothStatusSubscription != null) {
+      _bluetoothStatusSubscription!.cancel();
+      _mgr.stopStream();
     }
   }
 
   void selectDevice (DeviceModel device) {
-    this._view.selectedDevice = device;
+    _view.selectedDevice = device;
   }
 
 }

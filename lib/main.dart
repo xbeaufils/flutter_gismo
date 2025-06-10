@@ -20,12 +20,12 @@ void main() async {
 
         options.dsn =
         'https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553',
-    appRunner: () => {
-        startApp()
-    }
-  );
+        /*options.release = ''*/
+      },
+      appRunner: () => {
+      startApp()
+  });
 }
-
 void startApp()
   {
     WidgetsFlutterBinding.ensureInitialized();
@@ -39,11 +39,11 @@ void startApp()
     }
     gismoBloc = new GismoBloc();
     Environnement.init(
-        "http://10.0.2.2:8080/gismoWeb/bd", "http://10.0.2.2:8080/gismoApp/api",
-        //"https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api",
+        "https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api",
         new FlavorOvin());
     String nextPage = '/splash';
     if (kIsWeb)
+      //if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))
       nextPage = '/login';
 
     initializeDateFormatting();

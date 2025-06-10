@@ -9,7 +9,7 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
-import 'package:flutter_gismo/presenter/BetePresenter.dart';
+import 'package:flutter_gismo/individu/presenter/BetePresenter.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:intl/intl.dart';
 import 'package:sentry/sentry.dart';
@@ -48,7 +48,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
   bool _rfidPresent = false;
   String _bluetoothState ="NONE";
-  final BluetoothBloc _btBloc = new BluetoothBloc();
+  final BluetoothManager _btBloc = new BluetoothManager();
   late Stream<BluetoothState> _bluetoothStream;
   StreamSubscription<BluetoothState> ? _bluetoothSubscription;
 
@@ -259,8 +259,8 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
         BluetoothState _bluetoothState =  await this._presenter.startReadBluetooth();
         if (_bluetoothState.status != null)
           debug.log("Start status " + _bluetoothState.status!, name: "_BetePageState::_startService");
-        if (_bluetoothState.status == BluetoothBloc.CONNECTED
-            || _bluetoothState.status == BluetoothBloc.STARTED) {
+        if (_bluetoothState.status == BluetoothManager.CONNECTED
+            || _bluetoothState.status == BluetoothManager.STARTED) {
           this._bluetoothStream = this._btBloc.streamReadBluetooth();
           this._bluetoothSubscription = this._bluetoothStream.listen(
         //this.widget._bloc.streamBluetooth().listen(

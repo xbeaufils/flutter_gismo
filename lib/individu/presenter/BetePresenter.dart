@@ -1,4 +1,4 @@
-import 'package:flutter_gismo/lamb/ui/Bete.dart';
+import 'package:flutter_gismo/individu/ui/Bete.dart';
 import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
@@ -11,7 +11,6 @@ class BetePresenter {
   final BeteContract _view;
   final BeteService _service = BeteService();
   final BluetoothService _bluetoothService = BluetoothService();
-  final BluetoothBloc _btBloc = new BluetoothBloc();
   BetePresenter(this._view);
 
   void save(String ? numBoucle, String ? numMarquage, Sex ? sex, String ? nom, String ? obs, String dateEntree, String ? motif) async {
