@@ -23,14 +23,11 @@ class _SelectionPageState extends GismoStatePage<SelectionPage> implements Selec
   _SelectionPageState();
   late SelectionPresenter _presenter;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  TextEditingController _codeLotCtl = TextEditingController();
-  TextEditingController _dateDebutCtl = TextEditingController();
-  TextEditingController _dateFinCtl = TextEditingController();
-  TextEditingController _dateMvtCtl = TextEditingController();
 
   @override
   void initState(){
     super.initState();
+    _presenter = SelectionPresenter(this);
     }
 
   @override
@@ -109,21 +106,17 @@ class _SelectionPageState extends GismoStatePage<SelectionPage> implements Selec
 
   @override
   void dispose() {
-    _codeLotCtl.dispose();
-    _dateFinCtl.dispose();
-    _dateDebutCtl.dispose();
-    _dateMvtCtl.dispose();
     super.dispose();
   }
 
   List<Bete> get betes {
     return this.widget._lstBete;
   }
+
   set betes (List<Bete> value) {
     setState(() {
       this.widget._lstBete = value;
     });
   }
-
 
 }

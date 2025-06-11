@@ -75,6 +75,7 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
                           new Flexible(
                             child:
                             new TextFormField(
+                              key: const Key("dateDebut"),
                               controller: _dateDebutCtl,
                               decoration: InputDecoration(
                                 labelText: S.of(context).date_debut,),
@@ -95,6 +96,7 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
                           new Flexible(
                             child:
                             new TextFormField(
+                              key: const Key("dateFin"),
                               controller: _dateFinCtl,
                               decoration: InputDecoration(
                                 labelText: S.of(context).date_fin,),
@@ -187,10 +189,10 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
                             ]
                         ),
                     ])),
-                  new Card(child:
-                    new Column(
+                  Card(child:
+                    Column(
                         children: <Widget> [
-                            new Row(
+                          Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -203,14 +205,14 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
                                       ),
                                     ),
                             ]),
-                      new Row(
+                          Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            new Expanded(
+                             Expanded(
                               child:
-                              new TextFormField(
+                              TextFormField(
                                 controller: _observationCtl,
                                 decoration: InputDecoration(labelText: S.of(context).observations,),
                                 keyboardType: TextInputType.multiline,
@@ -233,7 +235,7 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
                                 TextButton(
                                   onPressed: () => _showDialog(context),
                                   child: Text(S.of(context).bt_delete)),
-                            new ElevatedButton(key:null, onPressed: () =>
+                            ElevatedButton(key:Key("Enregistrer"), onPressed: () =>
                                 this._presenter.save(_dateDebutCtl.text, _dateFinCtl.text, _doseCtl.text,
                                   _intervenantCtl.text, _observationCtl.text, _motifCtl.text, _medicamentCtl.text, _ordonnanceCtl.text,
                                 _rythmeCtl.text, _voieCtl.text),

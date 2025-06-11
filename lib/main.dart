@@ -17,14 +17,13 @@ GismoBloc gismoBloc= new GismoBloc();
 void main() async {
   await Sentry.init(
     (options) =>
-
         options.dsn =
-        'https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553',
+        'https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553'
         /*options.release = ''*/
-      },
+      ,
       appRunner: () => {
       startApp()
-  });
+    });
 }
 void startApp()
   {

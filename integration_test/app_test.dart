@@ -30,7 +30,7 @@ void main() {
     testWidgets('Start appli', (tester,) async {
     });*/
     testWidgets(
-        'Créez une entrée', (tester,) async {
+        'Saisir une entrée', (tester,) async {
           await startAppli(tester);
           final entree = find.text("Entrée");
           print(entree);
@@ -51,7 +51,7 @@ void main() {
           final btSave = find.text("Enregistrer");
           await tester.tap(btSave);
         });
-    testWidgets("Créer un agnelage", (tester,) async {
+    testWidgets("Saisir un agnelage", (tester,) async {
       await startAppli(tester);
       await tester.tap(find.text("Agnelage"));
       await tester.pumpAndSettle();
@@ -71,7 +71,7 @@ void main() {
 
     });
     testWidgets(
-        'Créez une echographie', (tester,) async {
+        'Saisir une echographie', (tester,) async {
       await startAppli(tester);
       final echo = find.text("Echographie");
       print(echo);
@@ -97,6 +97,55 @@ void main() {
       await tester.tap(find.text("Enregistrer"));
       await tester.pumpAndSettle();
     });
+    testWidgets(
+        'Saisir un traitement', (tester,) async {
+      await startAppli(tester);
+      final trt = find.text("Traitement");
+      print(trt);
+      await tester.tap(trt);
+      await tester.pumpAndSettle();
+      final btSearch = find.byIcon(Icons.settings_remote);
+      await tester.tap(btSearch);
+      await tester.pumpAndSettle();
+      await selectBete(tester, "123");
+      await tester.pumpAndSettle();
+      await tester.tap(btSearch);
+      await tester.pumpAndSettle();
+      await selectBete(tester, "456");
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("Continuer"));
+      await tester.pumpAndSettle(Duration(seconds: 2));
+      await tester.tap(find.byKey(Key("dateDebut")));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("5"));
+      await tester.tap(find.text("OK"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key("dateFin")));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("15"));
+      await tester.tap(find.text("OK"));
+      await tester.pumpAndSettle();
+      var ordonnanceTxt = find.ancestor(of: find.text('Ordonnance'),matching: find.byType(TextFormField),);
+      await tester.enterText(ordonnanceTxt, "ord 1");
+      var MedicamentTxt = find.ancestor(of: find.text('Medicament'),matching: find.byType(TextFormField),);
+      await tester.enterText(MedicamentTxt, "Medoc");
+      var voieTxt = find.ancestor(of: find.text('Voie'),matching: find.byType(TextFormField),);
+      await tester.enterText(voieTxt, "Oral");
+      var doseTxt = find.ancestor(of: find.text('Dose'),matching: find.byType(TextFormField),);
+      await tester.enterText(doseTxt, "1 ml");
+      var rythmeTxt = find.ancestor(of: find.text('Rythme'),matching: find.byType(TextFormField),);
+      await tester.enterText(rythmeTxt, "2 / j");
+      var interTxt = find.ancestor(of: find.text('Intervenant'),matching: find.byType(TextFormField),);
+      await tester.enterText(interTxt, "Berger");
+      var motifTxt = find.ancestor(of: find.text('Motif'),matching: find.byType(TextFormField),);
+      await tester.enterText(motifTxt, "Malalde");
+      var obsTxt = find.ancestor(of: find.text('Observations'),matching: find.byType(TextFormField),);
+      await tester.enterText(obsTxt, "Observation");
+      await tester.pump();
+      await tester.tap(find.text("Enregistrer"));
+      await tester.pumpAndSettle();
+    });
+
    });
 }
 

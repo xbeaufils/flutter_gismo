@@ -80,11 +80,11 @@ class BluetoothPresenter {
   }
 
   void stopBluetoothStream()  {
-    if (_bluetoothSubscription != null)
-      _bluetoothSubscription?.cancel();
-    if (_bluetoothStatusSubscription != null) {
-      _bluetoothStatusSubscription!.cancel();
-      _mgr.stopStream();
+    if (this._bluetoothSubscription != null)
+      this._bluetoothSubscription?.cancel();
+    if (this._bluetoothStatusSubscription != null) {
+      this._bluetoothStatusSubscription!.cancel();
+      this._mgr.stopStream();
     }
   }
 

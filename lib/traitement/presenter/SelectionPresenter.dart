@@ -24,8 +24,11 @@ class SelectionPresenter {
     Bete ? selectedBete = await  this._view.goNextPage(SearchPage( GismoPage.sanitaire));
     if (selectedBete != null) {
         Iterable<Bete> existingBete  = this._view.betes.where((element) => element.idBd == selectedBete.idBd);
-        if (existingBete.isEmpty)
-          this._view.betes.add(selectedBete);
+        if (existingBete.isEmpty) {
+          List<Bete> newList = this._view.betes;
+          newList.add(selectedBete);
+          this._view.betes = newList;
+        }
      }
   }
 

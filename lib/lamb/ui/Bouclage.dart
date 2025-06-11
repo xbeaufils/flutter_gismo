@@ -4,10 +4,8 @@ import 'dart:developer' as debug;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/lamb/presenter/LambPresenter.dart';
 import 'package:intl/intl.dart';
@@ -35,7 +33,7 @@ class _BouclagePageState extends State<BouclagePage> implements BouclageContract
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
   bool _rfidPresent = false;
   String _bluetoothState ="NONE";
-  final BluetoothBloc _btBloc= new BluetoothBloc();
+  final BluetoothManager _btBloc= new BluetoothManager();
 
 
   //String _numBoucle;

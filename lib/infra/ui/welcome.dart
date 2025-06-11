@@ -108,8 +108,8 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
                     //  _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
                     ])))),
 
-              this._getAdmobAdvice(),
-              this._getFacebookAdvice(),
+              //this._getAdmobAdvice(),
+              //this._getFacebookAdvice(),
             ]),
         drawer: GismoDrawer(),);
   }
@@ -217,7 +217,8 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
   void viewPageMessage(String path) {
     Future<dynamic>  message = Navigator.pushNamed(context, path)  ;
     message.then((message) {
-      showMessage(message);
+      if (message != null)
+        showMessage(message);
     }).catchError((message) {
       showMessage(message);
     });

@@ -48,7 +48,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   Stream<BluetoothState> ? _bluetoothStream;
   StreamSubscription<BluetoothState> ? _bluetoothSubscription;
   String _bluetoothState ="NONE";
-  final BluetoothBloc _btBloc= new BluetoothBloc();
+  final BluetoothManager _btBloc= new BluetoothManager();
   bool _rfidPresent = false;
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text( S.current.earring_search);
@@ -229,8 +229,8 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
       BluetoothState _bluetoothState = BluetoothState.fromResult(null); //await this._bloc.startReadBluetooth();
       if (_bluetoothState.status != null)
         debug.log("Start status " + _bluetoothState.status!, name: "_SearchPageState::_startService");
-      if (_bluetoothState.status == BluetoothBloc.CONNECTED
-      || _bluetoothState.status == BluetoothBloc.STARTED) {
+      if (_bluetoothState.status == BluetoothManager.CONNECTED
+      || _bluetoothState.status == BluetoothManager.STARTED) {
         this._bluetoothStream = this._btBloc.streamReadBluetooth();
         this._bluetoothSubscription = this._bluetoothStream!.listen(
             (BluetoothState event) {

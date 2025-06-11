@@ -14,6 +14,7 @@ class BluetoothService {
   String _bluetoothState ="NONE";
   StreamSubscription<BluetoothState> ? _bluetoothSubscription;
   StreamSubscription<StatusBlueTooth> ? _bluetoothStatusSubscription;
+  static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
 
   Future<String> startService() async{
     try {
@@ -28,30 +29,30 @@ class BluetoothService {
           //this.widget._bloc.streamBluetooth().listen(
                 (BluetoothState event) {
               if (this._bluetoothState != event.status)
-                setState(() {
+                //setState(() {
                   this._bluetoothState = event.status!;
                   if (event.status == 'AVAILABLE') {
                     String ? _foundBoucle = event.data;
                     if ( _foundBoucle != null) {
                       if (_foundBoucle.length > 15)
                         _foundBoucle = _foundBoucle.substring(
-                            _foundBoucle.length - 15);
+                            _foundBoucle.length - 15);/*
                       _numBoucleCtrl.text =
                           _foundBoucle.substring(_foundBoucle.length - 5);
                       _numMarquageCtrl.text = _foundBoucle.substring(
-                          0, _foundBoucle.length - 5);
+                          0, _foundBoucle.length - 5);*/
                     }
                   }
-                });
+                //});
             });
       }
     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
     }
     String start= await PLATFORM_CHANNEL.invokeMethod("start");
-    setState(() {
-      _rfidPresent =  (start == "start");
-    });
+    //setState(() {
+      //_rfidPresent =  (start == "start");
+    //});
     return start;
   }
 
