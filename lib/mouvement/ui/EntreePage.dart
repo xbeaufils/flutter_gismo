@@ -32,7 +32,9 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
   List<Bete> get sheeps => _sheeps;
 
   set sheeps(List<Bete> value) {
-    _sheeps = value;
+    setState(() {
+      _sheeps = value;
+    });
   }
 
   String ?  _currentMotif;

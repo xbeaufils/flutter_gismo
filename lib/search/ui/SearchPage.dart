@@ -1,22 +1,17 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer' as debug;
 import 'dart:io';
 
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/search/presenter/SearchPresenter.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:sentry/sentry.dart';
 
 class SearchPage extends StatefulWidget {
 
@@ -29,49 +24,51 @@ class SearchPage extends StatefulWidget {
 }
 
 abstract class SearchContract extends GismoContract {
-  void fillList(List<Bete> lstBetes);
   void goPreviousPage(Bete bete);
-
+  void setBoucle(String numBoucle);
+  void toggleSearchBar(Icon icon, Widget appbarTitile);
+  String get bluetoothState;
+  set bluetoothState(String value);
+  set filteredBetes(List<Bete> value);
+  set betes(List<Bete> value);
   GismoPage get nextPage;
 }
 
 class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderStateMixin implements SearchContract {
   final TextEditingController _filter = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
   late SearchPresenter _presenter ;
   BannerAd ? _adBanner;
   String _searchText = "";
-  List<Bete> _betes = <Bete>[]; //new List();
+  List<Bete> _betes = <Bete>[];
+
+  set betes(List<Bete> value) {
+    setState(() {
+      _betes = value;
+    });
+  } //new List();
   List<Bete> _filteredBetes = <Bete>[]; //new List();
 
-  Stream<BluetoothState> ? _bluetoothStream;
-  StreamSubscription<BluetoothState> ? _bluetoothSubscription;
   String _bluetoothState ="NONE";
-  final BluetoothManager _btBloc= new BluetoothManager();
-  bool _rfidPresent = false;
-  Icon _searchIcon = new Icon(Icons.search);
-  Widget _appBarTitle = new Text( S.current.earring_search);
+  set bluetoothState(String value) {
+    _bluetoothState = value;
+  }
+  String get bluetoothState => _bluetoothState;
+
+  late Icon _searchIcon ; //= Icon(Icons.search);
+  late Widget _appBarTitle; // = Text( S.current.earring_search );
 
   _SearchPageState() {
-    _presenter = SearchPresenter(this);
-    _filter.addListener(() {
-      if (_filter.text.isEmpty) {
-        setState(() {
-          _searchText = "";
-          _filteredBetes = _betes;
-        });
-      } else {
-        setState(() {
-          _searchText = _filter.text;
-        });
-      }
-    });
+    this._presenter = SearchPresenter(this);
+
   }
 
   @override
-  void initState() {
+  void initState() {     /*
+    testWidgets('Start appli', (tester,) async {
+    });*/
     this._presenter.getBetes(null);
+    this._presenter.buildSearchBar();
     super.initState();
   }
 
@@ -87,19 +84,14 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
 
   @override
   void dispose() {
-    if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
-      PLATFORM_CHANNEL.invokeMethod<String>('stop');
-      //this._bloc.stopReadBluetooth();
-      if (this._bluetoothSubscription != null)
-        this._bluetoothSubscription?.cancel();
-    }
+    this._presenter.dispose();
     super.dispose();
   }
 
   Widget build(BuildContext context) {
     if (AuthService().subscribe && defaultTargetPlatform == TargetPlatform.android)
       new Future.delayed(Duration.zero,() {
-        this._startService(context);
+        this._presenter.startService();
       });
     if ( ! AuthService().subscribe ) {
       this._adBanner = BannerAd(
@@ -129,7 +121,6 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
             this._getFacebookAdvice(),
           ],
         ),
-      floatingActionButton: _buildRfid(context),
       resizeToAvoidBottomInset: false,
     );
   }
@@ -154,16 +145,6 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
     return Row(children: status,);
   }
 
-  Widget _buildRfid(BuildContext context) {
-    if (AuthService().subscribe && this._rfidPresent) {
-      return FloatingActionButton(
-          child: Icon(Icons.wifi),
-          backgroundColor: Colors.green,
-          onPressed: () => _readRFID(context));
-    }
-    else
-      return Container();
-  }
 
   Widget _getAdmobAdvice() {
     if (AuthService().subscribe  ) {
@@ -197,70 +178,14 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
     return Container();
   }
 
-  void _readRFID(BuildContext context) async {
-    try {
-      String response = await PLATFORM_CHANNEL.invokeMethod("startRead");
-      await Future.delayed(Duration(seconds: 4));
-      response = await PLATFORM_CHANNEL.invokeMethod("data");
-      Map<String, dynamic> mpResponse = jsonDecode(response);
-      if (mpResponse.length > 0) {
-        _searchPressed(context);
-        setState(() {
-          // _searchText = mpResponse['boucle'];
-          _filter.text = mpResponse['boucle'];
-        });
-      }
-      else {
-        this.showMessage("Pas de boucle lue");
-      }
-    } on PlatformException catch (e) {
-      showMessage("Pas de boucle lue");
-    } on Exception catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace : stackTrace);
-      //_bloc.reportError(e, stackTrace);
-      debug.log(e.toString());
-    }
 
+  void setBoucle(String numBoucle) {
+    setState(() {
+      _searchText = numBoucle;
+      _filter.text = numBoucle;
+    });
   }
 
-  Future<String> _startService(BuildContext context) async{
-    try {
-      debug.log("Start service ", name: "_SearchPageState::_startService");
-      BluetoothState _bluetoothState = BluetoothState.fromResult(null); //await this._bloc.startReadBluetooth();
-      if (_bluetoothState.status != null)
-        debug.log("Start status " + _bluetoothState.status!, name: "_SearchPageState::_startService");
-      if (_bluetoothState.status == BluetoothManager.CONNECTED
-      || _bluetoothState.status == BluetoothManager.STARTED) {
-        this._bluetoothStream = this._btBloc.streamReadBluetooth();
-        this._bluetoothSubscription = this._bluetoothStream!.listen(
-            (BluetoothState event) {
-              if ( event.status != null)
-                debug.log("Status " + event.status!, name: "_SearchPageState::_startService");
-              if (this._bluetoothState != event.status)
-                setState(() {
-                  this._bluetoothState = event.status!;
-                  if (event.status == 'AVAILABLE') {
-                    String _foundBoucle = event.data!;
-                    if (_foundBoucle.length > 15)
-                      _foundBoucle =
-                          _foundBoucle.substring(_foundBoucle.length - 15);
-                    _foundBoucle =
-                        _foundBoucle.substring(_foundBoucle.length - 5);
-                    _searchText = _foundBoucle;
-                    _filter.text = _foundBoucle;
-                    _searchPressed(context);
-                  }
-                });
-            });
-      }
-    } on Exception catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace : stackTrace);
-      debug.log(e.toString());
-    }
-    String start= await PLATFORM_CHANNEL.invokeMethod("start");
-    _rfidPresent =  (start == "start");
-    return start;
-  }
 
   AppBar _buildBar(BuildContext context) {
     //this._appBarTitle = new Text( S.of(context).earring_search );
@@ -269,15 +194,16 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
       title: _appBarTitle,
       actions: <Widget>[
         IconButton(
-            icon: const Icon(Icons.search),
+            icon: _searchIcon,
             tooltip: S.of(context).search,
-            onPressed: () => _searchPressed(context)
+            onPressed: () => _presenter.searchPressed()
             ),
       ],
     );
   }
 
   Widget _buildList(BuildContext context) {
+    /*
     if (_searchText.isNotEmpty) {
       List<Bete> tempList = <Bete>[]; // new List();
       for (int i = 0; i < _filteredBetes.length; i++) {
@@ -286,7 +212,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
         }
       }
       _filteredBetes = tempList;
-    }
+    }*/
     if (_filteredBetes.isEmpty) {
       return Center( child:
         ListTile(
@@ -296,7 +222,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
       ),);
     }
     return ListView.builder(
-      itemCount: _betes == null ? 0 : _filteredBetes.length,
+      itemCount: _filteredBetes.length,
       itemBuilder: (BuildContext context, int index) {
         return ListTile(
           leading: (_filteredBetes[index].sex == Sex.male) ? ImageIcon(  AssetImage("assets/male.png")): ImageIcon(  AssetImage("assets/female.png")),
@@ -319,7 +245,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
       ),
     ],);
   }
-
+/*
   void _searchPressed(BuildContext context) {
     setState(() {
       if (this._searchIcon.icon == Icons.search) {
@@ -341,14 +267,14 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
       }
     });
   }
-
-  void fillList(List<Bete> lstBetes) {
+  */
+  void toggleSearchBar(Icon icon, Widget appbarTitle) {
     setState(() {
-      _betes = lstBetes;
-      //names.shuffle();
-      _filteredBetes = _betes;
+      this._searchIcon = icon;
+      this._appBarTitle = appbarTitle;
     });
   }
+
   void goPreviousPage(Bete bete) {
     Navigator.of(context).pop(bete);
   }
@@ -364,4 +290,10 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   }
 
   get nextPage => this.widget._nextPage;
+
+  set filteredBetes(List<Bete> value) {
+    setState(() {
+      _filteredBetes = value;
+    });
+  }
 }

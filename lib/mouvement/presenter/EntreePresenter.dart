@@ -34,12 +34,16 @@ class EntreePresenter {
   Future add() async {
     Bete? selectedBete = await this._view.goNextPage( BetePage(null));
     if (selectedBete != null) {
-        this._view.sheeps.add(selectedBete);
+      List<Bete> lstBete = this._view.sheeps;
+      lstBete.add(selectedBete);
+      this._view.sheeps = lstBete;
     }
   }
 
   void remove(int index) {
-    this._view.sheeps.removeAt(index);
+    List<Bete> lstBete = this._view.sheeps;
+    lstBete.removeAt(index);
+    this._view.sheeps = lstBete;
   }
 
 }
