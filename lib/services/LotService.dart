@@ -22,7 +22,10 @@ class LotService {
   }
 
   Future<String> removeFromLot(Affectation affect, String dateSortie) {
-    affect.dateSortie = DateFormat.yMd().parse(dateSortie);
+    if (dateSortie.isEmpty)
+      affect.dateSortie = null;
+    else
+      affect.dateSortie = DateFormat.yMd().parse(dateSortie);
     return this._lotRepository.remove(affect);
   }
   Future<List<LotModel>> getLots() {

@@ -21,10 +21,10 @@ class LotAffectationViewPage extends StatefulWidget {
 }
 
 abstract class LotAffectationContract extends GismoContract {
-  Future<String?> selectDateEntree();
   LotModel get currentLot;
   set currentLot(LotModel value);
   set currentView(View value);
+  Future<String?> showDateDialog(String title, String helpMessage, String label);
 }
 
 class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage> implements LotAffectationContract {
@@ -284,37 +284,11 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(icon: Icon(Icons.delete), onPressed: () => { _showDialog(context, bete) } ),
-                  IconButton(icon: Icon(Icons.launch), onPressed: () => { _removeBete(bete)},)
+                  IconButton(icon: Icon(Icons.launch), onPressed: () => { this._presenter.removeBete(bete)},)
         ])
         );
       }
     );
-  }
-
-
-  Future<String?> selectDateEntree() async {
-    String ? dateEntree = await _showDateDialog(this.context,
-        S.of(context).dateEntry,
-        "Saisir une date d'entrée si différente de la date de début de lot",
-        S.of(context).dateEntry);
-    return dateEntree;
-  }
-
-  Future _removeBete(Affectation affect) async {
-      String ? dateSortie = await _showDateDialog(this.context,
-          S.of(context).dateDeparture,
-          "Saisir une date de sortie si différente de la date de fin de lot",
-          S.of(context).dateDeparture);
-      if (dateSortie != null ) {
-        String ? message = await this._presenter.removeBete(affect, dateSortie);
-        if (message != null) {
-          final snackBar = SnackBar(
-            content: Text(message),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        }
-        setState(() {});
-      }
   }
 
   Future _showDialog(BuildContext context, Affectation affect) {
@@ -355,7 +329,7 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
     );
   }
 
-  Future<String?> _showDateDialog(BuildContext context, String title, String helpMessage, String label) async {
+  Future<String?> showDateDialog(String title, String helpMessage, String label) async {
     return showDialog<String>(
         context: context,
         barrierDismissible: false,

@@ -20,27 +20,39 @@ class LotAffectionPresenter {
   LotAffectionPresenter(this._view,  this._currentLot);
   final LotService _service = LotService();
 
-  Future<String> deleteAffectation(Affectation event) async {
+  Future<void> deleteAffectation(Affectation event) async {
     String message = await this._service.deleteAffectation(event);
-    return message;
+    this._view.showMessage(message);
   }
 
-  Future<String?> addBete() async {
+  Future<void> addBete() async {
     Bete ? selectedBete = await this._view.goNextPage(SearchPage(GismoPage.lot));
-    String ? dateEntree = await this._view.selectDateEntree();
+    if (selectedBete == null)
+      return null;
+    String ? dateEntree = await this._view.showDateDialog(
+        S.current.dateEntry,
+        "Saisir une date d'entrée si différente de la date de début de lot",
+        S.current.dateEntry);
     String? message;
     if (dateEntree != null) {
       message = await this._service.addBete(this._currentLot, selectedBete!, dateEntree);
     }
-    return message;
+    if (message != null) this._view.showMessage(message);
+    this._view.currentLot = this._currentLot;
   }
 
-  Future<String?> removeBete(Affectation affect,  String ? dateSortie) async {
+  Future<void> removeBete(Affectation affect) async {
+    String ? dateSortie = await this._view.showDateDialog(
+        S.current.dateDeparture,
+        "Saisir une date de sortie si différente de la date de fin de lot",
+        S.current.dateDeparture);
     String? message;
     if (dateSortie != null ) {
       message = await this._service.removeFromLot(affect, dateSortie);
     }
-    return message;
+    if (message != null)
+      this._view.showMessage(message);
+    this._view.currentLot = this._currentLot;
   }
 
   Future<void> save(String campagne, String codeLot, String dateDebut, String dateFin) async {
