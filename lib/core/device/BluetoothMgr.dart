@@ -48,6 +48,9 @@ class BluetoothManager {
   void stopStream() {
     _streamStatus = false;
   }
+  void stopReadBluetooth() {
+    BLUETOOTH_CHANNEL.invokeMethod("stopReadBlueTooth");
+  }
 
   Future<List<DeviceModel>> getDeviceList() async {
     BluetoothModel model = new BluetoothModel();

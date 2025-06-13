@@ -14,7 +14,6 @@ enum View {fiche, ewe, ram}
 class LotAffectationViewPage extends StatefulWidget {
   LotModel  _currentLot;
 
-
   LotAffectationViewPage(this._currentLot, {Key? key}) : super(key: key) ;
 
   @override
@@ -23,7 +22,9 @@ class LotAffectationViewPage extends StatefulWidget {
 
 abstract class LotAffectationContract extends GismoContract {
   Future<String?> selectDateEntree();
-
+  LotModel get currentLot;
+  set currentLot(LotModel value);
+  set currentView(View value);
 }
 
 class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage> implements LotAffectationContract {
@@ -37,10 +38,24 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
   TextEditingController _dateMvtCtl = TextEditingController();
   TextEditingController _campagneCtrl = TextEditingController();
   final _df = new DateFormat('dd/MM/yyyy');
-  int _curIndex=0;
+
   late View _currentView;
 
+  View get currentView => _currentView;
+
+  set currentView(View value) {
+    setState(() {
+      _currentView = value;
+    });
+  }
+
   LotModel get currentLot => this.widget._currentLot;
+
+  set currentLot(LotModel value) {
+    setState(() {
+      this.widget._currentLot = value;
+    });
+  }
 
   @override
   void initState(){
@@ -70,43 +85,25 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
                     BottomNavigationBarItem(icon: Image.asset("assets/ram_inactif.png"), activeIcon: Image.asset("assets/ram_actif.png") ,label: S.of(context).ram),
                     BottomNavigationBarItem(icon: Image.asset("assets/ewe_inactif.png"), activeIcon: Image.asset("assets/ewe_actif.png") , label: S.of(context).ewe),
                   ],
-                currentIndex: _curIndex,
-                onTap: (index) =>{ _changePage(index)}
+                currentIndex: this._presenter.currentViewIndex,
+                onTap: (index) => { this._presenter.changePage(index)}
               ),
             appBar: new AppBar(
               title:
               (this.currentLot.codeLotLutte == null) ? Text("Nouveau lot") : Text('Lot ' + this.currentLot.codeLotLutte!),
             ),
-            floatingActionButton: _curIndex == 0 ? null : FloatingActionButton(child: Icon(Icons.add), onPressed: _addBete),
+            floatingActionButton: this._presenter.currentViewIndex == 0 ? null :
+              FloatingActionButton(
+                child: Icon(Icons.add),
+                  onPressed: () =>
+                    setState(() {
+                      this._presenter.addBete();
+                    })),
             body:
               _getCurrentView()
     );
   }
 
-  void _changePage(int index) {
-    if (this.widget._currentLot.idb == null ) {
-      final snackBar = SnackBar(
-        content: Text(S.of(context).batch_warning),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      return;
-    }
-    setState(() {
-      _curIndex = index;
-      switch (_curIndex) {
-        case 0:
-          _currentView = View.fiche;
-          break;
-        case 1:
-          _currentView = View.ram;
-          break;
-        case 2:
-          _currentView = View.ewe;
-          break;
-      }
-    });
-
-  }
 
   Widget _getCurrentView() {
     switch (_currentView) {
@@ -303,18 +300,6 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
     return dateEntree;
   }
 
-  void _addBete() async {
-    String ? message  = await _presenter.addBete();
-    setState(() {
-      if (message != null) {
-        final snackBar = SnackBar(
-          content: Text(message),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-    });
-  }
-
   Future _removeBete(Affectation affect) async {
       String ? dateSortie = await _showDateDialog(this.context,
           S.of(context).dateDeparture,
@@ -362,8 +347,10 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
     return TextButton(
       child: Text(S.of(context).bt_delete),
       onPressed: () {
+        setState(() {
           this._presenter.deleteAffectation(affectation);
-        Navigator.of(context).pop();
+          Navigator.of(context).pop();
+        });
       },
     );
   }
@@ -407,18 +394,21 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
                 ),
                 actions: <Widget>[
                   TextButton(
-                      onPressed: () {
-                          setState(() {
-                            _dateMvtCtl.text="";
-                          });
-                      },
-                      child: Text("Effacer")),
-                  TextButton(
-                    child: Text('Enregistrer'),
+                    child: Text(S.of(context).bt_save),
                     onPressed: () {
                       Navigator.of(context).pop(_dateMvtCtl.text);
                     },
                   ),
+                  TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _dateMvtCtl.text="";
+                        });
+                      },
+                      child: Text("Effacer")),
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(S.of(context).bt_cancel)),
                 ],
               );
             },

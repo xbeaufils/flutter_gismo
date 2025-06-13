@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/core/repository/LocalRepository.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -24,11 +25,7 @@ void main() {
     }
     count ++;
   });
-   group('end-to-end test', () {
-
-     /*
-    testWidgets('Start appli', (tester,) async {
-    });*/
+  group('end-to-end test', () {
     testWidgets(
         'Saisir une entrée', (tester,) async {
           await startAppli(tester);
@@ -51,101 +48,8 @@ void main() {
           final btSave = find.text("Enregistrer");
           await tester.tap(btSave);
         });
-    testWidgets("Saisir un agnelage", (tester,) async {
-      await startAppli(tester);
-      await tester.tap(find.text("Agnelage"));
-      await tester.pumpAndSettle();
-      await selectBete(tester, "123");
-      // Passage à l'ecran Agnelage
-      await tester.pumpAndSettle();
-      DateTime now = DateTime.now();
-      expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
-      await tester.tap(find.byKey(Key("btQualite")));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text("3"));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(Key("btAdoption")));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text("2"));
-      await tester.pumpAndSettle();
-
-    });
-    testWidgets(
-        'Saisir une echographie', (tester,) async {
-      await startAppli(tester);
-      final echo = find.text("Echographie");
-      print(echo);
-      await tester.tap(echo);
-      await tester.pumpAndSettle();
-      await selectBete(tester, "123");
-      // Passage à l'ecran Echo Graphie
-      await tester.pumpAndSettle();
-      DateTime now = DateTime.now();
-      expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
-      final resultat = find.text("Simple");
-      await tester.tap(resultat);
-      await tester.tap(find.byKey(Key("dateEcho")));
-      await tester.pumpAndSettle();
-      String dateEcho =  (now.day > 7) ? (now.day - 7).toString(): (now.day + 1).toString();
-      await tester.tap(find.text(dateEcho));
-      await tester.tap(find.text("OK"));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(Key("dateSaillie")));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text("OK"));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text("Enregistrer"));
-      await tester.pumpAndSettle();
-    });
-    testWidgets(
-        'Saisir un traitement', (tester,) async {
-      await startAppli(tester);
-      final trt = find.text("Traitement");
-      print(trt);
-      await tester.tap(trt);
-      await tester.pumpAndSettle();
-      final btSearch = find.byIcon(Icons.settings_remote);
-      await tester.tap(btSearch);
-      await tester.pumpAndSettle();
-      await selectBete(tester, "123");
-      await tester.pumpAndSettle();
-      await tester.tap(btSearch);
-      await tester.pumpAndSettle();
-      await selectBete(tester, "456");
-      await tester.pumpAndSettle();
-      await tester.tap(find.text("Continuer"));
-      await tester.pumpAndSettle(Duration(seconds: 2));
-      await tester.tap(find.byKey(Key("dateDebut")));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text("5"));
-      await tester.tap(find.text("OK"));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(Key("dateFin")));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text("15"));
-      await tester.tap(find.text("OK"));
-      await tester.pumpAndSettle();
-      var ordonnanceTxt = find.ancestor(of: find.text('Ordonnance'),matching: find.byType(TextFormField),);
-      await tester.enterText(ordonnanceTxt, "ord 1");
-      var MedicamentTxt = find.ancestor(of: find.text('Medicament'),matching: find.byType(TextFormField),);
-      await tester.enterText(MedicamentTxt, "Medoc");
-      var voieTxt = find.ancestor(of: find.text('Voie'),matching: find.byType(TextFormField),);
-      await tester.enterText(voieTxt, "Oral");
-      var doseTxt = find.ancestor(of: find.text('Dose'),matching: find.byType(TextFormField),);
-      await tester.enterText(doseTxt, "1 ml");
-      var rythmeTxt = find.ancestor(of: find.text('Rythme'),matching: find.byType(TextFormField),);
-      await tester.enterText(rythmeTxt, "2 / j");
-      var interTxt = find.ancestor(of: find.text('Intervenant'),matching: find.byType(TextFormField),);
-      await tester.enterText(interTxt, "Berger");
-      var motifTxt = find.ancestor(of: find.text('Motif'),matching: find.byType(TextFormField),);
-      await tester.enterText(motifTxt, "Malalde");
-      var obsTxt = find.ancestor(of: find.text('Observations'),matching: find.byType(TextFormField),);
-      await tester.enterText(obsTxt, "Observation");
-      await tester.pump();
-      await tester.tap(find.text("Enregistrer"));
-      await tester.pumpAndSettle();
-    });
-
+    //testAgnelage();
+    testTraitement();
    });
 }
 
@@ -182,5 +86,109 @@ Future<void> startAppli(WidgetTester tester) async {
   final splash = find.byKey(ValueKey('splashScreen'));
   print(splash);
   await tester.pumpAndSettle();
+}
 
+Future<void> testEcho() async {
+  testWidgets(
+      'Saisir une echographie', (tester,) async {
+    await startAppli(tester);
+    final echo = find.text("Echographie");
+    print(echo);
+    await tester.tap(echo);
+    await tester.pumpAndSettle();
+    await selectBete(tester, "123");
+    // Passage à l'ecran Echo Graphie
+    await tester.pumpAndSettle();
+    DateTime now = DateTime.now();
+    expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
+    final resultat = find.text("Simple");
+    await tester.tap(resultat);
+    await tester.tap(find.byKey(Key("dateEcho")));
+    await tester.pumpAndSettle();
+    String dateEcho =  (now.day > 7) ? (now.day - 7).toString(): (now.day + 1).toString();
+    await tester.tap(find.text(dateEcho));
+    await tester.tap(find.text("OK"));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(Key("dateSaillie")));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("OK"));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("Enregistrer"));
+    await tester.pumpAndSettle();
+  });
+
+}
+
+Future<void> testTraitement() async {
+  testWidgets(
+      'Saisir un traitement', (tester,) async {
+    await startAppli(tester);
+    final trt = find.text("Traitement");
+    print(trt);
+    await tester.tap(trt);
+    await tester.pumpAndSettle();
+    final btSearch = find.byIcon(Icons.settings_remote);
+    await tester.tap(btSearch);
+    await tester.pumpAndSettle();
+    await selectBete(tester, "123");
+    await tester.pumpAndSettle();
+    await tester.tap(btSearch);
+    await tester.pumpAndSettle();
+    await selectBete(tester, "456");
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("Continuer"));
+    await tester.pumpAndSettle(Duration(seconds: 2));
+    await tester.tap(find.byKey(Key("dateDebut")));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("5"));
+    await tester.tap(find.text("OK"));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(Key("dateFin")));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("15"));
+    await tester.tap(find.text("OK"));
+    await tester.pumpAndSettle();
+    var ordonnanceTxt = find.ancestor(of: find.text('Ordonnance'),matching: find.byType(TextFormField),);
+    await tester.enterText(ordonnanceTxt, "ord 1");
+    var MedicamentTxt = find.ancestor(of: find.text('Medicament'),matching: find.byType(TextFormField),);
+    await tester.enterText(MedicamentTxt, "Medoc");
+    var voieTxt = find.ancestor(of: find.text('Voie'),matching: find.byType(TextFormField),);
+    await tester.enterText(voieTxt, "Oral");
+    var doseTxt = find.ancestor(of: find.text('Dose'),matching: find.byType(TextFormField),);
+    await tester.enterText(doseTxt, "1 ml");
+    var rythmeTxt = find.ancestor(of: find.text('Rythme'),matching: find.byType(TextFormField),);
+    await tester.enterText(rythmeTxt, "2 / j");
+    var interTxt = find.ancestor(of: find.text('Intervenant'),matching: find.byType(TextFormField),);
+    await tester.enterText(interTxt, "Berger");
+    var motifTxt = find.ancestor(of: find.text('Motif'),matching: find.byType(TextFormField),);
+    await tester.enterText(motifTxt, "Malalde");
+    var obsTxt = find.ancestor(of: find.text('Observations'),matching: find.byType(TextFormField),);
+    await tester.enterText(obsTxt, "Observation");
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.close);
+    await tester.tap(find.text("Enregistrer"));
+    await tester.pumpAndSettle();
+  });
+
+}
+
+Future<void> testAgnelage() async {
+  testWidgets("Saisir un agnelage", (tester,) async {
+    await startAppli(tester);
+    await tester.tap(find.text("Agnelage"));
+    await tester.pumpAndSettle();
+    await selectBete(tester, "123");
+    // Passage à l'ecran Agnelage
+    await tester.pumpAndSettle();
+    DateTime now = DateTime.now();
+    expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
+    await tester.tap(find.byKey(Key("btQualite")));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("3"));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(Key("btAdoption")));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("2"));
+    await tester.pumpAndSettle();
+  });
 }

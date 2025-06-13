@@ -1,5 +1,6 @@
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/Lot/ui/LotAffectationViewPage.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
@@ -12,6 +13,10 @@ class LotAffectionPresenter {
   final _df = new DateFormat('dd/MM/yyyy');
   final LotAffectationContract _view;
   LotModel  _currentLot;
+  int _currentViewIndex=0;
+
+  int get currentViewIndex => _currentViewIndex;
+
   LotAffectionPresenter(this._view,  this._currentLot);
   final LotService _service = LotService();
 
@@ -38,7 +43,7 @@ class LotAffectionPresenter {
     return message;
   }
 
-  Future<LotModel> save(String campagne, String codeLot, String dateDebut, String dateFin) async {
+  Future<void> save(String campagne, String codeLot, String dateDebut, String dateFin) async {
     LotModel currentLot = LotModel();
     currentLot.dateDebutLutte = DateFormat.yMd().parse(dateDebut);
     if (currentLot.dateDebutLutte == "") {
@@ -57,7 +62,7 @@ class LotAffectionPresenter {
       throw CodeLotException();
     }
     currentLot = (await this._service.saveLot(currentLot))!;
-    return currentLot;
+    this._view.currentLot = currentLot;
   }
 
   Future<List<Affectation>> ? getBeliers(int idLot)  {
@@ -68,6 +73,24 @@ class LotAffectionPresenter {
     return this._service.getBrebisForLot(idLot);
   }
 
+  void changePage(int index) {
+    if (this._view.currentLot.idb == null ) {
+      this._view.showMessage(S.current.batch_warning);
+      return;
+    }
+      _currentViewIndex = index;
+      switch (_currentViewIndex) {
+        case 0:
+          this._view.currentView = View.fiche;
+          break;
+        case 1:
+          this._view.currentView = View.ram;
+          break;
+        case 2:
+          this._view.currentView = View.ewe;
+          break;
+      }
+  }
 
 }
 

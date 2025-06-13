@@ -87,5 +87,7 @@ class BluetoothService {
   void stopReadBluetooth() {
     BLUETOOTH_CHANNEL.invokeMethod("stopReadBlueTooth");
   }
-
+  Stream <BluetoothState> streamReadBluetooth() {
+    return _mgr.streamReadBluetooth();
+  }
 }

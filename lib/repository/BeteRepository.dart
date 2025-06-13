@@ -163,7 +163,7 @@ class LocalBeteRepository extends LocalRepository implements BeteRepository {
     Database db = await this.database;
     List<Map<String, dynamic>> futureMaps = await db.query('bete' ,where: 'id = ?', whereArgs: [idBd]);
     if (futureMaps.length == 0) {
-      debug.log("Bete non trouvéé " + idBd.toString(), name: "LocalDataProvider::searchBete");
+      debug.log("Bete non trouvéé " + idBd.toString(), name: "LocalBeteRepository::searchBete");
       return null;
     }
     return Bete.fromResult(futureMaps[0]);
