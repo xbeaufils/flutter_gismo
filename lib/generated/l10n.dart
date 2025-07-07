@@ -740,6 +740,16 @@ class S {
     );
   }
 
+  /// `Dates`
+  String get batch_date {
+    return Intl.message(
+      'Dates',
+      name: 'batch_date',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Weight`
   String get weight {
     return Intl.message(
@@ -1915,6 +1925,16 @@ class S {
     return Intl.message(
       'Edit',
       name: 'bt_edition',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Validate the selection`
+  String get bt_validate {
+    return Intl.message(
+      'Validate the selection',
+      name: 'bt_validate',
       desc: '',
       args: [],
     );

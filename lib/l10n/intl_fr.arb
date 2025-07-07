@@ -73,6 +73,7 @@
   "batch_name" :"Nom lot",
   "batch_campaign" : "Campagne",
   "batch_warning" : "Vous devez enregistrer le lot avant d'ajouter",
+  "batch_date" : "Dates",
 
   "weight" : "Poids",
   "weighing_date": "Date de pesée",
@@ -200,6 +201,7 @@
   "bt_add" : "Ajouter",
   "bt_delete" : "Supprimer",
   "bt_edition" : "Edition",
+  "bt_validate" : "Valider la sélection",
 
   "title_delete" : "Suppression",
   "text_delete" : "Voulez vous supprimer cet enregistrement ?",

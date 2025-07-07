@@ -55,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Dans ce mode, les données seront enregistrés dans une base de données de votre téléphone.\nCopiez votre base de données locale pour la sauvegarder sur un PC et la restaurer en cas de besoin."),
         "batch": MessageLookupByLibrary.simpleMessage("Lot"),
         "batch_campaign": MessageLookupByLibrary.simpleMessage("Campagne"),
+        "batch_date": MessageLookupByLibrary.simpleMessage("Dates"),
         "batch_name": MessageLookupByLibrary.simpleMessage("Nom lot"),
         "batch_warning": MessageLookupByLibrary.simpleMessage(
             "Vous devez enregistrer le lot avant d\'ajouter"),
@@ -73,6 +74,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "bt_delete": MessageLookupByLibrary.simpleMessage("Supprimer"),
         "bt_edition": MessageLookupByLibrary.simpleMessage("Edition"),
         "bt_save": MessageLookupByLibrary.simpleMessage("Enregistrer"),
+        "bt_validate":
+            MessageLookupByLibrary.simpleMessage("Valider la sélection"),
         "collective_treatment":
             MessageLookupByLibrary.simpleMessage("Traitement collectif"),
         "configuration": MessageLookupByLibrary.simpleMessage("Configuration"),

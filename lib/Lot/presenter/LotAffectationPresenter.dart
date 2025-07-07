@@ -1,23 +1,34 @@
 import 'package:flutter_gismo/Gismo.dart';
+import 'package:flutter_gismo/Lot/ui/AffectationPage.dart';
 import 'package:flutter_gismo/Lot/ui/LotAffectationViewPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/individu/ui/Bete.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/search/ui/SearchPage.dart';
+import 'package:flutter_gismo/search/ui/SelectMultiplePage.dart';
 import 'package:flutter_gismo/services/LotService.dart';
 import 'package:intl/intl.dart';
+
+enum view {Lot, male, femelle}
 
 class LotAffectionPresenter {
 
   final _df = new DateFormat('dd/MM/yyyy');
   final LotAffectationContract _view;
+  late final List<Bete> beliers;
+  late final List<Bete> brebis;
+
   LotModel  _currentLot;
-  int _currentViewIndex=0;
+  view _currentViewIndex= view.Lot;
 
-  int get currentViewIndex => _currentViewIndex;
+  view get currentViewIndex => _currentViewIndex;
 
-  LotAffectionPresenter(this._view,  this._currentLot);
+  LotAffectionPresenter(this._view,  this._currentLot) {
+    beliers = this._currentLot.beliers;
+    brebis = this._currentLot.brebis;
+  }
   final LotService _service = LotService();
 
   Future<void> deleteAffectation(Affectation event) async {
@@ -39,6 +50,14 @@ class LotAffectionPresenter {
     }
     if (message != null) this._view.showMessage(message);
     this._view.currentLot = this._currentLot;
+  }
+
+  Future addMultipleBete() async {
+    List<Bete>? betes = await this._view.goNextPage(SelectMultiplePage( GismoPage.sanitaire, []));
+  }
+
+  Future<void> edit(Affectation affectation) async {
+    this._view.goNextPage(AffectationPage(affectation));
   }
 
   Future<void> removeBete(Affectation affect) async {
@@ -85,20 +104,20 @@ class LotAffectionPresenter {
     return this._service.getBrebisForLot(idLot);
   }
 
-  void changePage(int index) {
+  void changePage(view index) {
     if (this._view.currentLot.idb == null ) {
       this._view.showMessage(S.current.batch_warning);
       return;
     }
       _currentViewIndex = index;
       switch (_currentViewIndex) {
-        case 0:
+        case view.Lot:
           this._view.currentView = View.fiche;
           break;
-        case 1:
+        case view.male:
           this._view.currentView = View.ram;
           break;
-        case 2:
+        case view.femelle:
           this._view.currentView = View.ewe;
           break;
       }

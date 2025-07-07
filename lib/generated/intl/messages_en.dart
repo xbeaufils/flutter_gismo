@@ -55,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "In this mode, the data will be saved in a database on your phone.\nCopy your local database to back it up on a PC and restore it when needed."),
         "batch": MessageLookupByLibrary.simpleMessage("Batch"),
         "batch_campaign": MessageLookupByLibrary.simpleMessage("Campaign"),
+        "batch_date": MessageLookupByLibrary.simpleMessage("Dates"),
         "batch_name": MessageLookupByLibrary.simpleMessage("Batch name"),
         "batch_warning": MessageLookupByLibrary.simpleMessage(
             "You must save the batch before add"),
@@ -73,6 +74,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "bt_delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "bt_edition": MessageLookupByLibrary.simpleMessage("Edit"),
         "bt_save": MessageLookupByLibrary.simpleMessage("Save"),
+        "bt_validate":
+            MessageLookupByLibrary.simpleMessage("Validate the selection"),
         "collective_treatment":
             MessageLookupByLibrary.simpleMessage("Collective treatment"),
         "configuration": MessageLookupByLibrary.simpleMessage("Configuration"),

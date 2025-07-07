@@ -69,6 +69,7 @@
    "batch_name": "Name der Teilherde",
    "batch_campaign": "Kampagne",
    "batch_warning": "Sie müssen die Teilherde speichern, bevor Sie sie hinzufügen können",
+   "batch_date" : "Datum",
    "weight": "Gewicht",
    "weighing_date": "Wiegedatum",
    "no_weighing_date": "Kein Wiegedatum",
@@ -191,7 +192,7 @@
   "bt_add": "Hinzufügen",
   "bt_delete": "Löschen",
   "bt_edition": "Bearbeiten",
-
+  "bt_validate" : "Bestätigen Sie die Auswahl",
   "title_delete": "Löschen",
   "text_delete": "Möchten Sie diesen Eintrag löschen?",
   "date_debut": "Startdatum",

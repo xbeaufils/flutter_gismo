@@ -30,10 +30,7 @@ class SplashScreenState extends State<SplashScreen> {
     debug.log("initState" , name: "SplashScreenState:initState");
 
     AuthService.init()
-        .then( (message) => route(message))
-        .catchError( (e)  {
-      route(e);
-        });
+        .then( (message) => route(message));
     /*
     this._bloc.init().then( (message) => route(message))
         .catchError( (e)  {_initError(e);});

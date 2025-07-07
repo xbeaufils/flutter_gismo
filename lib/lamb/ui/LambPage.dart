@@ -275,25 +275,6 @@ class LambPageState extends GismoStatePage<LambPage> implements LambContract {
     return bete;
   }
 
-  void _openBoucle(LambModel lamb) async {
-    /*
-    Bete? bete = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => BouclagePage(lamb, this.widget._bloc)),
-    );
-    if (bete != null) {
-      this.widget._bloc.boucler(lamb, bete);
-      if (bete.idBd != null)
-        lamb.idDevenir = bete.idBd;
-      lamb.numBoucle = bete.numBoucle;
-      lamb.numMarquage = bete.numMarquage;
-    }*/
-    Navigator
-        .of(context)
-        .pop(lamb);
-  }
-
   Future<String> showDeath(LambModel lamb) async {
     var navigationResult = await Navigator.push(
       context,
@@ -303,17 +284,6 @@ class LambPageState extends GismoStatePage<LambPage> implements LambContract {
     return "Toto";
   }
 
-  void _openDeath(LambModel lamb) async {
-    var navigationResult = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => MortPage(lamb)),
-    );
-    print (navigationResult);
-    Navigator
-        .of(context)
-        .pop(navigationResult);
-  }
 
   void _openPesee(LambModel lamb) async {
     var navigationResult = await Navigator.push(

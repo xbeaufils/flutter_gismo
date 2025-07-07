@@ -55,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "In diesem Modus werden die Daten in einer Datenbank auf Ihrem Telefon gespeichert.\nSichern Sie Ihre lokale Datenbank auf einem PC, um sie bei Bedarf wiederherstellen zu können."),
         "batch": MessageLookupByLibrary.simpleMessage("Teilherde"),
         "batch_campaign": MessageLookupByLibrary.simpleMessage("Kampagne"),
+        "batch_date": MessageLookupByLibrary.simpleMessage("Datum"),
         "batch_name":
             MessageLookupByLibrary.simpleMessage("Name der Teilherde"),
         "batch_warning": MessageLookupByLibrary.simpleMessage(
@@ -74,6 +75,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "bt_delete": MessageLookupByLibrary.simpleMessage("Löschen"),
         "bt_edition": MessageLookupByLibrary.simpleMessage("Bearbeiten"),
         "bt_save": MessageLookupByLibrary.simpleMessage("Speichern"),
+        "bt_validate":
+            MessageLookupByLibrary.simpleMessage("Bestätigen Sie die Auswahl"),
         "collective_treatment":
             MessageLookupByLibrary.simpleMessage("Kollektive Behandlung"),
         "configuration": MessageLookupByLibrary.simpleMessage("Einstellung"),

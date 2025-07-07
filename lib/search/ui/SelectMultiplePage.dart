@@ -100,7 +100,7 @@ class _SelectMultiplePageState extends GismoStatePage<SelectMultiplePage> with T
                     //color: Colors.lightGreen[700],
                     child:
                     new Text(
-                      S.of(context).validate_lambing,
+                      S.of(context).bt_validate,
                       style: new TextStyle(color: Colors.white, ), )
                 )
                 ]

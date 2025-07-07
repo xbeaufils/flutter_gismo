@@ -80,11 +80,16 @@ class AuthService {
       return "mode connecte";
     }
     on PlatformException catch(e) {
-      User _user = new User(null, null);
-      _user.cheptel = "00000000";
-      _user.subscribe = false;
+      AuthService().cheptel = "00000000";
+      AuthService().subscribe = false;
       //_repository = new GismoRepository(this._currentUser!, RepositoryType.local);
-      debug.log("Mode autonome", name: "GismoBloc::init");
+      debug.log("Mode autonome", name: "AuthService::init");
+      return "mode erreur";
+    }
+    catch (e) {
+      debug.log("erreur ", error: e, name: "AuthService::init");
+      AuthService().cheptel = "00000000";
+      AuthService().subscribe = false;
       return "mode erreur";
     }
   }

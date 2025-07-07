@@ -85,20 +85,36 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
                     BottomNavigationBarItem(icon: Image.asset("assets/ram_inactif.png"), activeIcon: Image.asset("assets/ram_actif.png") ,label: S.of(context).ram),
                     BottomNavigationBarItem(icon: Image.asset("assets/ewe_inactif.png"), activeIcon: Image.asset("assets/ewe_actif.png") , label: S.of(context).ewe),
                   ],
-                currentIndex: this._presenter.currentViewIndex,
-                onTap: (index) => { this._presenter.changePage(index)}
+                currentIndex: this._presenter.currentViewIndex.index,
+                onTap: (index)  {
+                    switch( index) {
+                      case 0 :
+                        this._presenter.changePage(view.Lot);
+                        break;
+                      case 1:
+                        this._presenter.changePage(view.male);
+                        break;
+                      case 2:
+                        this._presenter.changePage(view.femelle);
+                        break;
+                    }
+                }
               ),
             appBar: new AppBar(
               title:
               (this.currentLot.codeLotLutte == null) ? Text("Nouveau lot") : Text('Lot ' + this.currentLot.codeLotLutte!),
             ),
-            floatingActionButton: this._presenter.currentViewIndex == 0 ? null :
-              FloatingActionButton(
-                child: Icon(Icons.add),
-                  onPressed: () =>
-                    setState(() {
-                      this._presenter.addBete();
-                    })),
+            floatingActionButton: this._presenter.currentViewIndex == view.Lot ? null :
+            Column (
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FloatingActionButton(
+                  child: Icon(Icons.check_box),onPressed: this._presenter.addMultipleBete, heroTag: null),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  FloatingActionButton(child: Icon(Icons.settings_remote), onPressed: this._presenter.addBete, heroTag: null,),
+                ],),
             body:
               _getCurrentView()
     );
@@ -284,7 +300,8 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(icon: Icon(Icons.delete), onPressed: () => { _showDialog(context, bete) } ),
-                  IconButton(icon: Icon(Icons.launch), onPressed: () => { this._presenter.removeBete(bete)},)
+                  IconButton(icon: Icon(Icons.edit), onPressed: () => { _presenter.edit(bete) }, ),
+                  //IconButton(icon: Icon(Icons.launch), onPressed: () => { this._presenter.removeBete(bete)},)
         ])
         );
       }
