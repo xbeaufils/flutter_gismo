@@ -9,7 +9,7 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/infra/ui/MenuPage.dart';
-import 'package:flutter_gismo/presenter/WelcomePresenter.dart';
+import 'package:flutter_gismo/infra/presenter/WelcomePresenter.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
