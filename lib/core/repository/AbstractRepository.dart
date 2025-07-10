@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/find_locale.dart';
 import 'package:intl/intl.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:sentry/sentry.dart';
@@ -24,18 +25,18 @@ class WebRepository {
   final String? _token;
   WebRepository(this._token) ;
 
-  Map<String, String> _getHeaders() {
+  Future<Map<String, String>> _getHeaders() async{
     Map<String, String> _headers = new Map();
     _headers[HttpHeaders.contentTypeHeader] = ContentType.json.value;
     if (this._token != null)
       _headers['token'] = this._token!;
-    _headers[HttpHeaders.acceptLanguageHeader] = Platform.localeName;
+    _headers[HttpHeaders.acceptLanguageHeader] =  Intl.shortLocale(await findSystemLocale());
     return _headers;
   }
 
   Future<String> doPostParcelle(String url, Object body) async {
     try {
-      var response = await http.post(Uri.parse(Environnement.getUrlTarget() + url), headers: _getHeaders() ,body: body).timeout(Duration(seconds: 10));
+      var response = await http.post(Uri.parse(Environnement.getUrlTarget() + url), headers: await _getHeaders() ,body: body).timeout(Duration(seconds: 10));
       return response.body;
     } on TimeoutException catch (e) {
       throw (e);
@@ -48,7 +49,7 @@ class WebRepository {
   Future<String> doPostWeb(String url, Object body) async {
     try {
       var response = await http.post(Uri.parse(Environnement.getUrlWebTarget() + url),
-          headers: _getHeaders() ,
+          headers: await _getHeaders() ,
           body: jsonEncode(body)).timeout(Duration(seconds: 10));
       return response.body;
     } on TimeoutException catch (e) {
@@ -64,7 +65,7 @@ class WebRepository {
     try {
       var response = await http.delete(
           Uri.parse(Environnement.getUrlTarget() + url),
-          headers: _getHeaders(),
+          headers: await _getHeaders(),
           body: jsonEncode(body)).timeout(Duration(seconds: 5) ).timeout(Duration(seconds: 10));
       Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
       if (msg.error) {
@@ -86,7 +87,7 @@ class WebRepository {
     try {
       var response = await http.post(
           Uri.parse(Environnement.getUrlTarget() + url),
-          headers: _getHeaders(),
+          headers: await _getHeaders(),
           body: jsonEncode(body)).timeout(Duration(seconds: 5) ).timeout(Duration(seconds: 10));
       Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
       if (msg.error) {
@@ -109,7 +110,7 @@ class WebRepository {
     try {
       var response = await http.post(
           Uri.parse(Environnement.getUrlTarget() + url),
-          headers: _getHeaders(),
+          headers: await _getHeaders(),
           body: jsonEncode(body)).timeout(Duration(seconds: 10));
       Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
       if (msg.error) {
@@ -129,7 +130,7 @@ class WebRepository {
 
   Future<Map<String, dynamic> > doGet(String url) async {
     try {
-      var response = await http.get(Uri.parse(Environnement.getUrlTarget() + url), headers: _getHeaders() ).timeout(Duration(seconds: 10));
+      var response = await http.get(Uri.parse(Environnement.getUrlTarget() + url), headers: await _getHeaders() ).timeout(Duration(seconds: 10));
       if (response.bodyBytes.lengthInBytes == 0)
         return jsonDecode("{}");
       return jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
@@ -143,7 +144,7 @@ class WebRepository {
 
   Future<List > doGetList(String url) async {
     try {
-      var response = await http.get(Uri.parse(Environnement.getUrlTarget() + url), headers: _getHeaders() );
+      var response = await http.get(Uri.parse(Environnement.getUrlTarget() + url), headers: await _getHeaders() );
       return jsonDecode(utf8.decode(response.bodyBytes)) as List;
     } on TimeoutException catch (e) {
       throw (e);
