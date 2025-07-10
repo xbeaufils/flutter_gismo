@@ -202,6 +202,7 @@
   "bt_delete" : "Supprimer",
   "bt_edition" : "Edition",
   "bt_validate" : "Valider la sélection",
+  "record_saved": "Enregistrement effectué",
 
   "title_delete" : "Suppression",
   "text_delete" : "Voulez vous supprimer cet enregistrement ?",

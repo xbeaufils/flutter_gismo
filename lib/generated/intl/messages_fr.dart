@@ -288,6 +288,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Numéro provisoire"),
         "ram": MessageLookupByLibrary.simpleMessage("Bélier"),
         "reason": MessageLookupByLibrary.simpleMessage("Motif"),
+        "record_saved":
+            MessageLookupByLibrary.simpleMessage("Enregistrement effectué"),
         "restore_bd":
             MessageLookupByLibrary.simpleMessage("Restauration de la BD"),
         "restore_bd_text": MessageLookupByLibrary.simpleMessage(

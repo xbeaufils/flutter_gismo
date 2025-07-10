@@ -11,6 +11,7 @@ class Affectation {
   DateTime ? dateSortie;
 
   Affectation();
+  Affectation.create(this.idAffectation, this.brebisId, this.lotId);
 
   Map<String, dynamic> toJson() {
     final _df = new DateFormat('dd/MM/yyyy');

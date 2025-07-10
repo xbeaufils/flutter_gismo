@@ -54,4 +54,7 @@ class LotService {
     return this._lotRepository.deleteAffectation(affect);
   }
 
+  Future<String> updateAffectationInLot(List<Affectation> toAdd, List<Affectation> toRemove) async {
+    return this._lotRepository.updateAffectationInLot(toAdd, toRemove);
+  }
 }

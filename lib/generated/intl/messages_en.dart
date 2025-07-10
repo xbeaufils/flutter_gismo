@@ -282,6 +282,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Provisional number"),
         "ram": MessageLookupByLibrary.simpleMessage("Ram"),
         "reason": MessageLookupByLibrary.simpleMessage("Reason"),
+        "record_saved":
+            MessageLookupByLibrary.simpleMessage("Record completed"),
         "restore_bd": MessageLookupByLibrary.simpleMessage("Restore database"),
         "restore_bd_text": MessageLookupByLibrary.simpleMessage(
             "Current data will be overwritten."),

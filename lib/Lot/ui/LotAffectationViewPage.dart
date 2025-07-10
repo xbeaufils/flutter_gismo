@@ -23,7 +23,7 @@ class LotAffectationViewPage extends StatefulWidget {
 abstract class LotAffectationContract extends GismoContract {
   LotModel get currentLot;
   set currentLot(LotModel value);
-  set currentView(View value);
+  set currentView(view value);
   Future<String?> showDateDialog(String title, String helpMessage, String label);
 }
 
@@ -39,11 +39,11 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
   TextEditingController _campagneCtrl = TextEditingController();
   final _df = new DateFormat('dd/MM/yyyy');
 
-  late View _currentView;
+  late view _currentView;
 
-  View get currentView => _currentView;
+  view get currentView => _currentView;
 
-  set currentView(View value) {
+  set currentView(view value) {
     setState(() {
       _currentView = value;
     });
@@ -61,7 +61,7 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
   void initState(){
     super.initState();
     _presenter = LotAffectionPresenter(this, this.currentLot);
-    _currentView = View.fiche;
+    _currentView = view.Lot;
     if (currentLot.codeLotLutte != null)
       _codeLotCtl.text = currentLot.codeLotLutte!;
     if (currentLot.dateDebutLutte != null)
@@ -86,16 +86,16 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
                     BottomNavigationBarItem(icon: Image.asset("assets/ewe_inactif.png"), activeIcon: Image.asset("assets/ewe_actif.png") , label: S.of(context).ewe),
                   ],
                 currentIndex: this._presenter.currentViewIndex.index,
-                onTap: (index)  {
+                onTap: (index) async {
                     switch( index) {
                       case 0 :
-                        this._presenter.changePage(view.Lot);
+                        await this._presenter.changePage(view.Lot);
                         break;
                       case 1:
-                        this._presenter.changePage(view.male);
+                        await this._presenter.changePage(view.male);
                         break;
                       case 2:
-                        this._presenter.changePage(view.femelle);
+                        await this._presenter.changePage(view.femelle);
                         break;
                     }
                 }
@@ -105,29 +105,32 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
               (this.currentLot.codeLotLutte == null) ? Text("Nouveau lot") : Text('Lot ' + this.currentLot.codeLotLutte!),
             ),
             floatingActionButton: this._presenter.currentViewIndex == view.Lot ? null :
-            Column (
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  FloatingActionButton(
-                  child: Icon(Icons.check_box),onPressed: this._presenter.addMultipleBete, heroTag: null),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  FloatingActionButton(child: Icon(Icons.settings_remote), onPressed: this._presenter.addBete, heroTag: null,),
-                ],),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                    child: Icon(Icons.check_box),
+                    onPressed: this._presenter.addMultipleBete,
+                    heroTag: null),
+                SizedBox(
+                  height: 10,
+                ),
+                FloatingActionButton(child: Icon(Icons.settings_remote),
+                  onPressed: this._presenter.addBete,
+                  heroTag: null,),
+              ],),
             body:
               _getCurrentView()
     );
   }
 
-
   Widget _getCurrentView() {
     switch (_currentView) {
-      case View.fiche:
+      case view.Lot:
         return _getFiche();
-      case View.ewe :
+      case view.femelle :
         return _listBrebisWidget();
-      case View.ram:
+      case view.male:
         return _listBelierWidget();
     }
   }
@@ -218,43 +221,20 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
   }
 
   Widget _listBelierWidget() {
-    return FutureBuilder(
-      builder: (context, AsyncSnapshot<List<Affectation>> belierSnap) {
-        if (belierSnap.connectionState == ConnectionState.none && belierSnap.hasData == null) {
-          return Container();
-        }
-        if (belierSnap.connectionState == ConnectionState.waiting)
-          return Center(child:CircularProgressIndicator());
-        return  Column(
-            mainAxisSize: MainAxisSize.max,
-            children:  [
-          _showCount( (belierSnap.data == null? "0 ": belierSnap.data!.length.toString()) + " béliers"),
-          Expanded(child: _showList(belierSnap))
-            ]);
-      },
-      future: this._presenter.getBeliers(this.widget._currentLot.idb!),
-    );
-  }
+    return Column(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          _showCount((_presenter.presentBeliers == null? "0 ": _presenter.presentBeliers!.length.toString()) + " " + S.current.ram),
+          Expanded(child: _showList(this._presenter.presentBeliers))
+        ],);
+   }
 
   Widget _listBrebisWidget() {
-    return FutureBuilder(
-        builder: (context, AsyncSnapshot<List<Affectation>> brebisSnap) {
-          if (brebisSnap.connectionState == ConnectionState.none &&
-              brebisSnap.hasData == null) {
-            return Container();
-          }
-          if (brebisSnap.connectionState == ConnectionState.waiting)
-            return Center(child:  CircularProgressIndicator(),);
-          return
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-              _showCount((brebisSnap.data == null? "0 ": brebisSnap.data!.length.toString()) + " brebis"),
-              Expanded(child: _showList(brebisSnap))
-            ],);
-        },
-      future: this._presenter.getBrebis(this.widget._currentLot.idb!),
-    );
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+      _showCount((_presenter.presentBrebis == null? "0 ": _presenter.presentBrebis!.length.toString()) + " brebis"),
+      Expanded(child: _showList(_presenter.presentBrebis))],);
   }
 
   Widget _showCount(String libelle) {
@@ -268,18 +248,18 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
     ],);
   }
 
-  Widget _showList(AsyncSnapshot<List<Affectation>> snap) {
-    if (snap.data == null)
+  Widget _showList(List<Affectation?>? snap) {
+    if (snap == null)
       return Container();
     return ListView.builder(
-      itemCount: snap.data!.length,
+      itemCount: snap.length,
       itemBuilder: (context, index) {
-        Affectation bete = snap.data![index];
+        Affectation ? bete = snap[index];
        return //Card(child:
         ListTile(
             title:
               Row(children: <Widget>[
-                Text(bete.numBoucle!,
+                Text(bete!.numBoucle!,
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 SizedBox(width: 20,),
                 Text(bete.numMarquage!,

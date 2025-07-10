@@ -6,6 +6,7 @@ import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/core/repository/LocalRepository.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:sentry/sentry.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -19,6 +20,7 @@ abstract class LotRepository {
   Future<String> remove(Affectation affect);
   Future<String> addBete(LotModel lot, Bete bete, String dateEntree);
   Future<String> deleteAffectation(Affectation affect);
+  Future<String> updateAffectationInLot(List<Affectation> toAdd, List<Affectation> toRemove);
 }
 
 class WebLotRepository extends WebRepository implements LotRepository {
@@ -100,6 +102,24 @@ class WebLotRepository extends WebRepository implements LotRepository {
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
+
+  }
+  @override
+  Future<String> updateAffectationInLot(List<Affectation> toAdd, List<Affectation> toRemove) async {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    try {
+      data['added'] = toAdd;
+      data['removed'] = toRemove;
+      final response = await super.doPostMessage(
+          '/lot/update', data);
+      return response;
+
+    }    catch (e,stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //      super.bloc.reportError(e, stackTrace);
+      return "Une erreur est survenue :" + e.toString();
+    }
+    return S.current.record_saved;
 
   }
 
@@ -267,6 +287,26 @@ class LocalLotRepository extends LocalRepository implements LotRepository {
       return "Une erreur est survenue :" + e.toString();
     }
     return "Enregistrement effectué";
+  }
+
+  Future<String> updateAffectationInLot(List<Affectation> toAdd, List<Affectation> toRemove) async {
+    Database db = await this.database;
+    try {
+      for (Affectation affect in toAdd) {
+        Map<String, dynamic> dataDb = new Map.from(affect.toJson());
+        await db.insert("affectation", dataDb,
+            conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (Affectation affectation in toRemove) {
+        this.deleteAffectation(affectation);
+      }
+    }
+    catch (e,stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //      super.bloc.reportError(e, stackTrace);
+      return "Une erreur est survenue :" + e.toString();
+    }
+    return S.current.record_saved;
   }
 
   @override

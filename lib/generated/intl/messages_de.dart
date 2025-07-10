@@ -294,6 +294,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Vorläufige Nummer"),
         "ram": MessageLookupByLibrary.simpleMessage("Widder"),
         "reason": MessageLookupByLibrary.simpleMessage("Grund"),
+        "record_saved":
+            MessageLookupByLibrary.simpleMessage("Aufnahme abgeschlossen"),
         "restore_bd":
             MessageLookupByLibrary.simpleMessage("Datenbank wiederherstellen"),
         "restore_bd_text": MessageLookupByLibrary.simpleMessage(

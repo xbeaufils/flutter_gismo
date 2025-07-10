@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:sentry/sentry.dart';
 import 'package:flutter_gismo/bloc/Message.dart';
 
@@ -25,7 +26,7 @@ class WebRepository {
 
   Map<String, String> _getHeaders() {
     Map<String, String> _headers = new Map();
-    _headers['Content-Type'] = "application/json";
+    _headers[HttpHeaders.contentTypeHeader] = ContentType.json.value;
     if (this._token != null)
       _headers['token'] = this._token!;
     _headers[HttpHeaders.acceptLanguageHeader] = Platform.localeName;

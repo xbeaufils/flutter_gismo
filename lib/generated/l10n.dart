@@ -1940,6 +1940,16 @@ class S {
     );
   }
 
+  /// `Record completed`
+  String get record_saved {
+    return Intl.message(
+      'Record completed',
+      name: 'record_saved',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Delete`
   String get title_delete {
     return Intl.message(
