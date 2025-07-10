@@ -157,7 +157,7 @@ class SearchPresenter {
   Future<void> startService() async{
     try {
       debug.log("Start service ", name: "_SearchPageState::_startService");
-      BluetoothState _bluetoothState = BluetoothState.fromResult(null); //await this._bloc.startReadBluetooth();
+      BluetoothState _bluetoothState = await this._mgr.startReadBluetooth();
       if (_bluetoothState.status != null)
         debug.log("Start status " + _bluetoothState.status!, name: "_SearchPageState::_startService");
       if (_bluetoothState.status == BluetoothManager.CONNECTED

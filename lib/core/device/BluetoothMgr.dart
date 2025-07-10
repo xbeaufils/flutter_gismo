@@ -18,6 +18,17 @@ class BluetoothManager {
   static const String LISTEN = "LISTEN";
   static const String ERROR = "ERROR";
 
+  Future<BluetoothState> startReadBluetooth() async {
+    BluetoothState state;
+    //FlutterSecureStorage storage = new FlutterSecureStorage();
+    //String address = await storage.read(key: "address");
+    //debug.log("read data status " + address, name: "GismoBloc::startReadBluetooth");
+    String status = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth" ); //, { 'address': address});
+    debug.log("read status " + status, name: "BluetoothManager::startReadBluetooth");
+    state = BluetoothState.fromResult(json.decode(status));
+    return state;
+  }
+
   Stream<StatusBlueTooth> streamStatusBluetooth() async* {
     StatusBlueTooth state;
     if (_streamStatus)
@@ -48,6 +59,7 @@ class BluetoothManager {
   void stopStream() {
     _streamStatus = false;
   }
+
   void stopReadBluetooth() {
     BLUETOOTH_CHANNEL.invokeMethod("stopReadBlueTooth");
   }

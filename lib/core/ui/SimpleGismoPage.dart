@@ -11,6 +11,8 @@ abstract class GismoContract {
 class GismoStatePage<T extends StatefulWidget> extends  State<T> {
   bool _isSaving = false;
 
+  bool get isSaving => _isSaving;
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -47,4 +49,9 @@ class GismoStatePage<T extends StatefulWidget> extends  State<T> {
     });
   }
 
+  void hideSaving() {
+    setState(() {
+      _isSaving = false;
+    });
+  }
 }

@@ -24,6 +24,8 @@ abstract class LotAffectationContract extends GismoContract {
   LotModel get currentLot;
   set currentLot(LotModel value);
   set currentView(view value);
+  void hideSaving();
+  bool get isSaving;
   Future<String?> showDateDialog(String title, String helpMessage, String label);
 }
 
@@ -125,6 +127,7 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
   }
 
   Widget _getCurrentView() {
+    if (isSaving) return Center(child: CircularProgressIndicator(),);
     switch (_currentView) {
       case view.Lot:
         return _getFiche();

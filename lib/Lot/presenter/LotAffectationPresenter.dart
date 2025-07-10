@@ -35,7 +35,13 @@ class LotAffectionPresenter {
   final BeteService _beteService = BeteService();
 
   Future<void> deleteAffectation(Affectation event) async {
+    this._view.showSaving();
     String message = await this._service.deleteAffectation(event);
+    if (_currentViewIndex == view.male)
+      await this._reloadPresent(Sex.male);
+    if (_currentViewIndex == view.femelle)
+      await this._reloadPresent(Sex.femelle);
+    this._view.hideSaving();
     this._view.showMessage(message);
   }
 
@@ -54,33 +60,31 @@ class LotAffectionPresenter {
         S.current.dateEntry);
     String? message;
     if (dateEntree != null) {
-      message = await this._service.addBete(this._currentLot, selectedBete!, dateEntree);
+      message = await this._service.addBete(this._currentLot, selectedBete, dateEntree);
+      await this._reloadPresent(search.searchSex!);
     }
     if (message != null) this._view.showMessage(message);
     this._view.currentLot = this._currentLot;
   }
 
-  Future addMultipleBete() async {
+  Future<String> addMultipleBete() async {
+    Sex sex = (_currentViewIndex == view.male) ? Sex.male: Sex.femelle;
+    String ?  message = await this._addMultipleBete(sex);
+    return message;
+  }
+
+  Future<String> _addMultipleBete(Sex sex) async {
     List<Bete> ? selectedBetes = null;
     List<Affectation> toAdd = [];
     List<Affectation> toRemove = [];
-    switch (_currentViewIndex) {
-      case view.male:
-        selectedBetes = await this._buildNewListBetes(Sex.male);
-        toAdd = this._buildToAdd(Sex.male, selectedBetes!);
-        toRemove = this._buildToRemove(Sex.male, selectedBetes) ;
-        break;
-      case view.femelle:
-        selectedBetes = await this._buildNewListBetes(Sex.femelle);
-        if (selectedBetes != null) {
-          toAdd = this._buildToAdd(Sex.femelle, selectedBetes);
-          toRemove = this._buildToRemove(Sex.femelle, selectedBetes);
-        }
-        break;
-      default:
-        break;
-    }
-    String ?  message = await this._service.updateAffectationInLot(toAdd!, toRemove!);
+    selectedBetes = await this._buildNewListBetes(sex);
+    this._view.showSaving();
+    toAdd = this._buildToAdd(sex, selectedBetes!);
+    toRemove = this._buildToRemove(sex, selectedBetes) ;
+    String ?  message = await this._service.updateAffectationInLot(toAdd, toRemove);
+    await this._reloadPresent(sex);
+    this._view.hideSaving();
+    return message;
   }
 
   List<Affectation> _buildToAdd(Sex sex, List<Bete> selectedBetes) {
@@ -137,6 +141,13 @@ class LotAffectionPresenter {
       return _presentBeliers;
     else
       return _presentBrebis;
+  }
+
+  Future<void> _reloadPresent(Sex sex) async {
+    if (sex == Sex.male)
+      _presentBeliers = await this._service.getBrebisForLot(this._currentLot.idb!);
+    else
+      _presentBrebis = await this._service.getBrebisForLot(this._currentLot.idb!);
   }
 
   Future<void> edit(Affectation affectation) async {
