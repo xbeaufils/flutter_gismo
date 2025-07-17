@@ -186,8 +186,8 @@ class LotAffectionPresenter {
     if (currentLot.codeLotLutte == "") {
       throw CodeLotException();
     }
-    currentLot = (await this._service.saveLot(currentLot))!;
-    this._view.currentLot = currentLot;
+    _currentLot = (await this._service.saveLot(currentLot))!;
+    this._view.currentLot = _currentLot;
   }
 
   Future<List<Affectation>> ? getBeliers(int idLot)  {

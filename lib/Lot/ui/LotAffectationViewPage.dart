@@ -188,7 +188,7 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
                                   firstDate:DateTime(1900),
                                   lastDate: DateTime(2100));
                               if (date != null)
-                                _dateDebutCtl.text = _df.format(date);
+                                _dateDebutCtl.text =  DateFormat.yMd().format(date);
                             },
                           ),
                         ),
@@ -207,7 +207,7 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
                                   firstDate:DateTime(1900),
                                   lastDate: DateTime(2100));
                               if (date != null)
-                                _dateFinCtl.text = _df.format(date);
+                                _dateFinCtl.text =  DateFormat.yMd().format(date);
                             },
                           ),
                         )
@@ -359,7 +359,7 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
                             firstDate: DateTime(1900),
                             lastDate: DateTime(2100));
                         if (date != null)
-                          _dateMvtCtl.text = _df.format(date);
+                          _dateMvtCtl.text =  DateFormat.yMd().format(date);
                         //dateEntree = _df.format(date);
                       },
                     ),
