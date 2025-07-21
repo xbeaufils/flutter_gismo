@@ -49,7 +49,7 @@ void main() {
           await tester.tap(btSave);
         });
     //testAgnelage();
-    testTraitement();
+    testLot();
    });
 }
 
@@ -190,5 +190,51 @@ Future<void> testAgnelage() async {
     await tester.pumpAndSettle();
     await tester.tap(find.text("2"));
     await tester.pumpAndSettle();
+  });
+
+
+}
+
+Future<void> testLot() async {
+  testWidgets("Saisir un lot", (tester,) async {
+    await startAppli(tester);
+    await tester.tap(find.text("Lot"));
+    await tester.pumpAndSettle();
+    final btAdd = find.byIcon(Icons.add);
+    await tester.tap(btAdd);
+    await tester.pumpAndSettle();
+    // Saisie du lot
+    var nomLotTxt = find.ancestor(of: find.text('Nom lot'),matching: find.byType(TextFormField),);
+    await tester.enterText(nomLotTxt, "Lot test");
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(Key("dateDebut")));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("5"));
+    await tester.tap(find.text("OK"));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(Key("dateFin")));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("25"));
+    await tester.tap(find.text("OK"));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("Enregistrer"));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(Key('ewe')));
+    await tester.pumpAndSettle();
+    final btSearch = find.byIcon(Icons.settings_remote);
+    // 1 ere affectation
+    await tester.tap(btSearch);
+    await tester.pumpAndSettle();
+    await selectBete(tester, "123");
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("Enregistrer"));
+    await tester.pumpAndSettle();
+    // 2 eme affectation
+    await tester.tap(btSearch);
+    await tester.pumpAndSettle();
+    await selectBete(tester, "456");
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("Enregistrer"));
+
   });
 }

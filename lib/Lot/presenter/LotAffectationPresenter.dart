@@ -54,35 +54,35 @@ class LotAffectionPresenter {
     Bete ? selectedBete = await this._view.goNextPage(search);
     if (selectedBete == null)
       return null;
-    String ? dateEntree = await this._view.showDateDialog(
-        S.current.dateEntry,
-        "Saisir une date d'entrée si différente de la date de début de lot",
-        S.current.dateEntry);
     String? message;
-    if (dateEntree != null) {
-      message = await this._service.addBete(this._currentLot, selectedBete, dateEntree);
-      await this._reloadPresent(search.searchSex!);
-    }
+    message = await this._service.addBete(this._currentLot, selectedBete);
+    await this._reloadPresent(search.searchSex!);
     if (message != null) this._view.showMessage(message);
     this._view.currentLot = this._currentLot;
   }
 
-  Future<String> addMultipleBete() async {
+  Future<String?> addMultipleBete() async {
     Sex sex = (_currentViewIndex == view.male) ? Sex.male: Sex.femelle;
     String ?  message = await this._addMultipleBete(sex);
     return message;
   }
 
-  Future<String> _addMultipleBete(Sex sex) async {
+  Future<String?> _addMultipleBete(Sex sex) async {
     List<Bete> ? selectedBetes = null;
     List<Affectation> toAdd = [];
     List<Affectation> toRemove = [];
     selectedBetes = await this._buildNewListBetes(sex);
     this._view.showSaving();
+    if (selectedBetes == null) {
+      this._view.hideSaving();
+      return null;
+    }
     toAdd = this._buildToAdd(sex, selectedBetes!);
-    toRemove = this._buildToRemove(sex, selectedBetes) ;
-    String ?  message = await this._service.updateAffectationInLot(toAdd, toRemove);
+    toRemove = this._buildToRemove(sex, selectedBetes);
+    String ? message = await this._service.updateAffectationInLot(
+        toAdd, toRemove);
     await this._reloadPresent(sex);
+
     this._view.hideSaving();
     return message;
   }

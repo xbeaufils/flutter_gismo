@@ -18,7 +18,7 @@ abstract class LotRepository {
   Future<List<Affectation>>getBeliersForLot(int idLot);
   Future<List<Affectation>>getAffectationForBete(int idBete);
   Future<String> remove(Affectation affect);
-  Future<String> addBete(LotModel lot, Bete bete, String dateEntree);
+  Future<String> addBete(LotModel lot, Bete bete);
   Future<String> deleteAffectation(Affectation affect);
   Future<String> updateAffectationInLot(List<Affectation> toAdd, List<Affectation> toRemove);
 }
@@ -89,12 +89,10 @@ class WebLotRepository extends WebRepository implements LotRepository {
   }
 
   @override
-  Future<String> addBete(LotModel lot, Bete bete, String dateEntree) async {
+  Future<String> addBete(LotModel lot, Bete bete) async {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data["lotId"] = lot.idb;
     data["brebisId"] = bete.idBd;
-    if (dateEntree.isNotEmpty)
-      data["dateEntree"] = super.df.format(DateFormat.yMd().parse(dateEntree));
     try {
       final response = await super.doPostMessage(
           '/lot/add', data);
@@ -266,14 +264,11 @@ class LocalLotRepository extends LocalRepository implements LotRepository {
 
 
   @override
-  Future<String> addBete(LotModel lot, Bete bete, String dateEntree) async {
+  Future<String> addBete(LotModel lot, Bete bete) async {
     try {
       Affectation affect = new Affectation();
       affect.lotId = lot.idb!;
       affect.brebisId = bete.idBd!;
-      if (dateEntree != null)
-        if (dateEntree.isNotEmpty)
-          affect.dateEntree = DateFormat.yMd().parse(dateEntree);
       Map<String, dynamic> dataDb = new Map.from(affect.toJson());
       dataDb.remove("numBoucle");
       dataDb.remove("numMarquage");

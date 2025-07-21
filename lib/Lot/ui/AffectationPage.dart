@@ -12,12 +12,27 @@ class AffectationPage  extends StatefulWidget {
 
   AffectationPage(this._affectation);
 }
+abstract class AffectationContract extends GismoContract {
+  Affectation get currentAffectation;
+}
 
-class AffectationPageState extends GismoStatePage<AffectationPage> {
+class AffectationPageState extends GismoStatePage<AffectationPage> implements AffectationContract {
   TextEditingController _dateEntreeCtl = TextEditingController();
   TextEditingController _dateSortieCtl = TextEditingController();
   bool _isSaving = false;
   late AffectationPresenter _presenter;
+
+  @override
+  void initState() {
+    super.initState();
+    _presenter = AffectationPresenter(this);
+    if (currentAffectation.dateEntree != null)
+      _dateEntreeCtl.text =  DateFormat.yMd().format(currentAffectation.dateEntree!);
+    if (currentAffectation.dateSortie != null)
+      _dateSortieCtl.text =  DateFormat.yMd().format(currentAffectation.dateSortie!);
+  }
+
+  Affectation get currentAffectation => this.widget._affectation;
 
   @override
   Widget build(BuildContext context) {

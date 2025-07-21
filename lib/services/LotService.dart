@@ -17,8 +17,8 @@ class LotService {
     }
   }
 
-  Future<String> addBete(LotModel lot, Bete bete, String dateEntree) {
-    return this._lotRepository.addBete(lot, bete, dateEntree);
+  Future<String> addBete(LotModel lot, Bete bete) {
+    return this._lotRepository.addBete(lot, bete);
   }
 
   Future<String> removeFromLot(Affectation affect, String dateSortie) {

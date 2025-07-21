@@ -39,7 +39,6 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
   TextEditingController _dateFinCtl = TextEditingController();
   TextEditingController _dateMvtCtl = TextEditingController();
   TextEditingController _campagneCtrl = TextEditingController();
-  final _df = new DateFormat('dd/MM/yyyy');
 
   late view _currentView;
 
@@ -84,8 +83,8 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
               BottomNavigationBar(
                   items: [
                     BottomNavigationBarItem(icon: Icon(Icons.edit),label: S.of(context).bt_edition),
-                    BottomNavigationBarItem(icon: Image.asset("assets/ram_inactif.png"), activeIcon: Image.asset("assets/ram_actif.png") ,label: S.of(context).ram),
-                    BottomNavigationBarItem(icon: Image.asset("assets/ewe_inactif.png"), activeIcon: Image.asset("assets/ewe_actif.png") , label: S.of(context).ewe),
+                    BottomNavigationBarItem(key: Key("ram"), icon: Image.asset("assets/ram_inactif.png"), activeIcon: Image.asset("assets/ram_actif.png") ,label: S.of(context).ram),
+                    BottomNavigationBarItem(key: Key('ewe'), icon: Image.asset("assets/ewe_inactif.png"), activeIcon: Image.asset("assets/ewe_actif.png") , label: S.of(context).ewe),
                   ],
                 currentIndex: this._presenter.currentViewIndex.index,
                 onTap: (index) async {
@@ -175,6 +174,7 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
                         new Flexible(
                           child:
                           new TextFormField(
+                            key: Key("dateDebut"),
                             controller: _dateDebutCtl,
                             decoration: InputDecoration(
                               labelText: S.of(context).date_debut,),
@@ -195,6 +195,7 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
                         new Flexible(
                           child:
                           new TextFormField(
+                            key: Key("dateFin"),
                             controller: _dateFinCtl,
                             decoration: InputDecoration(
                               labelText: S.of(context).date_fin,),
@@ -283,7 +284,7 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(icon: Icon(Icons.delete), onPressed: () => { _showDialog(context, bete) } ),
-                  IconButton(icon: Icon(Icons.edit), onPressed: () => { _presenter.edit(bete) }, ),
+                  IconButton(icon: Icon(Icons.calendar_month), onPressed: () => { _presenter.edit(bete) }, ),
                   //IconButton(icon: Icon(Icons.launch), onPressed: () => { this._presenter.removeBete(bete)},)
         ])
         );
