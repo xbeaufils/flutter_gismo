@@ -49,12 +49,14 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
       key: _scaffoldKey,
       appBar: new AppBar(
         title: Text(S.of(context).ultrasound),
-        leading: ( this.widget._bete == null) ? Text(""):Text(this.widget._bete!.numBoucle),
+        //leading: ( this.widget._bete == null) ? Text(""):Text(this.widget._bete!.numBoucle),
       ),
       body:
-      new Column(
+       Column(
+           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget> [
-            new TextFormField(
+            ( this.widget._bete == null) ? Container():Card.filled( child:  Center(child: Text(this.widget._bete!.numBoucle))),
+            TextFormField(
                 key: Key("dateEcho"),
                 keyboardType: TextInputType.datetime,
                 controller: _dateEchoCtl,
@@ -84,38 +86,38 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
                     });
                   }
                 }),
-            new Text(
+            Text(
               S.of(context).result,
               style: new TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18.0,
               ),
             ),
-            new Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                new Radio(
+                Radio(
                   value: 0,
                   groupValue: _nombre,
                   onChanged: _handleRdNombreChange,
                 ),
-                new Text(
+                Text(
                   S.of(context).empty,
                   style: new TextStyle(fontSize: 16.0),
                 ),
-                new Radio(
+                Radio(
                   value: 1,
                   groupValue: _nombre,
                   onChanged: _handleRdNombreChange,
                 ),
-                new Text(
+                Text(
                   S.of(context).simple,
                   style: new TextStyle(
                     fontSize: 16.0,
                   ),
                 ),
               ]),
-            new Row(
+            Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     new Radio(
@@ -192,7 +194,6 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
                 }),
 
             (_isSaving) ? CircularProgressIndicator():
-              new Card(child:
                 Flex(
                   direction: Axis.horizontal,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -203,11 +204,10 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
                         child: Text(S.of(context).bt_delete)):
                       Container(),
                     ElevatedButton(
-                      child: Text(S.of(context).bt_save,
-                      style: new TextStyle(color: Colors.white, ),),
+                      child: Text(S.of(context).bt_save,),
                     //color: Colors.lightGreen[700],
                       onPressed: () => {this._presenter.saveEcho(_dateEchoCtl.text, _dateSaillieCtl.text, _dateAgnelageCtl.text , _nombre) })
-                  ])),
+                  ]),
           ]),
 
     );
