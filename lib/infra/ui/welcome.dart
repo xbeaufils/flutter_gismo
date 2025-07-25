@@ -11,6 +11,7 @@ import 'dart:developer' as debug;
 import 'package:flutter_gismo/infra/ui/MenuPage.dart';
 import 'package:flutter_gismo/infra/presenter/WelcomePresenter.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
+import 'package:flutter_gismo/theme.dart';
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -50,89 +51,88 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
              ),
 //        bottomNavigationBar: this._navigationBar(),
         body:
-        ListView(
-            scrollDirection: Axis.vertical,
-            children: <Widget>[GridTile(child: Container(), ),
-              Text("Effectif"), Divider(),
-              ListTile(leading: SizedBox(child: Image.asset("assets/Lot.png"), width: 50), title: Text(S.of(context).batch),trailing:  Icon(Icons.chevron_right), onTap: _presenter.lotPressed, ),
-              ListTile(leading: SizedBox(child: Image.asset("assets/brebis.png"), width: 50), title: Text(S.of(context).sheep),trailing:  Icon(Icons.chevron_right), onTap: _presenter.individuPressed,),
-              ListTile(leading: SizedBox(child:Image.asset("assets/jumping_lambs.png"), width: 50), title: Text(S.of(context).lambs),trailing: Icon(Icons.chevron_right), onTap: _presenter.lambPressed, ),
-              Text("Reproduction"), Divider(),
-              ListTile(leading: SizedBox(child:Image.asset("assets/saillie.png"), width: 50), title: Text(S.of(context).mating),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: _presenter.sailliePressed,) ),
-              ListTile(leading: SizedBox(child:Image.asset("assets/ultrasound.png"), width: 50), title: Text(S.of(context).ultrasound),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.echoPressed,) ),
-              ListTile(leading: SizedBox(child:Image.asset("assets/lamb.png"), width: 50), title: Text(S.of(context).lambing),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.lambPressed,) ),
-              Text("Reproduction", ), Divider(),
-              ListTile(leading: SizedBox(child:Image.asset("assets/saillie.png"), width: 50), title: Text(S.of(context).mating),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: _presenter.sailliePressed,) ),
-              ListTile(leading: SizedBox(child:Image.asset("assets/ultrasound.png"), width: 50), title: Text(S.of(context).ultrasound),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.echoPressed,) ),
-              ListTile(leading: SizedBox(child:Image.asset("assets/lamb.png"), width: 50), title: Text(S.of(context).lambing),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.lambPressed,) ),
-              Text("Sanitaire"), Divider(),
-              ListTile(leading: SizedBox(child:Image.asset("assets/syringe.png"), width: 50), title: Text(S.of(context).treatment),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.traitementPressed,) ),
-              ListTile(leading: SizedBox(child: Image.asset("assets/peseur.png"), width: 50,), title: Text(S.of(context).weighing),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.peseePressed,) ),
-              ListTile(leading: SizedBox(child: Image.asset("assets/etat_corporel.png"), width: 50), title: Text(S.of(context).body_cond),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.necPressed,) ),
-              Text("Mouvement"), Divider(),
-              ListTile(leading: SizedBox(child: Image.asset("assets/home.png"), width: 50), title: Text(S.of(context).input),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.entreePressed,) ),
-              ListTile(leading: SizedBox(child: Image.asset("assets/Truck.png"), width: 50), title: Text(S.of(context).output),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.sortiePressed,) ),
-              ListTile(leading: SizedBox(child: Image.asset("assets/parcelles.png"), width: 50), title: Text("Parcelles"),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.lotPressed,) ),
-             /*
-              Card(
-                child: Center(
-                  child : SingleChildScrollView (
+        Column(children: [
+          Expanded(child:
+            GridView.count(
+            //gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+              scrollDirection: Axis.vertical,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              crossAxisCount: 3,
+              children: <Widget>[
+                _buildGriTile("assets/Lot.png", S.of(context).batch, _presenter.lotPressed) ,
+                _buildGriTile("assets/brebis.png", S.of(context).sheep, _presenter.individuPressed),
+                _buildGriTile("assets/jumping_lambs.png", S.of(context).lambs, _presenter.lambPressed ),
+                _buildGriTile("assets/saillie.png", S.of(context).mating, _presenter.sailliePressed, ),
+                _buildGriTile("assets/ultrasound.png", S.of(context).ultrasound, _presenter.echoPressed,) ,
+                _buildGriTile("assets/lamb.png", S.of(context).lambing, _presenter.lambPressed,) ,
+                _buildGriTile("assets/syringe.png", S.of(context).treatment, _presenter.traitementPressed,) ,
+                _buildGriTile("assets/peseur.png", S.of(context).weighing, _presenter.peseePressed,) ,
+                _buildGriTile("assets/etat_corporel.png", S.of(context).body_cond, _presenter.necPressed,),
+                _buildGriTile("assets/home.png", S.of(context).input,  _presenter.entreePressed,) ,
+                _buildGriTile("assets/Truck.png", S.of(context).output, _presenter.sortiePressed, ),
+                _buildGriTile("assets/parcelles.png", "Parcelles", _presenter.lotPressed ),
+              ]),),
+               /*
+                Card(
+                  child: Center(
+                    child : SingleChildScrollView (
+                      scrollDirection: Axis.horizontal,
+                      child : ButtonBar(
+                        mainAxisSize: MainAxisSize.max,
+                        //alignment: MainAxisAlignment.spaceBetween,
+                          alignment: MainAxisAlignment.center,
+                        buttonMinWidth: 90.0,
+                        children: <Widget>[
+                          _buildButton(S.of(context).batch, "assets/Lot.png", _presenter.lotPressed),
+                          _buildButton(S.of(context).sheep, "assets/brebis.png", _presenter.individuPressed),
+                          _buildButton(S.of(context).lambs, 'assets/jumping_lambs.png', _presenter.lambPressed),
+                        ])))),
+                Card(
+                  child: Center(
+                  child:  SingleChildScrollView (
                     scrollDirection: Axis.horizontal,
-                    child : ButtonBar(
+                    child: ButtonBar(
                       mainAxisSize: MainAxisSize.max,
-                      //alignment: MainAxisAlignment.spaceBetween,
-                        alignment: MainAxisAlignment.center,
+                      alignment: MainAxisAlignment.spaceEvenly,
                       buttonMinWidth: 90.0,
                       children: <Widget>[
-                        _buildButton(S.of(context).batch, "assets/Lot.png", _presenter.lotPressed),
-                        _buildButton(S.of(context).sheep, "assets/brebis.png", _presenter.individuPressed),
-                        _buildButton(S.of(context).lambs, 'assets/jumping_lambs.png', _presenter.lambPressed),
+                        _buildButton(S.of(context).mating, "assets/saillie.png", _presenter.sailliePressed),
+                        _buildButton(S.of(context).ultrasound, 'assets/ultrasound.png', _presenter.echoPressed),
+                        _buildButton( S.of(context).lambing, 'assets/lamb.png', _presenter.lambingPressed),
                       ])))),
-              Card(
-                child: Center(
-                child:  SingleChildScrollView (
-                  scrollDirection: Axis.horizontal,
-                  child: ButtonBar(
-                    mainAxisSize: MainAxisSize.max,
-                    alignment: MainAxisAlignment.spaceEvenly,
-                    buttonMinWidth: 90.0,
-                    children: <Widget>[
-                      _buildButton(S.of(context).mating, "assets/saillie.png", _presenter.sailliePressed),
-                      _buildButton(S.of(context).ultrasound, 'assets/ultrasound.png', _presenter.echoPressed),
-                      _buildButton( S.of(context).lambing, 'assets/lamb.png', _presenter.lambingPressed),
-                    ])))),
-              Card(
-                child: Center(
-                child: SingleChildScrollView (
-                  scrollDirection: Axis.horizontal,
-                  child: ButtonBar(
-                    mainAxisSize: MainAxisSize.max,
-                    alignment: MainAxisAlignment.spaceEvenly,
-                    buttonMinWidth: 90.0,
-                    children: <Widget>[
-                      _buildButton(S.of(context).treatment, "assets/syringe.png",_presenter.traitementPressed),
-                      _buildButton(S.of(context).body_cond, "assets/etat_corporel.png", _presenter.necPressed), //Etat corporel
-                      _buildButton(S.of(context).weighing, 'assets/peseur.png', _presenter.peseePressed), // Pesée
-                  ])))),
-              Card(
-                child: Center(
+                Card(
+                  child: Center(
                   child: SingleChildScrollView (
-                  scrollDirection: Axis.horizontal,
-                  child:
-                    ButtonBar(
-                    alignment: MainAxisAlignment.spaceEvenly,
-                    buttonMinWidth: 90.0,
-                    children: <Widget>[
-                      _buildButton(S.of(context).input, "assets/home.png", _presenter.entreePressed), // Entrée
-                      _buildButton(S.of(context).output, "assets/Truck.png", _presenter.sortiePressed),
-                      _buildButton("Parcelles", "assets/parcelles.png", ()  {
-                        (AuthService().subscribe ? _presenter.parcellePressed(): showMessage("Les parcelles ne sont pas visibles en mode autonome"));} ),
-                    //  _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
+                    scrollDirection: Axis.horizontal,
+                    child: ButtonBar(
+                      mainAxisSize: MainAxisSize.max,
+                      alignment: MainAxisAlignment.spaceEvenly,
+                      buttonMinWidth: 90.0,
+                      children: <Widget>[
+                        _buildButton(S.of(context).treatment, "assets/syringe.png",_presenter.traitementPressed),
+                        _buildButton(S.of(context).body_cond, "assets/etat_corporel.png", _presenter.necPressed), //Etat corporel
+                        _buildButton(S.of(context).weighing, 'assets/peseur.png', _presenter.peseePressed), // Pesée
                     ])))),
-              */
-              this._getAdmobAdvice(),
-              this._getFacebookAdvice(),
-            ]),
+                Card(
+                  child: Center(
+                    child: SingleChildScrollView (
+                    scrollDirection: Axis.horizontal,
+                    child:
+                      ButtonBar(
+                      alignment: MainAxisAlignment.spaceEvenly,
+                      buttonMinWidth: 90.0,
+                      children: <Widget>[
+                        _buildButton(S.of(context).input, "assets/home.png", _presenter.entreePressed), // Entrée
+                        _buildButton(S.of(context).output, "assets/Truck.png", _presenter.sortiePressed),
+                        _buildButton("Parcelles", "assets/parcelles.png", ()  {
+                          (AuthService().subscribe ? _presenter.parcellePressed(): showMessage("Les parcelles ne sont pas visibles en mode autonome"));} ),
+                      //  _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
+                      ])))),
+                */
+                this._getAdmobAdvice(),
+                this._getFacebookAdvice(),
+        ]),
         drawer: GismoDrawer(),);
   }
 
@@ -148,6 +148,22 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
             child: AdWidget(ad:  this._adBanner!)));
     }
     return Container();
+  }
+
+  Widget _buildGriTile(String imageName, String title, Function() press ) {
+    //return GridTile(child: _buildButton(title, imageName, press));
+    return GridTile(
+        child:
+            Column(children: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                // The width will be 100% of the parent widget
+                // The height will be 60
+                  minimumSize: const Size.fromHeight(60)),
+              child: Image.asset(imageName),
+              onPressed : press,),
+            Text(title) ]),
+            );
   }
 
   Widget _getFacebookAdvice() {

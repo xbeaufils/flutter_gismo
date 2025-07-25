@@ -7,8 +7,10 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/bloc/LocationBloc.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
-import 'package:flutter_gismo/parcelle/PaturagePage.dart';
+import 'package:flutter_gismo/parcelle/presenter/ParcellePresenter.dart';
+import 'package:flutter_gismo/parcelle/ui/PaturagePage.dart';
 
 import 'package:mapbox_gl/mapbox_gl.dart';
 
@@ -46,9 +48,16 @@ class ParcellePage extends StatefulWidget {
 */
 }
 
-class _ParcellePageState extends State<ParcellePage> {
+abstract class ParcelleContract extends GismoContract {
+  void showStatus(String message);
+  set locationProgress(bool value);
+}
+
+
+class _ParcellePageState extends GismoStatePage<ParcellePage> implements ParcelleContract {
   final GismoBloc _bloc;
   _ParcellePageState(this._bloc);
+  late ParcellePresenter _presenter;
 
   List<Parcelle?> _myParcelles=[];
   List<dynamic> featuresJson=[];
@@ -66,9 +75,18 @@ class _ParcellePageState extends State<ParcellePage> {
   late Stream<LocationResult> _locationStream;
   StreamSubscription<LocationResult> ? _locationSubscription;
   bool _locationProgress = true;
+
+  set locationProgress(bool value) {
+    setState(() {
+      _locationProgress = value;
+
+    });
+  }
+
   String _messageProgress="";
 
   void _onMapCreated(MapboxMapController controller) {
+    _presenter.mapController = controller;
     _mapController = controller;
     //this._initLocation();
     //this._drawParcelles(this._curentPosition);
@@ -127,7 +145,7 @@ class _ParcellePageState extends State<ParcellePage> {
     _mapBox =  MapboxMap(
       accessToken: 'pk.eyJ1IjoieGJlYXUiLCJhIjoiY2s4anVjamdwMGVsdDNucDlwZ2I0bGJwNSJ9.lc21my1ozaQZ2-EriDSY5w',
       onMapCreated: _onMapCreated,
-      onMapClick: _onMapClick,
+      onMapClick: _presenter.onMapClick,
       myLocationEnabled: true,
       styleString: MapboxStyles.SATELLITE,
       //onUserLocationUpdated: _onUserLocationUpdated,
@@ -137,7 +155,7 @@ class _ParcellePageState extends State<ParcellePage> {
     debug.log("Return mapBox", name: "_ParcellePageState::_mapBoxView]" );
     return _mapBox!;
   }
-
+/*
   Future<LatLng ?> _retrieveParcelles( LatLng ? location) async {
     if (location == null)
       return null;
@@ -149,7 +167,9 @@ class _ParcellePageState extends State<ParcellePage> {
     featuresJson = _cadastreJson!['features'];
     return location;
   }
+ */
 
+/*
   Future<LatLng ?>  _drawParcelles( LatLng ? location) async {
     if (location == null)
       return location;
@@ -166,7 +186,8 @@ class _ParcellePageState extends State<ParcellePage> {
     });
     return location;
   }
-
+  */
+  /*
   Future<void> _drawCadastre() async {
     await _mapController!.removeLayer("cadastre");
     await _mapController!.removeSource("parcelles");
@@ -197,7 +218,8 @@ class _ParcellePageState extends State<ParcellePage> {
         ownParcellesSrc["features"].add(allParcelles[parcelle!.idu]);
     });
   }
-
+*/
+  /*
   void _onMapClick(Point<double> pt, LatLng coord) async {
     debug.log("coord " + coord.latitude.toString() + " " + coord.longitude.toString(), name:"_ParcellePageState::_onMapClick");
     String cadastreStr = await _bloc.getParcelle(coord);
@@ -222,7 +244,7 @@ class _ParcellePageState extends State<ParcellePage> {
     });
 
   }
-
+*/
   void _showMessage(String message) {
     final snackBar = SnackBar(
       content: Text(message),
@@ -230,7 +252,7 @@ class _ParcellePageState extends State<ParcellePage> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  void _showStatus(String message) {
+  void showStatus(String message) {
     setState(() {
       this._locationProgress = true;
       this._messageProgress = message;
@@ -257,7 +279,7 @@ class _ParcellePageState extends State<ParcellePage> {
       lineOpacity: 0.5,
     ));
   }
-
+/*
   void _showMap(LatLng? location) async {
     debug.log("En attente des parcelles", name: "_ParcellePageState::_showMap");
     this._showStatus("En attente des parcelles");
@@ -269,13 +291,14 @@ class _ParcellePageState extends State<ParcellePage> {
       this._locationProgress = false;
     });
   }
-
+*/
   @override
   void initState() {
     super.initState();
-    this._initLocation();
+    this._presenter = ParcellePresenter(this);
+    this._presenter.initLocation();
   }
-
+/*
   void _initLocation() async {
     this._showStatus("Initialisation de la localisation");
     this._locBloc.initLocation();
@@ -291,4 +314,5 @@ class _ParcellePageState extends State<ParcellePage> {
         this._showStatus("En attente de coordonnées");
     });
   }
+ */
 }

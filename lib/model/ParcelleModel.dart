@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class Parcelle {
   late int id;
   late String idu;
@@ -22,16 +24,19 @@ class Pature {
   int ? id;
   int ? lotId;
   String ? lot;
-  String ? debut;
-  String ? fin;
+  DateTime ? debut;
+  DateTime ? fin;
   late int parcelleId;
+  final _df = new DateFormat('dd/MM/yyyy');
 
   Pature.fromResult(result) {
     id = result['id'];
     lotId = result['lotId'];
     lot = result['lot'];
-    debut = result['debut'];
-    fin = result['fin'];
+    if (result['debut'] != null )
+      debut = _df.parse(result['debut']);
+    if (result['fin'] != null)
+      fin = _df.parse(result['fin']);
     parcelleId = result['parcelleId'];
   }
 
@@ -41,9 +46,9 @@ class Pature {
       data['id'] = id;
     if (lotId != null)
       data['lotId'] =lotId;
-    data['debut'] = debut;
+    data['debut'] = _df.format(debut!);
     if (fin != null)
-      data['fin'] = fin;
+      data['fin'] = _df.format(fin!);
     data['parcelleId'] = parcelleId;
     return data;
   }

@@ -227,14 +227,11 @@ Future<void> testLot() async {
     await tester.pumpAndSettle();
     await selectBete(tester, "123");
     await tester.pumpAndSettle();
-    await tester.tap(find.text("Enregistrer"));
-    await tester.pumpAndSettle();
     // 2 eme affectation
     await tester.tap(btSearch);
     await tester.pumpAndSettle();
     await selectBete(tester, "456");
     await tester.pumpAndSettle();
-    await tester.tap(find.text("Enregistrer"));
 
   });
 }

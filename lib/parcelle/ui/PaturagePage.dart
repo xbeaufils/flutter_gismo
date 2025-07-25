@@ -1,25 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
+import 'package:flutter_gismo/parcelle/presenter/PaturagePresenter.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer' as debug;
 
 class PaturagePage extends StatefulWidget {
-  PaturagePage(this._bloc, this._pature, {Key ? key}) : super(key: key);
-  final GismoBloc _bloc;
+  PaturagePage( this._pature, {Key ? key}) : super(key: key);
   final Pature _pature;
+  int ? _currentLotId;
 
   @override
   _PaturagePageState createState() => new _PaturagePageState();
 }
 
-class _PaturagePageState extends State<PaturagePage> {
+abstract class PaturageContract extends GismoContract {
+  Pature get pature;
+  int ? get currentLotId;
+  set currentLotId(int ? value);
+}
+
+class _PaturagePageState extends GismoStatePage<PaturagePage> implements PaturageContract {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController _dateDebutCtl = TextEditingController();
   TextEditingController _dateFinCtl = TextEditingController();
   late List<DropdownMenuItem<LotModel>> _dropdownMenuLots;
-  int ? _currentLot;
+
+  late PaturagePresenter _presenter;
 
   final df = new DateFormat('dd/MM/yyyy');
 
@@ -42,7 +51,7 @@ class _PaturagePageState extends State<PaturagePage> {
                   new TextFormField(
                     controller: _dateDebutCtl,
                     decoration: InputDecoration(
-                      labelText: "Date de début",),
+                      labelText: S.of(context).date_debut,),
                     onTap: () async{
                       DateTime ? date = DateTime.now();
                       FocusScope.of(context).requestFocus(new FocusNode());
@@ -62,7 +71,7 @@ class _PaturagePageState extends State<PaturagePage> {
                   new TextFormField(
                     controller: _dateFinCtl,
                     decoration: InputDecoration(
-                      labelText: "Date de Fin",),
+                      labelText: S.of(context).date_fin,),
                     onTap: () async{
                       DateTime ? date = DateTime.now();
                       FocusScope.of(context).requestFocus(new FocusNode());
@@ -81,7 +90,7 @@ class _PaturagePageState extends State<PaturagePage> {
           ),
           new Card(
             child: new FutureBuilder<List<LotModel>>(
-                future: this.widget._bloc.getLots(),
+                future: this._presenter.getLots(),
                 builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.hasError) {
                     return Container();
@@ -96,10 +105,10 @@ class _PaturagePageState extends State<PaturagePage> {
                         child: Text( ( lot.codeLotLutte==null)?"": lot.codeLotLutte! ),
                         value: lot.idb,);
                     }).toList(),
-                    value: _currentLot,
+                    value: currentLotId,
                     onChanged: (int ? value) {
                       setState(() {
-                        _currentLot = value;
+                        currentLotId = value;
                       });
                     },
                   );
@@ -112,37 +121,33 @@ class _PaturagePageState extends State<PaturagePage> {
                   direction: Axis.horizontal,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    new ElevatedButton(key:null, onPressed:_save,
+                    new ElevatedButton(key:null, onPressed:() => {_presenter.save},
                       //color: Colors.lightGreen[700],
-                      child: new Text("Enregistrer",style: TextStyle( color: Colors.white)),)
+                      child: new Text(S.of(context).bt_save,style: TextStyle( color: Colors.white)),)
                   ]
               )
           )
         ]));
   }
 
-  void _save() async {
-    debug.log("Message", name: "_PaturagePageState::_save");
-    if (_currentLot != null)
-      this.widget._pature.lotId = _currentLot!;
-    this.widget._pature.debut = _dateDebutCtl.text;
-    if ( _dateFinCtl.text.isNotEmpty)
-      this.widget._pature.fin = _dateFinCtl.text;
-    String message = await this.widget._bloc.savePature(this.widget._pature);
-    Navigator.pop(context, message);
+  @override
+  void initState() {
+    super.initState();
+    _presenter = PaturagePresenter(this);
+    currentLotId = this.widget._pature.lotId;
+    if (this.widget._pature.debut != null)
+      _dateDebutCtl.text = DateFormat.yMd().format(this.widget._pature.debut!);
+    if (this.widget._pature.fin != null)
+      _dateFinCtl.text = DateFormat.yMd().format(this.widget._pature.fin!);
   }
 
-  Future<List<LotModel>> _getLots()  {
-    return this.widget._bloc.getLots();
+  Pature get pature => this.widget._pature;
+  set currentLotId(int ? value) {
+    this.widget._currentLotId = value;
   }
 
   @override
-  void initState() {
-    _currentLot = this.widget._pature.lotId;
-    if (this.widget._pature.debut != null)
-      _dateDebutCtl.text = this.widget._pature.debut!;
-    if (this.widget._pature.fin != null)
-      _dateFinCtl.text = this.widget._pature.fin!;
-  }
+  // TODO: implement currentLotId
+  int? get currentLotId => this.widget._currentLotId;
 
 }

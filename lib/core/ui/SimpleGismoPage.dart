@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 abstract class GismoContract {
   void back();
-  void backWithMessage(String message);
+  void               backWithMessage(String message);
   void showMessage(String message);
   void showSaving();
   Future<dynamic> goNextPage(StatefulWidget page);

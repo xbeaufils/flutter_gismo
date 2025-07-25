@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/individu/ui/Bete.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -124,7 +123,7 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
                     key: Key("Motif_Key"),
                     value: _currentMotif,
                     items: _motifEntreeItems,
-                    hint: Text(S.of(context).entree_select,style: TextStyle(color: Colors.lightGreen,)),
+                    hint: Text(S.of(context).entree_select),
                     onChanged: _changedMotifEntreeItem,
                   )
 
@@ -132,9 +131,8 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
               )),
           Expanded(
             child: Sheeps(this)),
-          ElevatedButton(
-            child: Text(S.of(context).bt_save,
-                style: new TextStyle(color: Colors.white, ),),
+          FilledButton(
+            child: Text(S.of(context).bt_save,),
             onPressed: () {
               try {
                 this._presenter.save(_dateEntreeCtl.text, _currentMotif);

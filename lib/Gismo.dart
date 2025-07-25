@@ -11,7 +11,8 @@ import 'package:flutter_gismo/infra/ui/bluetooth.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/infra/ui/loginPage.dart';
 import 'package:flutter_gismo/memo/ui/MemoListPage.dart';
-import 'package:flutter_gismo/parcelle/ParcellePage.dart';
+import 'package:flutter_gismo/parcelle/ui/ParcellePage.dart';
+import 'package:flutter_gismo/theme.dart';
 import 'package:flutter_gismo/traitement/ui/selectionTraitement.dart';
 import 'package:flutter_gismo/infra/ui/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -34,18 +35,9 @@ class GismoApp extends StatelessWidget {
     return MaterialApp(
       title: 'Gismo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.green,
+        //useMaterial3: false,
+        colorScheme: MaterialTheme.lightHighContrastScheme()
       ),
-     //localizationsDelegates: AppLocalizations.localizationsDelegates,
       localizationsDelegates: [
         S.delegate,
         //AppLocalizations.delegate,
@@ -71,7 +63,7 @@ class GismoApp extends StatelessWidget {
         '/lamb' : (context) => SearchLambPage(),
         '/sortie': (context) => SortiePage(),
         '/entree': (context) => EntreePage(),
-        '/splash' : (context) => SplashScreen(this._bloc),
+        '/splash' : (context) => SplashScreen(),
         '/lot' : (context) => LotPage(),
         '/parcelle' : (context) =>ParcellePage(this._bloc),
         '/config' : (context) =>ConfigPage(),

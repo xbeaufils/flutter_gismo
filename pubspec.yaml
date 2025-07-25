@@ -48,7 +48,7 @@ dependencies:
   google_mobile_ads: ^2.3.0
   #admob_flutter: 3.0.0
   facebook_audience_network: ^1.0.1
-
+  package_info_plus: ^8.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -10,19 +10,17 @@ import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:flutter_gismo/infra/ui/welcome.dart';
 
 class SplashScreen extends StatefulWidget {
-  GismoBloc _bloc;
-  SplashScreen(this._bloc, {Key ? key}) : super(key: key);
+  SplashScreen( {Key ? key}) : super(key: key);
 
   @override
-  SplashScreenState createState() => new SplashScreenState(_bloc);
+  SplashScreenState createState() => new SplashScreenState();
 }
 
 class SplashScreenState extends State<SplashScreen> {
 
-  GismoBloc _bloc;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  SplashScreenState(this._bloc);
+  SplashScreenState();
 
   @override
   void initState()  {
