@@ -65,7 +65,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
                 _buildGriTile("assets/jumping_lambs.png", S.of(context).lambs, _presenter.lambPressed ),
                 _buildGriTile("assets/saillie.png", S.of(context).mating, _presenter.sailliePressed, ),
                 _buildGriTile("assets/ultrasound.png", S.of(context).ultrasound, _presenter.echoPressed,) ,
-                _buildGriTile("assets/lamb.png", S.of(context).lambing, _presenter.lambPressed,) ,
+                _buildGriTile("assets/lamb.png", S.of(context).lambing, _presenter.lambingPressed,) ,
                 _buildGriTile("assets/syringe.png", S.of(context).treatment, _presenter.traitementPressed,) ,
                 _buildGriTile("assets/peseur.png", S.of(context).weighing, _presenter.peseePressed,) ,
                 _buildGriTile("assets/etat_corporel.png", S.of(context).body_cond, _presenter.necPressed,),

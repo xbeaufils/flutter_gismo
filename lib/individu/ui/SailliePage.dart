@@ -53,8 +53,9 @@ class _SailliePageState extends GismoStatePage<SailliePage> implements SaillieCo
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: Text(S.of(context).mating),
-        leading: Text(this.widget._bete.numBoucle),
+        centerTitle: true,
+        title: Text(S.of(context).mating),primary: true,
+        //leading: Text(this.widget._bete.numBoucle),
       ),
       body:
       new Column(
@@ -114,11 +115,6 @@ class _SailliePageState extends GismoStatePage<SailliePage> implements SaillieCo
             (_isSaving) ? CircularProgressIndicator():
               ElevatedButton(
                 child: Text(S.of(context).bt_save,),
-                  //style: new TextStyle(color: Colors.white, ),),
-                style : ButtonStyle(
-                    textStyle: MaterialStateProperty.all( TextStyle(color: Colors.white, ) ),
-                    backgroundColor: MaterialStateProperty.all<Color>( (Colors.lightGreen[700])! ),),
-                //color: Colors.lightGreen[700],
                 onPressed: () => this._presenter.saveSaillie(_dateSaillieCtl.text))
           ]),
 

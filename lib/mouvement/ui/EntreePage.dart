@@ -131,7 +131,7 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
               )),
           Expanded(
             child: Sheeps(this)),
-          FilledButton(
+          FilledButton.tonal(
             child: Text(S.of(context).bt_save,),
             onPressed: () {
               try {

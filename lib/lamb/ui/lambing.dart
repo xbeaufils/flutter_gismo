@@ -81,7 +81,7 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
       ),
       body:
           SingleChildScrollView(
-            scrollDirection: Axis.vertical,
+            scrollDirection: Axis.vertical,padding: EdgeInsets.all(10),
             child: Column (
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
@@ -155,12 +155,11 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
                             super.showMessage(S.current.no_lamb);
                           }
                         },
-                        style: ButtonStyle(backgroundColor: WidgetStateProperty.all(Colors.lightGreen[700])),
+                        //style: ButtonStyle(backgroundColor: WidgetStateProperty.all(Colors.lightGreen[700])),
                         //color: Colors.lightGreen[700],
                         child:
                           new Text(
-                            S.of(context).validate_lambing,
-                            style: new TextStyle(color: Colors.white, ), )
+                            S.of(context).validate_lambing)
                     )
                   ]
                 ),

@@ -238,9 +238,9 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   Widget _showCount(String libelle) {
     return Row(children: <Widget>[
       Expanded(child:
-        Card( color: Theme.of(context).primaryColor,  child:
+        Card( /*color: Theme.of(context).primaryColor, */ child:
           Center(child:
-            Text( libelle, style: TextStyle(fontSize: 16.0, color: Colors.white),),),
+            Text( libelle,/* style: TextStyle(fontSize: 16.0, color: Colors.white),*/),),
         ),
       ),
     ],);

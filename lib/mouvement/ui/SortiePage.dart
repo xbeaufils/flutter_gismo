@@ -113,7 +113,7 @@ class _SortiePageState extends GismoStatePage<SortiePage> implements SortieContr
             ElevatedButton(
                 //color: Colors.lightGreen[900],
                 child: Text(S.of(context).bt_save,
-                  style: new TextStyle(color: Colors.white, ),),
+                  /*style: new TextStyle(color: Colors.white, )*/),
                 onPressed:() => this._presenter.save(_dateSortieCtl.text, _currentMotif) )
           ]
 
