@@ -42,7 +42,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
   Widget build(BuildContext context) {
     return new Scaffold(
         key: _scaffoldKey,
-        backgroundColor: Colors.lightGreen,
+//        backgroundColor: Colors.lightGreen,
         appBar: new AppBar(
             title: Text('Gismo ' + AuthService().cheptel!),
             // N'affiche pas la touche back (qui revient à la SplashScreen
@@ -50,9 +50,52 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
              ),
 //        bottomNavigationBar: this._navigationBar(),
         body:
-          ListView(
+        ListView(
             scrollDirection: Axis.vertical,
             children: <Widget>[
+              Card(
+                  elevation: 10,
+                  child:
+                Column(
+                  //scrollDirection: Axis.vertical,
+                  children: <Widget>[
+                    Text("Effectif"), Divider(),
+                    ListTile(leading: SizedBox(child: Image.asset("assets/Lot.png"), width: 50), title: Text(S.of(context).batch),trailing:  Icon(Icons.chevron_right), onTap: _presenter.lotPressed, ),
+                    ListTile(leading: SizedBox(child: Image.asset("assets/brebis.png"), width: 50), title: Text(S.of(context).sheep),trailing:  Icon(Icons.chevron_right), onTap: _presenter.individuPressed,),
+                    ListTile(leading: SizedBox(child:Image.asset("assets/jumping_lambs.png"), width: 50), title: Text(S.of(context).lambs),trailing: Icon(Icons.chevron_right), onTap: _presenter.lambPressed, ),
+                  ],)),
+              Card(elevation: 10,
+                  child:
+                      ExpansionTile (title: Text("Reproduction", ), children: [
+                        ListTile(leading: SizedBox(child:Image.asset("assets/saillie.png"), width: 50), title: Text(S.of(context).mating),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: _presenter.sailliePressed,) ),
+                        ListTile(leading: SizedBox(child:Image.asset("assets/ultrasound.png"), width: 50), title: Text(S.of(context).ultrasound),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.echoPressed,) ),
+                        ListTile(leading: SizedBox(child:Image.asset("assets/lamb.png"), width: 50), title: Text(S.of(context).lambing),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.lambPressed,) ),
+                      ],)
+/*                  Column(//scrollDirection: Axis.vertical,
+                  children: [
+                    Text("Reproduction", ), Divider(),
+                    ListTile(leading: SizedBox(child:Image.asset("assets/saillie.png"), width: 50), title: Text(S.of(context).mating),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: _presenter.sailliePressed,) ),
+                    ListTile(leading: SizedBox(child:Image.asset("assets/ultrasound.png"), width: 50), title: Text(S.of(context).ultrasound),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.echoPressed,) ),
+                    ListTile(leading: SizedBox(child:Image.asset("assets/lamb.png"), width: 50), title: Text(S.of(context).lambing),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.lambPressed,) ),
+              ])*/),
+              Card(elevation: 10,
+                  margin:  EdgeInsets.all(15) ,
+                  child: Column(//scrollDirection: Axis.vertical,
+                      children: [
+                        Text("Sanitaire"), Divider(),
+              ListTile(leading: SizedBox(child:Image.asset("assets/syringe.png"), width: 50), title: Text(S.of(context).treatment),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.traitementPressed,) ),
+              ListTile(leading: SizedBox(child: Image.asset("assets/peseur.png"), width: 50,), title: Text(S.of(context).weighing),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.peseePressed,) ),
+              ListTile(leading: SizedBox(child: Image.asset("assets/etat_corporel.png"), width: 50), title: Text(S.of(context).body_cond),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.necPressed,) ),
+              ])),
+              Card(elevation: 10,
+                  child: Column(//scrollDirection: Axis.vertical,
+                      children: [
+                        Text("Mouvement"), Divider(),
+              ListTile(leading: SizedBox(child: Image.asset("assets/home.png"), width: 50), title: Text(S.of(context).input),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.entreePressed,) ),
+              ListTile(leading: SizedBox(child: Image.asset("assets/Truck.png"), width: 50), title: Text(S.of(context).output),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.sortiePressed,) ),
+              ListTile(leading: SizedBox(child: Image.asset("assets/parcelles.png"), width: 50), title: Text("Parcelles"),trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () =>_presenter.lotPressed,) ),
+              ])),
+             /*
               Card(
                 child: Center(
                   child : SingleChildScrollView (
@@ -104,12 +147,13 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
                     children: <Widget>[
                       _buildButton(S.of(context).input, "assets/home.png", _presenter.entreePressed), // Entrée
                       _buildButton(S.of(context).output, "assets/Truck.png", _presenter.sortiePressed),
-                      _buildButton("Parcelles", "assets/parcelles.png", () => { (AuthService().subscribe ? _presenter.parcellePressed: showMessage("Les parcelles ne sont pas visibles en mode autonome") )} ),
+                      _buildButton("Parcelles", "assets/parcelles.png", ()  {
+                        (AuthService().subscribe ? _presenter.parcellePressed(): showMessage("Les parcelles ne sont pas visibles en mode autonome"));} ),
                     //  _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
                     ])))),
-
-              //this._getAdmobAdvice(),
-              //this._getFacebookAdvice(),
+              */
+              this._getAdmobAdvice(),
+              this._getFacebookAdvice(),
             ]),
         drawer: GismoDrawer(),);
   }
