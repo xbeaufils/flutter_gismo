@@ -74,6 +74,9 @@
   "batch_campaign" : "Campaign",
   "batch_warning" : "You must save the batch before add",
   "batch_date" : "Dates",
+  "batch_no_date_debut": "No begin date",
+  "batch_no_date_fin": "No end date",
+  "batch_no_code": "No batch name",
 
   "weight" : "Weight",
   "weighing_date": "Weighing date",

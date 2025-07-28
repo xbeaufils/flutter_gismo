@@ -203,16 +203,6 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   }
 
   Widget _buildList(BuildContext context) {
-    /*
-    if (_searchText.isNotEmpty) {
-      List<Bete> tempList = <Bete>[]; // new List();
-      for (int i = 0; i < _filteredBetes.length; i++) {
-        if (_filteredBetes[i].numBoucle.toLowerCase().contains(_searchText.toLowerCase())) {
-          tempList.add(_filteredBetes[i]);
-        }
-      }
-      _filteredBetes = tempList;
-    }*/
     if (_filteredBetes.isEmpty) {
       return Center( child:
         ListTile(
@@ -245,29 +235,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
       ),
     ],);
   }
-/*
-  void _searchPressed(BuildContext context) {
-    setState(() {
-      if (this._searchIcon.icon == Icons.search) {
-        this._searchIcon = new Icon(Icons.close);
-        this._appBarTitle = new TextField(
-          autofocus: true,
-          controller: _filter,
-          keyboardType: TextInputType.number,
-          decoration: new InputDecoration(
-              prefixIcon: new Icon(Icons.search),
-              hintText: S.of(context).earring
-          ),
-        );
-      } else {
-        this._searchIcon = new Icon(Icons.search);
-        this._appBarTitle = new Text( S.of(context).earring_search );
-        _filteredBetes = _betes;
-        _filter.clear();
-      }
-    });
-  }
-  */
+
   void toggleSearchBar(Icon icon, Widget appbarTitle) {
     setState(() {
       this._searchIcon = icon;

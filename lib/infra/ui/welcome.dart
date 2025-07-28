@@ -55,7 +55,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
           Expanded(child:
             GridView.count(
             //gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-              scrollDirection: Axis.vertical,
+              scrollDirection: Axis.vertical,padding: EdgeInsets.all(10),
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
               crossAxisCount: 3,
@@ -155,7 +155,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
     return GridTile(
         child:
             Column(children: [
-            ElevatedButton(
+            FilledButton(
               style: ElevatedButton.styleFrom(
                 // The width will be 100% of the parent widget
                 // The height will be 60

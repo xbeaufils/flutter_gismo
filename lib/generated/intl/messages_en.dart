@@ -57,6 +57,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "batch_campaign": MessageLookupByLibrary.simpleMessage("Campaign"),
         "batch_date": MessageLookupByLibrary.simpleMessage("Dates"),
         "batch_name": MessageLookupByLibrary.simpleMessage("Batch name"),
+        "batch_no_code": MessageLookupByLibrary.simpleMessage("No batch name"),
+        "batch_no_date_debut":
+            MessageLookupByLibrary.simpleMessage("No begin date"),
+        "batch_no_date_fin":
+            MessageLookupByLibrary.simpleMessage("No end date"),
         "batch_warning": MessageLookupByLibrary.simpleMessage(
             "You must save the batch before add"),
         "bluetooth_autorisation":

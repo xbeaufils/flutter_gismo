@@ -174,12 +174,9 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                         });
                       }
                   ),
-                  ElevatedButton (
+                  FilledButton(
                   // RaisedButton(
-                      child: new Text(
-                        (this.bete == null)? S.of(context).bt_add: S.of(context).bt_save,
-                        style: new TextStyle(color: Colors.white),
-                      ),
+                      child: new Text((this.bete == null)? S.of(context).bt_add: S.of(context).bt_save,),
                       onPressed: () {
                         try {
                           this._presenter.save(_numBoucleCtrl.text, _numMarquageCtrl.text, _sex, _nom, _obs, _dateEntreCtrl.text, _motif);

@@ -18,13 +18,10 @@ class PeseePage extends StatefulWidget {
 
 }
 
-abstract class PeseeContract {
+abstract class PeseeContract extends GismoContract{
   Bete ? get bete;
   LambModel ? get lamb;
   void showSaving ();
-  void showMessage(String message);
-  void showErrorWeighing();
-  void backWithMessage(String message);
 }
 
 class PeseePageState extends GismoStatePage<PeseePage> implements PeseeContract {
@@ -95,9 +92,8 @@ class PeseePageState extends GismoStatePage<PeseePage> implements PeseeContract 
                 }
             ),
             (_isSaving) ? CircularProgressIndicator():
-              ElevatedButton(
-                child: Text(S.of(context).bt_save,
-                  style: new TextStyle(color: Colors.white, ),),
+              FilledButton(
+                child: Text(S.of(context).bt_save),
                 //color: Colors.lightGreen[700],
                 onPressed:() => { this._presenter.savePesee(_datePeseeCtl.text, _poidsCtl.text)})
           ]),
@@ -111,50 +107,11 @@ class PeseePageState extends GismoStatePage<PeseePage> implements PeseeContract 
     super.initState();
     _datePeseeCtl.text = DateFormat.yMd().format(DateTime.now());
   }
-/*
-  void _savePesee() async {
-    double? poids = double.tryParse(_poidsCtl.text);
-    String message="";
-    if (poids == null) {
-      message = "";
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).weighing_error)));
-      return;
-    }
-    setState(() {
-      _isSaving = true;
-    });
-    if (this.widget._bete != null)
-      message = await this._bloc.savePesee(this.widget._bete!, poids, DateFormat.yMd().parse( _datePeseeCtl.text) );
-    if (this.widget._lamb != null)
-      message = await this._bloc.savePeseeLamb(this.widget._lamb!, poids, DateFormat.yMd().parse( _datePeseeCtl.text ) );
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)))
-          .closed
-          .then((e) => {Navigator.of(context).pop()});
-  }
-*/
   void showSaving () {
     setState(() {
       _isSaving = true;
     });
 
-  }
-
-  void showErrorWeighing () {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        key: Key("SnackBar"),
-        content: Text(S.of(context).weighing_error)));
-  }
-
-  void showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      key: Key("SnackBar"),
-      content: Text(message)));
-  }
-
-  void backWithMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)))
-        .closed
-        .then((e) => {Navigator.of(context).pop()});
   }
 
   LambModel ? get lamb => this.widget._lamb;

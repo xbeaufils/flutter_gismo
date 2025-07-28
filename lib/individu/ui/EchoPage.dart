@@ -203,7 +203,7 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
                         onPressed: () => _showDialog(context),
                         child: Text(S.of(context).bt_delete)):
                       Container(),
-                    ElevatedButton(
+                    FilledButton(
                       child: Text(S.of(context).bt_save,),
                     //color: Colors.lightGreen[700],
                       onPressed: () => {this._presenter.saveEcho(_dateEchoCtl.text, _dateSaillieCtl.text, _dateAgnelageCtl.text , _nombre) })

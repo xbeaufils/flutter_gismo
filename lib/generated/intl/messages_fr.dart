@@ -57,6 +57,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "batch_campaign": MessageLookupByLibrary.simpleMessage("Campagne"),
         "batch_date": MessageLookupByLibrary.simpleMessage("Dates"),
         "batch_name": MessageLookupByLibrary.simpleMessage("Nom lot"),
+        "batch_no_code":
+            MessageLookupByLibrary.simpleMessage("Pas de nom de lot"),
+        "batch_no_date_debut":
+            MessageLookupByLibrary.simpleMessage("Pas de date de début"),
+        "batch_no_date_fin":
+            MessageLookupByLibrary.simpleMessage("Pas de date de fin"),
         "batch_warning": MessageLookupByLibrary.simpleMessage(
             "Vous devez enregistrer le lot avant d\'ajouter"),
         "bluetooth_autorisation":

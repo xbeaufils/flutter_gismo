@@ -169,24 +169,22 @@ class LotAffectionPresenter {
   }
 
   Future<void> save(String campagne, String codeLot, String dateDebut, String dateFin) async {
-    LotModel currentLot = LotModel();
-    currentLot.dateDebutLutte = DateFormat.yMd().parse(dateDebut);
-    if (currentLot.dateDebutLutte == "") {
-      throw DateDebutException();
+    if (dateDebut.isNotEmpty)
+      this._currentLot.dateDebutLutte = DateFormat.yMd().parse(dateDebut);
+    if (dateFin.isNotEmpty)
+      this._currentLot.dateFinLutte = DateFormat.yMd().parse(dateFin);
+    this._currentLot.campagne = campagne;
+    this._currentLot.codeLotLutte = codeLot;
+    try {
+      _currentLot = (await this._service.saveLot(this._currentLot))!;
+    } on DateDebutException {
+      this._view.showMessage(S.current.batch_no_date_debut, true);
+    } on DateFinException {
+      this._view.showMessage(S.current.batch_no_date_fin, true);
+    } on CodeLotException {
+      this._view.showMessage(S.current.batch_no_code, true);
     }
-    if (_df.parse(dateDebut).year.toString() != campagne) {
-      throw new DebutCampagneException();
-    }
-    currentLot.dateFinLutte =  DateFormat.yMd().parse(dateFin);
-    if (currentLot.dateFinLutte == "") {
-      throw DateFinException();
-    }
-    currentLot.campagne = campagne;
-    currentLot.codeLotLutte = codeLot;
-    if (currentLot.codeLotLutte == "") {
-      throw CodeLotException();
-    }
-    _currentLot = (await this._service.saveLot(currentLot))!;
+
     this._view.currentLot = _currentLot;
   }
 

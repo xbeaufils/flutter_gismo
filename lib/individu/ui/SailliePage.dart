@@ -113,7 +113,7 @@ class _SailliePageState extends GismoStatePage<SailliePage> implements SaillieCo
               ],) ,
             ),
             (_isSaving) ? CircularProgressIndicator():
-              ElevatedButton(
+              FilledButton(
                 child: Text(S.of(context).bt_save,),
                 onPressed: () => this._presenter.saveSaillie(_dateSaillieCtl.text))
           ]),

@@ -53,7 +53,6 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Colors.lightGreen,
       key: _scaffoldKey,
       appBar: new AppBar(
         title: new Text(S.of(context).treatment),
@@ -232,15 +231,15 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
                           children: <Widget>[
                             (this.widget._currentTraitement == null) ?
                                 Container():
-                                TextButton(
+                                ElevatedButton(
                                   onPressed: () => _showDialog(context),
                                   child: Text(S.of(context).bt_delete)),
-                            ElevatedButton(key:Key("Enregistrer"), onPressed: () =>
+                            FilledButton(key:Key("Enregistrer"), onPressed: () =>
                                 this._presenter.save(_dateDebutCtl.text, _dateFinCtl.text, _doseCtl.text,
                                   _intervenantCtl.text, _observationCtl.text, _motifCtl.text, _medicamentCtl.text, _ordonnanceCtl.text,
                                 _rythmeCtl.text, _voieCtl.text),
                               //color: Colors.lightGreen[700],
-                              child: new Text(S.of(context).bt_save,style: TextStyle( color: Colors.white)),)
+                              child: new Text(S.of(context).bt_save),)
                           ]
                         )
                   )

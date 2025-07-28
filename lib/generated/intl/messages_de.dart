@@ -58,6 +58,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "batch_date": MessageLookupByLibrary.simpleMessage("Datum"),
         "batch_name":
             MessageLookupByLibrary.simpleMessage("Name der Teilherde"),
+        "batch_no_code": MessageLookupByLibrary.simpleMessage("Kein Teilherde"),
+        "batch_no_date_debut":
+            MessageLookupByLibrary.simpleMessage("Kein Startdatum"),
+        "batch_no_date_fin":
+            MessageLookupByLibrary.simpleMessage("Kein Enddatum"),
         "batch_warning": MessageLookupByLibrary.simpleMessage(
             "Sie müssen die Teilherde speichern, bevor Sie sie hinzufügen können"),
         "bluetooth_autorisation":

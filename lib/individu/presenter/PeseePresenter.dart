@@ -1,5 +1,6 @@
 
 import 'package:flutter_gismo/individu/ui/PeseePage.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/services/PeseeService.dart';
 import 'package:intl/intl.dart';
 
@@ -13,7 +14,7 @@ class PeseePresenter {
     String message="";
     if (poids == null) {
       message = "";
-      this._view.showErrorWeighing();
+      this._view.showMessage(S.current.weighing_error, true);
       return;
     }
     this._view.showSaving();

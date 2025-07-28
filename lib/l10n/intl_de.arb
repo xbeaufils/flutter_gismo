@@ -70,7 +70,11 @@
    "batch_campaign": "Kampagne",
    "batch_warning": "Sie müssen die Teilherde speichern, bevor Sie sie hinzufügen können",
    "batch_date" : "Datum",
-   "weight": "Gewicht",
+  "batch_no_date_debut": "Kein Startdatum",
+  "batch_no_date_fin": "Kein Enddatum",
+  "batch_no_code": "Kein Teilherde",
+
+  "weight": "Gewicht",
    "weighing_date": "Wiegedatum",
    "no_weighing_date": "Kein Wiegedatum",
    "weighing_error": "Das Gewicht hat kein numerisches Format",

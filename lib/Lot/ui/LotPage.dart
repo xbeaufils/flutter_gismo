@@ -53,7 +53,6 @@ class _LotPageState extends GismoStatePage<LotPage> implements LotContract {
       floatingActionButton:
         FloatingActionButton(
           onPressed: this._presenter.createLot,
-          backgroundColor: Colors.lightGreen[700],
           child: Icon(Icons.add),),
     );
   }
@@ -86,7 +85,6 @@ class _LotPageState extends GismoStatePage<LotPage> implements LotContract {
       future: this._presenter.getLots(),
     );
   }
-
 
   Future _showDialog(BuildContext context, LotModel lot) {
     return showDialog(

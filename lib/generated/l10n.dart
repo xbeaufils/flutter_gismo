@@ -750,6 +750,36 @@ class S {
     );
   }
 
+  /// `No begin date`
+  String get batch_no_date_debut {
+    return Intl.message(
+      'No begin date',
+      name: 'batch_no_date_debut',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No end date`
+  String get batch_no_date_fin {
+    return Intl.message(
+      'No end date',
+      name: 'batch_no_date_fin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No batch name`
+  String get batch_no_code {
+    return Intl.message(
+      'No batch name',
+      name: 'batch_no_code',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Weight`
   String get weight {
     return Intl.message(

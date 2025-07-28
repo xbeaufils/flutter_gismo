@@ -1,3 +1,4 @@
+import 'package:flutter_gismo/Lot/presenter/LotAffectationPresenter.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
@@ -33,6 +34,24 @@ class LotService {
   }
 
   Future<LotModel ?> saveLot(LotModel lot) async {
+    if (lot.dateDebutLutte == null)
+      throw DateDebutException();
+    if (lot.dateDebutLutte == "") {
+      throw DateDebutException();
+    }
+    if (lot.dateDebutLutte!.year.toString() != lot.campagne) {
+      throw new DebutCampagneException();
+    }
+    if (lot.dateFinLutte == null)
+      throw DateFinException();
+    if (lot.dateFinLutte == "") {
+      throw DateFinException();
+    }
+    if (lot.codeLotLutte == null)
+      throw CodeLotException();
+    if (lot.codeLotLutte == "") {
+      throw CodeLotException();
+    }
     lot.cheptel = AuthService().cheptel;
     LotModel ? newLot  = await this._lotRepository.saveLot(lot);
     return newLot;

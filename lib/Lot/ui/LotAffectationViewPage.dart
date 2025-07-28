@@ -217,7 +217,7 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
                   ),
                   ElevatedButton(
                       //color: Colors.lightGreen[700],
-                      child: new Text(S.of(context).bt_save,style: TextStyle( color: Colors.white)),
+                      child: new Text(S.of(context).bt_save),
                       onPressed: () { this._presenter.save(_campagneCtrl.text, _codeLotCtl.text, _dateDebutCtl.text, _dateFinCtl.text);})
                 ])
         ));
