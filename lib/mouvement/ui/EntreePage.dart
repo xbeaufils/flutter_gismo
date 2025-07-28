@@ -8,7 +8,6 @@ import 'package:flutter_gismo/mouvement/presenter/EntreePresenter.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class EntreePage extends StatefulWidget {
   EntreePage();
@@ -131,18 +130,10 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
               )),
           Expanded(
             child: Sheeps(this)),
-          FilledButton.tonal(
+          FilledButton(
             child: Text(S.of(context).bt_save,),
             onPressed: () {
-              try {
                 this._presenter.save(_dateEntreeCtl.text, _currentMotif);
-              } on MissingDate {
-                showMessage(S.of(context).noEntryDate);
-              } on MissingMotif {
-                showMessage (S.of(context).entree_reason_required);
-              } on MissingSheeps {
-                showMessage(S.of(context).empty_list);
-              }
             }),
           ]
 
@@ -154,22 +145,7 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
       ),
     );
   }
-/*
-  Widget _getAdmobAdvice() {
-    if (this._bloc.isLogged() ! ) {
-      return Container();
-    }
-    if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
-      return Card(
-            child: Container(
-                height:  this._adBanner!.size.height.toDouble(),
-                width:  this._adBanner!.size.width.toDouble(),
-                child: AdWidget(ad:  this._adBanner!)));
-    }
-    return Container();
-  }
 
-*/
   String ? _getBannerAdUnitId() {
     if (Platform.isIOS) {
       return 'ca-app-pub-9699928438497749/2969884909';
@@ -186,21 +162,6 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
     _sheeps = [];
     //_motifEntreeItems = _getMotifEntreeItems();
     _dateEntreeCtl.text = DateFormat.yMd().format(DateTime.now());
-    /*
-    new Future.delayed(Duration.zero,() {
-      _motifEntreeItems = _getMotifEntreeItems(context);
-    });*/
-    /*
-    ConfigProvider provider = Provider.of<ConfigProvider>(context);
-    if ( ! provider.isSubscribing()) {
-      this._adBanner = BannerAd(
-        adUnitId: _getBannerAdUnitId()!, //'<ad unit ID>',
-        size: AdSize.banner,
-        request: AdRequest(),
-        listener: BannerAdListener(),
-      );
-      this._adBanner!.load();
-    }*/
   }
 
   void didChangeDependencies() {

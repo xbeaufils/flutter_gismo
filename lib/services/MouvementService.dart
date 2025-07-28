@@ -4,6 +4,7 @@ import 'dart:developer' as debug;
 import 'package:flutter_gismo/repository/EntreeRepository.dart';
 import 'package:flutter_gismo/repository/SortieRepository.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
+import 'package:intl/intl.dart';
 
 class EntreeService {
   late EntreeRepository _repository;
@@ -17,8 +18,24 @@ class EntreeService {
     }
   }
 
-  Future<String> save(DateTime date, String motif, List<Bete> betes ) async {
-    debug.log("Motif " + motif + " date " + date.toString() + " nb Betes " + betes.length.toString(), name: "GismoBloc::saveEntree");
+  Future<String> save(String ?  dateEntree, String ? motif, List<Bete> betes ) async {
+    if (dateEntree == null)
+      throw MissingDate();
+    if (dateEntree.isEmpty) {
+      throw MissingDate();
+    }
+
+    if ( motif == null) {
+      throw MissingMotif();
+    }
+    if (motif.isEmpty) {
+      throw MissingMotif();
+    }
+    if (betes.length == 0) {
+      throw MissingSheeps();
+    }
+    debug.log("Motif " + motif + " date " + dateEntree + " nb Betes " + betes.length.toString(), name: "GismoBloc::saveEntree");
+    DateTime date = DateFormat.yMd().parse(dateEntree);
     this._repository.save(AuthService().cheptel!, date, motif, betes);
     return "OK";
   }
@@ -42,3 +59,9 @@ class SortieService {
   }
 
 }
+
+class MissingDate implements Exception {}
+
+class MissingMotif implements Exception {}
+
+class MissingSheeps implements Exception {}

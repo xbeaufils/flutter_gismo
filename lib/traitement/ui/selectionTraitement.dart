@@ -61,9 +61,8 @@ class _SelectionPageState extends GismoStatePage<SelectionPage> implements Selec
           Center(
             child: Text(S.current.treatment_explanation),)),
       Center(child:
-        ElevatedButton(
-            child: Text( S.of(context).bt_continue, style: new TextStyle(color: Colors.white, ),),
-            //color: Colors.lightGreen[700],
+        FilledButton(
+            child: Text( S.of(context).bt_continue,),
             onPressed: this._presenter.openTraitement),
       ),
     ],

@@ -40,7 +40,6 @@ class _MemoListPageState extends GismoStatePage<MemoListPage> implements MemoLis
     floatingActionButton:
       FloatingActionButton(
           onPressed: _createNote,
-          backgroundColor: Colors.lightGreen[700],
           child: Icon(Icons.add),),
     drawer: GismoDrawer()
     );

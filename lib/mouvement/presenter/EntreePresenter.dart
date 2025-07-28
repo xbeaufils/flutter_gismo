@@ -1,8 +1,8 @@
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/ui/Bete.dart';
 import 'package:flutter_gismo/mouvement/ui/EntreePage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/services/MouvementService.dart';
-import 'package:intl/intl.dart';
 
 class EntreePresenter {
   final EntreeService _service = EntreeService();
@@ -12,23 +12,18 @@ class EntreePresenter {
 
 
   void save(String ? dateEntree, String ? motif) async {
-    if (dateEntree == null)
-      throw MissingDate();
-    if (dateEntree.isEmpty) {
-      throw MissingDate();
+    try {
+      String message = await this._service.save(
+          dateEntree, motif, this._view.sheeps);
+      this._view.backWithMessage(message);
+    } on MissingMotif {
+      this._view.showMessage (S.current.entree_reason_required, true);
+    } on MissingSheeps {
+      this._view.showMessage (S.current.empty_list, true);
+    } on MissingDate {
+      this._view.showMessage (S.current.noEntryDate, true);
     }
 
-    if ( motif == null) {
-      throw MissingMotif();
-    }
-    if (motif.isEmpty) {
-      throw MissingMotif();
-    }
-    if (this._view.sheeps.length == 0) {
-      throw MissingSheeps();
-    }
-    String message  = await this._service.save(DateFormat.yMd().parse(dateEntree), motif, this._view.sheeps);
-    this._view.backWithMessage(message);
   }
 
   Future add() async {
@@ -48,8 +43,3 @@ class EntreePresenter {
 
 }
 
-class MissingDate implements Exception {}
-
-class MissingMotif implements Exception {}
-
-class MissingSheeps implements Exception {}

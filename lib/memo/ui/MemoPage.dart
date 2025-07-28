@@ -154,13 +154,8 @@ class MemoPageState extends GismoStatePage<MemoPage> implements MemoContract {
                   }
               ),
               //(_isSaving) ? CircularProgressIndicator():
-              ElevatedButton(
+              FilledButton(
                   child: Text(S.of(context).bt_save,),
-                  //style: new TextStyle(color: Colors.white, ),),
-                  style : ButtonStyle(
-                    textStyle: MaterialStateProperty.all( TextStyle(color: Colors.white, ) ),
-                    backgroundColor: MaterialStateProperty.all<Color>( (Colors.lightGreen[700])! ),),
-                  //color: Colors.lightGreen[700],
                   onPressed: () => this._presenter.save( _dateDebutCtl.text, _dateFinCtl.text, _noteCtl.text, _classe))
             ]),
 
