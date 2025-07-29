@@ -1,10 +1,11 @@
 
+import 'package:flutter/material.dart';
 import 'package:flutter_gismo/individu/ui/PeseePage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/services/PeseeService.dart';
 import 'package:intl/intl.dart';
 
-class PeseePresenter {
+class PeseePresenter extends ChangeNotifier {
   PeseeContract _view;
   PeseeService _service = PeseeService();
   PeseePresenter(this._view);

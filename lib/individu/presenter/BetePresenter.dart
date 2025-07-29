@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_gismo/individu/ui/Bete.dart';
 import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -6,7 +7,7 @@ import 'package:flutter_gismo/services/BeteService.dart';
 import 'package:flutter_gismo/services/BluetoothService.dart';
 import 'package:intl/intl.dart';
 
-class BetePresenter {
+class BetePresenter extends ChangeNotifier {
 
   final BeteContract _view;
   final BeteService _service = BeteService();
