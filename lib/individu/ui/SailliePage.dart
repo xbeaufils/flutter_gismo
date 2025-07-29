@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
+import 'package:flutter_gismo/core/ui/NumBoucle.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -10,7 +11,6 @@ import 'package:intl/intl.dart';
 
 class SailliePage extends StatefulWidget {
   Bete _bete;
-
   SaillieModel ? _currentSaillie;
 
   set currentSaillie(SaillieModel value) {
@@ -25,13 +25,12 @@ class SailliePage extends StatefulWidget {
 
 }
 
-abstract class SaillieContract {
+abstract class SaillieContract extends GismoContract {
   Bete get bete;
   SaillieModel ? get currentSaillie;
   set currentSaillie(SaillieModel ? value);
   Future<Bete?> selectPere();
   void showSaving();
-  void backWithMessage(String message);
 }
 
 class _SailliePageState extends GismoStatePage<SailliePage> implements SaillieContract {
@@ -58,40 +57,41 @@ class _SailliePageState extends GismoStatePage<SailliePage> implements SaillieCo
         //leading: Text(this.widget._bete.numBoucle),
       ),
       body:
-      new Column(
-          children: <Widget> [
-            new TextFormField(
-                keyboardType: TextInputType.datetime,
-                controller: _dateSaillieCtl,
-                decoration: InputDecoration(
-                    labelText: S.of(context).mating_date,
-                    hintText: 'jj/mm/aaaa'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return S.of(context).no_mating_date;
-                  }},
-                onSaved: (value) {
-                  setState(() {
-                    _dateSaillieCtl.text = value!;
-                  });
-                },
-                onTap: () async{
-                  DateTime date = DateTime.now();
-                  FocusScope.of(context).requestFocus(new FocusNode());
-                  date = await showDatePicker(
-                      locale: const Locale("fr","FR"),
-                      context: context,
-                      initialDate:DateTime.now(),
-                      firstDate:DateTime(1900),
-                      lastDate: DateTime(2100)) as DateTime;
-                  if (date != null) {
-                    setState(() {
-                      _dateSaillieCtl.text = DateFormat.yMd().format(date);
-                    });
-                  }
-                }),
-            Card(
-              child: Column(children: [
+          Column(children: [
+            NumBoucleView(this.widget._bete),
+            Card( child:
+              Column(
+                children: <Widget> [
+                  TextFormField(
+                    keyboardType: TextInputType.datetime,
+                    controller: _dateSaillieCtl,
+                    decoration: InputDecoration(
+                        labelText: S.of(context).mating_date,
+                        hintText: 'jj/mm/aaaa'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return S.of(context).no_mating_date;
+                      }},
+                    onSaved: (value) {
+                      setState(() {
+                        _dateSaillieCtl.text = value!;
+                      });
+                    },
+                    onTap: () async{
+                      DateTime date = DateTime.now();
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                      date = await showDatePicker(
+                          locale: const Locale("fr","FR"),
+                          context: context,
+                          initialDate:DateTime.now(),
+                          firstDate:DateTime(1900),
+                          lastDate: DateTime(2100)) as DateTime;
+                      if (date != null) {
+                        setState(() {
+                          _dateSaillieCtl.text = DateFormat.yMd().format(date);
+                        });
+                      }
+                    }),
                 ListTile(
                   title: Text(S.of(context).male) ,
                   subtitle: Text(S.of(context).mating_male_text),
@@ -117,7 +117,6 @@ class _SailliePageState extends GismoStatePage<SailliePage> implements SaillieCo
                 child: Text(S.of(context).bt_save,),
                 onPressed: () => this._presenter.saveSaillie(_dateSaillieCtl.text))
           ]),
-
     );
   }
 
@@ -149,7 +148,9 @@ class _SailliePageState extends GismoStatePage<SailliePage> implements SaillieCo
   }
 
   Bete get bete => this.widget._bete;
+
   SaillieModel ? get currentSaillie => this.widget._currentSaillie;
+
   set currentSaillie(SaillieModel ? value) {
     this.widget._currentSaillie = value;
   }

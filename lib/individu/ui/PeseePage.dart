@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/core/ui/NumBoucle.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -45,6 +46,9 @@ class PeseePageState extends GismoStatePage<PeseePage> implements PeseeContract 
       body:
       new Column(
           children: <Widget> [
+            NumBoucleView(this.widget._bete!),
+            Card(
+              child: Column(children: [
             new TextFormField(
                 keyboardType: TextInputType.datetime,
                 controller: _datePeseeCtl,
@@ -98,7 +102,7 @@ class PeseePageState extends GismoStatePage<PeseePage> implements PeseeContract 
                 onPressed:() => { this._presenter.savePesee(_datePeseeCtl.text, _poidsCtl.text)})
           ]),
 
-    );
+    )]));
   }
 
   @override

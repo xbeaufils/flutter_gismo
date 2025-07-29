@@ -1,10 +1,9 @@
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/mouvement/presenter/EntreePresenter.dart';
 import 'package:flutter_gismo/mouvement/ui/SortiePage.dart';
 import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:flutter_gismo/services/MouvementService.dart';
-import 'package:intl/intl.dart';
 
 
 
@@ -15,31 +14,24 @@ class SortiePresenter {
   SortiePresenter(this._view);
 
   void save(String ? dateSortie, String ? motif) async {
-    if (dateSortie == null)
-      throw MissingDate();
-
-    if (dateSortie.isEmpty) {
-      throw MissingDate();
+    try {
+      String message  = await this._service.saveSortie(dateSortie, motif, this._view.sheeps);
+      this._view.backWithMessage(message);
+    } on MissingMotif {
+      this._view.showMessage (S.current.output_reason_required, true);
+    } on MissingSheeps {
+      this._view.showMessage (S.current.empty_list, true);
+    } on MissingDate {
+      this._view.showMessage (S.current.noEntryDate, true);
     }
-
-    if ( motif == null) {
-      throw MissingMotif();
-    }
-    if (motif.isEmpty) {
-      throw MissingMotif();
-    }
-    if (this._view.sheeps.length == 0) {
-      throw MissingSheeps();
-    }
-
-    String message  = await this._service.saveSortie(DateFormat.yMd().parse(dateSortie), motif, this._view.sheeps);
-    this._view.backWithMessage(message);
   }
 
   Future add() async {
     Bete ? selectedBete = await this._view.goNextPage( SearchPage(GismoPage.sortie));
     if (selectedBete != null) {
-        this._view.sheeps.add(selectedBete);
+      List<Bete> lstBete = this._view.sheeps;
+      lstBete.add(selectedBete);
+      this._view.sheeps = lstBete;
     }
   }
 

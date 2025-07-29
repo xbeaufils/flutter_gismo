@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/GismoBloc.dart';
+import 'package:flutter_gismo/core/ui/NumBoucle.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -55,7 +56,8 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
        Column(
            crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget> [
-            ( this.widget._bete == null) ? Container():Card.filled( child:  Center(child: Text(this.widget._bete!.numBoucle))),
+            ( this.widget._bete == null) ? Container(): NumBoucleView(this.widget._bete!),
+            Card (child: Column(children: [
             TextFormField(
                 key: Key("dateEcho"),
                 keyboardType: TextInputType.datetime,
@@ -207,7 +209,7 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
                       child: Text(S.of(context).bt_save,),
                     //color: Colors.lightGreen[700],
                       onPressed: () => {this._presenter.saveEcho(_dateEchoCtl.text, _dateSaillieCtl.text, _dateAgnelageCtl.text , _nombre) })
-                  ]),
+                  ]),],),)
           ]),
 
     );

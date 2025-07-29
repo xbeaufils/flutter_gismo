@@ -36,10 +36,6 @@ class GismoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Gismo',
-      theme: ThemeData(
-        //useMaterial3: false,
-        colorScheme: sheepyGreenSheme.colorScheme
-      ),
       localizationsDelegates: [
         S.delegate,
         //AppLocalizations.delegate,
@@ -47,6 +43,7 @@ class GismoApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
+      theme: sheepyGreenSheme,
       supportedLocales: S.delegate.supportedLocales,
       //home: openHome(),
       initialRoute: this.initialRoute,

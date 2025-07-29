@@ -102,7 +102,7 @@ class _SortiePageState extends GismoStatePage<SortiePage> implements SortieContr
                   new DropdownButton<String>(
                     value: _currentMotif,
                     items: _motifSortieItems,
-                    hint: Text(S.of(context).output_select,style: TextStyle(color: Colors.lightGreen,)),
+                    hint: Text(S.of(context).output_select),
                     onChanged: changedMotifSortieItem,
                   )
 
@@ -110,7 +110,7 @@ class _SortiePageState extends GismoStatePage<SortiePage> implements SortieContr
               )),
           Expanded(
             child: Sheeps(this._sheeps, this)),
-            ElevatedButton(
+            FilledButton(
                 //color: Colors.lightGreen[900],
                 child: Text(S.of(context).bt_save,
                   /*style: new TextStyle(color: Colors.white, )*/),

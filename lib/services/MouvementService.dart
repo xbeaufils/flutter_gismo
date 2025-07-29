@@ -36,8 +36,7 @@ class EntreeService {
     }
     debug.log("Motif " + motif + " date " + dateEntree + " nb Betes " + betes.length.toString(), name: "GismoBloc::saveEntree");
     DateTime date = DateFormat.yMd().parse(dateEntree);
-    this._repository.save(AuthService().cheptel!, date, motif, betes);
-    return "OK";
+    return this._repository.save(AuthService().cheptel!, date, motif, betes);
   }
 
 }
@@ -52,10 +51,26 @@ class SortieService {
       _repository = LocalSortieRepository();
   }
 
-  Future<String> saveSortie(DateTime date, String motif, List<Bete> betes ) async {
+  Future<String> saveSortie(String ? dateSortie, String ? motif, List<Bete> betes ) async {
+    if (dateSortie == null)
+      throw MissingDate();
+
+    if (dateSortie.isEmpty) {
+      throw MissingDate();
+    }
+
+    if ( motif == null) {
+      throw MissingMotif();
+    }
+    if (motif.isEmpty) {
+      throw MissingMotif();
+    }
+    if (betes.length == 0) {
+      throw MissingSheeps();
+    }
+    DateTime date = DateFormat.yMd().parse(dateSortie);
     debug.log("Motif " + motif + " date " + date.toString() + " nb Betes " + betes.length.toString(), name: "GismoBloc::saveSortie");
-    this._repository.save(date, motif, betes);
-    return "Enregistrement effectué";
+    return await this._repository.save(date, motif, betes);
   }
 
 }
