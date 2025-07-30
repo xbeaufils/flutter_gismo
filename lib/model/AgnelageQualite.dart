@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:gismo/generated/l10n.dart';
 
 class AgnelageNotFoundException implements Exception {}
 
@@ -33,6 +33,9 @@ class AgnelageHelper {
         return S.of(context).agnelage_delivrance;
       case AgnelageEnum.level4 :
         return S.of(context).agnelage_fouille;
+      case AgnelageEnum.level5:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
     throw new AgnelageNotFoundException();
   }

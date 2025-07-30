@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/traitement/presenter/SelectionPresenter.dart';
+import 'package:gismo/core/ui/SimpleGismoPage.dart';
+import 'package:gismo/generated/l10n.dart';
+import 'package:gismo/model/BeteModel.dart';
+import 'package:gismo/traitement/presenter/SelectionPresenter.dart';
 
 enum View {fiche, ewe, ram}
 

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/individu/ui/PeseePage.dart';
-import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
-import 'package:flutter_gismo/lamb/ui/Bouclage.dart';
-import 'package:flutter_gismo/lamb/ui/Mort.dart';
-import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/Event.dart';
-import 'package:flutter_gismo/model/LambModel.dart';
-import 'package:flutter_gismo/lamb/presenter/LambPresenter.dart';
-import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
+import 'package:gismo/generated/l10n.dart';
+import 'package:gismo/individu/ui/PeseePage.dart';
+import 'package:gismo/core/ui/SimpleGismoPage.dart';
+import 'package:gismo/lamb/ui/Bouclage.dart';
+import 'package:gismo/lamb/ui/Mort.dart';
+import 'package:gismo/model/BeteModel.dart';
+import 'package:gismo/model/Event.dart';
+import 'package:gismo/model/LambModel.dart';
+import 'package:gismo/lamb/presenter/LambPresenter.dart';
+import 'package:gismo/traitement/ui/Sanitaire.dart';
 import 'package:intl/intl.dart';
 
 class LambPage extends StatefulWidget {
@@ -333,6 +333,12 @@ class LambPageState extends GismoStatePage<LambPage> implements LambContract {
         return new Image.asset("assets/ultrasound.png");
       case EventType.entree:
       case EventType.sortie:
+      case EventType.saillie:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case EventType.memo:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
     return Container();
   }

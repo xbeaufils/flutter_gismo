@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/Exception/EventException.dart';
-import 'package:flutter_gismo/repository/BeteRepository.dart';
-import 'package:flutter_gismo/repository/EchoRepository.dart';
-import 'package:flutter_gismo/repository/LambRepository.dart';
-import 'package:flutter_gismo/repository/LotRepository.dart';
-import 'package:flutter_gismo/repository/MemoRepository.dart';
-import 'package:flutter_gismo/repository/NecRepository.dart';
-import 'package:flutter_gismo/repository/PeseeRepository.dart';
-import 'package:flutter_gismo/repository/SaillieRepository.dart';
-import 'package:flutter_gismo/repository/TraitementRepository.dart';
-import 'package:flutter_gismo/model/AffectationLot.dart';
-import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/EchographieModel.dart';
-import 'package:flutter_gismo/model/Event.dart';
-import 'package:flutter_gismo/services/AuthService.dart';
+import 'package:gismo/Exception/EventException.dart';
+import 'package:gismo/repository/BeteRepository.dart';
+import 'package:gismo/repository/EchoRepository.dart';
+import 'package:gismo/repository/LambRepository.dart';
+import 'package:gismo/repository/LotRepository.dart';
+import 'package:gismo/repository/MemoRepository.dart';
+import 'package:gismo/repository/NecRepository.dart';
+import 'package:gismo/repository/PeseeRepository.dart';
+import 'package:gismo/repository/SaillieRepository.dart';
+import 'package:gismo/repository/TraitementRepository.dart';
+import 'package:gismo/model/AffectationLot.dart';
+import 'package:gismo/model/BeteModel.dart';
+import 'package:gismo/model/EchographieModel.dart';
+import 'package:gismo/model/Event.dart';
+import 'package:gismo/services/AuthService.dart';
 import 'dart:developer' as debug;
 import 'package:sentry/sentry.dart';
 
-import 'package:flutter_gismo/model/LambModel.dart';
-import 'package:flutter_gismo/model/MemoModel.dart';
-import 'package:flutter_gismo/model/NECModel.dart';
-import 'package:flutter_gismo/model/PeseeModel.dart';
-import 'package:flutter_gismo/model/SaillieModel.dart';
-import 'package:flutter_gismo/model/TraitementModel.dart';
+import 'package:gismo/model/LambModel.dart';
+import 'package:gismo/model/MemoModel.dart';
+import 'package:gismo/model/NECModel.dart';
+import 'package:gismo/model/PeseeModel.dart';
+import 'package:gismo/model/SaillieModel.dart';
+import 'package:gismo/model/TraitementModel.dart';
 
 class BeteService {
 
@@ -98,6 +98,27 @@ class BeteService {
       case EventType.saillie:
         message = await this._saillieRepository.deleteSaillie(event.idBd);
         break;
+      case EventType.entree:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case EventType.agnelage:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case EventType.sortie:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case EventType.entreeLot:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case EventType.sortieLot:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case EventType.echo:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case EventType.memo:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
     return message;
   }

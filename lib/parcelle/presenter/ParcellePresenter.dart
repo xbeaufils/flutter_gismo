@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:developer' as debug;
 
-import 'package:flutter_gismo/bloc/LocationBloc.dart';
-import 'package:flutter_gismo/model/ParcelleModel.dart';
-import 'package:flutter_gismo/parcelle/ui/ParcellePage.dart';
-import 'package:flutter_gismo/parcelle/ui/PaturagePage.dart';
-import 'package:flutter_gismo/services/ParcelleService.dart';
+import 'package:gismo/bloc/LocationBloc.dart';
+import 'package:gismo/model/ParcelleModel.dart';
+import 'package:gismo/parcelle/ui/ParcellePage.dart';
+import 'package:gismo/parcelle/ui/PaturagePage.dart';
+import 'package:gismo/services/ParcelleService.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 class ParcellePresenter {

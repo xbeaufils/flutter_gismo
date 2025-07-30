@@ -5,12 +5,12 @@ import 'dart:developer' as debug;
 import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/bloc/LocationBloc.dart';
-import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
-import 'package:flutter_gismo/model/ParcelleModel.dart';
-import 'package:flutter_gismo/parcelle/presenter/ParcellePresenter.dart';
-import 'package:flutter_gismo/parcelle/ui/PaturagePage.dart';
+import 'package:gismo/bloc/GismoBloc.dart';
+import 'package:gismo/bloc/LocationBloc.dart';
+import 'package:gismo/core/ui/SimpleGismoPage.dart';
+import 'package:gismo/model/ParcelleModel.dart';
+import 'package:gismo/parcelle/presenter/ParcellePresenter.dart';
+import 'package:gismo/parcelle/ui/PaturagePage.dart';
 
 import 'package:mapbox_gl/mapbox_gl.dart';
 

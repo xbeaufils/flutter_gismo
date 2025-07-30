@@ -1,15 +1,15 @@
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/model/AffectationLot.dart';
-import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/EchographieModel.dart';
-import 'package:flutter_gismo/model/LambModel.dart';
-import 'package:flutter_gismo/model/LotModel.dart';
-import 'package:flutter_gismo/model/NECModel.dart';
-import 'package:flutter_gismo/model/MemoModel.dart';
-import 'package:flutter_gismo/model/PeseeModel.dart';
-import 'package:flutter_gismo/model/SaillieModel.dart';
-import 'package:flutter_gismo/model/TraitementModel.dart';
-import 'package:flutter_gismo/model/User.dart';
+import 'package:gismo/bloc/GismoBloc.dart';
+import 'package:gismo/model/AffectationLot.dart';
+import 'package:gismo/model/BeteModel.dart';
+import 'package:gismo/model/EchographieModel.dart';
+import 'package:gismo/model/LambModel.dart';
+import 'package:gismo/model/LotModel.dart';
+import 'package:gismo/model/NECModel.dart';
+import 'package:gismo/model/MemoModel.dart';
+import 'package:gismo/model/PeseeModel.dart';
+import 'package:gismo/model/SaillieModel.dart';
+import 'package:gismo/model/TraitementModel.dart';
+import 'package:gismo/model/User.dart';
 
 abstract class DataProvider {
 

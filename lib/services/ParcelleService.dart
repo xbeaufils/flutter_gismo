@@ -1,6 +1,6 @@
-import 'package:flutter_gismo/model/ParcelleModel.dart';
-import 'package:flutter_gismo/repository/ParcelleRepository.dart';
-import 'package:flutter_gismo/services/AuthService.dart';
+import 'package:gismo/model/ParcelleModel.dart';
+import 'package:gismo/repository/ParcelleRepository.dart';
+import 'package:gismo/services/AuthService.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 class ParcelleService {

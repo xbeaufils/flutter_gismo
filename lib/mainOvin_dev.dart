@@ -2,10 +2,10 @@
 import 'package:flutter/foundation.dart';
 //import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/env/Environnement.dart';
-import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/flavor/FlavorOvin.dart';
+import 'package:gismo/env/Environnement.dart';
+import 'package:gismo/Gismo.dart';
+import 'package:gismo/bloc/GismoBloc.dart';
+import 'package:gismo/flavor/FlavorOvin.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sentry/sentry.dart';
 

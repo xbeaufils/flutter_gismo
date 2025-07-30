@@ -1,4 +1,4 @@
-# flutter_gismo
+# gismo
 
 Gismo application.
 

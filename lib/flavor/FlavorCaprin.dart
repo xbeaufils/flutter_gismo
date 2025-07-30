@@ -1,4 +1,4 @@
-import 'package:flutter_gismo/flavor/Flavor.dart';
+import 'package:gismo/flavor/Flavor.dart';
 
 class FlavorCaprin extends Flavor {
   @override

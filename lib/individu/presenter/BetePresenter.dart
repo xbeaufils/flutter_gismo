@@ -1,9 +1,9 @@
-import 'package:flutter_gismo/individu/ui/Bete.dart';
-import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
-import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/BuetoothModel.dart';
-import 'package:flutter_gismo/services/BeteService.dart';
-import 'package:flutter_gismo/services/BluetoothService.dart';
+import 'package:gismo/individu/ui/Bete.dart';
+import 'package:gismo/core/device/BluetoothMgr.dart';
+import 'package:gismo/model/BeteModel.dart';
+import 'package:gismo/model/BuetoothModel.dart';
+import 'package:gismo/services/BeteService.dart';
+import 'package:gismo/services/BluetoothService.dart';
 import 'package:intl/intl.dart';
 
 class BetePresenter {

@@ -1,21 +1,21 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/individu/ui/Bete.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/individu/ui/EchoPage.dart';
-import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
-import 'package:flutter_gismo/lamb/ui/lambing.dart';
-import 'package:flutter_gismo/memo/ui/MemoPage.dart';
-import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/EchographieModel.dart';
-import 'package:flutter_gismo/model/Event.dart';
-import 'package:flutter_gismo/model/LambModel.dart';
-import 'package:flutter_gismo/model/MemoModel.dart';
-import 'package:flutter_gismo/model/TraitementModel.dart';
-import 'package:flutter_gismo/individu/presenter/TimeLinePresenter.dart';
-import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
+import 'package:gismo/individu/ui/Bete.dart';
+import 'package:gismo/bloc/GismoBloc.dart';
+import 'package:gismo/generated/l10n.dart';
+import 'package:gismo/individu/ui/EchoPage.dart';
+import 'package:gismo/core/ui/SimpleGismoPage.dart';
+import 'package:gismo/lamb/ui/lambing.dart';
+import 'package:gismo/memo/ui/MemoPage.dart';
+import 'package:gismo/model/BeteModel.dart';
+import 'package:gismo/model/EchographieModel.dart';
+import 'package:gismo/model/Event.dart';
+import 'package:gismo/model/LambModel.dart';
+import 'package:gismo/model/MemoModel.dart';
+import 'package:gismo/model/TraitementModel.dart';
+import 'package:gismo/individu/presenter/TimeLinePresenter.dart';
+import 'package:gismo/traitement/ui/Sanitaire.dart';
 import 'package:intl/intl.dart';
 
 

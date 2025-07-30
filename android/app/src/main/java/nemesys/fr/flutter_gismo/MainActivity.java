@@ -1,4 +1,4 @@
-package nemesys.fr.flutter_gismo;
+package nemesys.fr.gismo;
 
 
 import android.Manifest;

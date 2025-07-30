@@ -2,11 +2,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/Lot/presenter/LotAffectationPresenter.dart';
-import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/model/AffectationLot.dart';
-import 'package:flutter_gismo/model/LotModel.dart';
+import 'package:gismo/Lot/presenter/LotAffectationPresenter.dart';
+import 'package:gismo/core/ui/SimpleGismoPage.dart';
+import 'package:gismo/generated/l10n.dart';
+import 'package:gismo/model/AffectationLot.dart';
+import 'package:gismo/model/LotModel.dart';
 import 'package:intl/intl.dart';
 
 enum View {fiche, ewe, ram}

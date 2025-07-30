@@ -1,6 +1,6 @@
-import 'package:flutter_gismo/model/MemoModel.dart';
-import 'package:flutter_gismo/repository/MemoRepository.dart';
-import 'package:flutter_gismo/services/AuthService.dart';
+import 'package:gismo/model/MemoModel.dart';
+import 'package:gismo/repository/MemoRepository.dart';
+import 'package:gismo/services/AuthService.dart';
 
 class MemoService {
   late Memorepository _repository;

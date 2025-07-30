@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/model/AgnelageQualite.dart';
+import 'package:gismo/generated/l10n.dart';
+import 'package:gismo/model/AgnelageQualite.dart';
 
 class AgnelageDialog extends StatefulWidget {
   int _currentLevel;

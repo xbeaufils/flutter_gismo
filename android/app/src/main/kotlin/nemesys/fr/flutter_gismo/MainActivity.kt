@@ -1,4 +1,4 @@
-package nemesys.fr.flutter_gismo
+package nemesys.fr.gismo
 
 import io.flutter.embedding.android.FlutterActivity
 

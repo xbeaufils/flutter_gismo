@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:developer' as debug;
 import 'dart:io';
 
-import 'package:flutter_gismo/model/ReportModel.dart';
-import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
+import 'package:gismo/model/ReportModel.dart';
+import 'package:gismo/core/repository/AbstractRepository.dart';
 
 import 'package:path/path.dart';
 import 'package:sentry/sentry.dart';

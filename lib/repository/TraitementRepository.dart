@@ -1,11 +1,11 @@
 import 'dart:developer' as debug;
 
-import 'package:flutter_gismo/env/Environnement.dart';
-import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/LambModel.dart';
-import 'package:flutter_gismo/model/TraitementModel.dart';
-import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
-import 'package:flutter_gismo/core/repository/LocalRepository.dart';
+import 'package:gismo/env/Environnement.dart';
+import 'package:gismo/model/BeteModel.dart';
+import 'package:gismo/model/LambModel.dart';
+import 'package:gismo/model/TraitementModel.dart';
+import 'package:gismo/core/repository/AbstractRepository.dart';
+import 'package:gismo/core/repository/LocalRepository.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sentry/sentry.dart';
 

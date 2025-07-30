@@ -1,9 +1,9 @@
 
 import 'dart:convert';
 
-import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
-import 'package:flutter_gismo/env/Environnement.dart';
-import 'package:flutter_gismo/model/ParcelleModel.dart';
+import 'package:gismo/core/repository/AbstractRepository.dart';
+import 'package:gismo/env/Environnement.dart';
+import 'package:gismo/model/ParcelleModel.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 abstract class ParcelleRepository {

@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter_gismo/lamb/ui/Bouclage.dart';
-import 'package:flutter_gismo/lamb/ui/LambPage.dart';
-import 'package:flutter_gismo/lamb/ui/Mort.dart';
-import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/LambModel.dart';
-import 'package:flutter_gismo/services/LambingService.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:gismo/lamb/ui/Bouclage.dart';
+import 'package:gismo/lamb/ui/LambPage.dart';
+import 'package:gismo/lamb/ui/Mort.dart';
+import 'package:gismo/model/BeteModel.dart';
+import 'package:gismo/model/LambModel.dart';
+import 'package:gismo/services/LambingService.dart';
+import 'package:gismo/generated/l10n.dart';
 
 class LambPresenter {
   final LambContract _view;

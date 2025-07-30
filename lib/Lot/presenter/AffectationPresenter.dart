@@ -1,4 +1,4 @@
-import 'package:flutter_gismo/Lot/ui/AffectationPage.dart';
+import 'package:gismo/Lot/ui/AffectationPage.dart';
 
 class AffectationPresenter {
 

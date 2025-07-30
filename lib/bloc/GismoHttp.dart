@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_gismo/env/Environnement.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/bloc/Message.dart';
-import 'package:flutter_gismo/model/User.dart';
+import 'package:gismo/env/Environnement.dart';
+import 'package:gismo/bloc/GismoBloc.dart';
+import 'package:gismo/bloc/Message.dart';
+import 'package:gismo/model/User.dart';
 import 'package:http/http.dart' as http;
 import 'package:sentry/sentry.dart';
 
