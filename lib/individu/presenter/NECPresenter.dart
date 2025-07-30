@@ -1,6 +1,6 @@
-import 'package:flutter_gismo/individu/ui/NECPage.dart';
-import 'package:flutter_gismo/model/NECModel.dart';
-import 'package:flutter_gismo/services/NECService.dart';
+import 'package:gismo/individu/ui/NECPage.dart';
+import 'package:gismo/model/NECModel.dart';
+import 'package:gismo/services/NECService.dart';
 import 'package:intl/intl.dart';
 
 class NECPresenter {

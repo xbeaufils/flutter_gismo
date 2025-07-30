@@ -1,9 +1,9 @@
-import 'package:flutter_gismo/Lot/presenter/LotAffectationPresenter.dart';
-import 'package:flutter_gismo/model/AffectationLot.dart';
-import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/LotModel.dart';
-import 'package:flutter_gismo/repository/LotRepository.dart';
-import 'package:flutter_gismo/services/AuthService.dart';
+import 'package:gismo/Lot/presenter/LotAffectationPresenter.dart';
+import 'package:gismo/model/AffectationLot.dart';
+import 'package:gismo/model/BeteModel.dart';
+import 'package:gismo/model/LotModel.dart';
+import 'package:gismo/repository/LotRepository.dart';
+import 'package:gismo/services/AuthService.dart';
 import 'package:intl/intl.dart';
 
 class LotService {

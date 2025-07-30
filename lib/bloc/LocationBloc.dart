@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
+
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'dart:developer' as debug;
 
 import 'package:permission_handler/permission_handler.dart';
@@ -40,7 +41,7 @@ class LocationBloc {
   Stream<LocationResult> streamLocation() async* {
     if (_streamStatus)
       return;
-    LatLng latLng;
+    Position latLng;
     _streamStatus = true;
     while (_streamStatus) {
       try {
@@ -49,7 +50,7 @@ class LocationBloc {
         Map<String, dynamic> location = jsonDecode(response);
         await Future.delayed(Duration(milliseconds: 500));
         yield  LocationResult(true,
-            LatLng(double.parse(location['Latitude']), double.parse(location['Longitude'])));
+            Position(double.parse(location['Longitude']),  double.parse(location['Latitude'])));
       } on PlatformException catch (err) {
         if (err.code.contains("NoLocation") ){
           yield  LocationResult.empty();
@@ -68,7 +69,7 @@ class LocationBloc {
 
 class LocationResult {
   late bool result ;
-  LatLng? location;
+  Position? location;
 
   LocationResult.empty() {
     this.result  = false;

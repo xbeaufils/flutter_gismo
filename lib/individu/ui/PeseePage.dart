@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/core/ui/NumBoucle.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
-import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/LambModel.dart';
-import 'package:flutter_gismo/individu/presenter/PeseePresenter.dart';
+import 'package:gismo/core/ui/NumBoucle.dart';
+import 'package:gismo/generated/l10n.dart';
+import 'package:gismo/core/ui/SimpleGismoPage.dart';
+import 'package:gismo/model/BeteModel.dart';
+import 'package:gismo/model/LambModel.dart';
+import 'package:gismo/individu/presenter/PeseePresenter.dart';
 import 'package:intl/intl.dart';
 
 class PeseePage extends StatefulWidget {

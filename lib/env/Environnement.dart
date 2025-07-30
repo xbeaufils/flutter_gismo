@@ -1,5 +1,5 @@
-import 'package:flutter_gismo/bloc/certificatLetsEncrypt.dart';
-import 'package:flutter_gismo/flavor/Flavor.dart';
+import 'package:gismo/bloc/certificatLetsEncrypt.dart';
+import 'package:gismo/flavor/Flavor.dart';
 
 class Environnement {
   static Environnement ? _instance;

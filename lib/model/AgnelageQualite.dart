@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:gismo/generated/l10n.dart';
 
 class AgnelageNotFoundException implements Exception {}
 
@@ -8,8 +8,7 @@ enum AgnelageEnum {
   level1(1),
   level2(2),
   level3(3),
-  level4(4),
-  level5(5);
+  level4(4);
 
   final int _key;
 

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/core/repository/LocalRepository.dart';
+import 'package:gismo/Gismo.dart';
+import 'package:gismo/core/repository/LocalRepository.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_gismo/main.dart';
+import 'package:gismo/main.dart';
+import 'package:gismo/Gismo.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:intl/intl.dart';
 
@@ -82,7 +83,7 @@ Future<void> selectBete(WidgetTester tester, String numboucle) async {
 
 Future<void> startAppli(WidgetTester tester) async {
   // Load app widget.
-  await tester.pumpWidget(GismoApp(gismoBloc, RunningMode.test, initialRoute: '/splash'));
+  await tester.pumpWidget(GismoApp(RunningMode.test, initialRoute: '/splash'));
   final splash = find.byKey(ValueKey('splashScreen'));
   print(splash);
   await tester.pumpAndSettle();

@@ -4,14 +4,12 @@ import 'dart:io';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/search/presenter/SelectMultiplePresenter.dart';
-import 'package:flutter_gismo/services/AuthService.dart';
+import 'package:gismo/Gismo.dart';
+import 'package:gismo/core/ui/SimpleGismoPage.dart';
+import 'package:gismo/generated/l10n.dart';
+import 'package:gismo/model/BeteModel.dart';
+import 'package:gismo/search/presenter/SelectMultiplePresenter.dart';
+import 'package:gismo/services/AuthService.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class SelectMultiplePage extends StatefulWidget {

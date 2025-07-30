@@ -1,7 +1,7 @@
 
-import 'package:flutter_gismo/individu/ui/PeseePage.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/services/PeseeService.dart';
+import 'package:gismo/individu/ui/PeseePage.dart';
+import 'package:gismo/generated/l10n.dart';
+import 'package:gismo/services/PeseeService.dart';
 import 'package:intl/intl.dart';
 
 class PeseePresenter {

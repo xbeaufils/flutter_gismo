@@ -1,7 +1,7 @@
-import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/TraitementModel.dart';
-import 'package:flutter_gismo/repository/TraitementRepository.dart';
-import 'package:flutter_gismo/services/AuthService.dart';
+import 'package:gismo/model/BeteModel.dart';
+import 'package:gismo/model/TraitementModel.dart';
+import 'package:gismo/repository/TraitementRepository.dart';
+import 'package:gismo/services/AuthService.dart';
 
 class TraitementService {
   late Traitementrepository _repository;

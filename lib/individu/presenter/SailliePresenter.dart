@@ -1,7 +1,7 @@
-import 'package:flutter_gismo/individu/ui/SailliePage.dart';
-import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/SaillieModel.dart';
-import 'package:flutter_gismo/services/SaillieService.dart';
+import 'package:gismo/individu/ui/SailliePage.dart';
+import 'package:gismo/model/BeteModel.dart';
+import 'package:gismo/model/SaillieModel.dart';
+import 'package:gismo/services/SaillieService.dart';
 import 'package:intl/intl.dart';
 
 class SailliePresenter {

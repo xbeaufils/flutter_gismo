@@ -1,11 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/lamb/presenter/SearchLambPresenter.dart';
-import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:gismo/core/ui/SimpleGismoPage.dart';
+import 'package:gismo/generated/l10n.dart';
+import 'package:gismo/lamb/presenter/SearchLambPresenter.dart';
+import 'package:gismo/model/BeteModel.dart';
+import 'package:gismo/model/LambModel.dart';
 import 'package:intl/intl.dart';
 
 class SearchLambPage extends StatefulWidget {

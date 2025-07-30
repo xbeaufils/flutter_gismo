@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
-import 'package:flutter_gismo/infra/presenter/LoginPresenter.dart';
-import 'package:flutter_gismo/model/User.dart';
+import 'package:gismo/core/ui/SimpleGismoPage.dart';
+import 'package:gismo/infra/presenter/LoginPresenter.dart';
+import 'package:gismo/model/User.dart';
 
 class LoginPage extends StatefulWidget {
   @override

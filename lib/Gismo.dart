@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/SheepyTheme.dart';
-import 'package:flutter_gismo/infra/ui/ConfigPage.dart';
-import 'package:flutter_gismo/Lot/ui/LotPage.dart';
-import 'package:flutter_gismo/mouvement/ui/EntreePage.dart';
-import 'package:flutter_gismo/mouvement/ui/SortiePage.dart';
-import 'package:flutter_gismo/lamb/ui/SearchLambPage.dart';
-import 'package:flutter_gismo/search/ui/SearchPage.dart';
-import 'package:flutter_gismo/infra/ui/SplashScreen.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/infra/ui/bluetooth.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/infra/ui/loginPage.dart';
-import 'package:flutter_gismo/memo/ui/MemoListPage.dart';
-import 'package:flutter_gismo/parcelle/ui/ParcellePage.dart';
-import 'package:flutter_gismo/sheepyGreenScheme.dart';
-import 'package:flutter_gismo/theme.dart';
-import 'package:flutter_gismo/traitement/ui/selectionTraitement.dart';
-import 'package:flutter_gismo/infra/ui/welcome.dart';
+import 'package:gismo/SheepyTheme.dart';
+import 'package:gismo/infra/ui/ConfigPage.dart';
+import 'package:gismo/Lot/ui/LotPage.dart';
+import 'package:gismo/mouvement/ui/EntreePage.dart';
+import 'package:gismo/mouvement/ui/SortiePage.dart';
+import 'package:gismo/lamb/ui/SearchLambPage.dart';
+import 'package:gismo/search/ui/SearchPage.dart';
+import 'package:gismo/infra/ui/SplashScreen.dart';
+import 'package:gismo/infra/ui/bluetooth.dart';
+import 'package:gismo/generated/l10n.dart';
+import 'package:gismo/infra/ui/loginPage.dart';
+import 'package:gismo/memo/ui/MemoListPage.dart';
+import 'package:gismo/parcelle/ui/ParcellePage.dart';
+import 'package:gismo/sheepyGreenScheme.dart';
+import 'package:gismo/theme.dart';
+import 'package:gismo/traitement/ui/selectionTraitement.dart';
+import 'package:gismo/infra/ui/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 enum RunningMode {test, run}
@@ -26,8 +25,7 @@ enum GismoPage {lamb, sanitaire, etat_corporel, individu, sortie, lot, pesee, ec
 class GismoApp extends StatelessWidget {
   final String initialRoute;
   final RunningMode mode;
-  GismoBloc _bloc;
-  GismoApp(this._bloc, this.mode, {required this.initialRoute}) {
+  GismoApp( this.mode, {required this.initialRoute}) {
 
   }
 
@@ -64,9 +62,9 @@ class GismoApp extends StatelessWidget {
         '/entree': (context) => EntreePage(),
         '/splash' : (context) => SplashScreen(),
         '/lot' : (context) => LotPage(),
-        '/parcelle' : (context) =>ParcellePage(this._bloc),
+        '/parcelle' : (context) =>ParcellePage(),
         '/config' : (context) =>ConfigPage(),
-        '/bluetooth' : (context) =>BluetoothPermissionPage(this._bloc),
+        '/bluetooth' : (context) =>BluetoothPermissionPage(),
         '/saillie' : (context) => SearchPage(GismoPage.saillie),
       },
     );

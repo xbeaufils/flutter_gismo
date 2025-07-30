@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:developer' as debug;
 
-import 'package:flutter_gismo/bloc/LocationBloc.dart';
-import 'package:flutter_gismo/model/ParcelleModel.dart';
-import 'package:flutter_gismo/parcelle/ui/ParcellePage.dart';
-import 'package:flutter_gismo/parcelle/ui/PaturagePage.dart';
-import 'package:flutter_gismo/services/ParcelleService.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:gismo/bloc/LocationBloc.dart';
+import 'package:gismo/model/ParcelleModel.dart';
+import 'package:gismo/parcelle/ui/ParcellePage.dart';
+import 'package:gismo/parcelle/ui/PaturagePage.dart';
+import 'package:gismo/services/ParcelleService.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 class ParcellePresenter {
   ParcelleContract _view;
@@ -17,20 +17,21 @@ class ParcellePresenter {
   Map<String, dynamic> ? _cadastreJson;
   ParcelleService _service = ParcelleService();
   LocationBloc _locBloc = new LocationBloc();
-  LatLng ? _curentPosition;
+  Position ? _curentPosition;
   late Stream<LocationResult> _locationStream;
   StreamSubscription<LocationResult> ? _locationSubscription;
 
-  late MapboxMapController _mapController;
+  //late MapboxMapController _mapController;
+  late MapboxMap _mapboxMap;
 
-  set mapController(MapboxMapController value) {
-    _mapController = value;
+  set mapboxMap(MapboxMap value) {
+    _mapboxMap = value;
   }
 
   ParcellePresenter(this._view);
 
 
-  Future<LatLng ?> retrieveParcelles( LatLng ? location) async {
+  Future<Position ?> retrieveParcelles( Position ? location) async {
     if (location == null)
       return null;
     //this._showStatus("Recherche des parcelles");
@@ -42,36 +43,34 @@ class ParcellePresenter {
     return location;
   }
 
-  Future<LatLng ?>  _drawParcelles( LatLng ? location) async {
+  Future<Position ?>  _drawParcelles( Position ? location) async {
     if (location == null)
       return location;
     debug.log("" + location.toString(), name: "_ParcellePageState::_drawParcelles" );
-    _mapController!.moveCamera(CameraUpdate.newCameraPosition(
-      new CameraPosition(
-        target: LatLng(location.latitude, location.longitude),
-        zoom: 14,
-      ),));
+    _mapboxMap.flyTo(
+        CameraOptions(
+          center:  Point( coordinates: Position(location.lng, location.lat,) ),
+          zoom: 14), MapAnimationOptions());
     // featuresJson.forEach((feature) => _drawParcelle(feature));
     await this._drawCadastre();
     return location;
   }
 
   Future<void> _drawCadastre() async {
-    await _mapController!.removeLayer("cadastre");
-    await _mapController!.removeSource("parcelles");
+    await _mapboxMap.style.removeStyleLayer("cadastre");
+    //await _mapController!.removeLayer("cadastre");
+    await _mapboxMap.style.removeStyleLayer("cadastre");
+    //await _mapController!.removeSource("parcelles");
 
-    await _mapController!.removeLayer("ownParcelles");
-    await _mapController!.removeSource("ownParcellesSrc");
+    await _mapboxMap.style.removeStyleLayer("ownParcelles");
+    //await _mapController!.removeLayer("ownParcelles");
+    await _mapboxMap.style.removeStyleLayer("ownParcellesSrc");
+    //await _mapController!.removeSource("ownParcellesSrc");
 
-    await _mapController!.addSource("parcelles", GeojsonSourceProperties(data: this._cadastreJson));
-    await _mapController!.addLineLayer(
-      "parcelles",
-      "cadastre",
-      const LineLayerProperties(
-        lineColor: '#007AFF',
-        lineWidth: 1,
-      ),
-    );
+    await _mapboxMap.style.addSource( GeoJsonSource(id:"cadastreSourceId",data: json.encode(_cadastreJson)));
+    LineLayer parcelleLineLayer =
+      LineLayer(id: "modelLayer-cadastre", sourceId: "cadastreSourceId", lineColor: int.parse("#007AFF", radix: 16), lineWidth: 1);
+    await _mapboxMap.style.addLayer(parcelleLineLayer);
     Map<String, dynamic> allParcelles = new Map();
     for (var feature in this._cadastreJson!["features"]) {
       allParcelles[ feature['properties']['id'] ] = feature;
@@ -92,18 +91,25 @@ class ParcellePresenter {
     String lineColor = '#58db72';
     Map<String, dynamic>  geometry = feature['geometry'];
     List coordinates = geometry['coordinates'][0][0];
-    List<LatLng> lstLatLng = [];
-    coordinates.forEach( (anArray) => lstLatLng.add(LatLng(anArray[1], anArray[0])));
+    List<Position> lstLatLng = [];
+    coordinates.forEach( (anArray) => lstLatLng.add(Position( anArray[0],anArray[1])));
+    LineLayer parcelleLineLayer =
+      LineLayer(id: "modelLayer-parcelle",
+          sourceId: "parcelleSourceId",
+          lineColor: int.parse("#007AFF", radix: 16),
+          lineWidth: 1);
+    await _mapboxMap.style.addLayer(parcelleLineLayer);
+    /*
     await _mapController!.addLine(LineOptions(
       geometry: lstLatLng,
       lineColor: lineColor,
       lineWidth: lineWidth,
       lineOpacity: 0.5,
-    ));
+    ));*/
   }
 
-  void onMapClick(Point<double> pt, LatLng coord) async {
-    debug.log("coord " + coord.latitude.toString() + " " + coord.longitude.toString(), name:"_ParcellePageState::_onMapClick");
+  void onMapClick(Point pt, Position coord) async {
+    debug.log("coord " + coord.lat.toString() + " " + coord.lng.toString(), name:"_ParcellePageState::_onMapClick");
     String cadastreStr = await _service.getParcelle(coord);
     Map<String, dynamic> parcelleJson =  jsonDecode(cadastreStr);
     if (parcelleJson['features'].length == 0)
@@ -119,7 +125,7 @@ class ParcellePresenter {
 
   }
 
-  Future<LatLng ?> _retrieveParcelles( LatLng ? location) async {
+  Future<Position ?> _retrieveParcelles( Position ? location) async {
     if (location == null)
       return null;
     //this._showStatus("Recherche des parcelles");
@@ -131,7 +137,7 @@ class ParcellePresenter {
     return location;
   }
 
-  void _showMap(LatLng? location) async {
+  void _showMap(Position? location) async {
     try {
       debug.log(
           "En attente des parcelles", name: "_ParcellePageState::_showMap");

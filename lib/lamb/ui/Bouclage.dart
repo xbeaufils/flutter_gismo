@@ -3,11 +3,11 @@ import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/LambModel.dart';
-import 'package:flutter_gismo/lamb/presenter/LambPresenter.dart';
+import 'package:gismo/core/device/BluetoothMgr.dart';
+import 'package:gismo/generated/l10n.dart';
+import 'package:gismo/model/BeteModel.dart';
+import 'package:gismo/model/LambModel.dart';
+import 'package:gismo/lamb/presenter/LambPresenter.dart';
 import 'package:intl/intl.dart';
 import 'package:sentry/sentry.dart';
 

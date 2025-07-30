@@ -1,6 +1,6 @@
-import 'package:flutter_gismo/model/EchographieModel.dart';
-import 'package:flutter_gismo/repository/EchoRepository.dart';
-import 'package:flutter_gismo/services/AuthService.dart';
+import 'package:gismo/model/EchographieModel.dart';
+import 'package:gismo/repository/EchoRepository.dart';
+import 'package:gismo/services/AuthService.dart';
 
 class EchoService {
   late Echorepository _echoRepository;

@@ -3,15 +3,15 @@ import 'dart:io';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:gismo/core/ui/SimpleGismoPage.dart';
+import 'package:gismo/generated/l10n.dart';
 
 import 'dart:developer' as debug;
 
-import 'package:flutter_gismo/infra/ui/MenuPage.dart';
-import 'package:flutter_gismo/infra/presenter/WelcomePresenter.dart';
-import 'package:flutter_gismo/services/AuthService.dart';
-import 'package:flutter_gismo/theme.dart';
+import 'package:gismo/infra/ui/MenuPage.dart';
+import 'package:gismo/infra/presenter/WelcomePresenter.dart';
+import 'package:gismo/services/AuthService.dart';
+import 'package:gismo/theme.dart';
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 

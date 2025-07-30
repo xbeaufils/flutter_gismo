@@ -1,24 +1,18 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer' as debug;
 
-import 'dart:math';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
-import 'package:flutter_gismo/bloc/LocationBloc.dart';
-import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
-import 'package:flutter_gismo/model/ParcelleModel.dart';
-import 'package:flutter_gismo/parcelle/presenter/ParcellePresenter.dart';
-import 'package:flutter_gismo/parcelle/ui/PaturagePage.dart';
+import 'package:gismo/bloc/LocationBloc.dart';
+import 'package:gismo/core/ui/SimpleGismoPage.dart';
+import 'package:gismo/model/ParcelleModel.dart';
+import 'package:gismo/parcelle/presenter/ParcellePresenter.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
-import 'package:mapbox_gl/mapbox_gl.dart';
 
 class ParcellePage extends StatefulWidget {
-  final GismoBloc _bloc;
-  ParcellePage( this._bloc, {Key ? key}) : super(key: key);
+  ParcellePage(  {Key ? key}) : super(key: key);
   @override
-  _ParcellePageState createState() => new _ParcellePageState(_bloc);
+  _ParcellePageState createState() => _ParcellePageState();
 /*
   /// The initial position of the map's camera.
   final CameraPosition initialCameraPosition;
@@ -55,8 +49,8 @@ abstract class ParcelleContract extends GismoContract {
 
 
 class _ParcellePageState extends GismoStatePage<ParcellePage> implements ParcelleContract {
-  final GismoBloc _bloc;
-  _ParcellePageState(this._bloc);
+
+  _ParcellePageState();
   late ParcellePresenter _presenter;
 
   List<Parcelle?> _myParcelles=[];
@@ -67,11 +61,10 @@ class _ParcellePageState extends GismoStatePage<ParcellePage> implements Parcell
   /*
   MapBox
    */
-  MapboxMapController ? _mapController;
   MapboxMap ? _mapBox;
 
   LocationBloc _locBloc = new LocationBloc();
-  LatLng ? _curentPosition;
+  Position ? _curentPosition;
   late Stream<LocationResult> _locationStream;
   StreamSubscription<LocationResult> ? _locationSubscription;
   bool _locationProgress = true;
@@ -85,26 +78,25 @@ class _ParcellePageState extends GismoStatePage<ParcellePage> implements Parcell
 
   String _messageProgress="";
 
-  void _onMapCreated(MapboxMapController controller) {
-    _presenter.mapController = controller;
-    _mapController = controller;
-    //this._initLocation();
+  void _onMapCreated(MapboxMap map) {
+    _presenter.mapboxMap = map;
+   //this._initLocation();
     //this._drawParcelles(this._curentPosition);
     debug.log("Map created" , name: "_ParcellePageState::_onMapCreated" );
   }
 
 
-  void _onUserLocationUpdated(UserLocation location) {
-     _mapController!.moveCamera(CameraUpdate.newCameraPosition(
-      new CameraPosition(
-        target: LatLng(location.position.latitude, location.position.longitude),
-        zoom: 14,
-      ),));
-      //this._drawParcelles(location.position);
-  }
 
   @override
   Widget build(BuildContext context) {
+    final MapWidget mapWidget = MapWidget(
+        key: ValueKey("mapWidget"),
+        cameraOptions: CameraOptions(zoom: 14, center: Point(coordinates: Position(5.73, 45.26))),
+        //onTapListener:  _presenter.onMapClick,
+
+        onMapCreated: _onMapCreated);
+
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -115,7 +107,7 @@ class _ParcellePageState extends GismoStatePage<ParcellePage> implements Parcell
       body:
           Stack(
             children: [
-              _mapBoxView(),
+              mapWidget,
               _statusBar(),
             ],)
       );
@@ -141,7 +133,7 @@ class _ParcellePageState extends GismoStatePage<ParcellePage> implements Parcell
       return Container();
   }
 
-  Widget _mapBoxView() {
+/*  Widget _mapBoxView() {
     _mapBox =  MapboxMap(
       accessToken: 'pk.eyJ1IjoieGJlYXUiLCJhIjoiY2s4anVjamdwMGVsdDNucDlwZ2I0bGJwNSJ9.lc21my1ozaQZ2-EriDSY5w',
       onMapCreated: _onMapCreated,
@@ -155,102 +147,7 @@ class _ParcellePageState extends GismoStatePage<ParcellePage> implements Parcell
     debug.log("Return mapBox", name: "_ParcellePageState::_mapBoxView]" );
     return _mapBox!;
   }
-/*
-  Future<LatLng ?> _retrieveParcelles( LatLng ? location) async {
-    if (location == null)
-      return null;
-    //this._showStatus("Recherche des parcelles");
-    _myParcelles =  await _bloc.getParcelles();
-    //this._showStatus("Recherche du cadastre");
-    String cadastreStr = await _bloc.getCadastre(location);
-    /*Map<String, dynamic>*/ _cadastreJson =  jsonDecode(cadastreStr);
-    featuresJson = _cadastreJson!['features'];
-    return location;
-  }
- */
-
-/*
-  Future<LatLng ?>  _drawParcelles( LatLng ? location) async {
-    if (location == null)
-      return location;
-    debug.log("" + location.toString(), name: "_ParcellePageState::_drawParcelles" );
-    _mapController!.moveCamera(CameraUpdate.newCameraPosition(
-      new CameraPosition(
-        target: LatLng(location.latitude, location.longitude),
-        zoom: 14,
-      ),));
-    // featuresJson.forEach((feature) => _drawParcelle(feature));
-    await this._drawCadastre();
-    setState(() {
-      this._locationProgress = false;
-    });
-    return location;
-  }
-  */
-  /*
-  Future<void> _drawCadastre() async {
-    await _mapController!.removeLayer("cadastre");
-    await _mapController!.removeSource("parcelles");
-
-    await _mapController!.removeLayer("ownParcelles");
-    await _mapController!.removeSource("ownParcellesSrc");
-
-    await _mapController!.addSource("parcelles", GeojsonSourceProperties(data: this._cadastreJson));
-    await _mapController!.addLineLayer(
-      "parcelles",
-      "cadastre",
-      const LineLayerProperties(
-        lineColor: '#007AFF',
-        lineWidth: 1,
-      ),
-    );
-    Map<String, dynamic> allParcelles = new Map();
-    for (var feature in this._cadastreJson!["features"]) {
-      allParcelles[ feature['properties']['id'] ] = feature;
-    }
-
-    Map<String, dynamic> ownParcellesSrc = new Map();
-    ownParcellesSrc["type"] = "FeatureCollection";
-    ownParcellesSrc["features"] = [];
-    _myParcelles.forEach((parcelle) {
-      if (allParcelles[parcelle!.idu] != null )
-        _drawParcelle(allParcelles[parcelle!.idu]);
-        ownParcellesSrc["features"].add(allParcelles[parcelle!.idu]);
-    });
-  }
 */
-  /*
-  void _onMapClick(Point<double> pt, LatLng coord) async {
-    debug.log("coord " + coord.latitude.toString() + " " + coord.longitude.toString(), name:"_ParcellePageState::_onMapClick");
-    String cadastreStr = await _bloc.getParcelle(coord);
-    Map<String, dynamic> parcelleJson =  jsonDecode(cadastreStr);
-    if (parcelleJson['features'].length == 0)
-      return;
-    Map<String, dynamic> feature = parcelleJson['features'][0];
-    Parcelle ? myParcelle = this._myParcelles.firstWhereOrNull((parcelle) => parcelle!.idu == feature['properties']['id']);
-    if (myParcelle == null)
-      return;
-
-    debug.log("parcelle " + myParcelle.toString(), name:"_ParcellePageState::_onMapClick");
-    Pature pature = await _bloc.getPature(myParcelle.idu);
-    var navigationResult = Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PaturagePage(this._bloc, pature),)
-    );
-    navigationResult.then((message) {
-      if (message != null)
-        _showMessage(message);
-    });
-
-  }
-*/
-  void _showMessage(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
 
   void showStatus(String message) {
     setState(() {
@@ -259,60 +156,10 @@ class _ParcellePageState extends GismoStatePage<ParcellePage> implements Parcell
     });
   }
 
-  void _drawParcelle(feature) async {
-    /*
-    String lineColor = "#ffffff";
-    double lineWidth = 1.0;
-    Parcelle ? foundParcelle = _myParcelles.firstWhere((parcelle) => parcelle!.idu == feature['properties']['id'], orElse: () => null);
-    if (foundParcelle != null) {*/
-    double lineWidth = 6.0;
-      String lineColor = '#58db72';
-    //}
-    Map<String, dynamic>  geometry = feature['geometry'];
-    List coordinates = geometry['coordinates'][0][0];
-    List<LatLng> lstLatLng = [];
-    coordinates.forEach( (anArray) => lstLatLng.add(LatLng(anArray[1], anArray[0])));
-    await _mapController!.addLine(LineOptions(
-      geometry: lstLatLng,
-      lineColor: lineColor,
-      lineWidth: lineWidth,
-      lineOpacity: 0.5,
-    ));
-  }
-/*
-  void _showMap(LatLng? location) async {
-    debug.log("En attente des parcelles", name: "_ParcellePageState::_showMap");
-    this._showStatus("En attente des parcelles");
-    await this._retrieveParcelles(location);
-    debug.log("Affichage du cadastre", name: "_ParcellePageState::_showMap");
-    this._showStatus("Affichage du cadastre");
-    this._drawParcelles (location);
-    setState(() {
-      this._locationProgress = false;
-    });
-  }
-*/
   @override
   void initState() {
     super.initState();
     this._presenter = ParcellePresenter(this);
     this._presenter.initLocation();
   }
-/*
-  void _initLocation() async {
-    this._showStatus("Initialisation de la localisation");
-    this._locBloc.initLocation();
-    this._locationStream = this._locBloc.streamLocation();
-    this._locationSubscription = this._locationStream.listen( (LocationResult result) {
-      if (result.result) {
-        this._curentPosition = result.location!;
-        this._locBloc.stopStream();
-        this._locationSubscription!.cancel();
-        this._showMap(result.location!);
-      }
-      else
-        this._showStatus("En attente de coordonnées");
-    });
-  }
- */
 }
