@@ -32,7 +32,7 @@ dependencies:
   # cupertino_icons: ^0.1.2
 
   http: ^0.13.3
-  intl: ^0.19.0
+  intl: ^0.20.2
   sqflite:
   permission_handler: ^11.0.1
   provider: ^6.1.5
@@ -45,7 +45,7 @@ dependencies:
   #  path: ../rts500_plugin/
   #sentry: ^5.0.0
   sentry_flutter: ^8.12.0
-  google_mobile_ads: ^2.3.0
+  google_mobile_ads: ^5.3.1
   #admob_flutter: 3.0.0
   facebook_audience_network: ^1.0.1
   package_info_plus: ^8.3.0

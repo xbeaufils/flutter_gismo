@@ -53,7 +53,7 @@ class _TimeLinePageState extends GismoStatePage<TimeLinePage> with SingleTickerP
                   title: Text(_bete.numBoucle + " " + _bete.numMarquage),
                   subtitle: (_bete.dateEntree!= null) ? Text( DateFormat.yMd().format(_bete.dateEntree)): null,
                   leading: Image.asset("assets/brebis.png") ,
-                  trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: _openIdentityDialog, ),)
+                  trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () => this._presenter.viewBete(_bete), ),)
                 ,),
               _getMere(),
               _getPere(),

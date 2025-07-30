@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
+import 'package:flutter_gismo/core/ui/NumBoucle.dart';
 import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
@@ -81,71 +82,81 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
       ),
       body:
           SingleChildScrollView(
-            scrollDirection: Axis.vertical,padding: EdgeInsets.all(10),
-            child: Column (
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                TextFormField(
-                      keyboardType: TextInputType.datetime,
-                      controller: _dateAgnelageCtl,
-                      decoration: InputDecoration(
-                                    labelText: S.of(context).lambing_date),
-                      validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return S.of(context).enter_lambing_date;
-                                  }
-                                  return null;
-                                  },
-                      onSaved: (value) {
-                                  setState(() {
-                                    _dateAgnelageCtl.text = value!;
-                                  });
-                                },
-                      onTap: () async{
-                              DateTime ? date = DateTime.now();
-                              FocusScope.of(context).requestFocus(new FocusNode());
-                              date = await showDatePicker(
-                                  context: context,
-                                  initialDate:DateTime.now(),
-                                  firstDate:DateTime(1900),
-                                  lastDate: DateTime(2100)) ;
-                              if (date != null) {
-                                setState(() {
-                                  _dateAgnelageCtl.text = DateFormat.yMd().format(date!);
-                                });
-                              }
-                            }),
-                ListTile(
-                  title: Text(S.of(context).lambing_quality) ,
-                  subtitle: Text(_agnelage.key.toString() + " : " + transAgnelage.translate(_agnelage)),
-                  trailing: new IconButton(key: Key("btQualite"), onPressed: _openAgnelageDialog, icon: new Icon(Icons.create)),),
-                ListTile(
-                  title: Text(S.of(context).adoption_quality) ,
-                  subtitle: Text(_adoption.key.toString() + " : " + transAdoption.translate(_adoption)),
-                  trailing: new IconButton(key: Key("btAdoption"), onPressed: _openAdoptionDialog, icon: new Icon(Icons.create)),),
-                TextFormField(
-                  controller: _obsCtl,
-                  decoration: InputDecoration(
-                  labelText: S.of(context).observations,
-                  hintText: 'Obs',
-                  border: OutlineInputBorder(),
-                  enabledBorder: OutlineInputBorder()),
-                  maxLines: 3,
-                  onSaved: (value) {
-                    setState(() {
-                          _obsCtl.text = value!;
-                    });
-                  }
-                ),
+            scrollDirection: Axis.vertical,
+            padding: EdgeInsets.all(10),
+            child:
+              Column (children: [
+                ( this.widget._mere == null) ? Container(): NumBoucleView(this.widget._mere!),
+                Card (
+                  child: Column (
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(padding:  const EdgeInsets.all(8.0),
+                        child:
+                          TextFormField(
+                            keyboardType: TextInputType.datetime,
+                            controller: _dateAgnelageCtl,
+                            decoration: InputDecoration(
+                                filled: true,
+                                fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
+                                labelText: S.of(context).lambing_date),
+                            validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return S.of(context).enter_lambing_date;
+                                        }
+                                        return null;
+                                        },
+                            onSaved: (value) {
+                                        setState(() {
+                                          _dateAgnelageCtl.text = value!;
+                                        });
+                                      },
+                            onTap: () async{
+                                    DateTime ? date = DateTime.now();
+                                    FocusScope.of(context).requestFocus(new FocusNode());
+                                    date = await showDatePicker(
+                                        context: context,
+                                        initialDate:DateTime.now(),
+                                        firstDate:DateTime(1900),
+                                        lastDate: DateTime(2100)) ;
+                                    if (date != null) {
+                                      setState(() {
+                                        _dateAgnelageCtl.text = DateFormat.yMd().format(date!);
+                                      });
+                                    }
+                                  })),
+                      ListTile(
+                        title: Text(S.of(context).lambing_quality) ,
+                        subtitle: Text(_agnelage.key.toString() + " : " + transAgnelage.translate(_agnelage)),
+                        trailing: new IconButton(key: Key("btQualite"), onPressed: _openAgnelageDialog, icon: new Icon(Icons.create)),),
+                      ListTile(
+                        title: Text(S.of(context).adoption_quality) ,
+                        subtitle: Text(_adoption.key.toString() + " : " + transAdoption.translate(_adoption)),
+                        trailing: new IconButton(key: Key("btAdoption"), onPressed: _openAdoptionDialog, icon: new Icon(Icons.create)),),
+                      TextFormField(
+                        controller: _obsCtl,
+                        decoration: InputDecoration(
+                            filled: true,
+                            fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
+                            labelText: S.of(context).observations,
+                            hintText: 'Obs',
+                            border: OutlineInputBorder(),
+                            enabledBorder: OutlineInputBorder()),
+                        maxLines: 3,
+                        onSaved: (value) {
+                          setState(() {
+                                _obsCtl.text = value!;
+                          });
+                        }
+                      ),])),
                 this._buildPereWidget(),
                 SizedBox(
                   height: 200,
                   child: this._lambList(), //LambsPage(this._lambing.lambs, _dateAgnelageCtl.text)
                 ),
-                ButtonBar(alignment: MainAxisAlignment.start,
-                    children : [ ElevatedButton(key:null,
+                FilledButton(key:null,
                         onPressed: () {
                           try {
                             this._presenter.saveLambing(
@@ -155,15 +166,9 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
                             super.showMessage(S.current.no_lamb);
                           }
                         },
-                        //style: ButtonStyle(backgroundColor: WidgetStateProperty.all(Colors.lightGreen[700])),
-                        //color: Colors.lightGreen[700],
-                        child:
-                          new Text(
-                            S.of(context).validate_lambing)
+                         child: Text(S.of(context).validate_lambing)
                     )
-                  ]
-                ),
-            ],),
+                  ]),
           ) ,
       floatingActionButton: (currentLambing.idBd == null)?
       new FloatingActionButton(
@@ -186,12 +191,14 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
     if (currentLambing.numBouclePere != null || currentLambing.numMarquagePere != null)  {
       identifPere = currentLambing.numBouclePere! + " " + currentLambing.numMarquagePere!;
     }
-    return ListTile(
-      title: Text(S.of(context).ram) ,
-      subtitle: Text(identifPere),
-      trailing: (currentLambing.idPere == null ) ?
-      IconButton(icon: Icon(Icons.search), onPressed: () => this._presenter.addPere(), ):
-      IconButton(icon: Icon(Icons.close), onPressed: () => this._presenter.removePere(), ),);
+    return Card(
+      child:
+      ListTile(
+        title: Text(S.of(context).ram) ,
+        subtitle: Text(identifPere),
+        trailing: (currentLambing.idPere == null ) ?
+        IconButton(icon: Icon(Icons.search), onPressed: () => this._presenter.addPere(), ):
+        IconButton(icon: Icon(Icons.close), onPressed: () => this._presenter.removePere(), ),));
   }
 
 

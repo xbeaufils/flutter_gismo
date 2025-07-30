@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/core/ui/NumBoucle.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
@@ -58,20 +57,18 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
           children: <Widget> [
             ( this.widget._bete == null) ? Container(): NumBoucleView(this.widget._bete!),
             Card (child: Column(children: [
-            TextFormField(
+            TextField(
                 key: Key("dateEcho"),
+
                 keyboardType: TextInputType.datetime,
                 controller: _dateEchoCtl,
                 decoration: InputDecoration(
+                    filled: true,
                     labelText: S.of(context).date_ultrasound,
                     hintText: 'jj/mm/aaaa'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return S.of(context).no_ultrasound_date;
-                  }},
-                onSaved: (value) {
+                onChanged: (value) {
                   setState(() {
-                    _dateEchoCtl.text = value!;
+                    _dateEchoCtl.text = value;
                   });
                 },
                 onTap: () async{
@@ -120,14 +117,14 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
                 ),
               ]),
             Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    new Radio(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Radio(
                   value: 2,
                   groupValue: _nombre,
                   onChanged: _handleRdNombreChange,
                 ),
-                new Text(
+                Text(
                   S.of(context).double,
                   style: new TextStyle(fontSize: 16.0),
                 ),
@@ -195,24 +192,22 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
                   }
                 }),
 
-            (_isSaving) ? CircularProgressIndicator():
-                Flex(
-                  direction: Axis.horizontal,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    (this.widget._currentEcho != null) ?
-                      TextButton(
-                        onPressed: () => _showDialog(context),
-                        child: Text(S.of(context).bt_delete)):
-                      Container(),
-                    FilledButton(
-                      child: Text(S.of(context).bt_save,),
-                    //color: Colors.lightGreen[700],
-                      onPressed: () => {this._presenter.saveEcho(_dateEchoCtl.text, _dateSaillieCtl.text, _dateAgnelageCtl.text , _nombre) })
-                  ]),],),)
-          ]),
-
-    );
+    ])),
+    (_isSaving) ? CircularProgressIndicator():
+    Flex(
+        direction: Axis.horizontal,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          (this.widget._currentEcho != null) ?
+          TextButton(
+              onPressed: () => _showDialog(context),
+              child: Text(S.of(context).bt_delete)):
+          Container(),
+          FilledButton(
+              child: Text(S.of(context).bt_save,),
+              //color: Colors.lightGreen[700],
+              onPressed: () => {this._presenter.saveEcho(_dateEchoCtl.text, _dateSaillieCtl.text, _dateAgnelageCtl.text , _nombre) })
+        ])]));
   }
 
   // set up the buttons

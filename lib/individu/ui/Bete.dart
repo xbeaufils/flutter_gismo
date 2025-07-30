@@ -34,7 +34,6 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
    DateTime _selectedDate = DateTime.now();
   //final df = new DateFormat('dd/MM/yyyy');
   late BetePresenter _presenter;
-  final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   //BluetoothWidget btWidget;
   TextEditingController _dateEntreCtrl = new TextEditingController();
@@ -85,97 +84,105 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
 
         ),
         floatingActionButton: _buildRfid(),
-        body: new Container(
-          child: new Form(
-            key: _formKey,
+        body:
+          Container(
             child:
               SingleChildScrollView ( child:
-              new Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  _statusBluetoothBar(),
-                  new TextFormField(
-                    controller: _numBoucleCtrl,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(labelText: S.of(context).identity_number, hintText: S.of(context).flock_number_hint),
-                    validator: (value) {
-                        if (value!.isEmpty) {
-                          return S.of(context).identity_number_warn;
-                        }
-                        return "";
-                      },
-                      onSaved: (value) {
-                          setState(() {
-                            _numBoucleCtrl.text = value!;
-                        });
-                      }
-                  ),
-                  new TextFormField(
-                      //keyboardType: TextInputType.number,
-                    controller: _numMarquageCtrl,
-                    decoration: InputDecoration(labelText: S.of(context).flock_number, hintText: S.of(context).flock_number_hint),
-                    validator: (value) {
-                        if (value!.isEmpty) {
-                          return S.of(context).enter_flock_number;
-                        }
-                        return "";
-                        },
-                    onSaved: (value) {
-                        setState(() {
-                        _numMarquageCtrl.text = value!;
-                        });
-                      }
-                  ),
-                  new TextFormField(
-                    //keyboardType: TextInputType.number,
-                      initialValue: _nom,
-                      decoration: InputDecoration(labelText: S.of(context).name, hintText: S.of(context).name_hint),
-                      onSaved: (value) {
-                        setState(() {
-                          _nom = value;
-                        });
-                      }
-                  ),
-                  new Row(
-                     children: <Widget>[
-                      new Flexible (child:
-                          RadioListTile<Sex>(
-                            title: Text(S.of(context).male),
-                            selected: _sex == Sex.male,
-                            value: Sex.male,
-                            groupValue: _sex,
-                            onChanged: (Sex ? value) { setState(() { _sex = value; }); },
+                Column (children: [
+                  Card(child: _statusBluetoothBar(),),
+                  Card (
+                    child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Row(children: [
+                        Flexible( child:
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child:
+                              TextField(
+                                controller: _numBoucleCtrl,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
+                                    labelText: S.of(context).identity_number,
+                                    hintText: S.of(context).flock_number_hint),
+                                  onChanged: (value) {
+                                      setState(() {
+                                        _numBoucleCtrl.text = value;
+                                    });
+                                  }
+                              ),)),
+                        Flexible(child:
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child:
+                              TextField(
+                                controller: _numMarquageCtrl,
+                                decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
+                                    labelText: S.of(context).flock_number,
+                                    hintText: S.of(context).flock_number_hint),
+                                onChanged: (value) {
+                                    setState(() {
+                                    _numMarquageCtrl.text = value;
+                                    });
+                                  })))
+                      ],),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child:
+                        TextFormField(
+                          //keyboardType: TextInputType.number,
+                            initialValue: _nom,
+                            decoration: InputDecoration(
+                                filled: true,
+                                fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
+                                labelText: S.of(context).name,
+                                hintText: S.of(context).name_hint),
+                            onChanged:(value) => _nom = value ,
+                        )),
+                      Row(
+                         children: <Widget>[
+                            Flexible (child:
+                              RadioListTile<Sex>(
+                                title: Text(S.of(context).male),
+                                selected: _sex == Sex.male,
+                                value: Sex.male,
+                                groupValue: _sex,
+                                onChanged: (Sex ? value) { setState(() { _sex = value; }); },
+                              ),
                           ),
+                            Flexible( child:
+                              RadioListTile<Sex>(
+                                title: Text(S.of(context).female),
+                                selected: _sex == Sex.femelle,
+                                value: Sex.femelle,
+                                groupValue: _sex,
+                                onChanged: (Sex ? value) { setState(() { _sex = value; }); },
+                              ),
+                          ),]
                       ),
-                      new Flexible( child:
-                          RadioListTile<Sex>(
-                            title: Text(S.of(context).female),
-                            selected: _sex == Sex.femelle,
-                            value: Sex.femelle,
-                            groupValue: _sex,
-                            onChanged: (Sex ? value) { setState(() { _sex = value; }); },
-                          ),
-                      ),]
-                  ),
-                  new TextFormField(
-                    //keyboardType: TextInputType.number,
-                      initialValue: _obs,
-                      decoration: InputDecoration(
-                          labelText: S.of(context).observations,
-                          hintText: 'Obs',
-                          border: OutlineInputBorder(),
-                          enabledBorder: OutlineInputBorder()),
-                      maxLines: 3,
-                      onSaved: (value) {
-                        setState(() {
-                          _obs = value;
-                        });
-                      }
-                  ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child:
+                          TextFormField(
+                          //keyboardType: TextInputType.number,
+                            initialValue: _obs,
+                            decoration: InputDecoration(
+                                labelText: S.of(context).observations,
+                                hintText: 'Obs',
+                                filled: true,
+                                fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder()),
+                            maxLines: 3,
+                            onChanged: (value)  =>_obs = value,)
+                      )]),),
                   FilledButton(
-                  // RaisedButton(
                       child: new Text((this.bete == null)? S.of(context).bt_add: S.of(context).bt_save,),
                       onPressed: () {
                         try {
@@ -190,11 +197,10 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                           super.showMessage(S.of(context).identity_number_error);
                         }
                       } ,
-                      //color: Colors.lightGreen[700],
+
                   ),
-              ]
-    )),
-    )));
+        ]))
+    ));
 
   }
 
@@ -293,6 +299,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   @override
   void dispose() {
     // other dispose methods
+    _dateEntreCtrl.dispose();
     _numBoucleCtrl.dispose();
     _numMarquageCtrl.dispose();
     this._presenter.stopReadBluetooth();

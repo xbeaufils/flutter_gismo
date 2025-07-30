@@ -31,7 +31,6 @@ class _BouclagePageState extends State<BouclagePage> implements BouclageContract
   late BouclagePresenter _presenter = BouclagePresenter(this);
 
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
-  bool _rfidPresent = false;
   String _bluetoothState ="NONE";
   final BluetoothManager _btBloc= new BluetoothManager();
 
@@ -201,41 +200,6 @@ class _BouclagePageState extends State<BouclagePage> implements BouclageContract
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
     //_scaffoldKey.currentState.showSnackBar(snackBar);
-  }
-
-  Future<String> _startService() async{
-    /*
-    try {
-      debug.log("Start service ", name: "_BouclagePageState::_startService");
-      BluetoothState _bluetoothState =  await this._bloc.startReadBluetooth();
-      if (_bluetoothState.status != null)
-        debug.log("Start status " + _bluetoothState.status!, name: "_BouclagePageState::_startService");
-      if (_bluetoothState.status == BluetoothBloc.CONNECTED
-          || _bluetoothState.status == BluetoothBloc.STARTED) {
-        //this._bluetoothStream.listen((BluetoothState event) { })
-        this._btBloc.streamReadBluetooth().listen(
-                (BluetoothState event) {
-                  if (this._bluetoothState != event.status)
-              setState(() {
-                this._bluetoothState = event.status!;
-                if (event.status == 'AVAILABLE') {
-                  String _foundBoucle = event.data!;
-                  if (_foundBoucle.length > 15)
-                    _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
-                  _numBoucleCtrl.text = _foundBoucle.substring(_foundBoucle.length - 5);
-                  _numMarquageCtrl.text = _foundBoucle.substring(0, _foundBoucle.length - 5);
-                }
-              });
-            });
-      }
-    } on Exception catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace : stackTrace);
-    }*/
-    String start= await PLATFORM_CHANNEL.invokeMethod("start");
-    setState(() {
-      _rfidPresent =  (start == "start");
-    });
-    return start;
   }
 
   void returnBete(Bete bete) {
