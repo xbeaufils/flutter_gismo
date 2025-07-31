@@ -56,8 +56,12 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
            crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget> [
             ( this.widget._bete == null) ? Container(): NumBoucleView(this.widget._bete!),
-            Card (child: Column(children: [
-            TextField(
+            Card (
+              child: Column(children: [
+                Padding(
+                padding: const EdgeInsets.all(8.0),
+                  child:
+                    TextField(
                 key: Key("dateEcho"),
 
                 keyboardType: TextInputType.datetime,
@@ -85,113 +89,119 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
                     });
                   }
                 }),
-            Text(
-              S.of(context).result,
-              style: new TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Radio(
-                  value: 0,
-                  groupValue: _nombre,
-                  onChanged: _handleRdNombreChange,
                 ),
                 Text(
-                  S.of(context).empty,
-                  style: new TextStyle(fontSize: 16.0),
-                ),
-                Radio(
-                  value: 1,
-                  groupValue: _nombre,
-                  onChanged: _handleRdNombreChange,
-                ),
-                Text(
-                  S.of(context).simple,
+                  S.of(context).result,
                   style: new TextStyle(
-                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
                   ),
                 ),
-              ]),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Radio(
-                  value: 2,
-                  groupValue: _nombre,
-                  onChanged: _handleRdNombreChange,
-                ),
-                Text(
-                  S.of(context).double,
-                  style: new TextStyle(fontSize: 16.0),
-                ),
-                new Radio(
-                  value: 3,
-                  groupValue: _nombre,
-                  onChanged: _handleRdNombreChange,
-                ),
-                new Text(
-                  S.of(context).triplet,
-                  style: new TextStyle(fontSize: 16.0),
-                ),
-              ],
-            ),
-            new TextFormField(
-                key: Key("dateSaillie"),
-                keyboardType: TextInputType.datetime,
-                controller: _dateSaillieCtl,
-                decoration: InputDecoration(
-                    labelText: S.of(context).estimated_mating_date,
-                    hintText: 'jj/mm/aaaa'),
-                onSaved: (value) {
-                  setState(() {
-                    _dateSaillieCtl.text = value!;
-                  });
-                },
-                onTap: () async{
-                  FocusScope.of(context).requestFocus(new FocusNode());
-                  DateTime date = await showDatePicker(
-                      locale: const Locale("fr","FR"),
-                      context: context,
-                      initialDate:DateTime.now(),
-                      firstDate:DateTime(1900),
-                      lastDate: DateTime(2100)) as DateTime;
-                  if (date != null) {
-                    setState(() {
-                      _dateSaillieCtl.text = DateFormat.yMd().format(date);
-                    });
-                  }
-                }),
-            new TextFormField(
-                key: Key("dateAgnelage"),
-                keyboardType: TextInputType.datetime,
-                controller: _dateAgnelageCtl,
-                decoration: InputDecoration(
-                    labelText: S.of(context).expected_lambing_date,
-                    hintText: 'jj/mm/aaaa'),
-                onSaved: (value) {
-                  setState(() {
-                    _dateAgnelageCtl.text = value!;
-                  });
-                },
-                onTap: () async{
-                  FocusScope.of(context).requestFocus(new FocusNode());
-                  DateTime ? date = await showDatePicker(
-                      locale: const Locale("fr","FR"),
-                      context: context,
-                      initialDate:DateTime.now(),
-                      firstDate:DateTime(1900),
-                      lastDate: DateTime(2100));
-                  if (date != null) {
-                    setState(() {
-                      _dateAgnelageCtl.text = DateFormat.yMd().format(date);
-                    });
-                  }
-                }),
-
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Radio(
+                      value: 0,
+                      groupValue: _nombre,
+                      onChanged: _handleRdNombreChange,
+                    ),
+                    Text(
+                      S.of(context).empty,
+                      style: new TextStyle(fontSize: 16.0),
+                    ),
+                    Radio(
+                      value: 1,
+                      groupValue: _nombre,
+                      onChanged: _handleRdNombreChange,
+                    ),
+                    Text(
+                      S.of(context).simple,
+                      style: new TextStyle(
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ]),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Radio(
+                        value: 2,
+                        groupValue: _nombre,
+                        onChanged: _handleRdNombreChange,
+                      ),
+                      Text(
+                        S.of(context).double,
+                        style: new TextStyle(fontSize: 16.0),
+                      ),
+                      new Radio(
+                        value: 3,
+                        groupValue: _nombre,
+                        onChanged: _handleRdNombreChange,
+                      ),
+                      new Text(
+                        S.of(context).triplet,
+                        style: new TextStyle(fontSize: 16.0),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child:
+                        TextFormField(
+                            key: Key("dateSaillie"),
+                            keyboardType: TextInputType.datetime,
+                            controller: _dateSaillieCtl,
+                            decoration: InputDecoration(
+                                labelText: S.of(context).estimated_mating_date,
+                                hintText: 'jj/mm/aaaa'),
+                            onSaved: (value) {
+                              setState(() {
+                                _dateSaillieCtl.text = value!;
+                              });
+                            },
+                            onTap: () async{
+                              FocusScope.of(context).requestFocus(new FocusNode());
+                              DateTime date = await showDatePicker(
+                                  locale: const Locale("fr","FR"),
+                                  context: context,
+                                  initialDate:DateTime.now(),
+                                  firstDate:DateTime(1900),
+                                  lastDate: DateTime(2100)) as DateTime;
+                              if (date != null) {
+                                setState(() {
+                                  _dateSaillieCtl.text = DateFormat.yMd().format(date);
+                                });
+                              }
+                            })),
+                  Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child:
+                        TextFormField(
+                            key: Key("dateAgnelage"),
+                            keyboardType: TextInputType.datetime,
+                            controller: _dateAgnelageCtl,
+                            decoration: InputDecoration(
+                                labelText: S.of(context).expected_lambing_date,
+                                hintText: 'jj/mm/aaaa'),
+                            onSaved: (value) {
+                              setState(() {
+                                _dateAgnelageCtl.text = value!;
+                              });
+                            },
+                            onTap: () async{
+                              FocusScope.of(context).requestFocus(new FocusNode());
+                              DateTime ? date = await showDatePicker(
+                                  locale: const Locale("fr","FR"),
+                                  context: context,
+                                  initialDate:DateTime.now(),
+                                  firstDate:DateTime(1900),
+                                  lastDate: DateTime(2100));
+                              if (date != null) {
+                                setState(() {
+                                  _dateAgnelageCtl.text = DateFormat.yMd().format(date);
+                                });
+                              }
+                            })),
     ])),
     (_isSaving) ? CircularProgressIndicator():
     Flex(

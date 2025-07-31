@@ -81,101 +81,104 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
         key: _scaffoldKey,
       ),
       body:
-          SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            padding: EdgeInsets.all(10),
-            child:
-              Column (children: [
-                ( this.widget._mere == null) ? Container(): NumBoucleView(this.widget._mere!),
-                Card (
-                  child: Column (
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(padding:  const EdgeInsets.all(8.0),
-                        child:
-                          TextFormField(
-                            keyboardType: TextInputType.datetime,
-                            controller: _dateAgnelageCtl,
-                            decoration: InputDecoration(
-                                filled: true,
-                                fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
-                                labelText: S.of(context).lambing_date),
-                            validator: (value) {
-                                        if (value!.isEmpty) {
-                                          return S.of(context).enter_lambing_date;
-                                        }
-                                        return null;
-                                        },
-                            onSaved: (value) {
-                                        setState(() {
-                                          _dateAgnelageCtl.text = value!;
-                                        });
+        SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          padding: EdgeInsets.all(10),
+          child:
+            Column (children: [
+              ( this.widget._mere == null) ? Container(): NumBoucleView(this.widget._mere!),
+              Card (
+                child: Column (
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(padding:  const EdgeInsets.all(8.0),
+                      child:
+                        TextFormField(
+                          keyboardType: TextInputType.datetime,
+                          controller: _dateAgnelageCtl,
+                          decoration: InputDecoration(
+                              filled: true,
+                              fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
+                              labelText: S.of(context).lambing_date),
+                          validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return S.of(context).enter_lambing_date;
+                                      }
+                                      return null;
                                       },
-                            onTap: () async{
-                                    DateTime ? date = DateTime.now();
-                                    FocusScope.of(context).requestFocus(new FocusNode());
-                                    date = await showDatePicker(
-                                        context: context,
-                                        initialDate:DateTime.now(),
-                                        firstDate:DateTime(1900),
-                                        lastDate: DateTime(2100)) ;
-                                    if (date != null) {
+                          onSaved: (value) {
                                       setState(() {
-                                        _dateAgnelageCtl.text = DateFormat.yMd().format(date!);
+                                        _dateAgnelageCtl.text = value!;
                                       });
-                                    }
-                                  })),
-                      ListTile(
-                        title: Text(S.of(context).lambing_quality) ,
-                        subtitle: Text(_agnelage.key.toString() + " : " + transAgnelage.translate(_agnelage)),
-                        trailing: new IconButton(key: Key("btQualite"), onPressed: _openAgnelageDialog, icon: new Icon(Icons.create)),),
-                      ListTile(
-                        title: Text(S.of(context).adoption_quality) ,
-                        subtitle: Text(_adoption.key.toString() + " : " + transAdoption.translate(_adoption)),
-                        trailing: new IconButton(key: Key("btAdoption"), onPressed: _openAdoptionDialog, icon: new Icon(Icons.create)),),
-                      TextFormField(
-                        controller: _obsCtl,
-                        decoration: InputDecoration(
-                            filled: true,
-                            fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
-                            labelText: S.of(context).observations,
-                            hintText: 'Obs',
-                            border: OutlineInputBorder(),
-                            enabledBorder: OutlineInputBorder()),
-                        maxLines: 3,
-                        onSaved: (value) {
-                          setState(() {
-                                _obsCtl.text = value!;
-                          });
-                        }
-                      ),])),
-                this._buildPereWidget(),
-                SizedBox(
-                  height: 200,
-                  child: this._lambList(), //LambsPage(this._lambing.lambs, _dateAgnelageCtl.text)
-                ),
-                FilledButton(key:null,
-                        onPressed: () {
-                          try {
-                            this._presenter.saveLambing(
-                                _dateAgnelageCtl.text, _obsCtl.text,
-                                _adoption.key, _agnelage.key);
-                          } on NoLamb {
-                            super.showMessage(S.current.no_lamb);
-                          }
-                        },
-                         child: Text(S.of(context).validate_lambing)
-                    )
-                  ]),
-          ) ,
-      floatingActionButton: (currentLambing.idBd == null)?
-      new FloatingActionButton(
-        onPressed: _openAddEntryDialog,
-        tooltip: S.of(context).add_lamb,
-        child: new Icon(Icons.add),
-      ): null,
+                                    },
+                          onTap: () async{
+                                  DateTime ? date = DateTime.now();
+                                  FocusScope.of(context).requestFocus(new FocusNode());
+                                  date = await showDatePicker(
+                                      context: context,
+                                      initialDate:DateTime.now(),
+                                      firstDate:DateTime(1900),
+                                      lastDate: DateTime(2100)) ;
+                                  if (date != null) {
+                                    setState(() {
+                                      _dateAgnelageCtl.text = DateFormat.yMd().format(date!);
+                                    });
+                                  }
+                                })),
+                    ListTile(
+                      title: Text(S.of(context).lambing_quality) ,
+                      subtitle: Text(_agnelage.key.toString() + " : " + transAgnelage.translate(_agnelage)),
+                      trailing: new IconButton(key: Key("btQualite"), onPressed: _openAgnelageDialog, icon: new Icon(Icons.create)),),
+                    ListTile(
+                      title: Text(S.of(context).adoption_quality) ,
+                      subtitle: Text(_adoption.key.toString() + " : " + transAdoption.translate(_adoption)),
+                      trailing: new IconButton(key: Key("btAdoption"), onPressed: _openAdoptionDialog, icon: new Icon(Icons.create)),),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child:
+                        TextFormField(
+                          controller: _obsCtl,
+                          decoration: InputDecoration(
+                              filled: true,
+                              fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
+                              labelText: S.of(context).observations,
+                              hintText: 'Obs',
+                              border: OutlineInputBorder(),
+                              enabledBorder: OutlineInputBorder()),
+                            maxLines: 3,
+                            onSaved: (value) {
+                              setState(() {
+                                  _obsCtl.text = value!;
+                            });
+                          })
+                    ),])),
+              this._buildPereWidget(),
+              SizedBox(
+                height: 200,
+                child: this._lambList(), //LambsPage(this._lambing.lambs, _dateAgnelageCtl.text)
+              ),
+              FilledButton(key:null,
+                onPressed: () {
+                  try {
+                    this._presenter.saveLambing(
+                        _dateAgnelageCtl.text, _obsCtl.text,
+                        _adoption.key, _agnelage.key);
+                  } on NoLamb {
+                    super.showMessage(S.current.no_lamb);
+                  }
+                },
+                 child: Text(S.of(context).validate_lambing)
+            )
+          ]),
+        ) ,
+        floatingActionButton: (currentLambing.idBd == null)?
+          FloatingActionButton(
+            onPressed: _openAddEntryDialog,
+            tooltip: S.of(context).add_lamb,
+            child: new Icon(Icons.add),
+          ): null,
     );
   }
 

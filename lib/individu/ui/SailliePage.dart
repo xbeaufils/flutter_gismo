@@ -62,7 +62,10 @@ class _SailliePageState extends GismoStatePage<SailliePage> implements SaillieCo
             Card( child:
               Column(
                 children: <Widget> [
-                  TextFormField(
+                  Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child:
+                    TextFormField(
                     keyboardType: TextInputType.datetime,
                     controller: _dateSaillieCtl,
                     decoration: InputDecoration(
@@ -92,6 +95,7 @@ class _SailliePageState extends GismoStatePage<SailliePage> implements SaillieCo
                         });
                       }
                     }),
+                  ),
                 ListTile(
                   title: Text(S.of(context).male) ,
                   subtitle: Text(S.of(context).mating_male_text),

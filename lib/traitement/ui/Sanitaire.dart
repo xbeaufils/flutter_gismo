@@ -125,11 +125,11 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
                         children: <Widget> [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                                child:
-                                  TextFormField(
-                                        controller: _ordonnanceCtl,
-                                        decoration: InputDecoration(labelText: S.of(context).prescription,),
-                                  )
+                            child:
+                              TextFormField(
+                                    controller: _ordonnanceCtl,
+                                    decoration: InputDecoration(labelText: S.of(context).prescription,),
+                              )
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),

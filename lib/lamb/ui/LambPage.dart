@@ -22,7 +22,7 @@ class LambPage extends StatefulWidget {
   LambPage();
 }
 
-abstract class LambContract {
+abstract class LambContract extends GismoContract {
   Future <Bete?> showBouclage(LambModel lamb);
   Future<String> showDeath(LambModel lamb);
 }
@@ -45,14 +45,19 @@ class LambPageState extends GismoStatePage<LambPage> implements LambContract {
           actions: _getActionButton(),
         ),
         body:
-            SingleChildScrollView (child:
-          Column(
+          SingleChildScrollView (
+            child:
+                Card( child:
+            Column(
               children: <Widget>[
-                new TextField(
-                  decoration: InputDecoration(labelText: S.of(context).provisional_number),
-                  controller: _marquageCtrl,
-                ),
-                new Row(
+                Padding(
+                padding: const EdgeInsets.all(8.0),
+                child:
+                  TextField(
+                    decoration: InputDecoration(labelText: S.of(context).provisional_number),
+                    controller: _marquageCtrl,
+                  )),
+                Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -124,24 +129,8 @@ class LambPageState extends GismoStatePage<LambPage> implements LambContract {
                     height: 200,
                     child : (this.widget._lamb == null) ? Container() : _buildEvents())
               ]
-          ),
+          )),
     ),);
-  }
-
-  void _addLamb() {
-    Navigator
-        .of(context)
-        .pop(new LambModel(this._marquageCtrl.text, this._sex, this._currentAllaitement, this._sante));
-  }
-
-  void _saveLamb() {
-    this.widget._lamb!.marquageProvisoire = this._marquageCtrl.text;
-    this.widget._lamb!.sex = this._sex;
-    this.widget._lamb!.allaitement = this._currentAllaitement;
-    this.widget._lamb!.sante = this._sante;
-    Navigator
-        .of(context)
-        .pop(this.widget._lamb);
   }
 
   void changedDropDownItem(MethodeAllaitement ? selectedAllaitement) {
@@ -180,17 +169,15 @@ class LambPageState extends GismoStatePage<LambPage> implements LambContract {
 
   Widget _mainButton() {
     if (this.widget._lamb == null)
-      return new ElevatedButton(
-          onPressed:_addLamb,
+      return new FilledButton(
+          onPressed: () => _presenter.addLamb(this._marquageCtrl.text, this._sex, this._currentAllaitement, this._sante),
           //color: Colors.lightGreen[900],
           child:
-          new Text(S.of(context).bt_add,
-            style: new TextStyle(color: Colors.white),
-          )
+            Text(S.of(context).bt_add,)
       );
     return
-      new ElevatedButton.icon(
-        onPressed:_saveLamb,
+      new FilledButton.icon(
+        onPressed: () =>_presenter.saveLamb(this.widget._lamb!, this._marquageCtrl.text, this._sex, this._currentAllaitement, this._sante),
       //color: Colors.lightGreen[900],
         icon: Icon(Icons.save),
         label: Text(S.of(context).bt_save),
