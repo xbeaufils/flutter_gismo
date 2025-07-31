@@ -1,7 +1,7 @@
-import 'package:gismo/memo/ui/MemoListPage.dart';
-import 'package:gismo/memo/ui/MemoPage.dart';
-import 'package:gismo/model/MemoModel.dart';
-import 'package:gismo/services/MemoService.dart';
+import 'package:flutter_gismo/memo/ui/MemoListPage.dart';
+import 'package:flutter_gismo/memo/ui/MemoPage.dart';
+import 'package:flutter_gismo/model/MemoModel.dart';
+import 'package:flutter_gismo/services/MemoService.dart';
 import 'package:intl/intl.dart';
 
 class MemoPresenter {

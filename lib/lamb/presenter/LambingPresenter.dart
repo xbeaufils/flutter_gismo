@@ -1,11 +1,11 @@
 
-import 'package:gismo/lamb/ui/SearchPerePage.dart';
-import 'package:gismo/lamb/ui/lambing.dart';
-import 'package:gismo/model/BeteModel.dart';
-import 'package:gismo/model/LambModel.dart';
-import 'package:gismo/services/AuthService.dart';
-import 'package:gismo/services/BeteService.dart';
-import 'package:gismo/services/LambingService.dart';
+import 'package:flutter_gismo/lamb/ui/SearchPerePage.dart';
+import 'package:flutter_gismo/lamb/ui/lambing.dart';
+import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
+import 'package:flutter_gismo/services/BeteService.dart';
+import 'package:flutter_gismo/services/LambingService.dart';
 import 'package:intl/intl.dart';
 
 class LambingPresenter {

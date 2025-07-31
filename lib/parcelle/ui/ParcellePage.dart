@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
-import 'package:gismo/bloc/LocationBloc.dart';
-import 'package:gismo/core/ui/SimpleGismoPage.dart';
-import 'package:gismo/model/ParcelleModel.dart';
-import 'package:gismo/parcelle/presenter/ParcellePresenter.dart';
+import 'package:flutter_gismo/bloc/LocationBloc.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
+import 'package:flutter_gismo/model/ParcelleModel.dart';
+import 'package:flutter_gismo/parcelle/presenter/ParcellePresenter.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 

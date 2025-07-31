@@ -1,14 +1,14 @@
-import 'package:gismo/Gismo.dart';
-import 'package:gismo/Lot/ui/AffectationPage.dart';
-import 'package:gismo/Lot/ui/LotAffectationViewPage.dart';
-import 'package:gismo/generated/l10n.dart';
-import 'package:gismo/model/AffectationLot.dart';
-import 'package:gismo/model/BeteModel.dart';
-import 'package:gismo/model/LotModel.dart';
-import 'package:gismo/search/ui/SearchPage.dart';
-import 'package:gismo/search/ui/SelectMultiplePage.dart';
-import 'package:gismo/services/BeteService.dart';
-import 'package:gismo/services/LotService.dart';
+import 'package:flutter_gismo/Gismo.dart';
+import 'package:flutter_gismo/Lot/ui/AffectationPage.dart';
+import 'package:flutter_gismo/Lot/ui/LotAffectationViewPage.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/model/AffectationLot.dart';
+import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/LotModel.dart';
+import 'package:flutter_gismo/search/ui/SearchPage.dart';
+import 'package:flutter_gismo/search/ui/SelectMultiplePage.dart';
+import 'package:flutter_gismo/services/BeteService.dart';
+import 'package:flutter_gismo/services/LotService.dart';
 import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
 

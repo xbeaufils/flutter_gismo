@@ -1,7 +1,7 @@
-import 'package:gismo/core/repository/AbstractRepository.dart';
-import 'package:gismo/core/repository/LocalRepository.dart';
-import 'package:gismo/env/Environnement.dart';
-import 'package:gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
+import 'package:flutter_gismo/core/repository/LocalRepository.dart';
+import 'package:flutter_gismo/env/Environnement.dart';
+import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 

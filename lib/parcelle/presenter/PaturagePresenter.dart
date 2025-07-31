@@ -1,8 +1,8 @@
 
-import 'package:gismo/model/LotModel.dart';
-import 'package:gismo/parcelle/ui/PaturagePage.dart';
-import 'package:gismo/services/LotService.dart';
-import 'package:gismo/services/ParcelleService.dart';
+import 'package:flutter_gismo/model/LotModel.dart';
+import 'package:flutter_gismo/parcelle/ui/PaturagePage.dart';
+import 'package:flutter_gismo/services/LotService.dart';
+import 'package:flutter_gismo/services/ParcelleService.dart';
 import 'dart:developer' as debug;
 
 import 'package:intl/intl.dart';

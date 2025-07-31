@@ -1,4 +1,4 @@
-import 'package:gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:intl/intl.dart';
 
 class LotModel {

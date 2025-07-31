@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:gismo/core/device/BluetoothMgr.dart';
-import 'package:gismo/infra/ui/bluetooth.dart';
-import 'package:gismo/model/BuetoothModel.dart';
-import 'package:gismo/model/DeviceModel.dart';
-import 'package:gismo/model/StatusBluetooth.dart';
-import 'package:gismo/services/BluetoothService.dart';
+import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
+import 'package:flutter_gismo/infra/ui/bluetooth.dart';
+import 'package:flutter_gismo/model/BuetoothModel.dart';
+import 'package:flutter_gismo/model/DeviceModel.dart';
+import 'package:flutter_gismo/model/StatusBluetooth.dart';
+import 'package:flutter_gismo/services/BluetoothService.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'dart:developer' as debug;

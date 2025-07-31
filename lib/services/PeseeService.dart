@@ -1,8 +1,8 @@
-import 'package:gismo/model/BeteModel.dart';
-import 'package:gismo/model/LambModel.dart';
-import 'package:gismo/model/PeseeModel.dart';
-import 'package:gismo/repository/PeseeRepository.dart';
-import 'package:gismo/services/AuthService.dart';
+import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/model/PeseeModel.dart';
+import 'package:flutter_gismo/repository/PeseeRepository.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class PeseeService {

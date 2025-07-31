@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:gismo/Gismo.dart';
-import 'package:gismo/core/ui/NumBoucle.dart';
-import 'package:gismo/generated/l10n.dart';
-import 'package:gismo/core/ui/SimpleGismoPage.dart';
-import 'package:gismo/model/BeteModel.dart';
-import 'package:gismo/model/SaillieModel.dart';
-import 'package:gismo/individu/presenter/SailliePresenter.dart';
-import 'package:gismo/search/ui/SearchPage.dart';
+import 'package:flutter_gismo/Gismo.dart';
+import 'package:flutter_gismo/core/ui/NumBoucle.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
+import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/SaillieModel.dart';
+import 'package:flutter_gismo/individu/presenter/SailliePresenter.dart';
+import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:intl/intl.dart';
 
 class SailliePage extends StatefulWidget {

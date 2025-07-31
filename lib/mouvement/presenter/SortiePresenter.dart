@@ -1,9 +1,9 @@
-import 'package:gismo/generated/l10n.dart';
-import 'package:gismo/Gismo.dart';
-import 'package:gismo/model/BeteModel.dart';
-import 'package:gismo/mouvement/ui/SortiePage.dart';
-import 'package:gismo/search/ui/SearchPage.dart';
-import 'package:gismo/services/MouvementService.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/Gismo.dart';
+import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/mouvement/ui/SortiePage.dart';
+import 'package:flutter_gismo/search/ui/SearchPage.dart';
+import 'package:flutter_gismo/services/MouvementService.dart';
 
 
 

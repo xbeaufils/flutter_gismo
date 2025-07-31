@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:gismo/generated/l10n.dart';
-import 'package:gismo/core/ui/SimpleGismoPage.dart';
-import 'package:gismo/model/BeteModel.dart';
-import 'package:gismo/mouvement/presenter/EntreePresenter.dart';
-import 'package:gismo/services/AuthService.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
+import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/mouvement/presenter/EntreePresenter.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 

@@ -1,9 +1,9 @@
-import 'package:gismo/Gismo.dart';
-import 'package:gismo/model/BeteModel.dart';
-import 'package:gismo/search/ui/SearchPage.dart';
-import 'package:gismo/search/ui/SelectMultiplePage.dart';
-import 'package:gismo/traitement/ui/Sanitaire.dart';
-import 'package:gismo/traitement/ui/selectionTraitement.dart';
+import 'package:flutter_gismo/Gismo.dart';
+import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/search/ui/SearchPage.dart';
+import 'package:flutter_gismo/search/ui/SelectMultiplePage.dart';
+import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
+import 'package:flutter_gismo/traitement/ui/selectionTraitement.dart';
 
 class SelectionPresenter {
   SelectionContract _view;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gismo/sheepyGreenScheme.dart';
+import 'package:flutter_gismo/sheepyGreenScheme.dart';
 
 abstract class GismoContract {
   void back();

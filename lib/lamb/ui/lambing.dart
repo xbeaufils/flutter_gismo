@@ -1,23 +1,23 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:gismo/Gismo.dart';
-import 'package:gismo/core/ui/NumBoucle.dart';
-import 'package:gismo/search/ui/SearchPage.dart';
-import 'package:gismo/generated/l10n.dart';
-import 'package:gismo/core/ui/SimpleGismoPage.dart';
+import 'package:flutter_gismo/Gismo.dart';
+import 'package:flutter_gismo/core/ui/NumBoucle.dart';
+import 'package:flutter_gismo/search/ui/SearchPage.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 
-import 'package:gismo/lamb/ui/Adoption.dart';
-import 'package:gismo/lamb/ui/AgnelageQualityPage.dart';
-import 'package:gismo/lamb/ui/LambPage.dart';
-import 'package:gismo/lamb/ui/SearchPerePage.dart';
-import 'package:gismo/model/BeteModel.dart';
-import 'package:gismo/model/AdoptionQualite.dart';
-import 'package:gismo/model/AgnelageQualite.dart';
-import 'package:gismo/model/CauseMort.dart';
-import 'package:gismo/model/LambModel.dart';
-import 'package:gismo/lamb/presenter/LambingPresenter.dart';
-import 'package:gismo/services/LambingService.dart';
+import 'package:flutter_gismo/lamb/ui/Adoption.dart';
+import 'package:flutter_gismo/lamb/ui/AgnelageQualityPage.dart';
+import 'package:flutter_gismo/lamb/ui/LambPage.dart';
+import 'package:flutter_gismo/lamb/ui/SearchPerePage.dart';
+import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/AdoptionQualite.dart';
+import 'package:flutter_gismo/model/AgnelageQualite.dart';
+import 'package:flutter_gismo/model/CauseMort.dart';
+import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/lamb/presenter/LambingPresenter.dart';
+import 'package:flutter_gismo/services/LambingService.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer' as debug;
 

@@ -2,11 +2,11 @@ import 'dart:io';
 import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
-import 'package:gismo/core/ui/SimpleGismoPage.dart';
-import 'package:gismo/generated/l10n.dart';
-import 'package:gismo/infra/presenter/ConfigPresenter.dart';
-import 'package:gismo/infra/ui/MenuPage.dart';
-import 'package:gismo/services/AuthService.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/infra/presenter/ConfigPresenter.dart';
+import 'package:flutter_gismo/infra/ui/MenuPage.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 
 import 'package:path/path.dart' as path;
 

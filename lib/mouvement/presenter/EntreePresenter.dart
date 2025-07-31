@@ -1,8 +1,8 @@
-import 'package:gismo/generated/l10n.dart';
-import 'package:gismo/individu/ui/Bete.dart';
-import 'package:gismo/mouvement/ui/EntreePage.dart';
-import 'package:gismo/model/BeteModel.dart';
-import 'package:gismo/services/MouvementService.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/individu/ui/Bete.dart';
+import 'package:flutter_gismo/mouvement/ui/EntreePage.dart';
+import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/services/MouvementService.dart';
 
 class EntreePresenter {
   final EntreeService _service = EntreeService();

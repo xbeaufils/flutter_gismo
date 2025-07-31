@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:gismo/infra/ui/ConfigPage.dart';
-import 'package:gismo/infra/ui/welcome.dart';
-import 'package:gismo/model/User.dart';
-import 'package:gismo/services/AuthService.dart';
-import 'package:gismo/services/UserService.dart';
+import 'package:flutter_gismo/infra/ui/ConfigPage.dart';
+import 'package:flutter_gismo/infra/ui/welcome.dart';
+import 'package:flutter_gismo/model/User.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
+import 'package:flutter_gismo/services/UserService.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ConfigPresenter {

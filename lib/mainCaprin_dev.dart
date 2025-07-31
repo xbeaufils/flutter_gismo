@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:gismo/env/Environnement.dart';
-import 'package:gismo/Gismo.dart';
-import 'package:gismo/flavor/FlavorCaprin.dart';
+import 'package:flutter_gismo/env/Environnement.dart';
+import 'package:flutter_gismo/Gismo.dart';
+import 'package:flutter_gismo/flavor/FlavorCaprin.dart';
 import 'package:sentry/sentry.dart';
 
 

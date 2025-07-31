@@ -1,7 +1,7 @@
-import 'package:gismo/lamb/ui/LambPage.dart';
-import 'package:gismo/lamb/ui/SearchLambPage.dart';
-import 'package:gismo/model/LambModel.dart';
-import 'package:gismo/services/LambingService.dart';
+import 'package:flutter_gismo/lamb/ui/LambPage.dart';
+import 'package:flutter_gismo/lamb/ui/SearchLambPage.dart';
+import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/services/LambingService.dart';
 
 class SearchLambPresenter {
   final LambingService _service = LambingService();

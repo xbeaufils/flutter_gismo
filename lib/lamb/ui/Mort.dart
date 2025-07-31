@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gismo/generated/l10n.dart';
-import 'package:gismo/model/LambModel.dart';
-import 'package:gismo/lamb/presenter/LambPresenter.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/lamb/presenter/LambPresenter.dart';
 import 'package:intl/intl.dart';
 
 class MortPage extends StatefulWidget {

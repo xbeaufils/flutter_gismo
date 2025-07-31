@@ -1,11 +1,11 @@
 import 'dart:developer' as debug;
 import 'dart:io';
 
-import 'package:gismo/core/repository/LocalRepository.dart';
-import 'package:gismo/env/Environnement.dart';
-import 'package:gismo/model/User.dart';
-import 'package:gismo/core/repository/AbstractRepository.dart';
-import 'package:gismo/services/AuthService.dart';
+import 'package:flutter_gismo/core/repository/LocalRepository.dart';
+import 'package:flutter_gismo/env/Environnement.dart';
+import 'package:flutter_gismo/model/User.dart';
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';

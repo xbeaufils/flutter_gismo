@@ -1,8 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <application
         android:label="gismo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.mapbox.token" android:value="pk.eyJ1IjoieGJlYXUiLCJhIjoiY2s4anVjamdwMGVsdDNucDlwZ2I0bGJwNSJ9.lc21my1ozaQZ2-EriDSY5w" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-9699928438497749~5245883820"/>    <!-- Prod -->
+        <!--    android:value="ca-app-pub-3940256099942544~3347511713"/>--> <!-- Debug -->
+        <meta-data android:name="io.sentry.dsn" android:value="https://47cb2dc0faa74dc48fdf9c452ec6ab49@o406124.ingest.sentry.io/5603947" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

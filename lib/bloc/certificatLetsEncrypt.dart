@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'dart:typed_data';
 
-import 'package:gismo/main.dart';
+import 'package:flutter_gismo/main.dart';
 import 'package:http/io_client.dart';
 import 'package:http/http.dart' as http;
 

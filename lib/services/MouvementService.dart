@@ -1,9 +1,9 @@
-import 'package:gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/BeteModel.dart';
 import 'dart:developer' as debug;
 
-import 'package:gismo/repository/EntreeRepository.dart';
-import 'package:gismo/repository/SortieRepository.dart';
-import 'package:gismo/services/AuthService.dart';
+import 'package:flutter_gismo/repository/EntreeRepository.dart';
+import 'package:flutter_gismo/repository/SortieRepository.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:intl/intl.dart';
 
 class EntreeService {

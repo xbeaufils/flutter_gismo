@@ -1,6 +1,6 @@
 
 import 'package:flutter/widgets.dart';
-import 'package:gismo/generated/l10n.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 
 class AdoptionNotFoundException implements Exception {}
 

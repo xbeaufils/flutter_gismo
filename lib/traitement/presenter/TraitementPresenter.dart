@@ -1,6 +1,6 @@
-import 'package:gismo/model/TraitementModel.dart';
-import 'package:gismo/services/TraitementService.dart';
-import 'package:gismo/traitement/ui/Sanitaire.dart';
+import 'package:flutter_gismo/model/TraitementModel.dart';
+import 'package:flutter_gismo/services/TraitementService.dart';
+import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
 import 'package:intl/intl.dart';
 
 class TraitementPresenter {

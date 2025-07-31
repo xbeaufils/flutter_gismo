@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:gismo/individu/ui/Bete.dart';
-import 'package:gismo/generated/l10n.dart';
-import 'package:gismo/core/ui/SimpleGismoPage.dart';
-import 'package:gismo/model/BeteModel.dart';
-import 'package:gismo/model/Event.dart';
-import 'package:gismo/individu/presenter/TimeLinePresenter.dart';
+import 'package:flutter_gismo/individu/ui/Bete.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
+import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/Event.dart';
+import 'package:flutter_gismo/individu/presenter/TimeLinePresenter.dart';
 import 'package:intl/intl.dart';
 
 

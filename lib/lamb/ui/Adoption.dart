@@ -1,8 +1,8 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:gismo/generated/l10n.dart';
-import 'package:gismo/model/AdoptionQualite.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/model/AdoptionQualite.dart';
 
 class AdoptionDialog extends StatefulWidget {
   int _currentLevel;

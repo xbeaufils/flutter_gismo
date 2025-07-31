@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gismo/core/ui/SimpleGismoPage.dart';
-import 'package:gismo/generated/l10n.dart';
-import 'package:gismo/model/LotModel.dart';
-import 'package:gismo/model/ParcelleModel.dart';
-import 'package:gismo/parcelle/presenter/PaturagePresenter.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/model/LotModel.dart';
+import 'package:flutter_gismo/model/ParcelleModel.dart';
+import 'package:flutter_gismo/parcelle/presenter/PaturagePresenter.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer' as debug;
 

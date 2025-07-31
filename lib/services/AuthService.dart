@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/services.dart';
-import 'package:gismo/model/User.dart';
-import 'package:gismo/services/UserService.dart';
+import 'package:flutter_gismo/model/User.dart';
+import 'package:flutter_gismo/services/UserService.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:developer' as debug;
 

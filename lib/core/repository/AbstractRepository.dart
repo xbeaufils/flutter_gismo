@@ -3,11 +3,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:gismo/env/Environnement.dart';
+import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/find_locale.dart';
 import 'package:intl/intl.dart';
-import 'package:gismo/bloc/Message.dart';
+import 'package:flutter_gismo/bloc/Message.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 enum RepositoryType {web, local}

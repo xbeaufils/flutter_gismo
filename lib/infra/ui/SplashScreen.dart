@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:gismo/infra/ui/ConfigPage.dart';
+import 'package:flutter_gismo/infra/ui/ConfigPage.dart';
 import 'dart:developer' as debug;
 
-import 'package:gismo/services/AuthService.dart';
-import 'package:gismo/infra/ui/welcome.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
+import 'package:flutter_gismo/infra/ui/welcome.dart';
 
 class SplashScreen extends StatefulWidget {
   SplashScreen( {Key ? key}) : super(key: key);

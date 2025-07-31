@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:gismo/model/BuetoothModel.dart';
-import 'package:gismo/model/DeviceModel.dart';
-import 'package:gismo/model/StatusBluetooth.dart';
+import 'package:flutter_gismo/model/BuetoothModel.dart';
+import 'package:flutter_gismo/model/DeviceModel.dart';
+import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'dart:developer' as debug;
 
 import 'package:sentry_flutter/sentry_flutter.dart';

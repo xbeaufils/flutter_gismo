@@ -1,7 +1,7 @@
-import 'package:gismo/Lot/ui/LotAffectationViewPage.dart';
-import 'package:gismo/Lot/ui/LotPage.dart';
-import 'package:gismo/model/LotModel.dart';
-import 'package:gismo/services/LotService.dart';
+import 'package:flutter_gismo/Lot/ui/LotAffectationViewPage.dart';
+import 'package:flutter_gismo/Lot/ui/LotPage.dart';
+import 'package:flutter_gismo/model/LotModel.dart';
+import 'package:flutter_gismo/services/LotService.dart';
 
 class LotPresenter {
   LotContract _view;
