@@ -90,7 +90,7 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
               Card (
                 child: Column (
                   mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Padding(padding:  const EdgeInsets.all(8.0),
@@ -153,8 +153,8 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
                                   _obsCtl.text = value!;
                             });
                           })
-                    ),])),
-              this._buildPereWidget(),
+                    ),
+                    this._buildPereWidget(),])),
               SizedBox(
                 height: 200,
                 child: this._lambList(), //LambsPage(this._lambing.lambs, _dateAgnelageCtl.text)
@@ -194,14 +194,13 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
     if (currentLambing.numBouclePere != null || currentLambing.numMarquagePere != null)  {
       identifPere = currentLambing.numBouclePere! + " " + currentLambing.numMarquagePere!;
     }
-    return Card(
-      child:
+    return
       ListTile(
         title: Text(S.of(context).ram) ,
         subtitle: Text(identifPere),
         trailing: (currentLambing.idPere == null ) ?
         IconButton(icon: Icon(Icons.search), onPressed: () => this._presenter.addPere(), ):
-        IconButton(icon: Icon(Icons.close), onPressed: () => this._presenter.removePere(), ),));
+        IconButton(icon: Icon(Icons.close), onPressed: () => this._presenter.removePere(), ),);
   }
 
 
