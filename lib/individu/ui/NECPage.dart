@@ -38,52 +38,53 @@ class NECPageState extends GismoStatePage<NECPage> implements NECContract {
       body:
           Column (children: [
             NumBoucleView(this.widget._bete),
-          Card(child:
-            Column(
-              children: <Widget> [
-                TextFormField(
-                    keyboardType: TextInputType.datetime,
-                    controller: _dateNoteCtl,
-                    decoration: InputDecoration(
-                        labelText: S.of(context).dateDeNotation,
-                        hintText: 'jj/mm/aaaa'),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Pas de date de notation";
-                      }},
-                    onSaved: (value) {
-                      setState(() {
-                        _dateNoteCtl.text = value!;
-                      });
-                    },
-                    onTap: () async{
-                      DateTime ? date = DateTime.now();
-                      FocusScope.of(context).requestFocus(new FocusNode());
-                      date = await showDatePicker(
-                          locale: const Locale("fr","FR"),
-                          context: context,
-                          initialDate:DateTime.now(),
-                          firstDate:DateTime(1900),
-                          lastDate: DateTime(2100));
-                      if (date != null) {
+            Card(child:
+              Column(
+                children: <Widget> [
+                Padding(padding:  const EdgeInsets.all(8.0),
+                  child:
+                  TextFormField(
+                      keyboardType: TextInputType.datetime,
+                      controller: _dateNoteCtl,
+                      decoration: InputDecoration(
+                          labelText: S.of(context).dateDeNotation,
+                          hintText: 'jj/mm/aaaa'),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Pas de date de notation";
+                        }},
+                      onSaved: (value) {
                         setState(() {
-                          _dateNoteCtl.text =  DateFormat.yMd().format(date!);
+                          _dateNoteCtl.text = value!;
                         });
-                      }
-                    }),
+                      },
+                      onTap: () async{
+                        DateTime ? date = DateTime.now();
+                        FocusScope.of(context).requestFocus(new FocusNode());
+                        date = await showDatePicker(
+                            locale: const Locale("fr","FR"),
+                            context: context,
+                            initialDate:DateTime.now(),
+                            firstDate:DateTime(1900),
+                            lastDate: DateTime(2100));
+                        if (date != null) {
+                          setState(() {
+                            _dateNoteCtl.text =  DateFormat.yMd().format(date!);
+                          });
+                        }
+                      })),
                 _getNec(NEC.level0),
                 _getNec(NEC.level1),
                 _getNec(NEC.level2),
                 _getNec(NEC.level3),
                 _getNec(NEC.level4),
                 _getNec(NEC.level5),
-                (_isSaving) ? CircularProgressIndicator():
-                  FilledButton(
-                    child: Text(S.of(context).bt_save,),
-                    onPressed: () => this._presenter.saveNote(_dateNoteCtl.text, _nec) )
-              ]),
-
-      )]));
+                ])),
+            (_isSaving) ? CircularProgressIndicator():
+            FilledButton(
+              child: Text(S.of(context).bt_save,),
+              onPressed: () => this._presenter.saveNote(_dateNoteCtl.text, _nec) )
+      ]));
   }
 
   Widget _getNec(NEC nec) {

@@ -49,7 +49,9 @@ class PeseePageState extends GismoStatePage<PeseePage> implements PeseeContract 
             NumBoucleView(this.widget._bete!),
             Card(
               child: Column(children: [
-            new TextFormField(
+              Padding(padding:  const EdgeInsets.all(8.0),
+                child:
+              TextFormField(
                 keyboardType: TextInputType.datetime,
                 controller: _datePeseeCtl,
                 decoration: InputDecoration(
@@ -78,23 +80,25 @@ class PeseePageState extends GismoStatePage<PeseePage> implements PeseeContract 
                       _datePeseeCtl.text =  DateFormat.yMd().format(date!);
                     });
                   }
-                }),
-            TextFormField(
-                keyboardType: TextInputType.number,
-                controller: _poidsCtl,
-              decoration: InputDecoration(
-                  labelText: S.of(context).weight,
-                  hintText: S.of(context).weighing_hint),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return S.of(context).no_weight_entered;
-                  }},
-                onSaved: (value) {
-                  setState(() {
-                    _poidsCtl.text = value!;
-                  });
-                }
-            ),
+                })),
+              Padding(padding:  const EdgeInsets.all(8.0),
+                child:
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    controller: _poidsCtl,
+                    decoration: InputDecoration(
+                      labelText: S.of(context).weight,
+                      hintText: S.of(context).weighing_hint),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return S.of(context).no_weight_entered;
+                      }},
+                    onSaved: (value) {
+                      setState(() {
+                        _poidsCtl.text = value!;
+                      });
+                    }
+                )),
             (_isSaving) ? CircularProgressIndicator():
               FilledButton(
                 child: Text(S.of(context).bt_save),
