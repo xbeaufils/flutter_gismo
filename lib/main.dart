@@ -26,7 +26,7 @@ void main() async {
 void startApp()
   {
     WidgetsFlutterBinding.ensureInitialized();
-/*    if (!kIsWeb) {
+    if (!kIsWeb) {
       // if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))
       WidgetsFlutterBinding.ensureInitialized();
       MobileAds.instance.initialize();
@@ -34,7 +34,7 @@ void startApp()
           testDeviceIds: ["395AA0EC16134E88603112A34BE6BF57"]);
       MobileAds.instance.updateRequestConfiguration(configuration);
     }
-  */  Environnement.init(
+    Environnement.init(
         //"https://www.neme-sys.fr/bd", "http://10.0.2.2:8080/gismoApp/api",
         "https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api",
         new FlavorOvin());

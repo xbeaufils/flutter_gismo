@@ -1,3 +1,4 @@
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/ui/Bete.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
@@ -12,46 +13,59 @@ class BetePresenter {
   final BluetoothService _bluetoothService = BluetoothService();
   BetePresenter(this._view);
 
-  void save(String ? numBoucle, String ? numMarquage, Sex ? sex, String ? nom, String ? obs, String dateEntree, String ? motif) async {
+  Future<void> add (String ? numBoucle, String ? numMarquage, Sex ? sex, String ? nom, String ? obs, String dateEntree, String ? motif) async {
     if (numBoucle == null) {
-      throw MissingNumBoucle();
+      this._view.showMessage(S.current.identity_number_warn, true);
+      return;
     }
     if (numBoucle.isEmpty){
-      throw MissingNumBoucle();
+      this._view.showMessage(S.current.identity_number_warn, true);
+      return;
     }
     if (numMarquage == null){
-      throw MissingNumMarquage();
+      this._view.showMessage(S.current.flock_number_warn, true);
+      return;
     }
     if (numMarquage.isEmpty){
-      throw MissingNumMarquage();
+      this._view.showMessage(S.current.flock_number_warn, true);
+      return;
     }
     if (sex == null){
-      throw MissingSex();
+      this._view.showMessage(S.current.sex_warn, true);
+      return;
     }
-    bool _existant = false;
-    if (this._view.bete == null) {
-      this._view.bete = new Bete(
-          null, numBoucle, numMarquage, nom, obs, DateFormat.yMd().parse(dateEntree), sex, motif);
-      _existant = await _service.check(this._view.bete!);
-    }
+    Bete newBete =  Bete( null, numBoucle, numMarquage, nom, obs, DateFormat.yMd().parse(dateEntree), sex, motif);
+    bool existant = await this._service.check(newBete);
+    if (existant)
+      this._view.showMessage(S.current.identity_number_error, true);
     else {
-      this._view.bete!.numBoucle = numBoucle;
-      this._view.bete!.numMarquage = numMarquage;
-      this._view.bete!.nom = nom;
-      this._view.bete!.observations = obs;
-      this._view.bete!.dateEntree =  DateFormat.yMd().parse(dateEntree);
-      this._view.bete!.sex = sex;
-      if (motif != null)
-        this._view.bete!.motifEntree = motif;
-      _existant = await _service.check(this._view.bete!);
-      if (! _existant)
-        _service.save(this._view.bete!);
-    }
-    if (! _existant)
+      this._view.bete = newBete;
       this._view.backWithBete();
-    else
-      throw ExistingBete();
+    }
+  }
 
+  Future<String?> save(String ? numBoucle, String ? numMarquage, Sex ? sex, String ? nom, String ? obs, String dateEntree, String ? motif) async {
+    Bete newBete =  Bete(this._view.bete==null ? null: this._view.bete?.idBd, numBoucle, numMarquage, nom, obs, DateFormat.yMd().parse(dateEntree), sex, motif);
+    try {
+      String message = await _service.save(newBete);
+      if (this._view.bete != null) {
+        this._view.bete!.numBoucle = numBoucle!;
+        this._view.bete!.numMarquage = numMarquage!;
+        this._view.bete!.sex = sex!;
+        this._view.bete!.observations = obs;
+        this._view.backWithBete();
+      }
+      return message;
+    } on MissingNumBoucle {
+      this._view.showMessage(S.current.identity_number_warn, true);
+    } on MissingNumMarquage {
+      this._view.showMessage(S.current.flock_number_warn, true);
+    } on MissingSex {
+      this._view.showMessage(S.current.sex_warn, true);
+    } on ExistingBete {
+      this._view.showMessage(S.current.identity_number_error, true);
+    }
+    return null;
   }
 
   Future<BluetoothState> startReadBluetooth() {
