@@ -176,7 +176,6 @@ class _SelectMultiplePageState extends GismoStatePage<SelectMultiplePage> with T
                     else
                       this._selectedBete.remove(_betes[index].idBd!);
                   }
-                  var test = _betes[index].numBoucle;
                 });
               },
               value: _selectedBete.containsKey(_betes[index].idBd),
