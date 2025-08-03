@@ -8,6 +8,7 @@ import 'package:flutter_gismo/flavor/FlavorOvin.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:sentry/sentry.dart';
 
 
@@ -34,6 +35,10 @@ void startApp()
           testDeviceIds: ["395AA0EC16134E88603112A34BE6BF57"]);
       MobileAds.instance.updateRequestConfiguration(configuration);
     }
+    // Pass your access token to MapboxOptions so you can load a map
+    String ACCESS_TOKEN = const String.fromEnvironment("map_box_token");
+    MapboxOptions.setAccessToken("pk.eyJ1IjoieGJlYXUiLCJhIjoiY2s4anVjamdwMGVsdDNucDlwZ2I0bGJwNSJ9.lc21my1ozaQZ2-EriDSY5w");
+
     Environnement.init(
         //"https://www.neme-sys.fr/bd", "http://10.0.2.2:8080/gismoApp/api",
         "https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api",

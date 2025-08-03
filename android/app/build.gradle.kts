@@ -12,11 +12,18 @@ val keystorePropertiesFile = rootProject.file("key.properties")
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
+val mapBoxProperties = Properties()
+val mapBoxPropertiesFile = rootProject.file("../../mapboxkey.properties")
+if (mapBoxPropertiesFile.exists()) {
+    mapBoxProperties.load(FileInputStream(mapBoxPropertiesFile))
+}
+
 android {
     namespace = "nemesys.fr.flutter_gismo"
     compileSdk = flutter.compileSdkVersion
     ndkVersion =  "27.0.12077973" // flutter.ndkVersion
-
+    // For Map_access_token
+    android.buildFeatures.buildConfig = true
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -35,6 +42,8 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        //map_box_token = mapBoxProperties.getProperty("mapxbox_token")
+        buildConfigField ("String", "MAP_ACCESS_TOKEN","\"pk.eyJ1IjoieGJlYXUiLCJhIjoiY2s4anVjamdwMGVsdDNucDlwZ2I0bGJwNSJ9.lc21my1ozaQZ2-EriDSY5w\"")
     }
 
     signingConfigs {

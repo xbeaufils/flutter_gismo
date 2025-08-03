@@ -1,4 +1,5 @@
 
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/lamb/ui/SearchPerePage.dart';
 import 'package:flutter_gismo/lamb/ui/lambing.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -52,7 +53,7 @@ class LambingPresenter {
       String ? message  =  await this._service.saveLambing(this.currentLambing);
       if (message != null) this._view.backWithMessage(message);
     } on NoLamb catch(e){
-      throw e;
+      this._view.showMessage(S.current.no_lamb, true);
     }
   }
 

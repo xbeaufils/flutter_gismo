@@ -161,13 +161,9 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
               ),
               FilledButton(key:null,
                 onPressed: () {
-                  try {
                     this._presenter.saveLambing(
                         _dateAgnelageCtl.text, _obsCtl.text,
                         _adoption.key, _agnelage.key);
-                  } on NoLamb {
-                    super.showMessage(S.current.no_lamb);
-                  }
                 },
                  child: Text(S.of(context).validate_lambing)
             )

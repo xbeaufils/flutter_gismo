@@ -26,6 +26,7 @@ class SearchLambPresenter {
       }
     });
   }
+
   void deleteLamb(CompleteLambModel lamb) async {
     String message = await this._service.deleteLamb(lamb);
     this._view.lambs  = await this._service.getAllLambs();

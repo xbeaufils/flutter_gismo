@@ -2,7 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:developer' as debug;
+import 'dart:ui';
 
+import 'package:flutter/services.dart' show rootBundle;
+
+import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/LocationBloc.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/parcelle/ui/ParcellePage.dart';
@@ -30,6 +34,19 @@ class ParcellePresenter {
 
   ParcellePresenter(this._view);
 
+  /*onStyleLoadedCallback(StyleLoadedEventData data) async {
+    var data = await rootBundle
+        .loadString('assets/from_crema_to_council_crest.geojson');
+
+    await _mapboxMap?.style.addSource(GeoJsonSource(id: "line", data: data));
+    await _mapboxMap?.style.addLayer(LineLayer(
+        id: "line_layer",
+        sourceId: "line",
+        lineJoin: LineJoin.ROUND,
+        lineCap: LineCap.ROUND,
+        // lineColor: Colors.red.value,
+        lineWidth: 6.0));
+  }*/
 
   Future<Position ?> retrieveParcelles( Position ? location) async {
     if (location == null)
@@ -47,30 +64,47 @@ class ParcellePresenter {
     if (location == null)
       return location;
     debug.log("" + location.toString(), name: "_ParcellePageState::_drawParcelles" );
-    _mapboxMap.flyTo(
-        CameraOptions(
-          center:  Point( coordinates: Position(location.lng, location.lat,) ),
-          zoom: 14), MapAnimationOptions());
+    // _mapboxMap.coordinateForPixel
+
+    /*  await _mapboxMap.flyTo(
+       CameraOptions(
+          center:  Point(coordinates: Position(-122.486052, 37.830348),), //Point( coordinates: Position(location.lng, location.lat,) ),
+          zoom: 14), MapAnimationOptions(duration: 2000, startDelay: 0));
     // featuresJson.forEach((feature) => _drawParcelle(feature));
+    var data = await rootBundle
+        .loadString('assets/from_crema_to_council_crest.geojson');
+
+    await _mapboxMap?.style.addSource(GeoJsonSource(id: "line", data: data));
+    await _mapboxMap?.style.addLayer(LineLayer(
+        id: "line_layer",
+        sourceId: "line",
+        lineJoin: LineJoin.ROUND,
+        lineCap: LineCap.ROUND,
+        lineColor: Colors.red.value,
+        lineWidth: 6.0));
+
+    await Future.delayed(Duration(seconds: 5));*/
+    await _mapboxMap.flyTo(
+        CameraOptions(
+            center:  Point( coordinates: Position(location.lng, location.lat,) ),
+            zoom: 14), MapAnimationOptions(duration: 2000, startDelay: 0));
+
     await this._drawCadastre();
     return location;
   }
 
   Future<void> _drawCadastre() async {
-    await _mapboxMap.style.removeStyleLayer("cadastre");
-    //await _mapController!.removeLayer("cadastre");
-    await _mapboxMap.style.removeStyleLayer("cadastre");
-    //await _mapController!.removeSource("parcelles");
+    await _mapboxMap.style.addSource(  GeoJsonSource(id:"cadastreSrc",data: json.encode(_cadastreJson)));
+    LineLayer cadastreLayer =
+        LineLayer(id: "cadastreLayer",
+          sourceId: "cadastreSrc",
+          lineColor: Colors.red.value, // int.parse("007AFF", radix: 16),
+          lineJoin: LineJoin.ROUND,
+          lineCap: LineCap.ROUND,
+          lineWidth: 1.0);
 
-    await _mapboxMap.style.removeStyleLayer("ownParcelles");
-    //await _mapController!.removeLayer("ownParcelles");
-    await _mapboxMap.style.removeStyleLayer("ownParcellesSrc");
-    //await _mapController!.removeSource("ownParcellesSrc");
+    await _mapboxMap.style.addLayer(cadastreLayer);
 
-    await _mapboxMap.style.addSource( GeoJsonSource(id:"cadastreSourceId",data: json.encode(_cadastreJson)));
-    LineLayer parcelleLineLayer =
-      LineLayer(id: "modelLayer-cadastre", sourceId: "cadastreSourceId", lineColor: int.parse("#007AFF", radix: 16), lineWidth: 1);
-    await _mapboxMap.style.addLayer(parcelleLineLayer);
     Map<String, dynamic> allParcelles = new Map();
     for (var feature in this._cadastreJson!["features"]) {
       allParcelles[ feature['properties']['id'] ] = feature;
@@ -80,26 +114,43 @@ class ParcellePresenter {
     ownParcellesSrc["type"] = "FeatureCollection";
     ownParcellesSrc["features"] = [];
     _myParcelles.forEach((parcelle) {
-      if (allParcelles[parcelle!.idu] != null )
-        _drawParcelle(allParcelles[parcelle!.idu]);
-      ownParcellesSrc["features"].add(allParcelles[parcelle!.idu]);
+      if (allParcelles[parcelle!.idu] != null ) {
+        //_drawParcelle(allParcelles[parcelle!.idu]);
+        ownParcellesSrc["features"].add(allParcelles[parcelle!.idu]);
+      }
     });
+
+    await _mapboxMap.style.addSource(  GeoJsonSource(id:"parcelleSrc",data: json.encode(ownParcellesSrc)));
+    LineLayer parcelleLayer =
+      LineLayer(id: "parcelleLayer",
+        sourceId: "parcelleSrc",
+        lineColor: Colors.lightGreenAccent.value, // int.parse("007AFF", radix: 16),
+        lineJoin: LineJoin.ROUND,
+        lineCap: LineCap.ROUND,
+        lineWidth: 4.0);
+    await _mapboxMap.style.addLayer(parcelleLayer);
   }
 
-  void _drawParcelle(feature) async {
+  void _drawParcelle(Map feature) async {
     double lineWidth = 6.0;
     String lineColor = '#58db72';
     Map<String, dynamic>  geometry = feature['geometry'];
     List coordinates = geometry['coordinates'][0][0];
     List<Position> lstLatLng = [];
     coordinates.forEach( (anArray) => lstLatLng.add(Position( anArray[0],anArray[1])));
-    LineLayer parcelleLineLayer =
-      LineLayer(id: "modelLayer-parcelle",
-          sourceId: "parcelleSourceId",
-          lineColor: int.parse("#007AFF", radix: 16),
-          lineWidth: 1);
-    await _mapboxMap.style.addLayer(parcelleLineLayer);
-    /*
+    var newFeature = Feature(
+        id: feature["id"],
+        geometry: LineString(coordinates:  lstLatLng /*[
+          Position(-122.483696, 37.833818),
+          Position(-122.4861, 37.828802),
+          Position(-122.493782, 37.833683),
+          Position(-122.48959, 37.8366109),
+          Position(-122.483696, 37.833818)
+        ]*/));
+   /* await _mapboxMap.style
+        .addGeoJSONSourceFeatures("line", "new_line", [newFeature]);
+
+
     await _mapController!.addLine(LineOptions(
       geometry: lstLatLng,
       lineColor: lineColor,
@@ -108,21 +159,35 @@ class ParcellePresenter {
     ));*/
   }
 
-  void onMapClick(Point pt, Position coord) async {
-    debug.log("coord " + coord.lat.toString() + " " + coord.lng.toString(), name:"_ParcellePageState::_onMapClick");
-    String cadastreStr = await _service.getParcelle(coord);
-    Map<String, dynamic> parcelleJson =  jsonDecode(cadastreStr);
-    if (parcelleJson['features'].length == 0)
-      return;
-    Map<String, dynamic> feature = parcelleJson['features'][0];
-    Parcelle ? myParcelle = this._myParcelles.firstWhere((parcelle) => parcelle.idu == feature['properties']['id'], orElse: null);
-    if (myParcelle == null)
-      return;
+  void onMapClick(MapContentGestureContext context) async {
+    this._view.showStatus("Recherche des données de paturage");
+    debug.log("coord $context.point.lat  $context.point.lng", name:"_ParcellePageState::_onMapClick");
+    print("OnTap coordinate: {${context.point.coordinates.lng}, ${context.point.coordinates.lat}}" +
+        " point: {x: ${context.touchPosition.x}, y: ${context.touchPosition.y}}" +
+        " state: ${context.gestureState}");
+    try {
+      debug.log(
+          "coord $context.point.coordinate.lat.toString() $context.point.coordinate.lng.toString()",
+          name: "_ParcellePageState::_onMapClick");
+      String cadastreStr = await _service.getParcelle(
+          context.point.coordinates);
+      Map<String, dynamic> parcelleJson = jsonDecode(cadastreStr);
+      if (parcelleJson['features'].length == 0)
+        return;
+      Map<String, dynamic> feature = parcelleJson['features'][0];
+      Parcelle ? myParcelle = this._myParcelles.firstWhere((
+          parcelle) => parcelle.idu == feature['properties']['id'],
+          orElse: null);
+      if (myParcelle == null)
+        return;
 
-    debug.log("parcelle " + myParcelle.toString(), name:"_ParcellePageState::_onMapClick");
-    Pature pature = await _service.getPature(myParcelle.idu);
-    this._view.goNextPage(PaturagePage( pature));
-
+      debug.log("parcelle " + myParcelle.toString(),
+          name: "_ParcellePageState::_onMapClick");
+      Pature pature = await _service.getPature(myParcelle.idu);
+      this._view.goNextPage(PaturagePage(pature));
+    } finally {
+      this._view.locationProgress=false;
+    }
   }
 
   Future<Position ?> _retrieveParcelles( Position ? location) async {
@@ -155,6 +220,7 @@ class ParcellePresenter {
 
   void initLocation() async {
     this._view.showStatus("Initialisation de la localisation");
+    _mapboxMap.location.updateSettings(LocationComponentSettings(enabled: true));
     this._locBloc.initLocation();
     this._locationStream = this._locBloc.streamLocation();
     this._locationSubscription = this._locationStream.listen( (LocationResult result) {
