@@ -1,6 +1,7 @@
 import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/env/Environnement.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
@@ -249,7 +250,7 @@ class LocalBeteRepository extends LocalRepository implements BeteRepository {
     Database db = await this.database;
     int res =   await db.update("bete", bete.toJson(),
         where: "id = ?", whereArgs: <int>[bete.idBd!]);
-    return res.toString() + " enregistrement modifié";
+    return res.toString() + S.current.record_saved;
   }
 
 
@@ -260,7 +261,7 @@ class LocalBeteRepository extends LocalRepository implements BeteRepository {
     lstBete.forEach((bete) => { _insertEntree(batch, cheptel, date, motif, bete)});
     var results = await batch.commit();
     print(results);
-    return "Entrée enregistrée";
+    return S.current.record_saved;
   }
 
   void _insertEntree(Batch batch, String cheptel, DateTime date, String motif, Bete bete) async {
@@ -281,7 +282,7 @@ class LocalBeteRepository extends LocalRepository implements BeteRepository {
     lstBete.forEach((bete) => { _updateSortie(batch, date, motif, bete)});
     var results = await batch.commit();
     print(results);
-    return "Sortie enregistrée";
+    return S.current.record_saved;
   }
 
   void _updateSortie(Batch batch, DateTime date, String motif, Bete bete) {
