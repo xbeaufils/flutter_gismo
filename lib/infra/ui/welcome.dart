@@ -41,6 +41,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
 
   @override
   Widget build(BuildContext context) {
+    debug.log("Build", name: "Welcome:::build");
     return new Scaffold(
         key: _scaffoldKey,
 //        backgroundColor: Colors.lightGreen,

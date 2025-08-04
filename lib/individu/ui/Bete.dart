@@ -280,7 +280,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
     }
-    String start= await PLATFORM_CHANNEL.invokeMethod("start");
+    String start= "toto";
     setState(() {
       _rfidPresent =  (start == "start");
     });

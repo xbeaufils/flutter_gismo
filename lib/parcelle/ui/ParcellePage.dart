@@ -152,6 +152,7 @@ class _ParcellePageState extends GismoStatePage<ParcellePage> implements Parcell
   @override
   void initState() {
     super.initState();
+    MapboxOptions.setAccessToken("pk.eyJ1IjoieGJlYXUiLCJhIjoiY2s4anVjamdwMGVsdDNucDlwZ2I0bGJwNSJ9.lc21my1ozaQZ2-EriDSY5w");
     this._presenter = ParcellePresenter(this);
     //this._presenter.initLocation();
   }
