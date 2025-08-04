@@ -68,7 +68,7 @@ class WebRepository {
           body: jsonEncode(body)).timeout(Duration(seconds: 5) ).timeout(Duration(seconds: 10));
       Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
       if (msg.error) {
-        throw (msg.error);
+        throw GismoException(msg.message);
       }
       else {
         return msg.message;
@@ -90,7 +90,7 @@ class WebRepository {
           body: jsonEncode(body)).timeout(Duration(seconds: 5) ).timeout(Duration(seconds: 10));
       Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
       if (msg.error) {
-        throw (msg.error);
+        throw GismoException(msg.message);
       }
       else {
         return msg.message;
@@ -124,7 +124,7 @@ class WebRepository {
       Sentry.captureException(e, stackTrace : stackTrace);
       throw(e);
     }
-    throw Exception(errorMessage);
+    throw GismoException(errorMessage);
   }
 
   Future<Map<String, dynamic> > doGet(String url) async {
@@ -153,4 +153,9 @@ class WebRepository {
     }
   }
 
+}
+
+class GismoException implements Exception {
+  String message;
+  GismoException(this.message);
 }

@@ -23,8 +23,9 @@ class UserService extends WebRepository{
       debug.log("Send authentication", name: "UserService::auth");
       user.cheptel=(response["cheptel"]);
       user.token = response["token"];
-    }  catch (e) {
-      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+    catch (e) {
+      throw (e);
     }
     debug.log("User is $user.cheptel", name: "WebDataProvider::auth");
     return user;
