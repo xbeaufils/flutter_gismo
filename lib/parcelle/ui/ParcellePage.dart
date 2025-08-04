@@ -53,16 +53,10 @@ class _ParcellePageState extends GismoStatePage<ParcellePage> implements Parcell
   _ParcellePageState();
   late ParcellePresenter _presenter;
 
-  List<Parcelle?> _myParcelles=[];
   List<dynamic> featuresJson=[];
-  Map<String, dynamic> ? _cadastreJson;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  LocationBloc _locBloc = new LocationBloc();
-  Position ? _curentPosition;
-  late Stream<LocationResult> _locationStream;
-  StreamSubscription<LocationResult> ? _locationSubscription;
   bool _locationProgress = true;
 
   set locationProgress(bool value) {

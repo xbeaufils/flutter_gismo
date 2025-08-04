@@ -20,7 +20,7 @@ if (mapBoxPropertiesFile.exists()) {
 
 android {
     namespace = "nemesys.fr.flutter_gismo"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35
     ndkVersion =  "27.0.12077973" // flutter.ndkVersion
     // For Map_access_token
     android.buildFeatures.buildConfig = true
@@ -39,7 +39,7 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         //map_box_token = mapBoxProperties.getProperty("mapxbox_token")
