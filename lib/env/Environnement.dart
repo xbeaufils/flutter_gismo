@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_gismo/bloc/certificatLetsEncrypt.dart';
 import 'package:flutter_gismo/flavor/Flavor.dart';
 
@@ -12,7 +13,8 @@ class Environnement {
   static void init(String urlWeb, String url, Flavor flavor) {
     if(_instance == null) {
       _instance = Environnement(url, urlWeb, flavor);
-      Environnement.certif.getCertificat();
+      if (! kIsWeb)
+        Environnement.certif.getCertificat();
     }
   }
 

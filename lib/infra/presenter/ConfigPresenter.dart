@@ -54,7 +54,7 @@ class ConfigPresenter {
     if (canPop)
       this._view.backWithMessage(message);
     else
-      this._view.goNextPage(WelcomePage(null));
+      this._view.goNextPage(WelcomePage());
   }
 
 }

@@ -18,9 +18,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 
 class WelcomePage extends StatefulWidget {
-  String ? _message;
 
-  WelcomePage(this._message, {Key ? key}) : super(key: key);
+  WelcomePage();
 
   @override
   _WelcomePageState createState() => new _WelcomePageState();

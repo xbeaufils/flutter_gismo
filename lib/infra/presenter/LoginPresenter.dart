@@ -13,7 +13,7 @@ class LoginPresenter {
     try {
       User testUser  = User(email, password);
       await _service.auth(testUser);
-      _view.goNextPage(WelcomePage(null));
+      _view.goNextPage(WelcomePage());
     }
     catch(e) {
       this._view.showMessage(e.toString());

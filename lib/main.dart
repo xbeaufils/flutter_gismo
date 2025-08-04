@@ -23,16 +23,17 @@ void main() async {
       startApp()
     });
 }
+
 void startApp()
   {
     if (!kIsWeb) {
       // if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))
       WidgetsFlutterBinding.ensureInitialized();
-
+/*
       MobileAds.instance.initialize();
       RequestConfiguration configuration = RequestConfiguration(
           testDeviceIds: ["395AA0EC16134E88603112A34BE6BF57"]);
-      MobileAds.instance.updateRequestConfiguration(configuration);
+      MobileAds.instance.updateRequestConfiguration(configuration);*/
     }
     // Pass your access token to MapboxOptions so you can load a map
     String ACCESS_TOKEN = const String.fromEnvironment("map_box_token");

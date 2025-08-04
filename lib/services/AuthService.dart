@@ -89,6 +89,7 @@ class AuthService {
       //_repository = new GismoRepository(this._currentUser!, RepositoryType.local);
       debug.log("Mode autonome", name: "AuthService::init");
       debug.log("Mode erreur");
+      storage.deleteAll();
       return "mode erreur";
     }
     catch (e, stackTrace) {
@@ -96,6 +97,7 @@ class AuthService {
       debug.log("erreur ", error: e, name: "AuthService::init");
       AuthService().cheptel = "00000000";
       AuthService().subscribe = false;
+      storage.deleteAll();
       return "mode erreur";
     }
   }
