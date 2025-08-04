@@ -23,8 +23,8 @@ class AuthService {
     _cheptel = value;
   }
   static String ? _token;
-  String  get token => _token!;
-  set token(String value) {
+  String ? get token => _token;
+  set token(String ? value) {
     _token = value;
   }
 
