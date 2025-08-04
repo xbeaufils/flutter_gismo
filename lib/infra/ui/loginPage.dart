@@ -72,7 +72,7 @@ class _LoginPageState extends GismoStatePage<LoginPage> implements LoginContract
                             border:
                             OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                        ),
-                      new FilledButton(key:null, onPressed: this._presenter.loginWeb(_emailCtrl.text, _passwordCtrl.text),
+                      new FilledButton(key:null, onPressed: ()=> this._presenter.loginWeb(_emailCtrl.text, _passwordCtrl.text),
                           //color: const Color(0xFFe0e0e0),
                           child:
                           new Text(S.of(context).connection,),

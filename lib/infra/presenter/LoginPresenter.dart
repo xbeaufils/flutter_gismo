@@ -12,7 +12,11 @@ class LoginPresenter {
   loginWeb(String email, String password) async {
     try {
       User testUser  = User(email, password);
-      await _service.auth(testUser);
+      User completeUser = await _service.auth(testUser);
+      AuthService().email = completeUser.email;
+      AuthService().cheptel = completeUser.cheptel;
+      AuthService().token = completeUser.token;
+      AuthService().subscribe = true;
       _view.goNextPage(WelcomePage());
     }
     catch(e) {
