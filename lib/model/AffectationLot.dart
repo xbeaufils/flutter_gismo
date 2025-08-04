@@ -11,6 +11,7 @@ class Affectation {
   DateTime ? dateSortie;
 
   Affectation();
+  Affectation.create(this.idAffectation, this.brebisId, this.lotId);
 
   Map<String, dynamic> toJson() {
     final _df = new DateFormat('dd/MM/yyyy');
@@ -41,10 +42,10 @@ class Affectation {
     if (result['dateEntree'] != null)
       dateEntree = _df.parse(result["dateEntree"]);
     else
-      dateEntree = null;
+      dateEntree = _df.parse(result["dateDebutLutte"]);
     if (result["dateSortie"] != null)
       dateSortie = _df.parse(result["dateSortie"]);
     else
-      dateSortie = null;
+      dateSortie = _df.parse(result["dateFinLutte"]);
   }
 }

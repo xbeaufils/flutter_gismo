@@ -16,11 +16,11 @@ class User {
   String ? get cheptel =>_cheptel;
   String ? get token =>_token;
 
-  void setCheptel(String ? cheptel) {
+  set cheptel(String ? cheptel) {
     this._cheptel = cheptel;
   }
 
-  setToken(String ? value) {
+  set token(String ? value) {
     _token = value;
   }
 

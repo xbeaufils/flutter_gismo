@@ -73,6 +73,10 @@
   "batch_name" :"Nom lot",
   "batch_campaign" : "Campagne",
   "batch_warning" : "Vous devez enregistrer le lot avant d'ajouter",
+  "batch_date" : "Dates",
+  "batch_no_date_debut": "Pas de date de début",
+  "batch_no_date_fin": "Pas de date de fin",
+  "batch_no_code": "Pas de nom de lot",
 
   "weight" : "Poids",
   "weighing_date": "Date de pesée",
@@ -91,6 +95,7 @@
   "observations" : "Observations",
   "validate_lambing": "Valider l'agnelage",
   "add_lamb" : "Ajouter un agneau",
+  "no_lamb" : "Agnelage sans agneau ?",
   "breastfeeding_not_specified" : "Allaitement non spécifié",
   "health" : "Etat de santé",
   "alive" : "Vivant",
@@ -199,6 +204,8 @@
   "bt_add" : "Ajouter",
   "bt_delete" : "Supprimer",
   "bt_edition" : "Edition",
+  "bt_validate" : "Valider la sélection",
+  "record_saved": "Enregistrement effectué",
 
   "title_delete" : "Suppression",
   "text_delete" : "Voulez vous supprimer cet enregistrement ?",

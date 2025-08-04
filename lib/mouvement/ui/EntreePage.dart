@@ -1,0 +1,209 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
+import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/mouvement/presenter/EntreePresenter.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:intl/intl.dart';
+
+class EntreePage extends StatefulWidget {
+  EntreePage();
+  @override
+  _EntreePageState createState() => new _EntreePageState();
+}
+
+abstract class EntreeContract extends GismoContract {
+  List<Bete> get sheeps;
+  set sheeps(List<Bete> value);
+}
+
+class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContract {
+
+  _EntreePageState();
+
+  TextEditingController _dateEntreeCtl = TextEditingController();
+  late List<Bete> _sheeps;
+
+  List<Bete> get sheeps => _sheeps;
+
+  set sheeps(List<Bete> value) {
+    setState(() {
+      _sheeps = value;
+    });
+  }
+
+  String ?  _currentMotif;
+  late List<DropdownMenuItem<String>> _motifEntreeItems;
+  BannerAd ? _adBanner;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  late EntreePresenter _presenter;
+
+  List<DropdownMenuItem<String>> _getMotifEntreeItems(BuildContext context) {
+    List<DropdownMenuItem<String>> items = [];
+    items.add( new DropdownMenuItem(value: 'NAISSANCE', child: new Text( S.of(context).entree_birth )));
+    items.add( new DropdownMenuItem(value: 'CREATION', child: new Text(S.of(context).entree_creation)));
+    items.add( new DropdownMenuItem(value: 'RENOUVELLEMENT', child: new Text(S.of(context).entree_renewal)));
+    items.add( new DropdownMenuItem(value: 'ACHAT', child: new Text(S.of(context).entree_purchase)));
+    items.add( new DropdownMenuItem(value: 'MUTATION_INTERNE', child: new Text('Mutation interne')));
+    items.add( new DropdownMenuItem(value: 'REACTIVATION', child: new Text(S.of(context).entree_reactivation)));
+    items.add( new DropdownMenuItem(value: 'PRET_OU_PENSION', child: new Text(S.of(context).entree_loan)));
+    items.add( new DropdownMenuItem(value: 'ENTREE_EN_SCI_OU_CE', child: new Text('Entree en SCI ou CE')));
+    items.add( new DropdownMenuItem(value: 'REPRISE_EN_SCI_OU_CE', child: new Text('Reprise en SCI ou CE')));
+    items.add( new DropdownMenuItem(value: 'INCONNUE', child: new Text(S.of(context).entree_unknown)));
+    return items;
+  }
+
+  void _changedMotifEntreeItem(String ? selectedMotif) {
+    setState(() {
+      if (selectedMotif != null)
+        _currentMotif= selectedMotif;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if ( ! AuthService().subscribe) {
+      this._adBanner = BannerAd(
+        adUnitId: _getBannerAdUnitId()!, //'<ad unit ID>',
+        size: AdSize.banner,
+        request: AdRequest(),
+        listener: BannerAdListener(),
+      );
+      this._adBanner!.load();
+    }
+    return new Scaffold(
+      key: _scaffoldKey,
+      appBar: new AppBar(
+        title: new Text(S.of(context).input),
+      ),
+      body:
+      new Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            new Card(key: null,
+              child:Column(
+                children: <Widget>[
+                  Padding(padding:  const EdgeInsets.all(8.0),
+                  child:
+                    TextFormField(
+                      keyboardType: TextInputType.datetime,
+                      controller: _dateEntreeCtl,
+                      decoration: InputDecoration(
+                          labelText: S.of(context).dateEntry,
+                          hintText: 'jj/mm/aaaa'),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return S.of(context).noEntryDate;
+                        }},
+                      onSaved: (value) {
+                        setState(() {
+                          _dateEntreeCtl.text = value!;
+                        });
+                      },
+                      onTap: () async{
+                        DateTime date = DateTime.now();
+                        FocusScope.of(context).requestFocus(new FocusNode());
+                        date = (await showDatePicker(
+                          //locale: const Locale("fr","FR"),
+                          context: context,
+                          initialDate:DateTime.now(),
+                          firstDate:DateTime(1900),
+                          lastDate: DateTime(2100)))!;
+                        if (date != null) {
+                          setState(() {
+                            _dateEntreeCtl.text = DateFormat.yMd().format(date);
+                          });
+                        }
+                      })),
+                  new DropdownButton<String>(
+                    key: Key("Motif_Key"),
+                    value: _currentMotif,
+                    items: _motifEntreeItems,
+                    hint: Text(S.of(context).entree_select),
+                    onChanged: _changedMotifEntreeItem,
+                  )
+
+                ],
+              )),
+          Expanded(
+            child: Sheeps(this)),
+          FilledButton(
+            child: Text(S.of(context).bt_save,),
+            onPressed: () {
+                this._presenter.save(_dateEntreeCtl.text, _currentMotif);
+            }),
+          ]
+
+      ),
+      floatingActionButton: new FloatingActionButton(
+        onPressed: this._presenter.add,
+        tooltip: S.of(context).tooltip_add_beast,
+        child: new Icon(Icons.add),
+      ),
+    );
+  }
+
+  String ? _getBannerAdUnitId() {
+    if (Platform.isIOS) {
+      return 'ca-app-pub-9699928438497749/2969884909';
+    } else if (Platform.isAndroid) {
+      return 'ca-app-pub-9699928438497749/7971231462';
+    }
+    return null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _presenter = EntreePresenter(this);
+    _sheeps = [];
+    //_motifEntreeItems = _getMotifEntreeItems();
+    _dateEntreeCtl.text = DateFormat.yMd().format(DateTime.now());
+  }
+
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _motifEntreeItems  = this._getMotifEntreeItems(context);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    //this._adBanner!.dispose();
+  }
+
+  void removeBete(int index) {
+    setState(() {
+      _sheeps.removeAt(index);
+    });
+
+  }
+}
+
+class Sheeps extends StatelessWidget {
+  _EntreePageState _entree;
+  Sheeps(this._entree);
+
+  Widget _buildSheepItem(BuildContext context, int index) {
+    return Card(
+      child: ListTile(
+            title: Text(this._entree.sheeps[index].numBoucle),
+            subtitle: Text(this._entree.sheeps[index].numMarquage),
+            trailing: IconButton(icon: Icon(Icons.clear), onPressed:() {  _entree._presenter.remove(index);} ),
+          ),
+      );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemBuilder: _buildSheepItem,
+      itemCount: _entree.sheeps.length,
+    );
+  }
+}

@@ -34,7 +34,7 @@ import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 import io.sentry.Sentry;
 
-public class MainActivity extends FlutterActivity  implements  MethodChannel.MethodCallHandler, PluginRegistry.PluginRegistrantCallback{
+public class MainActivity extends FlutterActivity  implements  MethodChannel.MethodCallHandler{
     private static final String CHANNEL_RT610 = "nemesys.rfid.RT610";
     private static final String CHANNEL_GPS = "nemesys.GPS";
     private static final String CHANNEL_BLUETOOTH = "nemesys.rfid.bluetooth";
@@ -130,7 +130,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             super.registerReceiver(this.receiver, intentFilter, Context.RECEIVER_EXPORTED);
         } else {
-            super.registerReceiver(this.receiver, intentFilter);
+            ContextCompat.registerReceiver(super.getContext(), this.receiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
         }
         this.context = this.getContext();
     }
@@ -140,11 +140,6 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         if (receiver != null) {
             unregisterReceiver(receiver);
         }
-    }
-
-    @Override
-    public void registerWith(PluginRegistry registry) {
-        GeneratedPluginRegistrant.registerWith((FlutterEngine) registry);
     }
 
     public class RFIDReceiver extends BroadcastReceiver {

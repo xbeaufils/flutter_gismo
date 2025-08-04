@@ -3,87 +3,26 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/flavor/FlavorOvin.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:sentry/sentry.dart';
 
-GismoBloc gismoBloc= new GismoBloc();
 
 
 void main() async {
-  /*
-    Debut Certificat
-   */
-
-  /// From dart:io, create a HttpClient with a trusted certificate [cert]
-  /// added to SecurityContext.
-  /// Wrapped in try catch in case the certificate is already trusted by
-  /// device/os, which will cause an exception to be thrown.
-  /*
-  HttpClient customHttpClient({String cert}) {
-    SecurityContext context = SecurityContext.defaultContext;
-
-    try {
-      if (cert != null) {
-        Uint8List bytes = utf8.encode(cert);
-        context.setTrustedCertificatesBytes(bytes);
-      }
-      print('createHttpClient() - cert added!');
-    } on TlsException catch (e) {
-      if (e?.osError?.message != null &&
-          e.osError.message.contains('CERT_ALREADY_IN_HASH_TABLE')) {
-        print('createHttpClient() - cert already trusted! Skipping.');
-      }
-      else {
-        print('createHttpClient().setTrustedCertificateBytes EXCEPTION: $e');
-        rethrow;
-      }
-    } finally {}
-
-    HttpClient httpClient = new HttpClient(context: context);
-
-    return httpClient;
-  }
-  */
-
-  /// Use package:http Client with our custom dart:io HttpClient with added
-  /// LetsEncrypt trusted certificate
-  /*
-  http.Client createLEClient() {
-    IOClient ioClient;
-    ioClient = IOClient(customHttpClient(cert: ISRG_X1));
-    return ioClient;
-  }
-  */
-
-  /// Example using a custom package:http Client
-  /// that will work with devices missing LetsEncrypt
-  /// ISRG Root X1 certificates, like old Android 7 devices.
-  //test('HTTP client to LetsEncrypt SSL website', () async {
-
-  /*
-  const sslUrl = 'https://valid-isrgrootx1.letsencrypt.org/';
-  http.Client _client = createLEClient();
-  http.Response _response = await _client.get(Uri.parse(sslUrl) );
-  print(_response.body);
-   */
-  /*
-  Fin certificat
-   */
-  // Run app!
   await Sentry.init(
-          (options) =>
-      {
+    (options) =>
         options.dsn =
-        'https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553',
+        'https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553'
         /*options.release = ''*/
-      },
+      ,
       appRunner: () => {
       startApp()
-  });
+    });
 }
 void startApp()
   {
@@ -96,8 +35,12 @@ void startApp()
           testDeviceIds: ["395AA0EC16134E88603112A34BE6BF57"]);
       MobileAds.instance.updateRequestConfiguration(configuration);
     }
-    gismoBloc = new GismoBloc();
+    // Pass your access token to MapboxOptions so you can load a map
+    String ACCESS_TOKEN = const String.fromEnvironment("map_box_token");
+    MapboxOptions.setAccessToken("pk.eyJ1IjoieGJlYXUiLCJhIjoiY2s4anVjamdwMGVsdDNucDlwZ2I0bGJwNSJ9.lc21my1ozaQZ2-EriDSY5w");
+
     Environnement.init(
+        //"https://www.neme-sys.fr/bd", "http://10.0.2.2:8080/gismoApp/api",
         "https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api",
         new FlavorOvin());
     String nextPage = '/splash';
@@ -106,7 +49,7 @@ void startApp()
       nextPage = '/login';
 
     initializeDateFormatting();
-    final GismoApp gismoApp = new GismoApp(gismoBloc,
+    final GismoApp gismoApp = new GismoApp( RunningMode.run,
       initialRoute: nextPage, //isLogged ? '/welcome' : '/config',
     );
     runApp(gismoApp);
