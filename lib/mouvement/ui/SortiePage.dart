@@ -88,16 +88,16 @@ class _SortiePageState extends GismoStatePage<SortiePage> implements SortieContr
                         });
                       },
                       onTap: () async{
-                        DateTime date = DateTime.now();
+                        DateTime ? date = DateTime.now();
                         FocusScope.of(context).requestFocus(new FocusNode());
                         date = await showDatePicker(
                           context: context,
                           initialDate:DateTime.now(),
                           firstDate:DateTime(1900),
-                          lastDate: DateTime(2100)) as DateTime;
+                          lastDate: DateTime(2100)) ;
                         if (date != null) {
                           setState(() {
-                            _dateSortieCtl.text =  DateFormat.yMd().format(date);
+                            _dateSortieCtl.text =  DateFormat.yMd().format(date!);
                           });
                         }
                       })),
