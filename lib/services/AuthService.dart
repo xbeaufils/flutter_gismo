@@ -7,6 +7,8 @@ import 'package:flutter_gismo/services/UserService.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:developer' as debug;
 
+import 'package:sentry_flutter/sentry_flutter.dart';
+
 class AuthService {
 
   static AuthService ? _singleton;
@@ -21,8 +23,8 @@ class AuthService {
     _cheptel = value;
   }
   static String ? _token;
-  String  get token => _token!;
-  set token(String value) {
+  String ? get token => _token;
+  set token(String ? value) {
     _token = value;
   }
 
@@ -59,6 +61,7 @@ class AuthService {
         if (Platform.isIOS) {
           //await Admob.requestTrackingAuthorization();
         }
+        debug.log("Mode autonome");
         return "mode autonome";
       }
       String? password = await storage.read(key: "password");
@@ -79,17 +82,22 @@ class AuthService {
           name: "GismoBloc::init");
       return "mode connecte";
     }
-    on PlatformException catch(e) {
+    on PlatformException catch(e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
       AuthService().cheptel = "00000000";
       AuthService().subscribe = false;
       //_repository = new GismoRepository(this._currentUser!, RepositoryType.local);
       debug.log("Mode autonome", name: "AuthService::init");
+      debug.log("Mode erreur");
+      storage.deleteAll();
       return "mode erreur";
     }
-    catch (e) {
+    catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
       debug.log("erreur ", error: e, name: "AuthService::init");
       AuthService().cheptel = "00000000";
       AuthService().subscribe = false;
+      storage.deleteAll();
       return "mode erreur";
     }
   }

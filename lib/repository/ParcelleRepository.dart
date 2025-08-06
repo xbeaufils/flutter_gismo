@@ -4,13 +4,13 @@ import 'dart:convert';
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/model/ParcelleModel.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 abstract class ParcelleRepository {
   Future<Pature> getPature(String idu);
-  Future<String> getParcelle(LatLng touchPosition);
+  Future<String> getParcelle(Position touchPosition);
   Future<List<Parcelle>> getParcelles();
-  Future<String> getCadastre( LatLng myPosition);
+  Future<String> getCadastre( Position myPosition);
   Future<String> savePature(Pature pature);
 }
 
@@ -31,12 +31,12 @@ class WebParcelleRepository  extends WebRepository implements ParcelleRepository
     }
   }
 
-  Future<String> getParcelle(LatLng touchPosition) async {
+  Future<String> getParcelle(Position touchPosition) async {
     try {
       final response = await super.doPostParcelle(
           '/map/parcelle', jsonEncode({
-        'lattitude': touchPosition.latitude,
-        'longitude': touchPosition.longitude
+        'lattitude': touchPosition.lat,
+        'longitude': touchPosition.lng
       }));
       String cadastre =  response;
       return cadastre;
@@ -55,21 +55,21 @@ class WebParcelleRepository  extends WebRepository implements ParcelleRepository
       }
       return parcelles;
     } catch ( e) {
-      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+      throw ("Erreur de connection à ${Environnement.getUrlTarget()}");
     }
   }
 
-  Future<String> getCadastre( LatLng myPosition) async {
+  Future<String> getCadastre( Position myPosition) async {
     try {
       final response = await super.doPostParcelle(
           '/map/cadastre', jsonEncode({
-            'lattitude': myPosition.latitude,
-            'longitude': myPosition.longitude
+            'lattitude': myPosition.lat,
+            'longitude': myPosition.lng
       }));
         String cadastre =  response;
         return cadastre;
     }  catch ( e) {
-      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+      throw ("Erreur de connection à ${Environnement.getUrlTarget()}");
     }
   }
   Future<String> savePature(Pature pature) async {

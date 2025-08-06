@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
@@ -27,17 +28,25 @@ class GismoDrawer extends StatelessWidget {
                 height: 10,
                 thickness: 1,
               ),
-              ListTile(
-                title: Text(S.of(context).configuration),
-                leading: Icon(Icons.settings),
-                onTap:  () { _settingPressed(context);},
-              ),
+              _showConfig(context),
               _showBlueTooth(context),
           ]),
     ]));
   }
+  Widget _showConfig(BuildContext context) {
+    if (kIsWeb)
+      return Container();
+    return ListTile(
+      title: Text(S.of(context).configuration),
+      leading: Icon(Icons.settings),
+      onTap:  () { _settingPressed(context);},
+    );
+
+  }
 
   Widget _showBlueTooth(BuildContext context) {
+    if (kIsWeb)
+      return Container();
     if (AuthService().subscribe)
       return  ListTile(
         title: Text("Bluetooth"),

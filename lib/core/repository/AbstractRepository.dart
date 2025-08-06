@@ -7,9 +7,8 @@ import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/find_locale.dart';
 import 'package:intl/intl.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
-import 'package:sentry/sentry.dart';
 import 'package:flutter_gismo/bloc/Message.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 enum RepositoryType {web, local}
 
@@ -69,7 +68,7 @@ class WebRepository {
           body: jsonEncode(body)).timeout(Duration(seconds: 5) ).timeout(Duration(seconds: 10));
       Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
       if (msg.error) {
-        throw (msg.error);
+        throw GismoException(msg.message);
       }
       else {
         return msg.message;
@@ -91,7 +90,7 @@ class WebRepository {
           body: jsonEncode(body)).timeout(Duration(seconds: 5) ).timeout(Duration(seconds: 10));
       Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
       if (msg.error) {
-        throw (msg.error);
+        throw GismoException(msg.message);
       }
       else {
         return msg.message;
@@ -125,7 +124,7 @@ class WebRepository {
       Sentry.captureException(e, stackTrace : stackTrace);
       throw(e);
     }
-    throw Exception(errorMessage);
+    throw GismoException(errorMessage);
   }
 
   Future<Map<String, dynamic> > doGet(String url) async {
@@ -154,4 +153,9 @@ class WebRepository {
     }
   }
 
+}
+
+class GismoException implements Exception {
+  String message;
+  GismoException(this.message);
 }

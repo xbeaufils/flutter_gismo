@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Exception/EventException.dart';
+import 'package:flutter_gismo/individu/presenter/BetePresenter.dart';
 import 'package:flutter_gismo/repository/BeteRepository.dart';
 import 'package:flutter_gismo/repository/EchoRepository.dart';
 import 'package:flutter_gismo/repository/LambRepository.dart';
@@ -98,6 +99,27 @@ class BeteService {
       case EventType.saillie:
         message = await this._saillieRepository.deleteSaillie(event.idBd);
         break;
+      case EventType.entree:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case EventType.agnelage:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case EventType.sortie:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case EventType.entreeLot:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case EventType.sortieLot:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case EventType.echo:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case EventType.memo:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
     return message;
   }
@@ -174,7 +196,28 @@ class BeteService {
   }
 
   Future<String> save (Bete bete ) async {
-    return this._repository.saveBete(bete);
+    if (bete.numBoucle == null) {
+      throw MissingNumBoucle();
+    }
+    if (bete.numBoucle.isEmpty){
+      throw MissingNumBoucle();
+    }
+    if (bete.numMarquage == null){
+      throw MissingNumMarquage();
+    }
+    if (bete.numMarquage.isEmpty){
+      throw MissingNumMarquage();
+    }
+    if (bete.sex == null){
+      throw MissingSex();
+    }
+    bool _existant = false;
+    _existant = await this.check(bete);
+    bete.cheptel = AuthService().cheptel!;
+    if (! _existant)
+      return this._repository.saveBete(bete);
+    else
+      throw ExistingBete();
   }
 
 }

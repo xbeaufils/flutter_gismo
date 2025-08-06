@@ -4,12 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/flavor/FlavorOvin.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sentry/sentry.dart';
 
-GismoBloc gismoBloc = new GismoBloc();
 
 
 void main() async {
@@ -23,12 +21,11 @@ void main() async {
       /*testingId: "b9f2908b-1a6b-4a5b-b862-ded7ce289e41",*/
     );*/
   }
-  gismoBloc = new GismoBloc();
   Environnement.init( "http://10.0.2.2:8080/gismoWeb/bd", /*"http://localhost:8080/gismoApp/api" */ "http://10.0.2.2:8080/gismoApp/api", new FlavorOvin());
   String nextPage = '/splash';
   if (kIsWeb)
     nextPage='/login';
-  final GismoApp gismoApp = new GismoApp(gismoBloc, RunningMode.run,
+  final GismoApp gismoApp = new GismoApp(RunningMode.run,
      initialRoute: nextPage,
   );
   // Run app!

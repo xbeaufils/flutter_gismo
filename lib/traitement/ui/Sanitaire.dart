@@ -1,7 +1,6 @@
 //import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -65,152 +64,133 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  new Card( child:
-                    new Row(
+                  Card( child:
+                    Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          new Flexible(
-                            child:
-                            new TextFormField(
-                              key: const Key("dateDebut"),
-                              controller: _dateDebutCtl,
-                              decoration: InputDecoration(
-                                labelText: S.of(context).date_debut,),
-                              onTap: () async{
-                                DateTime ? date = DateTime.now();
-                                FocusScope.of(context).requestFocus(new FocusNode());
+                          Flexible(child:
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child:
+                              new TextFormField(
+                                key: const Key("dateDebut"),
+                                controller: _dateDebutCtl,
+                                decoration: InputDecoration(
+                                  labelText: S.of(context).date_debut,),
+                                onTap: () async{
+                                  DateTime ? date = DateTime.now();
+                                  FocusScope.of(context).requestFocus(new FocusNode());
 
-                                date = await showDatePicker(
-                                    context: context,
-                                    initialDate:DateTime.now(),
-                                    firstDate:DateTime(1900),
-                                    lastDate: DateTime(2100));
-                                if (date != null)
-                                  _dateDebutCtl.text = DateFormat.yMd().format(date);
+                                  date = await showDatePicker(
+                                      context: context,
+                                      initialDate:DateTime.now(),
+                                      firstDate:DateTime(1900),
+                                      lastDate: DateTime(2100));
+                                  if (date != null)
+                                    _dateDebutCtl.text = DateFormat.yMd().format(date);
+                                  },
+                              ),
+                            )),
+                          Flexible(child:
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child:
+                              new TextFormField(
+                                key: const Key("dateFin"),
+                                controller: _dateFinCtl,
+                                decoration: InputDecoration(
+                                  labelText: S.of(context).date_fin,),
+                                onTap: () async{
+                                  DateTime ? date = DateTime.now();
+                                  FocusScope.of(context).requestFocus(new FocusNode());
+  
+                                  date = await showDatePicker(
+                                      context: context,
+                                      initialDate:DateTime.now(),
+                                      firstDate:DateTime(1900),
+                                      lastDate: DateTime(2100));
+                                  if (date != null)
+                                    _dateFinCtl.text = DateFormat.yMd().format(date);
                                 },
-                            ),
-                          ),
-                          new Flexible(
-                            child:
-                            new TextFormField(
-                              key: const Key("dateFin"),
-                              controller: _dateFinCtl,
-                              decoration: InputDecoration(
-                                labelText: S.of(context).date_fin,),
-                              onTap: () async{
-                                DateTime ? date = DateTime.now();
-                                FocusScope.of(context).requestFocus(new FocusNode());
-
-                                date = await showDatePicker(
-                                    context: context,
-                                    initialDate:DateTime.now(),
-                                    firstDate:DateTime(1900),
-                                    lastDate: DateTime(2100));
-                                if (date != null)
-                                  _dateFinCtl.text = DateFormat.yMd().format(date);
-                              },
-                            ),
-                          )
+                              ),
+                          ))
                         ]
 
                     ),
-                    ),
-                  new Card(child:
-                      new Column(
-                          children: <Widget> [
-                            new Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  new Expanded(
-                                      child:
-                                      new TextFormField(
-                                        controller: _ordonnanceCtl,
-                                        decoration: InputDecoration(labelText: S.of(context).prescription,),
-                                      ))
-                                ]
-                            ),
-                            new Row(
+                  ),
+                  Card(child:
+                      Column(
+                        children: <Widget> [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child:
+                              TextFormField(
+                                    controller: _ordonnanceCtl,
+                                    decoration: InputDecoration(labelText: S.of(context).prescription,),
+                              )
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child:
+                              TextFormField(
+                                  controller: _medicamentCtl,
+                                  decoration: InputDecoration(labelText: S.of(context).medication,),
+                                ),
+                          ),
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Expanded(
-                                child:
-                                new TextFormField(
-                                  controller: _medicamentCtl,
-                                  decoration: InputDecoration(labelText: S.of(context).medication,),
-                                ),
-                              )
-                            ]
-
-                        ),
-                            new Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  new Flexible( child:
-                                    new TextFormField(
-                                      controller: _voieCtl,
-                                      decoration: InputDecoration(labelText: S.of(context).route,),
-                                    ),
-                                  ),
-                                  new Flexible( child:
-                                  new TextFormField(
-                                    controller: _doseCtl,
-                                    decoration: InputDecoration(labelText: S.of(context).dose,),
-                                  ),
-                                  ),
-                                  new Flexible( child:
-                                  new TextFormField(
+                              Flexible( child:
+                                Padding(padding: const EdgeInsets.all(8.0),
+                                    child:
+                                    TextFormField(
+                                        controller: _voieCtl,
+                                        decoration: InputDecoration(labelText: S.of(context).route,),
+                                      ),
+                                  )),
+                              Flexible( child:
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child:
+                                        TextFormField(
+                                          controller: _doseCtl,
+                                          decoration: InputDecoration(labelText: S.of(context).dose,),
+                                        ),
+                                  )),
+                              Flexible( child:
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child:
+                                      TextFormField(
                                     controller: _rythmeCtl,
                                     decoration: InputDecoration(labelText: S.of(context).rythme,),
                                   ),
-                                  ),
+                                  )),
                                 ]
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child:
+                              TextFormField(
+                                controller: _intervenantCtl,
+                                decoration: InputDecoration(labelText: S.of(context).contributor,),
+                              )
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child:
+                                TextFormField(
+                                  controller: _motifCtl,
+                                  decoration: InputDecoration(labelText: S.of(context).reason,),
+                                ),
                             ),
-
-                            new Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                new Expanded(
-                                  child:
-                                  new TextFormField(
-                                    controller: _intervenantCtl,
-                                    decoration: InputDecoration(labelText: S.of(context).contributor,),
-                                ))
-                            ]
-                        ),
-                    ])),
-                  Card(child:
-                    Column(
-                        children: <Widget> [
-                          Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  new Expanded(
-                                      child:
-                                      new TextFormField(
-                                        controller: _motifCtl,
-                                        decoration: InputDecoration(labelText: S.of(context).reason,),
-                                      ),
-                                    ),
-                            ]),
-                          Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                             Expanded(
-                              child:
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child:
                               TextFormField(
                                 controller: _observationCtl,
                                 decoration: InputDecoration(labelText: S.of(context).observations,),
@@ -218,30 +198,28 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
                                 minLines: 3,
                                 maxLines: null,
                               ),
-                             )
-                            ]),
+                             ),
                           ]
                       )
                   ),
-                  new Card(
-                    child:
-                        Flex(
-                          direction: Axis.horizontal,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            (this.widget._currentTraitement == null) ?
-                                Container():
-                                ElevatedButton(
-                                  onPressed: () => _showDialog(context),
-                                  child: Text(S.of(context).bt_delete)),
-                            FilledButton(key:Key("Enregistrer"), onPressed: () =>
-                                this._presenter.save(_dateDebutCtl.text, _dateFinCtl.text, _doseCtl.text,
-                                  _intervenantCtl.text, _observationCtl.text, _motifCtl.text, _medicamentCtl.text, _ordonnanceCtl.text,
-                                _rythmeCtl.text, _voieCtl.text),
-                              //color: Colors.lightGreen[700],
-                              child: new Text(S.of(context).bt_save),)
-                          ]
-                        )
+                  Flex(
+                    direction: Axis.horizontal,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      (this.widget._currentTraitement == null) ?
+                          Container():
+                      Padding(padding: const EdgeInsets.all(8.0),
+                          child:
+                          ElevatedButton(
+                            onPressed: () => _showDialog(context),
+                            child: Text(S.of(context).bt_delete))),
+                        FilledButton(key:Key("Enregistrer"), onPressed: () =>
+                          this._presenter.save(_dateDebutCtl.text, _dateFinCtl.text, _doseCtl.text,
+                            _intervenantCtl.text, _observationCtl.text, _motifCtl.text, _medicamentCtl.text, _ordonnanceCtl.text,
+                          _rythmeCtl.text, _voieCtl.text),
+                        //color: Colors.lightGreen[700],
+                        child: new Text(S.of(context).bt_save),)
+                    ]
                   )
                   ])
 

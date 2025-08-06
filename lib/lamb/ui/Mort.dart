@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/lamb/presenter/LambPresenter.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MortPage extends StatefulWidget {
   final LambModel _currentLamb ;
@@ -141,21 +139,6 @@ class _MortPageState extends State<MortPage> implements MortContract {
     });
   }
 
-  void _saveDeath() {
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
-    if (_dateMortCtl.text.isEmpty) {
-      showError(appLocalizations!.no_death_date);
-      return;
-    }
-
-    if ( _currentMotif == null) {
-      showError(appLocalizations!.death_cause_mandatory);
-      return;
-    }
-    if (_currentMotif!.isEmpty) {
-      showError(appLocalizations!.death_cause_mandatory);
-      return;
-    }
 /*
     var message  = this.widget._bloc.mort(this.widget._currentLamb, _currentMotif!, _dateMortCtl.text);
     message
@@ -163,7 +146,6 @@ class _MortPageState extends State<MortPage> implements MortContract {
         .catchError( (message) {showError(message);});
 
  */
-  }
 
   void showError(String message) {
     final snackBar = SnackBar(

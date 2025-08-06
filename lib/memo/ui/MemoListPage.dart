@@ -82,8 +82,9 @@ class _MemoListPageState extends GismoStatePage<MemoListPage> implements MemoLis
         return const Icon(Icons.info_outlined);
       case MemoClasse.WARNING :
         return const Icon(Icons.error_outline);
+      case null:
+        return Container();
     }
-    return Container();
   }
 
   Widget _notesList ( List<MemoModel> _notes) {

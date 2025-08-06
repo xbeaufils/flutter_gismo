@@ -7,7 +7,6 @@ import 'package:flutter_gismo/mouvement/ui/SortiePage.dart';
 import 'package:flutter_gismo/lamb/ui/SearchLambPage.dart';
 import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:flutter_gismo/infra/ui/SplashScreen.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/infra/ui/bluetooth.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/infra/ui/loginPage.dart';
@@ -26,8 +25,7 @@ enum GismoPage {lamb, sanitaire, etat_corporel, individu, sortie, lot, pesee, ec
 class GismoApp extends StatelessWidget {
   final String initialRoute;
   final RunningMode mode;
-  GismoBloc _bloc;
-  GismoApp(this._bloc, this.mode, {required this.initialRoute}) {
+  GismoApp( this.mode, {required this.initialRoute}) {
 
   }
 
@@ -50,7 +48,7 @@ class GismoApp extends StatelessWidget {
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
        // '/config':(context) => ConfigPage(this._bloc),
-        '/welcome': (context) => WelcomePage(null),
+        '/welcome': (context) => WelcomePage(),
         '/note' : (context) => MemoListPage(),
         '/login': (context) => LoginPage(),
         '/nec': (context) => SearchPage( GismoPage.etat_corporel),
@@ -64,9 +62,9 @@ class GismoApp extends StatelessWidget {
         '/entree': (context) => EntreePage(),
         '/splash' : (context) => SplashScreen(),
         '/lot' : (context) => LotPage(),
-        '/parcelle' : (context) =>ParcellePage(this._bloc),
+        '/parcelle' : (context) =>ParcellePage(),
         '/config' : (context) =>ConfigPage(),
-        '/bluetooth' : (context) =>BluetoothPermissionPage(this._bloc),
+        '/bluetooth' : (context) =>BluetoothPermissionPage(),
         '/saillie' : (context) => SearchPage(GismoPage.saillie),
       },
     );

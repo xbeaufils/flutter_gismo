@@ -88,7 +88,9 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
             new Card(key: null,
               child:Column(
                 children: <Widget>[
-                  new TextFormField(
+                  Padding(padding:  const EdgeInsets.all(8.0),
+                  child:
+                    TextFormField(
                       keyboardType: TextInputType.datetime,
                       controller: _dateEntreeCtl,
                       decoration: InputDecoration(
@@ -117,7 +119,7 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
                             _dateEntreeCtl.text = DateFormat.yMd().format(date);
                           });
                         }
-                      }),
+                      })),
                   new DropdownButton<String>(
                     key: Key("Motif_Key"),
                     value: _currentMotif,

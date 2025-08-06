@@ -1,16 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-//import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
-//import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/flavor/FlavorCaprin.dart';
 import 'package:sentry/sentry.dart';
 
-GismoBloc gismoBloc = new GismoBloc();
 
 
 void main() async {
@@ -22,13 +18,12 @@ void main() async {
       /*testingId: "b9f2908b-1a6b-4a5b-b862-ded7ce289e41",*/
     );*/
   }
-  gismoBloc = new GismoBloc();
   Environnement.init( "http://10.0.2.2:8080/gismoWeb/bd", "http://192.168.1.90:8080/gismoApp/api", new FlavorCaprin());
   String nextPage = '/splash';
   if (kIsWeb)
     //if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))
     nextPage='/login';
-  final GismoApp gismoApp = new GismoApp(gismoBloc, RunningMode.run,
+  final GismoApp gismoApp = new GismoApp(RunningMode.run,
      initialRoute: nextPage, //isLogged ? '/welcome' : '/config',
   );
   // Run app!

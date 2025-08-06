@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/infra/ui/ConfigPage.dart';
 import 'dart:developer' as debug;
 
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:flutter_gismo/infra/ui/welcome.dart';
 
@@ -26,8 +25,8 @@ class SplashScreenState extends State<SplashScreen> {
   void initState()  {
     super.initState();
     debug.log("initState" , name: "SplashScreenState:initState");
-
-    AuthService.init()
+    if (! kIsWeb)
+      AuthService.init()
         .then( (message) => route(message));
     /*
     this._bloc.init().then( (message) => route(message))
@@ -39,8 +38,7 @@ class SplashScreenState extends State<SplashScreen> {
 
   void route(String message) {
     debug.log("Is logged $AuthService.subscribe ", name: "SplashScreenState::route");
-    Widget homePage = AuthService().subscribe ? WelcomePage( message):  ConfigPage();
-    homePage = WelcomePage( message);
+    Widget homePage = WelcomePage();
     Navigator.pushReplacement(
           context,
           MaterialPageRoute(

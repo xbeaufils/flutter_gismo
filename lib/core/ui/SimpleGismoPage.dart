@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/sheepyGreenScheme.dart';
 
 abstract class GismoContract {
+  void backWithObject(Object object);
   void back();
   void backWithMessage(String message, [bool error]);
   void showMessage(String message, [bool error]);
@@ -32,10 +33,18 @@ class GismoStatePage<T extends StatefulWidget> extends  State<T> {
     ScaffoldMessenger.of(context).showSnackBar(this._buildSnackBar(message, error));
   }
 
+  void backWithObject(Object object) {
+    Navigator.of(context).pop( object);
+  }
+
   void backWithMessage(String message, [bool error = false,]) {
     ScaffoldMessenger.of(context).showSnackBar(this._buildSnackBar(message, error))
         .closed
         .then((e) => {Navigator.of(context).pop()});
+  }
+
+  void back() {
+    Navigator.of(context).pop();
   }
 
   SnackBar _buildSnackBar(String message, bool error ) {
@@ -55,9 +64,6 @@ class GismoStatePage<T extends StatefulWidget> extends  State<T> {
         content: content);
   }
   
-  void back() {
-    Navigator.of(context).pop();
-  }
 
   void showSaving() {
     setState(() {

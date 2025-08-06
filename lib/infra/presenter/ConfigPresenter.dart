@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/infra/ui/ConfigPage.dart';
 import 'package:flutter_gismo/infra/ui/welcome.dart';
 import 'package:flutter_gismo/model/User.dart';
@@ -43,7 +44,10 @@ class ConfigPresenter {
     try {
       User testedUser = await this._userUservice.auth(testUser);
       _view.configTeste = TestConfig.DONE;
-     } catch(e) {
+    } on GismoException  catch(e) {
+      this._view.showMessage(e.message);
+    }
+      catch(e) {
       this._view.showMessage(e.toString());
     }
 
@@ -54,7 +58,7 @@ class ConfigPresenter {
     if (canPop)
       this._view.backWithMessage(message);
     else
-      this._view.goNextPage(WelcomePage(null));
+      this._view.goNextPage(WelcomePage());
   }
 
 }

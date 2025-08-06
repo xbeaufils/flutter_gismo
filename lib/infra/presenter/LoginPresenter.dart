@@ -1,3 +1,4 @@
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/infra/ui/loginPage.dart';
 import 'package:flutter_gismo/infra/ui/welcome.dart';
 import 'package:flutter_gismo/model/User.dart';
@@ -12,8 +13,14 @@ class LoginPresenter {
   loginWeb(String email, String password) async {
     try {
       User testUser  = User(email, password);
-      await _service.auth(testUser);
-      _view.goNextPage(WelcomePage(null));
+      User completeUser = await _service.auth(testUser);
+      AuthService().email = completeUser.email;
+      AuthService().cheptel = completeUser.cheptel;
+      AuthService().token = completeUser.token;
+      AuthService().subscribe = true;
+      _view.goNextPage(WelcomePage());
+    } on GismoException catch (e) {
+      this._view.showMessage(e.message);
     }
     catch(e) {
       this._view.showMessage(e.toString());

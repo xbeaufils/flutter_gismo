@@ -76,7 +76,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
     if (Platform.isIOS) {
       return 'ca-app-pub-9699928438497749/2969884909';
     } else if (Platform.isAndroid) {
-      return 'ca-app-pub-9699928438497749/5554017347';
+      return 'ca-app-pub-9699928438497749/3752490208';
     }
     debug.log("Unable to find plateform");
     return "";

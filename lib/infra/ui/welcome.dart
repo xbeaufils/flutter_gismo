@@ -18,9 +18,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 
 class WelcomePage extends StatefulWidget {
-  String ? _message;
 
-  WelcomePage(this._message, {Key ? key}) : super(key: key);
+  WelcomePage();
 
   @override
   _WelcomePageState createState() => new _WelcomePageState();
@@ -41,6 +40,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
 
   @override
   Widget build(BuildContext context) {
+    debug.log("Build", name: "Welcome:::build");
     return new Scaffold(
         key: _scaffoldKey,
 //        backgroundColor: Colors.lightGreen,
@@ -71,7 +71,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
                 _buildGriTile("assets/etat_corporel.png", S.of(context).body_cond, _presenter.necPressed,),
                 _buildGriTile("assets/home.png", S.of(context).input,  _presenter.entreePressed,) ,
                 _buildGriTile("assets/Truck.png", S.of(context).output, _presenter.sortiePressed, ),
-                _buildGriTile("assets/parcelles.png", "Parcelles", _presenter.lotPressed ),
+                _buildGriTile("assets/parcelles.png", "Parcelles", _presenter.parcellePressed ),
               ]),),
                /*
                 Card(

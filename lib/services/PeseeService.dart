@@ -8,7 +8,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 class PeseeService {
   late PeseeRepository _repository;
 
-  EchoService() {
+  PeseeService() {
     if (AuthService().subscribe ) {
       _repository = WebPeseeRepository(AuthService().token);
     }

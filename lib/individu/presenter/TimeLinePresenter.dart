@@ -1,3 +1,4 @@
+import 'package:flutter_gismo/individu/ui/Bete.dart';
 import 'package:flutter_gismo/individu/ui/EchoPage.dart';
 import 'package:flutter_gismo/individu/ui/TimeLine.dart';
 import 'package:flutter_gismo/lamb/ui/lambing.dart';
@@ -92,6 +93,10 @@ class TimeLinePresenter {
     String ? message = await this._view.editPage(MemoPage.modify(note));
     if (message != null)
       this._view.showMessage(message);
+  }
+
+  Future viewBete(Bete bete) async {
+    Bete? selectedBete = await this._view.goNextPage( BetePage(bete));
   }
 
   void viewParent(Bete parent) async {

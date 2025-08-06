@@ -4,7 +4,6 @@ import 'dart:developer' as debug;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/infra/presenter/BluetoothPresenter.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
@@ -12,22 +11,20 @@ import 'package:flutter_gismo/model/DeviceModel.dart';
 import 'package:provider/provider.dart';
 
 class BluetoothPermissionPage extends StatefulWidget {
-  final GismoBloc _bloc;
 
-  BluetoothPermissionPage(this._bloc,  {Key ? key}) : super(key: key);
+  BluetoothPermissionPage(  {Key ? key}) : super(key: key);
 
   @override
-  BluetoothPermissionPageState createState() => new BluetoothPermissionPageState(_bloc);
+  BluetoothPermissionPageState createState() => new BluetoothPermissionPageState();
 }
 abstract class BluetoothPermissionContract extends GismoContract {
 
 }
 
 class BluetoothPermissionPageState extends State<BluetoothPermissionPage> {
-  final GismoBloc _bloc;
   late final BluetoothModel _model;
 
-  BluetoothPermissionPageState(this._bloc);
+  BluetoothPermissionPageState();
 
   @override
   void initState() {
@@ -50,7 +47,7 @@ class BluetoothPermissionPageState extends State<BluetoothPermissionPage> {
                   widget = new BluetoothAskPermissions(onPressed: _checkPermissions,);
                   break;
                 case BluetoothPermission.bluetoothOkPermission:
-                  widget = new BluetoothPage(this._bloc);
+                  widget = new BluetoothPage();
               }
               return Scaffold(
                 //backgroundColor: Colors.lightGreen,
@@ -105,9 +102,9 @@ class BluetoothPermissionPageState extends State<BluetoothPermissionPage> {
 }
 
 class BluetoothPage extends StatefulWidget {
-  final GismoBloc _bloc;
 
-  BluetoothPage(this._bloc,  {Key ? key}) : super(key: key);
+
+  BluetoothPage( {Key ? key}) : super(key: key);
 
   @override
   _BluetoothPagePageState createState() => new _BluetoothPagePageState();

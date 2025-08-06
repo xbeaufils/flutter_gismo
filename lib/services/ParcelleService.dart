@@ -1,7 +1,7 @@
 import 'package:flutter_gismo/model/ParcelleModel.dart';
 import 'package:flutter_gismo/repository/ParcelleRepository.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 class ParcelleService {
   late ParcelleRepository _repository;
@@ -10,7 +10,7 @@ class ParcelleService {
     _repository = WebParcelleRepository(AuthService().token);
   }
 
-  Future<String> getCadastre(LatLng /*Position*/ myPosition) async {
+  Future<String> getCadastre(Position /*Position*/ myPosition) async {
        String cadastre = await this._repository.getCadastre(myPosition);
        return cadastre;
   }
@@ -20,7 +20,7 @@ class ParcelleService {
       return pature;
   }
 
-    Future<String> getParcelle(LatLng touchPosition) async {
+    Future<String> getParcelle(Position touchPosition) async {
       String cadastre = await this._repository.getParcelle(touchPosition);
       return cadastre;
   }

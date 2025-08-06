@@ -13,6 +13,18 @@ class LambPresenter {
   final LambingService service = LambingService();
   LambPresenter(this._view);
 
+  void addLamb(String marquage, Sex sex, MethodeAllaitement allaitement, Sante sante ) {
+    this._view.backWithObject(LambModel(marquage, sex, allaitement, sante));
+  }
+
+  void saveLamb(LambModel lamb, String marquage, Sex sex, MethodeAllaitement allaitement, Sante sante ) {
+    lamb.marquageProvisoire = marquage;
+    lamb.sex = sex;
+    lamb.allaitement = allaitement;
+    lamb.sante = sante;
+    this._view.backWithObject(lamb);
+  }
+
   void boucle(LambModel lamb) async {
     Bete ? bete = await this._view.showBouclage(lamb);
     if (bete != null) {
@@ -22,7 +34,6 @@ class LambPresenter {
       lamb.numBoucle = bete.numBoucle;
       lamb.numMarquage = bete.numMarquage;
     }
-
   }
 
   void mort(LambModel lamb) {

@@ -2,20 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/individu/ui/Bete.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/individu/ui/EchoPage.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
-import 'package:flutter_gismo/lamb/ui/lambing.dart';
-import 'package:flutter_gismo/memo/ui/MemoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/EchographieModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
-import 'package:flutter_gismo/model/LambModel.dart';
-import 'package:flutter_gismo/model/MemoModel.dart';
-import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/individu/presenter/TimeLinePresenter.dart';
-import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
 import 'package:intl/intl.dart';
 
 
@@ -53,7 +44,7 @@ class _TimeLinePageState extends GismoStatePage<TimeLinePage> with SingleTickerP
                   title: Text(_bete.numBoucle + " " + _bete.numMarquage),
                   subtitle: (_bete.dateEntree!= null) ? Text( DateFormat.yMd().format(_bete.dateEntree)): null,
                   leading: Image.asset("assets/brebis.png") ,
-                  trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: _openIdentityDialog, ),)
+                  trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () => this._presenter.viewBete(_bete), ),)
                 ,),
               _getMere(),
               _getPere(),

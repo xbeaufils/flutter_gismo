@@ -3,15 +3,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/bloc/GismoBloc.dart';
 import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/flavor/FlavorOvin.dart';
-import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:sentry/sentry.dart';
 
-GismoBloc gismoBloc= new GismoBloc();
 
 
 void main() async {
@@ -25,21 +23,25 @@ void main() async {
       startApp()
     });
 }
+
 void startApp()
   {
-    WidgetsFlutterBinding.ensureInitialized();
     if (!kIsWeb) {
       // if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))
       WidgetsFlutterBinding.ensureInitialized();
+/*
       MobileAds.instance.initialize();
       RequestConfiguration configuration = RequestConfiguration(
           testDeviceIds: ["395AA0EC16134E88603112A34BE6BF57"]);
-      MobileAds.instance.updateRequestConfiguration(configuration);
+      MobileAds.instance.updateRequestConfiguration(configuration);*/
     }
-    gismoBloc = new GismoBloc();
+    // Pass your access token to MapboxOptions so you can load a map
+    String ACCESS_TOKEN = const String.fromEnvironment("map_box_token");
+    // MapboxOptions.setAccessToken("pk.eyJ1IjoieGJlYXUiLCJhIjoiY2s4anVjamdwMGVsdDNucDlwZ2I0bGJwNSJ9.lc21my1ozaQZ2-EriDSY5w");
+
     Environnement.init(
-        "https://www.neme-sys.fr/bd", "http://10.0.2.2:8080/gismoApp/api",
-        //"https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api",
+        //"https://www.neme-sys.fr/bd", "http://10.0.2.2:8080/gismoApp/api",
+        "https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api",
         new FlavorOvin());
     String nextPage = '/splash';
     if (kIsWeb)
@@ -47,7 +49,7 @@ void startApp()
       nextPage = '/login';
 
     initializeDateFormatting();
-    final GismoApp gismoApp = new GismoApp(gismoBloc, RunningMode.run,
+    final GismoApp gismoApp = new GismoApp( RunningMode.run,
       initialRoute: nextPage, //isLogged ? '/welcome' : '/config',
     );
     runApp(gismoApp);

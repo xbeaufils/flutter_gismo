@@ -4,7 +4,7 @@ package nemesys.fr.flutter_gismo;
 import android.Manifest;
 import android.bluetooth.BluetoothDevice;
 
-import android.content.BroadcastReceiver;
+// import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -34,8 +34,8 @@ import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 import io.sentry.Sentry;
 
-public class MainActivity extends FlutterActivity  implements  MethodChannel.MethodCallHandler, PluginRegistry.PluginRegistrantCallback{
-    private static final String CHANNEL_RT610 = "nemesys.rfid.RT610";
+public class MainActivity extends FlutterActivity  implements  MethodChannel.MethodCallHandler{
+    //private static final String CHANNEL_RT610 = "nemesys.rfid.RT610";
     private static final String CHANNEL_GPS = "nemesys.GPS";
     private static final String CHANNEL_BLUETOOTH = "nemesys.rfid.bluetooth";
 
@@ -46,7 +46,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
     public String boucle;
     public String marquage;
     private volatile boolean newValue;
-    public BroadcastReceiver receiver = new RFIDReceiver();
+   //public BroadcastReceiver receiver = new RFIDReceiver();
 
     @Override
     public void onMethodCall(MethodCall call, MethodChannel.Result result) {
@@ -118,10 +118,11 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
     public void onCreate(Bundle  bundle) {
         super.onCreate(bundle);
 
-        new MethodChannel(getFlutterEngine().getDartExecutor().getBinaryMessenger(), CHANNEL_RT610)
-                .setMethodCallHandler(this::onMethodCall);
+/*        new MethodChannel(getFlutterEngine().getDartExecutor().getBinaryMessenger(), CHANNEL_RT610)
+                .setMethodCallHandler(this::onMethodCall);*/
         new MethodChannelBlueTooth(getFlutterEngine().getDartExecutor().getBinaryMessenger(), CHANNEL_BLUETOOTH);
         new LocationMethod(getFlutterEngine().getDartExecutor().getBinaryMessenger(), CHANNEL_GPS, this.getContext());
+        /*
         Intent intent = getIntent();
         intent.getAction();
         intent.getType();
@@ -130,23 +131,18 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             super.registerReceiver(this.receiver, intentFilter, Context.RECEIVER_EXPORTED);
         } else {
-            super.registerReceiver(this.receiver, intentFilter);
-        }
+            ContextCompat.registerReceiver(super.getContext(), this.receiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
+        }*/
         this.context = this.getContext();
     }
 
     public void onDestroy() {
         super.onDestroy();
-        if (receiver != null) {
+ /*       if (receiver != null) {
             unregisterReceiver(receiver);
-        }
+        }*/
     }
-
-    @Override
-    public void registerWith(PluginRegistry registry) {
-        GeneratedPluginRegistrant.registerWith((FlutterEngine) registry);
-    }
-
+/*
     public class RFIDReceiver extends BroadcastReceiver {
         public RFIDReceiver() {
         }
@@ -166,6 +162,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
         }
     }
 
+ */
     public class MethodChannelBlueTooth extends  MethodChannel {
         public MethodChannelBlueTooth(BinaryMessenger messenger, String name) {
             super(messenger, name);
