@@ -11,18 +11,18 @@ class ParcelleService {
   }
 
   Future<String> getCadastre(Position /*Position*/ myPosition) async {
-       String cadastre = await this._repository.getCadastre(myPosition);
-       return cadastre;
+    String cadastre = await this._repository.getCadastre(myPosition);
+    return cadastre;
   }
 
   Future<Pature> getPature(String idu) async {
-      Pature pature = await this._repository.getPature(idu);
-      return pature;
+    Pature pature = await this._repository.getPature(idu);
+    return pature;
   }
 
-    Future<String> getParcelle(Position touchPosition) async {
-      String cadastre = await this._repository.getParcelle(touchPosition);
-      return cadastre;
+  Future<String> getParcelle(Position touchPosition) async {
+    String cadastre = await this._repository.getParcelle(touchPosition);
+    return cadastre;
   }
 
   Future<List<Parcelle>> getParcelles()  async{

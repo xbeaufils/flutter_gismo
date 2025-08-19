@@ -77,7 +77,7 @@ class BetePresenter {
   }
 
   void stopReadBluetooth() {
-    _bluetoothService.startReadBluetooth();
+    _bluetoothService.stopReadBluetooth();
   }
 }
 

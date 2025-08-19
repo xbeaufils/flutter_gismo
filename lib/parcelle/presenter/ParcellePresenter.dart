@@ -1,10 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 import 'dart:developer' as debug;
-import 'dart:ui';
-
-import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/bloc/LocationBloc.dart';
@@ -33,20 +29,6 @@ class ParcellePresenter {
   }
 
   ParcellePresenter(this._view);
-
-  /*onStyleLoadedCallback(StyleLoadedEventData data) async {
-    var data = await rootBundle
-        .loadString('assets/from_crema_to_council_crest.geojson');
-
-    await _mapboxMap?.style.addSource(GeoJsonSource(id: "line", data: data));
-    await _mapboxMap?.style.addLayer(LineLayer(
-        id: "line_layer",
-        sourceId: "line",
-        lineJoin: LineJoin.ROUND,
-        lineCap: LineCap.ROUND,
-        // lineColor: Colors.red.value,
-        lineWidth: 6.0));
-  }*/
 
   Future<Position ?> retrieveParcelles( Position ? location) async {
     if (location == null)
@@ -129,34 +111,6 @@ class ParcellePresenter {
         lineCap: LineCap.ROUND,
         lineWidth: 4.0);
     await _mapboxMap.style.addLayer(parcelleLayer);
-  }
-
-  void _drawParcelle(Map feature) async {
-    double lineWidth = 6.0;
-    String lineColor = '#58db72';
-    Map<String, dynamic>  geometry = feature['geometry'];
-    List coordinates = geometry['coordinates'][0][0];
-    List<Position> lstLatLng = [];
-    coordinates.forEach( (anArray) => lstLatLng.add(Position( anArray[0],anArray[1])));
-    var newFeature = Feature(
-        id: feature["id"],
-        geometry: LineString(coordinates:  lstLatLng /*[
-          Position(-122.483696, 37.833818),
-          Position(-122.4861, 37.828802),
-          Position(-122.493782, 37.833683),
-          Position(-122.48959, 37.8366109),
-          Position(-122.483696, 37.833818)
-        ]*/));
-   /* await _mapboxMap.style
-        .addGeoJSONSourceFeatures("line", "new_line", [newFeature]);
-
-
-    await _mapController!.addLine(LineOptions(
-      geometry: lstLatLng,
-      lineColor: lineColor,
-      lineWidth: lineWidth,
-      lineOpacity: 0.5,
-    ));*/
   }
 
   void onMapClick(MapContentGestureContext context) async {

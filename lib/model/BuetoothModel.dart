@@ -5,6 +5,10 @@ class BluetoothState {
   String ? _status;
   String ? _data;
 
+  BluetoothState.none() {
+    _status = "NONE";
+  }
+
   BluetoothState.fromResult(result) {
     _status = result["status"];
     if (_status != 'NONE')

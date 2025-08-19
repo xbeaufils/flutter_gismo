@@ -60,23 +60,27 @@ class _BouclagePageState extends State<BouclagePage> implements BouclageContract
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     _statusBluetoothBar(),
-                    new TextFormField(
-                      controller: this._numBoucleCtrl,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(labelText: S.of(context).identity_number, hintText: S.of(context).identity_number_hint),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return S.of(context).enter_identity_number;
-                          }
-                          return "";
-                        },
-                        onSaved: (value) {
-                          setState(() {
-                            _numBoucleCtrl.text = value!;
-                          });
-                        }
-                    ),
-                    new TextFormField(
+                    Padding(padding:  const EdgeInsets.all(8.0),
+                        child:
+                          TextFormField(
+                            controller: this._numBoucleCtrl,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(labelText: S.of(context).identity_number, hintText: S.of(context).identity_number_hint),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return S.of(context).enter_identity_number;
+                                }
+                                return "";
+                              },
+                              onSaved: (value) {
+                                setState(() {
+                                  _numBoucleCtrl.text = value!;
+                                });
+                              }
+                          )),
+                    Padding(padding:  const EdgeInsets.all(8.0),
+                        child:
+                          TextFormField(
                         controller: this._numMarquageCtrl,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(labelText: S.of(context).flock_number, hintText: S.of(context).flock_number_hint),
@@ -91,12 +95,8 @@ class _BouclagePageState extends State<BouclagePage> implements BouclageContract
                             _numMarquageCtrl.text = value!;
                           });
                         }
-                    ),
-                    new ElevatedButton(
-                      child: new Text(
-                        S.of(context).place_earring,
-                        style: new TextStyle(color: Colors.white),
-                      ),
+                    )),
+                    new FilledButton( child: new Text(S.of(context).place_earring,),
                       onPressed: () => this._presenter.createBete(this.widget._currentLamb, _numBoucleCtrl.text, _numMarquageCtrl.text),
                       //color: Colors.lightGreen[900],
                     ),

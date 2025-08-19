@@ -39,95 +39,94 @@ class _PaturagePageState extends GismoStatePage<PaturagePage> implements Paturag
         appBar: AppBar(
           title: Text('Paturage'),
         ),
-        body: Column(children: <Widget>[
-          new Card( child:
-            new Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
+        body:
+        Column(children: <Widget>[
+          Card( child:
+            Column(
               children: <Widget>[
-                new Flexible(
-                  child:
-                  new TextFormField(
-                    controller: _dateDebutCtl,
-                    decoration: InputDecoration(
-                      labelText: S.of(context).date_debut,),
-                    onTap: () async{
-                      DateTime ? date = DateTime.now();
-                      FocusScope.of(context).requestFocus(new FocusNode());
+                Row(
+                  children: <Widget>[
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child:
+                          TextFormField(
+                            controller: _dateDebutCtl,
+                            decoration: InputDecoration(
+                            labelText: S.of(context).date_debut,),
+                            onTap: () async {
+                              DateTime ? date = DateTime.now();
+                              FocusScope.of(context).requestFocus(new FocusNode());
+                              date = await showDatePicker(
+                              context: context,
+                              initialDate:DateTime.now(),
+                              firstDate:DateTime(1900),
+                              lastDate: DateTime(2100));
+                              if (date != null)
+                                _dateDebutCtl.text = df.format(date);
+                            }),
+                      ),
+                    ),
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child:
+                          TextFormField(
+                            controller: _dateFinCtl,
+                            decoration: InputDecoration(
+                            labelText: S.of(context).date_fin,),
+                            onTap: () async{
+                              DateTime ? date = DateTime.now();
+                              FocusScope.of(context).requestFocus(new FocusNode());
 
-                      date = await showDatePicker(
-                          context: context,
-                          initialDate:DateTime.now(),
-                          firstDate:DateTime(1900),
-                          lastDate: DateTime(2100));
-                      if (date != null)
-                        _dateDebutCtl.text = df.format(date);
-                    },
-                  ),
-                ),
-                new Flexible(
-                  child:
-                  new TextFormField(
-                    controller: _dateFinCtl,
-                    decoration: InputDecoration(
-                      labelText: S.of(context).date_fin,),
-                    onTap: () async{
-                      DateTime ? date = DateTime.now();
-                      FocusScope.of(context).requestFocus(new FocusNode());
-
-                      date = await showDatePicker(
-                          context: context,
-                          initialDate:DateTime.now(),
-                          firstDate:DateTime(1900),
-                          lastDate: DateTime(2100));
-                      if (date != null)
-                        _dateFinCtl.text = df.format(date);
-                    },
-                  ),
-                )
-              ]),
-          ),
-          new Card(
-            child: new FutureBuilder<List<LotModel>>(
-                future: this._presenter.getLots(),
-                builder: (context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasError) {
-                    return Container();
+                              date = await showDatePicker(
+                                  context: context,
+                                  initialDate:DateTime.now(),
+                                  firstDate:DateTime(1900),
+                                  lastDate: DateTime(2100));
+                              if (date != null)
+                                _dateFinCtl.text = df.format(date);
+                            },
+                          ),
+                        ))
+                  ]),
+                FutureBuilder<List<LotModel>>(
+                  future: this._presenter.getLots(),
+                  builder: (context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasError) {
+                      return Container();
+                    }
+                    if (!snapshot.hasData) {
+                      return CircularProgressIndicator();
+                    }
+                    return DropdownButton(
+                      hint: Text('Lot en paturage'),
+                      items: snapshot.data.map <DropdownMenuItem<int>>((LotModel lot) {
+                        return DropdownMenuItem(
+                          child: Text( ( lot.codeLotLutte==null)?"": lot.codeLotLutte! ),
+                          value: lot.idb,);
+                      }).toList(),
+                      value: currentLotId,
+                      onChanged: (int ? value) {
+                        setState(() {
+                          currentLotId = value;
+                        });
+                      },
+                    );
                   }
-                  if (!snapshot.hasData) {
-                    return CircularProgressIndicator();
-                  }
-                  return DropdownButton(
-                    hint: Text('Lot en paturage'),
-                    items: snapshot.data.map <DropdownMenuItem<int>>((LotModel lot) {
-                      return DropdownMenuItem(
-                        child: Text( ( lot.codeLotLutte==null)?"": lot.codeLotLutte! ),
-                        value: lot.idb,);
-                    }).toList(),
-                    value: currentLotId,
-                    onChanged: (int ? value) {
-                      setState(() {
-                        currentLotId = value;
-                      });
-                    },
-                  );
-                }
-            ),
-          ),
-          new Card(
-            child:
+              ),
+              ])),
               Flex(
                   direction: Axis.horizontal,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    new ElevatedButton(key:null, onPressed:() => {_presenter.save},
+                    FilledButton(key:null, onPressed:()  {_presenter.save(_dateDebutCtl.text , _dateFinCtl.text);},
                       //color: Colors.lightGreen[700],
-                      child: new Text(S.of(context).bt_save,style: TextStyle( color: Colors.white)),)
-                  ]
-              )
-          )
-        ]));
+                      child: new Text(S.of(context).bt_save,))
+                  ])
+
+          ]),
+        );
   }
 
   @override

@@ -82,49 +82,50 @@ class _MortPageState extends State<MortPage> implements MortContract {
             new Card(key: null,
                 child:Column(
                   children: <Widget>[
-                    new TextFormField(
-                        keyboardType: TextInputType.datetime,
-                        controller: _dateMortCtl,
-                        decoration: InputDecoration(
-                            labelText: S.of(context).death_date,
-                            hintText: 'jj/mm/aaaa'),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return S.of(context).no_death_date;
-                          }},
-                        onSaved: (value) {
-                          setState(() {
-                            _dateMortCtl.text = value!;
-                          });
-                        },
-                        onTap: () async{
-                          DateTime ? date = DateTime.now();
-                          FocusScope.of(context).requestFocus(new FocusNode());
-                          date = await showDatePicker(
-                              locale: const Locale("fr","FR"),
-                              context: context,
-                              initialDate:DateTime.now(),
-                              firstDate:DateTime(1900),
-                              lastDate: DateTime(2100));
-                          if (date != null) {
+                    Padding(padding:  const EdgeInsets.all(8.0),
+                      child:
+
+                        TextFormField(
+                          keyboardType: TextInputType.datetime,
+                          controller: _dateMortCtl,
+                          decoration: InputDecoration(
+                              labelText: S.of(context).death_date,
+                              hintText: 'jj/mm/aaaa'),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return S.of(context).no_death_date;
+                            }},
+                          onSaved: (value) {
                             setState(() {
-                              _dateMortCtl.text = _df.format(date!);
+                              _dateMortCtl.text = value!;
                             });
-                          }
-                        }),
+                          },
+                          onTap: () async{
+                            DateTime ? date = DateTime.now();
+                            FocusScope.of(context).requestFocus(new FocusNode());
+                            date = await showDatePicker(
+                                locale: const Locale("fr","FR"),
+                                context: context,
+                                initialDate:DateTime.now(),
+                                firstDate:DateTime(1900),
+                                lastDate: DateTime(2100));
+                            if (date != null) {
+                              setState(() {
+                                _dateMortCtl.text = _df.format(date!);
+                              });
+                            }
+                          })),
                     new DropdownButton<String>(
                       value: _currentMotif,
                       items: _getCauseMortItems(),
-                      hint: Text(S.of(context).select_death_cause,style: TextStyle(color: Colors.lightGreen,)),
+                      hint: Text(S.of(context).select_death_cause),
                       onChanged: _changedCauseDecesItem,
                     )
 
                   ],
                 )),
-            ElevatedButton (
-                child: Text(S.of(context).bt_save,
-                  style: new TextStyle(color: Colors.white, ),),
-
+            FilledButton(
+                child: Text(S.of(context).bt_save),
                 // color: Colors.lightGreen[700],
                 onPressed: () => this._presenter.saveDeath(widget._currentLamb, _dateMortCtl.text, _currentMotif ))
           ]

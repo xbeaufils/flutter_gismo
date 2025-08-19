@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as debug;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
@@ -17,6 +18,8 @@ class BluetoothService {
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
 
   Future<String> startService() async{
+    if (kIsWeb)
+      return "start";
     try {
       //if ( await this._bloc.configIsBt()) {
       debug.log("Start service ", name: "_BetePageState::_startService");
@@ -70,6 +73,8 @@ class BluetoothService {
   }
 
   Future<BluetoothState> startReadBluetooth() async {
+    if (kIsWeb)
+      return BluetoothState.none();
     BluetoothState state;
     //FlutterSecureStorage storage = new FlutterSecureStorage();
     //String address = await storage.read(key: "address");
