@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/individu/ui/Bete.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
+import 'package:flutter_gismo/individu/ui/EventPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/individu/presenter/TimeLinePresenter.dart';
@@ -14,7 +15,7 @@ class TimeLinePage extends StatefulWidget {
   final Bete _bete;
   TimeLinePage(this._bete, {Key ? key}) : super(key: key);
   @override
-  _TimeLinePageState createState() => new _TimeLinePageState(_bete);
+  _TimeLinePageState createState() => new _TimeLinePageState();
 }
 
 abstract class TimelineContract extends GismoContract {
@@ -25,9 +26,8 @@ class _TimeLinePageState extends GismoStatePage<TimeLinePage> with SingleTickerP
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   late TimeLinePresenter _presenter;
-  Bete _bete;
 
-  _TimeLinePageState( this._bete);
+  _TimeLinePageState( );
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +41,10 @@ class _TimeLinePageState extends GismoStatePage<TimeLinePage> with SingleTickerP
             children: <Widget>[
               Card(child:
                 ListTile(
-                  title: Text(_bete.numBoucle + " " + _bete.numMarquage),
-                  subtitle: (_bete.dateEntree!= null) ? Text( DateFormat.yMd().format(_bete.dateEntree)): null,
+                  title: Text(this.widget._bete.numBoucle + " " + this.widget._bete.numMarquage),
+                  subtitle: (this.widget._bete.dateEntree!= null) ? Text( DateFormat.yMd().format(this.widget._bete.dateEntree)): null,
                   leading: Image.asset("assets/brebis.png") ,
-                  trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () => this._presenter.viewBete(_bete), ),)
+                  trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () => this._presenter.viewBete(this.widget._bete), ),)
                 ,),
               _getMere(),
               _getPere(),
@@ -72,7 +72,7 @@ class _TimeLinePageState extends GismoStatePage<TimeLinePage> with SingleTickerP
               trailing: IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => this._presenter.viewParent(mere.data), )),
           );
         },
-        future: this._presenter.getMere(_bete),
+        future: this._presenter.getMere(this.widget._bete),
     );
   }
 
@@ -89,65 +89,13 @@ class _TimeLinePageState extends GismoStatePage<TimeLinePage> with SingleTickerP
               trailing: IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () =>this._presenter.viewParent(pere.data), )),
         );
       },
-      future: this._presenter.getPere(_bete),
+      future: this._presenter.getPere(this.widget._bete),
     );
   }
 
-
-  Future _openIdentityDialog() async {
-    Bete ? selectedBete = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
-        builder: (BuildContext context) {
-          return new BetePage(_bete);
-        },
-        fullscreenDialog: true
-    ));
-    if (selectedBete != null) {
-      setState(() {
-        _bete = selectedBete;
-      });
-    }
-  }
 
   Widget _getEvents() {
-    return FutureBuilder(
-      builder: (context, AsyncSnapshot lstEvents){
-        if (lstEvents.data == null)
-          return Container( child:
-            Center(
-              child: CircularProgressIndicator()),);
-        return ListView.builder(
-          shrinkWrap: true,
-          itemCount: lstEvents.data.length,
-          itemBuilder: (context, index) {
-            Event event = lstEvents.data[index];
-            return new ListTile(
-              leading: _getImageType(event.type),
-              title: Text(event.eventName),
-              subtitle: Text(DateFormat.yMd().format(event.date)),
-              trailing:this._eventButton(event),
-            );
-          },
-        );
-      },
-      future: this._presenter.getEvents(_bete),
-    );
-  }
-
-  Widget ? _eventButton(Event event) {
-    switch (event.type) {
-      case EventType.agnelage :
-      case EventType.traitement:
-      case EventType.echo:
-      case EventType.memo:
-        return IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => this._presenter.searchEvent(event), );
-        break;
-      case EventType.saillie:
-      case EventType.NEC:
-      case EventType.pesee:
-        return IconButton(icon: Icon(Icons.delete), onPressed: () => _showDialog(context, event), );
-      default:
-    }
-    return null;
+    return EventSheepPage(this, this.widget._bete);
   }
 
   Future _showDialog(BuildContext context, Event event) {
@@ -165,7 +113,7 @@ class _TimeLinePageState extends GismoStatePage<TimeLinePage> with SingleTickerP
       },
     );
   }
-  
+
   // set up the buttons
   Widget _cancelButton() {
     return TextButton(

@@ -2,11 +2,24 @@ import 'dart:async';
 
 import 'package:flutter_gismo/lamb/ui/Bouclage.dart';
 import 'package:flutter_gismo/lamb/ui/LambPage.dart';
+import 'package:flutter_gismo/lamb/ui/LambTimeLine.dart';
 import 'package:flutter_gismo/lamb/ui/Mort.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/services/LambingService.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+
+class LambTimeLinePresenter {
+  final LambTimelineContract _view;
+  final LambingService service = LambingService();
+
+  LambTimeLinePresenter(this._view);
+
+  void view(LambModel lamb) {
+
+  }
+}
 
 class LambPresenter {
   final LambContract _view;
