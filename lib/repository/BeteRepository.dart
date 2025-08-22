@@ -176,7 +176,7 @@ class LocalBeteRepository extends LocalRepository implements BeteRepository {
     List<Map<String, dynamic>> futureMaps = await db.query('bete' ,where: 'numBoucle = ? and numMarquage = ?',
         whereArgs: [bete.numBoucle, bete.numMarquage]);
     if (futureMaps.length == 0) {
-      debug.log("Bete non trouvéé " , name: "LocalDataProvider::searchBete");
+      debug.log("Bete non trouvéé " , name: "BeteRepository::searchBete");
       return false;
     }
     Bete beteBd = Bete.fromResult(futureMaps[0]);

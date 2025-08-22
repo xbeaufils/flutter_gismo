@@ -118,7 +118,7 @@ class LocalRepository {
     catch(e,stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       //super.bloc.reportError(e, stackTrace);
-      debug.log("message"  , name: "LocalDataProvider::_init");
+      debug.log("message"  , name: "LocalRepository::_init");
     }
 
   }

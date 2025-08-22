@@ -35,6 +35,7 @@ class LambPresenter {
     lamb.sex = sex;
     lamb.allaitement = allaitement;
     lamb.sante = sante;
+    this.service.saveLamb(lamb);
     this._view.backWithObject(lamb);
   }
 

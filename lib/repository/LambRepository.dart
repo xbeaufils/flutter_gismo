@@ -234,7 +234,7 @@ class LocalLambRepository extends LocalRepository implements LambRepository {
         'agnelage', where: 'id = ?', whereArgs: [idBd]);
     if (futureMaps.length == 0) {
       debug.log("Agnelage non trouvé " + idBd.toString(),
-          name: "LocalDataProvider::searchLambing");
+          name: "LambRepository::searchLambing");
       return null;
     }
     LambingModel current = new LambingModel.fromResult(futureMaps[0]);
@@ -367,7 +367,7 @@ class LocalLambRepository extends LocalRepository implements LambRepository {
     Database db = await this.database;
     List<Map<String, dynamic>> futureMaps = await db.query('bete' ,where: 'id = ?', whereArgs: [idBd]);
     if (futureMaps.length == 0) {
-      debug.log("Bete non trouvéé " + idBd.toString(), name: "LocalDataProvider::searchBete");
+      debug.log("Bete non trouvéé " + idBd.toString(), name: "LambRepository::searchBete");
       return null;
     }
     return Bete.fromResult(futureMaps[0]);
