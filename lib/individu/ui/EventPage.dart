@@ -20,12 +20,13 @@ abstract class EventPage extends StatelessWidget {
           return Container( child:
           Center(
               child: CircularProgressIndicator()),);
-        return ListView.builder(
+        return ListView.builder ( //.separated(
+          //separatorBuilder: (context, index) { return Divider(indent: 16, endIndent: 16,);},
           shrinkWrap: true,
           itemCount: lstEvents.data.length,
           itemBuilder: (context, index) {
             Event event = lstEvents.data[index];
-            return new ListTile(
+            return ListTile(
               leading: _getImageType(event.type),
               title: Text(event.eventName),
               subtitle: Text(DateFormat.yMd().format(event.date)),

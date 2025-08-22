@@ -148,31 +148,6 @@ class _TimeLinePageState extends GismoStatePage<TimeLinePage> with SingleTickerP
     return message;
   }
 
-  Widget _getImageType(EventType type) {
-    switch (type) {
-      case EventType.traitement :
-        return new Image.asset("assets/syringe.png");
-      case EventType.agnelage :
-        return new Image.asset("assets/lamb.png");
-      case EventType.NEC:
-        return new Image.asset("assets/etat_corporel.png");
-      case EventType.entreeLot:
-        return new Image.asset("assets/Lot_entree.png");
-      case EventType.sortieLot:
-        return new Image.asset("assets/Lot_sortie.png");
-      case EventType.pesee:
-        return new Image.asset("assets/peseur.png");
-      case EventType.echo:
-        return new Image.asset("assets/ultrasound.png");
-      case EventType.saillie:
-        return new Image.asset("assets/saillie.png");
-      case EventType.memo:
-        return new Image.asset("assets/memo.png");
-      case EventType.entree:
-      case EventType.sortie:
-     }
-    return Container();
-  }
 
  }
 
