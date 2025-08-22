@@ -4,6 +4,7 @@
   "sheep" : "Individu",
   "lambing" : "Agnelage",
   "lambs" : "Agneaux",
+  "lamb" : "Agneau",
   "mating" : "Saillie",
   "ultrasound" : "Echographie",
   "weighing" : "Pesée",
@@ -209,6 +210,7 @@
 
   "title_delete" : "Suppression",
   "text_delete" : "Voulez vous supprimer cet enregistrement ?",
+  "ack_delete_done": "Suppression effectuée",
 
   "date_debut" : "Date début",
   "no_date_debut": "Pas de date de début",

@@ -23,6 +23,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "aborted": MessageLookupByLibrary.simpleMessage("Aborted"),
+    "ack_delete_done": MessageLookupByLibrary.simpleMessage("Deletion done"),
     "add_lamb": MessageLookupByLibrary.simpleMessage("Add a lamb"),
     "adoption_abandon": MessageLookupByLibrary.simpleMessage(
       "Abandoned while fleeing",
@@ -184,6 +185,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "info": MessageLookupByLibrary.simpleMessage("Info"),
     "input": MessageLookupByLibrary.simpleMessage("Entry"),
+    "lamb": MessageLookupByLibrary.simpleMessage("Lamb"),
     "lambing": MessageLookupByLibrary.simpleMessage("Lambing"),
     "lambing_date": MessageLookupByLibrary.simpleMessage("Lambing date"),
     "lambing_default": MessageLookupByLibrary.simpleMessage("Lambing default"),

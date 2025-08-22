@@ -129,17 +129,6 @@ class LocalTraitementRepository extends LocalRepository implements Traitementrep
   }
 
   @override
-  Future<List<TraitementModel>> getTraitements(LambModel lamb) async{
-    Database db = await this.database;
-    List<Map<String, dynamic>> futureMaps = await db.query('traitement',where: 'beteId = ?', whereArgs: [bete.idBd]);
-    List<TraitementModel> tempList = [];
-    for (int i = 0; i < futureMaps.length; i++) {
-      tempList.add(TraitementModel.fromResult(futureMaps[i]));
-    }
-    return tempList;
-  }
-
-  @override
   Future<List<TraitementModel>> getTraitementsForLamb(LambModel lamb) async{
     Database db = await this.database;
     List<Map<String, dynamic>> futureMaps = await db.query('traitement',where: 'lambId = ?', whereArgs: [lamb.idBd]);

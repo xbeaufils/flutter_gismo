@@ -11,10 +11,19 @@ import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/services/BeteService.dart';
+import 'package:flutter_gismo/services/LambingService.dart';
+import 'package:flutter_gismo/services/TraitementService.dart';
 import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
+
+abstract class EventService {
+
+}
 
 abstract class EventPresenter {
   final _beteService = BeteService();
+  final LambingService _lambingService = LambingService();
+  final TraitementService _traitementService = TraitementService();
+
   TimelineContract get view ;
 
   Future<List<Event>> getEvents();
@@ -25,7 +34,7 @@ abstract class EventPresenter {
         this._beteService.searchLambing(event.idBd).then( (lambing) => {this._editLambing(lambing!)} );
         break;
       case EventType.traitement:
-        this._beteService.searchTraitement(event.idBd).then( (traitement) => { _editTraitement(traitement!)});
+        this._traitementService.searchTraitement(event.idBd).then( (traitement) => { _editTraitement(traitement!)});
         break;
       case EventType.echo:
         this._beteService.searchEcho(event.idBd).then( (echo) => { _editEcho(echo!)});
@@ -73,7 +82,7 @@ class EventSheepPresenter extends EventPresenter {
   EventSheepPresenter(this._view, this._bete);
 
   Future<List<Event>> getEvents() async {
-    return this._beteService.getEvents(_bete!);
+    return this._beteService.getEvents(_bete);
   }
 
 }
@@ -86,22 +95,16 @@ class EventLambPresenter extends EventPresenter {
   EventLambPresenter(this._view, this._lamb);
 
   Future<List<Event>> getEvents() async {
-    return this._beteService.getEvents();
+    return this._lambingService.getEvents(this._lamb);
   }
+
   void searchEvent(Event event) {
     switch (event.type) {
-      case EventType.agnelage :
-        this._beteService.searchLambing(event.idBd).then( (lambing) => {this._editLambing(lambing!)} );
-        break;
       case EventType.traitement:
-        this._beteService.searchTraitement(event.idBd).then( (traitement) => { _editTraitement(traitement!)});
+        this._traitementService.searchTraitement(event.idBd).then( (traitement) => { _editTraitement(traitement!)});
         break;
       case EventType.echo:
-        this._beteService.searchEcho(event.idBd).then( (echo) => { _editEcho(echo!)});
-        break;
       case EventType.memo:
-        this._beteService.searchMemo(event.idBd).then( (memo) => { _editMemo(memo!) });
-        break;
       case EventType.saillie:
       case EventType.NEC:
       case EventType.pesee:

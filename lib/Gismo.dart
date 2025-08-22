@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gismo/SheepyTheme.dart';
 import 'package:flutter_gismo/infra/ui/ConfigPage.dart';
 import 'package:flutter_gismo/Lot/ui/LotPage.dart';
 import 'package:flutter_gismo/mouvement/ui/EntreePage.dart';
@@ -13,7 +12,6 @@ import 'package:flutter_gismo/infra/ui/loginPage.dart';
 import 'package:flutter_gismo/memo/ui/MemoListPage.dart';
 import 'package:flutter_gismo/parcelle/ui/ParcellePage.dart';
 import 'package:flutter_gismo/sheepyGreenScheme.dart';
-import 'package:flutter_gismo/theme.dart';
 import 'package:flutter_gismo/traitement/ui/selectionTraitement.dart';
 import 'package:flutter_gismo/infra/ui/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

@@ -1,10 +1,10 @@
 import 'dart:developer' as debug;
 
-import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/core/repository/LocalRepository.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:intl/intl.dart';
 import 'package:sentry/sentry.dart';
 import 'package:sqflite/sqflite.dart';
@@ -184,7 +184,7 @@ class LocalLambRepository extends LocalRepository implements LambRepository {
         _saveLamb(lamb, txn, idAgnelage)
       });
     });
-    return "Enregistrement effectué";
+    return S.current.record_saved;
   }
 
   Future<int> _saveLambing(LambingModel lambing, Transaction tx) {
@@ -207,14 +207,24 @@ class LocalLambRepository extends LocalRepository implements LambRepository {
     Database db = await this.database;
     int res =   await db.update("agneaux", lamb.toJson(),
         where: "id = ?", whereArgs: <int>[lamb.idBd!]);
-    return "enregistrement modifié";
+    return S.current.record_saved;
   }
 
   Future<String> deleteLamb(int idBd ) async {
     Database db = await this.database;
+    List<Map<String, dynamic>> futureMaps = await db.query('agneaux',where: 'id= ?', whereArgs: [idBd]);
+    LambModel lamb = LambModel.fromResult(futureMaps[0]);
+    int idAgnelage = lamb.idAgnelage;
     int res =   await db.delete("agneaux",
         where: "id = ?", whereArgs: <int>[idBd]);
-    return "Suppression effectuée";
+    // Vérification du nombre d'agneaux dans l'agnelage
+    List<Map<String, dynamic>> mapLambs = await  db.query('agneaux',where: 'agnelage_id= ?', whereArgs: [idAgnelage]);
+    if (mapLambs.length == 0)
+      // Suppression de l'agnelage
+      int res =   await db.delete("agnelage",
+          where: "id = ?", whereArgs: <int>[idAgnelage]);
+
+    return S.current.ack_delete_done;
   }
 
   @override

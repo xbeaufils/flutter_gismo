@@ -17,7 +17,7 @@ class LambTimeLinePresenter {
   LambTimeLinePresenter(this._view);
 
   void view(LambModel lamb) {
-
+    this._view.goNextPage(LambPage.edit(lamb));
   }
 }
 

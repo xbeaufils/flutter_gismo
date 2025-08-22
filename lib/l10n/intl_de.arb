@@ -4,6 +4,7 @@
    "sheep": "Schaf",
    "lambing": "Lammen",
    "lambs": "Lämmer",
+   "lamb": "Lamm",
    "mating": "Paarung",
    "ultrasound": "Ultraschall",
    "weighing": "Wiegen",
@@ -201,6 +202,8 @@
 
   "title_delete": "Löschen",
   "text_delete": "Möchten Sie diesen Eintrag löschen?",
+  "ack_delete_done": "Löschvorgang abgeschlossen",
+
   "date_debut": "Startdatum",
   "no_date_debut": "Kein Startdatum",
   "date_fin": "Enddatum",

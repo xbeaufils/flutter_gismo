@@ -74,6 +74,11 @@ class S {
     return Intl.message('Lambs', name: 'lambs', desc: '', args: []);
   }
 
+  /// `Lamb`
+  String get lamb {
+    return Intl.message('Lamb', name: 'lamb', desc: '', args: []);
+  }
+
   /// `Ultrasound`
   String get ultrasound {
     return Intl.message('Ultrasound', name: 'ultrasound', desc: '', args: []);
@@ -1579,6 +1584,16 @@ class S {
     );
   }
 
+  /// `Deletion done`
+  String get ack_delete_done {
+    return Intl.message(
+      'Deletion done',
+      name: 'ack_delete_done',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Begin date`
   String get date_debut {
     return Intl.message('Begin date', name: 'date_debut', desc: '', args: []);
@@ -1772,6 +1787,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
       Locale.fromSubtags(languageCode: 'de'),
+      Locale.fromSubtags(languageCode: 'es'),
       Locale.fromSubtags(languageCode: 'fr'),
     ];
   }

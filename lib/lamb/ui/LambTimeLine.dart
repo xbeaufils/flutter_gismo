@@ -5,11 +5,12 @@ import 'package:flutter_gismo/individu/ui/EventPage.dart';
 import 'package:flutter_gismo/individu/ui/TimeLine.dart';
 import 'package:flutter_gismo/lamb/presenter/LambPresenter.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:intl/intl.dart';
 
 class LambTimeLinePage extends StatefulWidget {
-  final LambModel _lamb;
+  final CompleteLambModel _lamb;
 
-  LambModel get lamb => _lamb;
+  CompleteLambModel get lamb => _lamb;
 
   LambTimeLinePage(this._lamb, {Key ? key}) : super(key: key);
   @override
@@ -17,7 +18,7 @@ class LambTimeLinePage extends StatefulWidget {
 }
 
 abstract class LambTimelineContract extends  TimelineContract {
-  LambModel get lamb;
+  CompleteLambModel get lamb;
 }
 
 class LambTimeLinePageState extends GismoStatePage<LambTimeLinePage> with SingleTickerProviderStateMixin implements LambTimelineContract {
@@ -33,7 +34,7 @@ class LambTimeLinePageState extends GismoStatePage<LambTimeLinePage> with Single
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(S.of(context).sheep),
+        title: new Text(S.of(context).lambs),
       ),
       body:
       Column (
@@ -41,7 +42,7 @@ class LambTimeLinePageState extends GismoStatePage<LambTimeLinePage> with Single
           Card(child:
           ListTile(
             title: Text(lamb.marquageProvisoire!),
-            // subtitle: (lamb.dateAgnelage!= null) ? Text( DateFormat.yMd().format(_bete.dateEntree)): null,
+             subtitle: (lamb.dateAgnelage!= null) ? Text( DateFormat.yMd().format(lamb.dateAgnelage)): null,
             leading: Image.asset("assets/lamb.png") ,
             trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () => this._presenter.view(lamb), ),)
             ,),
@@ -62,5 +63,5 @@ class LambTimeLinePageState extends GismoStatePage<LambTimeLinePage> with Single
     this._presenter  = LambTimeLinePresenter(this);
   }
 
-  LambModel get lamb => this.widget._lamb;
+  CompleteLambModel get lamb => this.widget._lamb;
 }

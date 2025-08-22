@@ -46,7 +46,7 @@ class PeseePageState extends GismoStatePage<PeseePage> implements PeseeContract 
       body:
       new Column(
           children: <Widget> [
-            NumBoucleView(this.widget._bete!),
+            _numBoucleView(),
             Card(
               child: Column(children: [
               Padding(padding:  const EdgeInsets.all(8.0),
@@ -122,6 +122,13 @@ class PeseePageState extends GismoStatePage<PeseePage> implements PeseeContract 
 
   }
 
+  Widget _numBoucleView() {
+    if (bete != null)
+      return NumBoucleView(bete!);
+    if (lamb != null)
+      return NumLambView(lamb!);
+    return Container();
+  }
   LambModel ? get lamb => this.widget._lamb;
 
   Bete ? get bete => this.widget._bete;

@@ -124,10 +124,7 @@ class LambPageState extends GismoStatePage<LambPage> implements LambContract {
                     )
                   ],
                 ),
-                      this._mainButton(),
-                SizedBox(
-                    height: 200,
-                    child : (this.widget._lamb == null) ? Container() : _buildEvents())
+                this._mainButton(),
               ]
           )),
     ),);
@@ -226,32 +223,6 @@ class LambPageState extends GismoStatePage<LambPage> implements LambContract {
     return actionButtons;
   }
 
-  Widget _buildEvents() {
-     return FutureBuilder(
-      builder:(context, AsyncSnapshot eventSnap) {
-        if (eventSnap.connectionState == ConnectionState.none ||
-            eventSnap.hasData == false) {
-          return Container();
-        }
-        if (eventSnap.connectionState == ConnectionState.waiting)
-          return Center(child:  CircularProgressIndicator(),);
-        return ListView.builder(
-          shrinkWrap: true,
-          itemCount: eventSnap.data.length,
-          itemBuilder: (context, index) {
-            Event event = eventSnap.data[index];
-            return new ListTile(
-                leading: _getImageType(event.type),
-                title: Text(event.eventName),
-                subtitle: Text(DateFormat.yMd().format(event.date)),
-                trailing: IconButton(icon: Icon(Icons.delete), onPressed: () =>  _showDialog(context, event), )
-            );
-          },
-        );
-      },
-      future: null //this.widget._bloc.getEventsForLamb(this.widget._lamb!),
-    );
-  }
 
   Future <Bete?> showBouclage(LambModel lamb) async {
     Bete? bete = await Navigator.push(
