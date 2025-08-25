@@ -25,9 +25,14 @@ class LambTimeLinePageState extends GismoStatePage<LambTimeLinePage> with Single
   late LambTimeLinePresenter _presenter;
 
   @override
-  Future<String?> editPage(StatefulWidget page) {
-    // TODO: implement editPage
-    throw UnimplementedError();
+  Future<String?> editPage(StatefulWidget page) async {
+    String ? message = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => page,
+      ),
+    );
+    return message;
   }
 
   @override
