@@ -147,75 +147,85 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  new TextFormField(
-                      controller: _codeLotCtl,
-                      decoration: InputDecoration(labelText: S.of(context).batch_name, hintText: S.of(context).batch),
-                   ),
-
-                  new Row(
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child:
+                      TextFormField(
+                        controller: _codeLotCtl,
+                        decoration: InputDecoration(labelText: S.of(context).batch_name, hintText: S.of(context).batch),
+                  )),
+                  Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Flexible( child:
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child:
                           TextFormField(
                             controller: _campagneCtrl,
                             decoration: InputDecoration(labelText: S.of(context).batch_campaign),
                             enabled: false,
                           ),
-                        )
-                      ]
+                        ))]
                   ),
                   new Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        new Flexible(
+                        Flexible(
                           child:
-                          new TextFormField(
-                            key: Key("dateDebut"),
-                            controller: _dateDebutCtl,
-                            decoration: InputDecoration(
-                              labelText: S.of(context).date_debut,),
-                            onTap: () async{
-                              DateTime ? date = DateTime.now();
-                              FocusScope.of(context).requestFocus(new FocusNode());
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child:
+                              TextFormField(
+                              key: Key("dateDebut"),
+                              controller: _dateDebutCtl,
+                              decoration: InputDecoration(
+                                labelText: S.of(context).date_debut,),
+                              onTap: () async{
+                                DateTime ? date = DateTime.now();
+                                FocusScope.of(context).requestFocus(new FocusNode());
 
-                              date = await showDatePicker(
-                                  context: context,
-                                  initialDate:DateTime.now(),
-                                  firstDate:DateTime(1900),
-                                  lastDate: DateTime(2100));
-                              if (date != null)
-                                _dateDebutCtl.text =  DateFormat.yMd().format(date);
-                            },
-                          ),
-                        ),
-                        new Flexible(
+                                date = await showDatePicker(
+                                    context: context,
+                                    initialDate:DateTime.now(),
+                                    firstDate:DateTime(1900),
+                                    lastDate: DateTime(2100));
+                                if (date != null)
+                                  _dateDebutCtl.text =  DateFormat.yMd().format(date);
+                              },
+                            ),
+                        )),
+                        Flexible(
                           child:
-                          new TextFormField(
-                            key: Key("dateFin"),
-                            controller: _dateFinCtl,
-                            decoration: InputDecoration(
-                              labelText: S.of(context).date_fin,),
-                            onTap: () async{
-                              DateTime ? date = DateTime.now();
-                              FocusScope.of(context).requestFocus(new FocusNode());
-                              date = await showDatePicker(
-                                  context: context,
-                                  initialDate:DateTime.now(),
-                                  firstDate:DateTime(1900),
-                                  lastDate: DateTime(2100));
-                              if (date != null)
-                                _dateFinCtl.text =  DateFormat.yMd().format(date);
-                            },
-                          ),
-                        )
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child:
+                                new TextFormField(
+                                  key: Key("dateFin"),
+                                  controller: _dateFinCtl,
+                                  decoration: InputDecoration(
+                                    labelText: S.of(context).date_fin,),
+                                  onTap: () async{
+                                    DateTime ? date = DateTime.now();
+                                    FocusScope.of(context).requestFocus(new FocusNode());
+                                    date = await showDatePicker(
+                                        context: context,
+                                        initialDate:DateTime.now(),
+                                        firstDate:DateTime(1900),
+                                        lastDate: DateTime(2100));
+                                    if (date != null)
+                                      _dateFinCtl.text =  DateFormat.yMd().format(date);
+                                  },
+                                ),
+                              ))
                       ]
 
                   ),
-                  ElevatedButton(
+                  FilledButton(
                       //color: Colors.lightGreen[700],
                       child: new Text(S.of(context).bt_save),
                       onPressed: () { this._presenter.save(_campagneCtrl.text, _codeLotCtl.text, _dateDebutCtl.text, _dateFinCtl.text);})

@@ -9,7 +9,6 @@ import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/lamb/presenter/LambPresenter.dart';
 import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
-import 'package:intl/intl.dart';
 
 class LambPage extends StatefulWidget {
   LambModel ? _lamb;

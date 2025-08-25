@@ -43,37 +43,44 @@ class AffectationPageState extends GismoStatePage<AffectationPage> implements Af
     ),
     body:
         Column( children: [
-          TextFormField(
-            keyboardType: TextInputType.datetime,
-            controller: _dateEntreeCtl,
-            decoration: InputDecoration(
-                labelText: S.current.dateEntry),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return S.of(context).enter_lambing_date;
-              }
-              return null;
-            },
-            onSaved: (value) {
-              setState(() {
-                _dateEntreeCtl.text = value!;
-              });
-            },
-            onTap: () async{
-              DateTime ? date = DateTime.now();
-              FocusScope.of(context).requestFocus(new FocusNode());
-              date = await showDatePicker(
-                  context: context,
-                  initialDate:DateTime.now(),
-                  firstDate:DateTime(1900),
-                  lastDate: DateTime(2100)) ;
-              if (date != null) {
-                setState(() {
-                  _dateEntreeCtl.text = DateFormat.yMd().format(date!);
-                });
-              }
-            }),
-          TextFormField(
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child:
+            TextFormField(
+                  keyboardType: TextInputType.datetime,
+                  controller: _dateEntreeCtl,
+                  decoration: InputDecoration(
+                      labelText: S.current.dateEntry),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return S.of(context).enter_lambing_date;
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    setState(() {
+                      _dateEntreeCtl.text = value!;
+                    });
+                  },
+                  onTap: () async{
+                    DateTime ? date = DateTime.now();
+                    FocusScope.of(context).requestFocus(new FocusNode());
+                    date = await showDatePicker(
+                        context: context,
+                        initialDate:DateTime.now(),
+                        firstDate:DateTime(1900),
+                        lastDate: DateTime(2100)) ;
+                    if (date != null) {
+                      setState(() {
+                        _dateEntreeCtl.text = DateFormat.yMd().format(date!);
+                      });
+                    }
+                  })
+        ),
+        Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:
+         TextFormField(
               keyboardType: TextInputType.datetime,
               controller: _dateSortieCtl,
               decoration: InputDecoration(
@@ -102,12 +109,11 @@ class AffectationPageState extends GismoStatePage<AffectationPage> implements Af
                     _dateSortieCtl.text = DateFormat.yMd().format(date!);
                   });
                 }
-              }),
+              })
+          ),
           (_isSaving) ? CircularProgressIndicator():
-          ElevatedButton(
-              child: Text(S.of(context).bt_save,
-                style: new TextStyle(color: Colors.white, ),),
-              //color: Colors.lightGreen[700],
+          FilledButton(
+              child: Text(S.of(context).bt_save),
               onPressed: () => this._presenter.save(_dateEntreeCtl.text, _dateSortieCtl.text) )
 
         ],)

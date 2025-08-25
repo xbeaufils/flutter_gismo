@@ -17,7 +17,7 @@ abstract class LotRepository {
   Future<List<Affectation>>getBrebisForLot(int idLot);
   Future<List<Affectation>>getBeliersForLot(int idLot);
   Future<List<Affectation>>getAffectationForBete(int idBete);
-  Future<String> remove(Affectation affect);
+  Future<String> updateAffectation(Affectation affect);
   Future<String> addBete(LotModel lot, Bete bete);
   Future<String> deleteAffectation(Affectation affect);
   Future<String> updateAffectationInLot(List<Affectation> toAdd, List<Affectation> toRemove);
@@ -60,15 +60,16 @@ class WebLotRepository extends WebRepository implements LotRepository {
   }
 
   @override
-  Future<String> remove(Affectation affect) async {
+  Future<String> updateAffectation(Affectation affect) async {
     try {
       final response = await super.doPostMessage(
-          '/lot/del', affect.toJson());
+          '/lot/date', affect.toJson());
       return response;
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
+
 
   @override
   Future<String> deleteAffectation(Affectation affect) async {
@@ -187,7 +188,7 @@ class LocalLotRepository extends LocalRepository implements LotRepository {
             + " AND bete.sex = 'male' ");
     List<Affectation> tempList = [];
     for (int i = 0; i < maps.length; i++) {
-      tempList.add(new Affectation.fromResult(maps[i]));
+      tempList.add(Affectation.fromResult(maps[i]));
     }
     return tempList;
   }
@@ -208,7 +209,7 @@ class LocalLotRepository extends LocalRepository implements LotRepository {
   }
 
   @override
-  Future<String> remove(Affectation affect) async{
+  Future<String> updateAffectation(Affectation affect) async{
     Database db = await this.database;
     Map<String, dynamic> dataDb = new Map.from(affect.toJson());
     dataDb.remove("numBoucle");

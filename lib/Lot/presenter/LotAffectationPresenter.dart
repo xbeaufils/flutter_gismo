@@ -1,3 +1,5 @@
+import 'dart:developer' as debug;
+
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/Lot/ui/AffectationPage.dart';
 import 'package:flutter_gismo/Lot/ui/LotAffectationViewPage.dart';
@@ -145,27 +147,17 @@ class LotAffectionPresenter {
 
   Future<void> _reloadPresent(Sex sex) async {
     if (sex == Sex.male)
-      _presentBeliers = await this._service.getBrebisForLot(this._currentLot.idb!);
+      _presentBeliers = await this._service.getBeliersForLot(this._currentLot.idb!);
     else
       _presentBrebis = await this._service.getBrebisForLot(this._currentLot.idb!);
   }
 
   Future<void> edit(Affectation affectation) async {
-    this._view.goNextPage(AffectationPage(affectation));
-  }
-
-  Future<void> removeBete(Affectation affect) async {
-    String ? dateSortie = await this._view.showDateDialog(
-        S.current.dateDeparture,
-        "Saisir une date de sortie si différente de la date de fin de lot",
-        S.current.dateDeparture);
-    String? message;
-    if (dateSortie != null ) {
-      message = await this._service.removeFromLot(affect, dateSortie);
-    }
-    if (message != null)
-      this._view.showMessage(message);
-    this._view.currentLot = this._currentLot;
+    this._view.showSaving();
+    Affectation ? affect = await this._view.goNextPage(AffectationPage(affectation));
+    if (affect != null)
+      debug.log("$affect", name: "LotAffectionPresenter:edit");
+    this._view.hideSaving();
   }
 
   Future<void> save(String campagne, String codeLot, String dateDebut, String dateFin) async {

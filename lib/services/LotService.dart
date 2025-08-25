@@ -4,7 +4,6 @@ import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/repository/LotRepository.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
-import 'package:intl/intl.dart';
 
 class LotService {
   late LotRepository _lotRepository;
@@ -22,13 +21,6 @@ class LotService {
     return this._lotRepository.addBete(lot, bete);
   }
 
-  Future<String> removeFromLot(Affectation affect, String dateSortie) {
-    if (dateSortie.isEmpty)
-      affect.dateSortie = null;
-    else
-      affect.dateSortie = DateFormat.yMd().parse(dateSortie);
-    return this._lotRepository.remove(affect);
-  }
   Future<List<LotModel>> getLots() {
     return this._lotRepository.getLots(AuthService().cheptel!);
   }
@@ -71,6 +63,10 @@ class LotService {
 
   Future<String> deleteAffectation(Affectation affect) {
     return this._lotRepository.deleteAffectation(affect);
+  }
+
+  Future<String> updateAffectation(Affectation affect) {
+    return this._lotRepository.updateAffectation(affect);
   }
 
   Future<String> updateAffectationInLot(List<Affectation> toAdd, List<Affectation> toRemove) async {
