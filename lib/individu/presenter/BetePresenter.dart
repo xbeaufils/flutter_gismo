@@ -1,3 +1,4 @@
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/ui/Bete.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -56,6 +57,8 @@ class BetePresenter {
         this._view.backWithBete();
       }
       return message;
+    } on GismoException catch(e) {
+      this._view.showMessage(e.message, true);
     } on MissingNumBoucle {
       this._view.showMessage(S.current.identity_number_warn, true);
     } on MissingNumMarquage {

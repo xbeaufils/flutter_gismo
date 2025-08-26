@@ -50,6 +50,8 @@ class WebBeteRepository extends WebRepository implements BeteRepository {
           '/bete/' + action,
           bete.toJson());
       return response;
+    } on GismoException catch(e) {
+      throw e;
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
@@ -106,6 +108,8 @@ class WebBeteRepository extends WebRepository implements BeteRepository {
       final response = await super.doPostMessage(
           '/bete/sortie', data);
       return response;
+    } on GismoException catch(e) {
+      throw e;
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
@@ -123,6 +127,8 @@ class WebBeteRepository extends WebRepository implements BeteRepository {
       final response = await super.doPostMessage(
           '/bete/entree', data);
       return response;
+    } on GismoException catch(e) {
+      throw e;
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }

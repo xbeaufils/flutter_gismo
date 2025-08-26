@@ -65,6 +65,8 @@ class WebLotRepository extends WebRepository implements LotRepository {
       final response = await super.doPostMessage(
           '/lot/date', affect.toJson());
       return response;
+    } on GismoException catch(e) {
+      throw e;
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
@@ -98,6 +100,8 @@ class WebLotRepository extends WebRepository implements LotRepository {
       final response = await super.doPostMessage(
           '/lot/add', data);
       return response;
+    } on GismoException catch (e){
+        throw e;
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
@@ -113,7 +117,9 @@ class WebLotRepository extends WebRepository implements LotRepository {
           '/lot/update', data);
       return response;
 
-    }    catch (e,stackTrace) {
+    } on GismoException catch(e) {
+      throw e;
+    } catch (e,stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       //      super.bloc.reportError(e, stackTrace);
       return "Une erreur est survenue :" + e.toString();

@@ -32,6 +32,8 @@ class WebLambRepository extends WebRepository implements LambRepository {
     try {
       final response = await super.doPostMessage('/lamb/add',lambing.toJson());
       return response;
+    } on GismoException catch(e) {
+      throw e;
     }
     on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace: stackTrace);
@@ -44,6 +46,8 @@ class WebLambRepository extends WebRepository implements LambRepository {
     try {
       final response = await super.doPostMessage('/lamb/save', lamb.toJson());
       return response;
+    } on GismoException catch(e) {
+      throw e;
     }
     on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace: stackTrace);
@@ -78,6 +82,8 @@ class WebLambRepository extends WebRepository implements LambRepository {
       final response = await super.doPostMessage(
           '/lamb/boucle',  data);
       return response;
+    } on GismoException catch(e) {
+      throw e;
     }
     on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace: stackTrace);
@@ -105,6 +111,8 @@ class WebLambRepository extends WebRepository implements LambRepository {
       final response = await super.doPostMessage(
           '/lamb/mort', data);
       return response;
+    } on GismoException catch(e) {
+      throw e;
     }
     on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace: stackTrace);

@@ -23,6 +23,8 @@ class WebSortieRepository  extends WebRepository  implements SortieRepository {
       final response = await super.doPostMessage(
           '/bete/sortie', data);
       return response;
+    } on GismoException catch(e) {
+      throw e;
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }

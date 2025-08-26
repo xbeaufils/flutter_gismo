@@ -22,6 +22,8 @@ class WebNecRepository extends WebRepository implements NecRepository{
       final response = await super.doPostMessage(
           '/nec/new', note.toJson());
       return response;
+    } on GismoException catch(e) {
+      throw e;
     }catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }

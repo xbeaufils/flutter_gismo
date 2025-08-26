@@ -27,6 +27,8 @@ class WebPeseeRepository  extends WebRepository implements PeseeRepository{
       final response = await super.doPostMessage(
           '/poids/new',  pesee.toJson());
       return response;
+    } on GismoException catch(e) {
+      throw e;
     } on Exception catch (e) {
         throw GismoException(e.toString());
     }

@@ -23,6 +23,8 @@ class WebSaillieRepository extends WebRepository implements SaillieRepository {
       final response = await super.doPostMessage(
           '/saillie/new',  saillie.toJson());
       return response;
+    } on GismoException catch(e) {
+      throw e;
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }

@@ -3,6 +3,7 @@ import 'dart:developer' as debug;
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/Lot/ui/AffectationPage.dart';
 import 'package:flutter_gismo/Lot/ui/LotAffectationViewPage.dart';
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -56,10 +57,14 @@ class LotAffectionPresenter {
     Bete ? selectedBete = await this._view.goNextPage(search);
     if (selectedBete == null)
       return null;
-    String? message;
-    message = await this._service.addBete(this._currentLot, selectedBete);
-    await this._reloadPresent(search.searchSex!);
-    if (message != null) this._view.showMessage(message);
+    try {
+      String? message;
+      message = await this._service.addBete(this._currentLot, selectedBete);
+      await this._reloadPresent(search.searchSex!);
+      if (message != null) this._view.showMessage(message);
+    } on GismoException catch(e) {
+      this._view.showMessage(e.message, true);
+    }
     this._view.currentLot = this._currentLot;
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter_gismo/Lot/presenter/LotAffectationPresenter.dart';
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
@@ -18,7 +19,12 @@ class LotService {
   }
 
   Future<String> addBete(LotModel lot, Bete bete) {
-    return this._lotRepository.addBete(lot, bete);
+    try {
+      return this._lotRepository.addBete(lot, bete);
+    }
+    on GismoException catch(e) {
+      throw e;
+    }
   }
 
   Future<List<LotModel>> getLots() {

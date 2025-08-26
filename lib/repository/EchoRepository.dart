@@ -23,6 +23,8 @@ class WebEchoRepository extends WebRepository implements Echorepository {
       final response = await super.doPostMessage(
           '/echo/new', echo.toJson());
       return response;
+    } on GismoException catch(e) {
+      throw e;
     }  catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
@@ -33,6 +35,8 @@ class WebEchoRepository extends WebRepository implements Echorepository {
       final response = await super.doDeleteMessage(
           '/echo/delete', echo.toJson());
       return response;
+    } on GismoException catch(e) {
+      throw e;
     }
     catch (e, stacktrace) {
       debug.log("Error", error: e);

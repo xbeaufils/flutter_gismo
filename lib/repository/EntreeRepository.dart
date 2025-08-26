@@ -25,6 +25,8 @@ class WebEntreeRepository  extends WebRepository  implements EntreeRepository {
       final response = await super.doPostMessage(
           '/bete/entree', data);
       return response;
+    } on GismoException catch(e) {
+      throw e;
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }

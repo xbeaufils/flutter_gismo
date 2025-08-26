@@ -29,6 +29,8 @@ class WebTraitementRepository  extends WebRepository implements Traitementreposi
       final response = await super.doPostMessage(
           '/traitement/add', data);
       return response;
+    } on GismoException catch(e) {
+      throw e;
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
@@ -42,6 +44,8 @@ class WebTraitementRepository  extends WebRepository implements Traitementreposi
       final response = await super.doPostMessage(
           '/traitement/collectif', data);
       return response;
+    } on GismoException catch(e) {
+      throw e;
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
