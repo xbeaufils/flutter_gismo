@@ -166,6 +166,7 @@ class MemoPageState extends GismoStatePage<MemoPage> implements MemoContract {
   @override
   void initState() {
     super.initState();
+    _presenter = MemoPresenter(this);
     if (this.widget._currentNote == null)
       _dateDebutCtl.text = DateFormat.yMd().format(DateTime.now());
     else {

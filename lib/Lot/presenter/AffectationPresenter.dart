@@ -1,5 +1,4 @@
 import 'package:flutter_gismo/Lot/ui/AffectationPage.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/services/LotService.dart';
 import 'package:intl/intl.dart';
 
