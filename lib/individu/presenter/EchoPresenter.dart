@@ -18,9 +18,10 @@ class EchoPresenter {
   }
 
   void saveEcho( String dateEcho, String dateSaillie, String dateAgnelage, int nombre) async {
-    if (this._view.currentEcho == null)
+    if (this._view.currentEcho == null) {
       this._view.currentEcho = new EchographieModel();
-    this._view.currentEcho!.bete_id = this._view.bete!.idBd!;
+      this._view.currentEcho!.bete_id = this._view.bete!.idBd!;
+    }
     this._view.currentEcho!.dateEcho = DateFormat.yMd().parse(dateEcho);
     this._view.currentEcho!.nombre = nombre;
     if (dateSaillie.isNotEmpty)

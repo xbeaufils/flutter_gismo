@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/sheepyGreenScheme.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 
 abstract class GismoContract {
   void backWithObject(Object object);
@@ -7,7 +8,9 @@ abstract class GismoContract {
   void backWithMessage(String message, [bool error]);
   void showMessage(String message, [bool error]);
   void showSaving();
+  void hideSaving();
   Future<dynamic> goNextPage(StatefulWidget page);
+  Future<dynamic> showDialogOkCancel();
 }
 
 class GismoStatePage<T extends StatefulWidget> extends  State<T> {
@@ -76,4 +79,40 @@ class GismoStatePage<T extends StatefulWidget> extends  State<T> {
       _isSaving = false;
     });
   }
+
+  Future<dynamic> showDialogOkCancel() {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(S.current.title_delete),
+          content: Text(S.current.text_delete),
+          actions: [
+            _cancelButton(),
+            _continueButton(),
+          ],
+        );
+      },
+    );
+  }
+
+  // set up the buttons
+  Widget _cancelButton() {
+    return TextButton(
+      child: Text(S.current.bt_cancel),
+      onPressed: () {
+        Navigator.of(context).pop(false);
+      },
+    );
+  }
+
+  Widget _continueButton() {
+    return TextButton(
+      child: Text(S.current.bt_continue),
+      onPressed: ()  {
+        Navigator.of(context).pop(true);
+      },
+    );
+  }
+
 }

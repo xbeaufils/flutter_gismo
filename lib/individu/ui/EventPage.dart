@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/presenter/EventPresenter.dart';
 import 'package:flutter_gismo/individu/ui/TimeLine.dart';
 import 'package:flutter_gismo/lamb/ui/LambTimeLine.dart';
@@ -51,7 +52,7 @@ abstract class EventPage extends StatelessWidget {
       case EventType.saillie:
       case EventType.NEC:
       case EventType.pesee:
-        return IconButton(icon: Icon(Icons.delete), onPressed: () => () , );
+        return IconButton(icon: Icon(Icons.delete), onPressed: () => this.presenter.delete(event) , );
       default:
     }
     return null;
@@ -82,7 +83,8 @@ abstract class EventPage extends StatelessWidget {
     }
     return Container();
   }
-}
+
+ }
 
 class EventLambPage extends EventPage {
   late EventPresenter _presenter;

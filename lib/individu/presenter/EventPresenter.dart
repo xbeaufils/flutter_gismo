@@ -49,6 +49,14 @@ abstract class EventPresenter {
     }
   }
 
+  void delete(Event event) async {
+    bool ok = await this.view.showDialogOkCancel();
+    if (ok) {
+      await _beteService.deleteEvent(event);
+      this.view.hideSaving();
+    }
+  }
+
   void _editLambing(LambingModel lambing) async {
     String ? message = await this.view.editPage(LambingPage.modify(lambing));
     if (message != null)
