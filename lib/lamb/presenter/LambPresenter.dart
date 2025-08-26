@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
+import 'package:flutter_gismo/individu/ui/PeseePage.dart';
 import 'package:flutter_gismo/lamb/ui/Bouclage.dart';
 import 'package:flutter_gismo/lamb/ui/LambPage.dart';
 import 'package:flutter_gismo/lamb/ui/LambTimeLine.dart';
@@ -9,6 +11,7 @@ import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/services/LambingService.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
 
 class LambTimeLinePresenter {
   final LambTimelineContract _view;
@@ -31,28 +34,45 @@ class LambPresenter {
   }
 
   void saveLamb(LambModel lamb, String marquage, Sex sex, MethodeAllaitement allaitement, Sante sante ) {
-    lamb.marquageProvisoire = marquage;
-    lamb.sex = sex;
-    lamb.allaitement = allaitement;
-    lamb.sante = sante;
-    this.service.saveLamb(lamb);
-    this._view.backWithObject(lamb);
+    try {
+      lamb.marquageProvisoire = marquage;
+      lamb.sex = sex;
+      lamb.allaitement = allaitement;
+      lamb.sante = sante;
+      this.service.saveLamb(lamb);
+      this._view.backWithObject(lamb);
+    } on GismoException catch(e) {
+      this._view.showMessage(e.message, true);
+    }
   }
 
   void boucle(LambModel lamb) async {
-    Bete ? bete = await this._view.showBouclage(lamb);
-    if (bete != null) {
+    Bete ? bete = await this._view.goNextPage( BouclagePage(lamb));
+    if (bete == null)
+      return;
+    try {
       this.service.boucler(lamb, bete);
       if (bete.idBd != null)
         lamb.idDevenir = bete.idBd;
       lamb.numBoucle = bete.numBoucle;
       lamb.numMarquage = bete.numMarquage;
+    } on GismoException catch (e) {
+      this._view.showMessage(e.message, true);
     }
   }
 
   void mort(LambModel lamb) {
-    this._view.showDeath(lamb);
+    this._view.goNextPage( MortPage(lamb));
   }
+
+  void peser(LambModel lamb) async {
+    this._view.goNextPage(  PeseePage( null, lamb ));
+  }
+
+  void traitement(LambModel lamb) async {
+    this._view.goNextPage( SanitairePage(null, lamb ));
+  }
+
 }
 
 class BouclagePresenter {
@@ -80,11 +100,11 @@ class DeathPresenter {
   Future<String> saveDeath(LambModel lamb, String dateMort, String? motif) async {
     try {
       return this._save(lamb, dateMort, motif);
-    }
-    on MissingDeathDateException {
+    } on GismoException catch(e) {
+      this._view.showMessage(e.message, true);
+    }  on MissingDeathDateException {
       this._view.showError(S.current.no_death_date);
-    }
-    on MissingMotifException {
+    } on MissingMotifException {
       this._view.showError(S.current.death_cause_mandatory);
     }
     throw Exception();

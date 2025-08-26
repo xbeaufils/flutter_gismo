@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/lamb/presenter/LambPresenter.dart';
@@ -11,11 +12,11 @@ class MortPage extends StatefulWidget {
   @override
   _MortPageState createState() => new _MortPageState();
 }
-abstract class MortContract {
+abstract class MortContract extends GismoContract {
   void showError(String message);
 }
 
-class _MortPageState extends State<MortPage> implements MortContract {
+class _MortPageState extends  GismoStatePage<MortPage> implements MortContract {
   String ? _currentMotif;
   late DeathPresenter _presenter = DeathPresenter(this);
 

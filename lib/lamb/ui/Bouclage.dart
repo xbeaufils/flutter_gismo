@@ -34,9 +34,6 @@ class _BouclagePageState extends State<BouclagePage> implements BouclageContract
   String _bluetoothState ="NONE";
   final BluetoothManager _btBloc= new BluetoothManager();
 
-
-  //String _numBoucle;
-  //String _numMarquage;
   TextEditingController _numBoucleCtrl = new TextEditingController();
   TextEditingController _numMarquageCtrl = new TextEditingController();
 
@@ -143,28 +140,6 @@ class _BouclagePageState extends State<BouclagePage> implements BouclageContract
     return Row(children: status,);
   }
 
-  void _readRFID() async {
-    try {
-      String response = await PLATFORM_CHANNEL.invokeMethod("startRead");
-      await Future.delayed(Duration(seconds: 4));
-      response = await PLATFORM_CHANNEL.invokeMethod("data");
-      Map<String, dynamic> mpResponse = jsonDecode(response);
-      if (mpResponse.length > 0) {
-        setState(() {
-          _numMarquageCtrl.text = mpResponse['marquage'];
-          _numBoucleCtrl.text = mpResponse['boucle'];
-        });
-      }
-      else {
-        _showMessage("Pas de boucle lue");
-      }
-    } on PlatformException catch (e) {
-      _showMessage("Pas de boucle lue");
-    } on Exception catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace : stackTrace);
-    }
-  }
-
   @override
   void dispose() {
     _numBoucleCtrl.dispose();
@@ -174,33 +149,6 @@ class _BouclagePageState extends State<BouclagePage> implements BouclageContract
     super.dispose();
   }
 
-  void _createBete() async {
-    _formKey.currentState!.save();
-    this.widget._currentLamb.numMarquage = _numMarquageCtrl.text;
-    this.widget._currentLamb.numBoucle = _numBoucleCtrl.text;
-    Bete bete = new Bete(null, _numBoucleCtrl.text, _numMarquageCtrl.text, null, null, null, this.widget._currentLamb.sex, 'NAISSANCE');
-    Navigator.pop(context, bete);
-  }
-
-  void _showMessage(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    //_scaffoldKey.currentState.showSnackBar(snackBar);
-  }
-
-  void goodSaving(String message) {
-    Navigator.pop(context, message);
-  }
-
-  void badSaving(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    //_scaffoldKey.currentState.showSnackBar(snackBar);
-  }
 
   void returnBete(Bete bete) {
     Navigator.pop(context, bete);

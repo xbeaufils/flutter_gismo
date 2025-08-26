@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
-import 'package:flutter_gismo/individu/ui/PeseePage.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
-import 'package:flutter_gismo/lamb/ui/Bouclage.dart';
-import 'package:flutter_gismo/lamb/ui/Mort.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/lamb/presenter/LambPresenter.dart';
-import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
 
 class LambPage extends StatefulWidget {
   LambModel ? _lamb;
@@ -22,8 +17,6 @@ class LambPage extends StatefulWidget {
 }
 
 abstract class LambContract extends GismoContract {
-  Future <Bete?> showBouclage(LambModel lamb);
-  Future<String> showDeath(LambModel lamb);
 }
 
 class LambPageState extends GismoStatePage<LambPage> implements LambContract {
@@ -196,13 +189,13 @@ class LambPageState extends GismoStatePage<LambPage> implements LambContract {
             IconButton(
               icon: Image.asset("assets/peseur.png"),
               onPressed: () {
-                _openPesee(this.widget._lamb!);
+                this._presenter.peser(this.widget._lamb!);
               },),);
           actionButtons.add(
             IconButton(
               icon: Image.asset("assets/syringe.png"),
               onPressed: () {
-                _openTraitement(this.widget._lamb!);
+                this._presenter.traitement(this.widget._lamb!);
               },),);
           actionButtons.add(
             IconButton(
@@ -223,128 +216,5 @@ class LambPageState extends GismoStatePage<LambPage> implements LambContract {
   }
 
 
-  Future <Bete?> showBouclage(LambModel lamb) async {
-    Bete? bete = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => BouclagePage(lamb)),
-    );
-    return bete;
-  }
-
-  Future<String> showDeath(LambModel lamb) async {
-    var navigationResult = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => MortPage(lamb)),
-    );
-    return "Toto";
-  }
-
-
-  void _openPesee(LambModel lamb) async {
-    var navigationResult = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => PeseePage( null, lamb )),
-    );
-    print (navigationResult);
-    Navigator
-        .of(context)
-        .pop(navigationResult);
-  }
-
-  void _openTraitement(LambModel lamb) async {
-    var navigationResult = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => SanitairePage(null, lamb )),
-    );
-    print (navigationResult);
-    Navigator
-        .of(context)
-        .pop(navigationResult);
-  }
-
-  Widget _getImageType(EventType type) {
-    switch (type) {
-      case EventType.traitement :
-        return new Image.asset("assets/syringe.png");
-        break;
-      case EventType.agnelage :
-        return new Image.asset("assets/lamb.png");
-        break;
-      case EventType.NEC:
-        return new Image.asset("assets/etat_corporel.png");
-        break;
-      case EventType.entreeLot:
-        return new Image.asset("assets/Lot_entree.png");
-        break;
-      case EventType.sortieLot:
-        return new Image.asset("assets/Lot_sortie.png");
-        break;
-      case EventType.pesee:
-        return new Image.asset("assets/peseur.png");
-        break;
-      case EventType.echo:
-        return new Image.asset("assets/ultrasound.png");
-      case EventType.entree:
-      case EventType.sortie:
-      case EventType.saillie:
-        // TODO: Handle this case.
-        throw UnimplementedError();
-      case EventType.memo:
-        // TODO: Handle this case.
-        throw UnimplementedError();
-    }
-    return Container();
-  }
-
-  // set up the buttons
-  Widget _cancelButton() {
-    return TextButton(
-      child: Text(S.of(context).bt_cancel),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-  }
-
-  Widget _continueButton(Event event) {
-    return TextButton(
-      child: Text(S.of(context).bt_continue),
-      onPressed: () {
-        if (event.type == EventType.pesee || event.type == EventType.traitement)
-          _deleteEvent(event);
-        Navigator.of(context).pop();
-      },
-    );
-  }
-
-  Future _showDialog(BuildContext context, Event event) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(S.of(context).title_delete),
-          content: Text(S.of(context).text_delete),
-          actions: [
-            _cancelButton(),
-            _continueButton(event),
-          ],
-        );
-      },
-    );
-  }
-
-  void _deleteEvent(Event event) async {
-    String message = ""; //await this.widget._bloc.deleteEvent(event);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-    /*_scaffoldKey.currentState
-        .showSnackBar(SnackBar(content: Text(message)));*/
-    setState(() {
-
-    });
-  }
 }
 
