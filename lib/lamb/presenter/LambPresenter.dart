@@ -22,6 +22,35 @@ class LambTimeLinePresenter {
   void view(LambModel lamb) {
     this._view.goNextPage(LambPage.edit(lamb));
   }
+  void boucle(LambModel lamb) async {
+    Bete ? bete = await this._view.goNextPage( BouclagePage(lamb));
+    if (bete == null)
+      return;
+    try {
+      this.service.boucler(lamb, bete);
+      if (bete.idBd != null)
+        lamb.idDevenir = bete.idBd;
+      lamb.numBoucle = bete.numBoucle;
+      lamb.numMarquage = bete.numMarquage;
+    } on GismoException catch (e) {
+      this._view.showMessage(e.message, true);
+    }
+  }
+
+  void mort(LambModel lamb) {
+    this._view.goNextPage( MortPage(lamb));
+  }
+
+  void peser(LambModel lamb) async {
+    await this._view.goNextPage(  PeseePage( null, lamb ));
+    this._view.hideSaving();
+  }
+
+  void traitement(LambModel lamb) async {
+    await this._view.goNextPage( SanitairePage(null, lamb ));
+    this._view.hideSaving();
+  }
+
 }
 
 class LambPresenter {
@@ -66,11 +95,13 @@ class LambPresenter {
   }
 
   void peser(LambModel lamb) async {
-    this._view.goNextPage(  PeseePage( null, lamb ));
+    await this._view.goNextPage(  PeseePage( null, lamb ));
+    this._view.hideSaving();
   }
 
   void traitement(LambModel lamb) async {
-    this._view.goNextPage( SanitairePage(null, lamb ));
+    await this._view.goNextPage( SanitairePage(null, lamb ));
+    this._view.hideSaving();
   }
 
 }

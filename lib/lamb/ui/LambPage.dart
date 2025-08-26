@@ -34,7 +34,7 @@ class LambPageState extends GismoStatePage<LambPage> implements LambContract {
         key: _scaffoldKey,
         appBar: new AppBar(
           title: _mainTitle(),
-          actions: _getActionButton(),
+          //actions: _getActionButton(),
         ),
         body:
           SingleChildScrollView (
