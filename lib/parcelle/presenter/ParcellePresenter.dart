@@ -17,11 +17,9 @@ class ParcellePresenter {
   Map<String, dynamic> ? _cadastreJson;
   ParcelleService _service = ParcelleService();
   LocationBloc _locBloc = new LocationBloc();
-  Position ? _curentPosition;
   late Stream<LocationResult> _locationStream;
   StreamSubscription<LocationResult> ? _locationSubscription;
 
-  //late MapboxMapController _mapController;
   late MapboxMap _mapboxMap;
 
   set mapboxMap(MapboxMap value) {
@@ -46,26 +44,6 @@ class ParcellePresenter {
     if (location == null)
       return location;
     debug.log("" + location.toString(), name: "_ParcellePageState::_drawParcelles" );
-    // _mapboxMap.coordinateForPixel
-
-    /*  await _mapboxMap.flyTo(
-       CameraOptions(
-          center:  Point(coordinates: Position(-122.486052, 37.830348),), //Point( coordinates: Position(location.lng, location.lat,) ),
-          zoom: 14), MapAnimationOptions(duration: 2000, startDelay: 0));
-    // featuresJson.forEach((feature) => _drawParcelle(feature));
-    var data = await rootBundle
-        .loadString('assets/from_crema_to_council_crest.geojson');
-
-    await _mapboxMap?.style.addSource(GeoJsonSource(id: "line", data: data));
-    await _mapboxMap?.style.addLayer(LineLayer(
-        id: "line_layer",
-        sourceId: "line",
-        lineJoin: LineJoin.ROUND,
-        lineCap: LineCap.ROUND,
-        lineColor: Colors.red.value,
-        lineWidth: 6.0));
-
-    await Future.delayed(Duration(seconds: 5));*/
     await _mapboxMap.flyTo(
         CameraOptions(
             center:  Point( coordinates: Position(location.lng, location.lat,) ),
@@ -97,7 +75,6 @@ class ParcellePresenter {
     ownParcellesSrc["features"] = [];
     _myParcelles.forEach((parcelle) {
       if (allParcelles[parcelle!.idu] != null ) {
-        //_drawParcelle(allParcelles[parcelle!.idu]);
         ownParcellesSrc["features"].add(allParcelles[parcelle!.idu]);
       }
     });
@@ -147,9 +124,7 @@ class ParcellePresenter {
   Future<Position ?> _retrieveParcelles( Position ? location) async {
     if (location == null)
       return null;
-    //this._showStatus("Recherche des parcelles");
     _myParcelles =  await _service.getParcelles();
-    //this._showStatus("Recherche du cadastre");
     String cadastreStr = await _service.getCadastre(location);
     _cadastreJson =  jsonDecode(cadastreStr);
     featuresJson = _cadastreJson!['features'];
@@ -179,7 +154,6 @@ class ParcellePresenter {
     this._locationStream = this._locBloc.streamLocation();
     this._locationSubscription = this._locationStream.listen( (LocationResult result) {
       if (result.result) {
-        this._curentPosition = result.location!;
         this._locBloc.stopStream();
         this._locationSubscription!.cancel();
         this._showMap(result.location!);
