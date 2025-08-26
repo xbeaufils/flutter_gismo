@@ -61,24 +61,28 @@ abstract class EventPresenter {
     String ? message = await this.view.editPage(LambingPage.modify(lambing));
     if (message != null)
       this.view.showMessage(message);
+    this.view.hideSaving();
   }
 
   void _editTraitement(TraitementModel traitement) async {
     String ? message = await this.view.editPage(SanitairePage.modify(traitement));
     if (message != null)
       this.view.showMessage(message);
+    this.view.hideSaving();
   }
 
   void _editEcho(EchographieModel echo) async {
     String ? message = await this.view.editPage(EchoPage.modify(echo));
     if (message != null)
       this.view.showMessage(message);
+    this.view.hideSaving();
   }
 
   void _editMemo(MemoModel note) async {
     String ? message = await this.view.editPage(MemoPage.modify(note));
     if (message != null)
       this.view.showMessage(message);
+    this.view.hideSaving();
   }
 }
 
@@ -106,10 +110,11 @@ class EventLambPresenter extends EventPresenter {
     return this._lambingService.getEvents(this._lamb);
   }
 
-  void searchEvent(Event event) {
+  void searchEvent(Event event) async {
     switch (event.type) {
       case EventType.traitement:
-        this._traitementService.searchTraitement(event.idBd).then( (traitement) => { _editTraitement(traitement!)});
+        await this._traitementService.searchTraitement(event.idBd).then( (traitement) => { _editTraitement(traitement!)});
+        this.view.hideSaving();
         break;
       case EventType.echo:
       case EventType.memo:
