@@ -25,6 +25,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Objects;
+
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -118,7 +120,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
     public void onCreate(Bundle  bundle) {
         super.onCreate(bundle);
 
-        new MethodChannelBlueTooth(getFlutterEngine().getDartExecutor().getBinaryMessenger(), CHANNEL_BLUETOOTH);
+        new MethodChannelBlueTooth(Objects.requireNonNull(getFlutterEngine()).getDartExecutor().getBinaryMessenger(), CHANNEL_BLUETOOTH);
         new LocationMethod(getFlutterEngine().getDartExecutor().getBinaryMessenger(), CHANNEL_GPS, this.getContext());
         this.context = this.getContext();
     }
@@ -151,7 +153,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
             else
                 stateBluetooth = State.NONE;
             if (call.method.contentEquals("stateBlueTooth")) {
-                result.success("{\"connectionStatus\" : \"" +stateBluetooth + "\", \"dataStatus\" : \"" + stateData + "\"}");
+                result.success("{\"connectionStatus\" : \"" +stateBluetooth + "\", \"dataStatus\" : \"NONE\"}");
             }
             else if (call.method.contentEquals("connectBlueTooth")) {
                 String address = (String) call.argument("address");
@@ -163,11 +165,11 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
             else if (call.method.contentEquals("readBlueTooth")) {
                 if (bluetoothConnect == null) {
                     Log.d(TAG, "onMethodCall: bluetoothConnect is null");
-                    result.success("{ \"connectionStatus\" : \"NONE\",\"dataStatus\": \"NONE\"}");
+                    result.success("{ \"connectionStatus\" : \"" + State.NONE + "\",\"dataStatus\": \"NONE\"}");
                 }
                 else if (bluetoothConnect.getSocket() == null) {
                     Log.d(TAG, "onMethodCall: socket is null");
-                    result.success("{ \"connectionStatus\" : \"NONE\", \"dataStatus\": \"NONE\"}");
+                    result.success("{ \"connectionStatus\" : \"" + State.NONE + "\", \"dataStatus\": \"NONE\"}");
                 }
                 else {
                     if (bluetoothConnect.getSocket().isConnected()) {
@@ -175,7 +177,7 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                         reader = new BluetoothReader(bluetoothConnect.getSocket(), handler);
                         reader.start();
                         stateData = DataState.WAITING;
-                        result.success("{ \"connectionStatus\" : \"STARTED\",\"dataStatus\": \"NONE\"}");
+                        result.success("{ \"connectionStatus\" : \"" + State.CONNECTED + "\" ,\"dataStatus\": \"WAITING\"}");
                     } else {
                         Log.d(TAG, "onMethodCall: socket is not connected");
                         result.success("{ \"connectionStatus\" : \"NONE\",\"dataStatus\": \"NONE\"}");
@@ -186,18 +188,19 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
             else if (call.method.contentEquals("dataBlueTooth")) {
                 switch (stateData) {
                     case  AVAILABLE :
-                        result.success("{\"connectionStatus\" : \"" + stateBluetooth + ", \"dataStatus\": \"AVAILABLE\", \"data\" : \"" + dataBluetoooth + "\"}");
+                        result.success("{\"connectionStatus\" : \"" + stateBluetooth + "\", \"dataStatus\": \"AVAILABLE\", \"data\" : \"" + dataBluetoooth + "\"}");
                         stateData = DataState.WAITING;
                         break;
                     case WAITING:
-                        result.success("{\"connectionStatus\" : \"" + stateBluetooth + ", \"dataStatus\": \"WAITING\"}");
+                        result.success("{\"connectionStatus\" : \"" + stateBluetooth + "\", \"dataStatus\": \"WAITING\"}");
                         stateData = DataState.WAITING;
                         break;
                     case ERROR:
                         result.error("Error", "Error", "Error");
                          break;
                     case NONE:
-                        result.success("{\"connectionStatus\" : \"" + stateBluetooth + ", \"dataStatus\": \"NONE\"}");
+                        if (stateBluetooth == State.NONE)
+                        result.success("{\"connectionStatus\" : \"" + stateBluetooth + "\", \"dataStatus\": \"NONE\"}");
                         stateData = DataState.NONE;
                         break;
                 }

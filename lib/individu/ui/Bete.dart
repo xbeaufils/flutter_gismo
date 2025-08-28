@@ -10,6 +10,7 @@ import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/individu/presenter/BetePresenter.dart';
+import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:intl/intl.dart';
 import 'package:sentry/sentry.dart';
@@ -250,9 +251,9 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
     try {
       //if ( await this._bloc.configIsBt()) {
         debug.log("Start service ", name: "_BetePageState::_startService");
-        BluetoothState _bluetoothState =  await this._presenter.startReadBluetooth();
-        if (_bluetoothState.status != null)
-          debug.log("Start status " + _bluetoothState.status!, name: "_BetePageState::_startService");
+        StatusBlueTooth _bluetoothState =  await this._presenter.startReadBluetooth();
+        if (_bluetoothState.connectionStatus != null)
+          debug.log("Start status " + _bluetoothState.connectionStatus!, name: "_BetePageState::_startService");
      } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
     }

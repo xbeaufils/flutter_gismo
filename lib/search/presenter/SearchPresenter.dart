@@ -16,8 +16,10 @@ import 'package:flutter_gismo/lamb/ui/lambing.dart';
 import 'package:flutter_gismo/memo/ui/MemoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
+import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:flutter_gismo/services/BeteService.dart';
+import 'package:flutter_gismo/services/BluetoothService.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 enum mode{typing, ready}
@@ -31,6 +33,7 @@ class SearchPresenter {
   List<Bete> _filteredBetes = <Bete>[];
   List<Bete> _betes = <Bete>[];
   BeteService _service = BeteService();
+  BluetoothService _blService = BluetoothService();
   BluetoothManager _mgr = BluetoothManager();
   StreamSubscription<BluetoothState> ? _bluetoothSubscription;
 
@@ -156,14 +159,47 @@ class SearchPresenter {
 
   Future<void> startService() async{
     try {
-      debug.log("Start service ", name: "_SearchPageState::_startService");
-      BluetoothState _bluetoothState = await this._mgr.startReadBluetooth();
-      if (_bluetoothState.status != null)
-        debug.log("Start status " + _bluetoothState.status!, name: "_SearchPageState::_startService");
+      debug.log("Start service ", name: "SearchPresenter::startService");
+      /*
+      StatusBlueTooth _bluetoothState = await this._blService.startReadBluetooth();
+      if (_bluetoothState.connectionStatus != null)
+        debug.log("Start status " + _bluetoothState.connectionStatus!, name: "SearchPresenter::startService");
+      this._view.bluetoothState = _bluetoothState;
+      this._blService.handleStatus(this.handleBlueTooth);
+       */
+      StatusBlueTooth status= await this._blService.startReadBluetooth();
+      if (status.connectionStatus == 'CONNECTED') {
+        await this._blService.readBluetooth();
+        this._blService.handleData(this.handleBlueTooth);
+      }
     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       debug.log(e.toString());
     }
+  }
+
+  void handleBlueTooth(StatusBlueTooth event) {
+    if ( event.connectionStatus != null)
+    debug.log("Status " + event.connectionStatus!, name: "SearchPresenter::handleBlueTooth");
+      if (this._view.bluetoothState.dataStatus != event.dataStatus
+        || this._view.bluetoothState.connectionStatus != event.dataStatus ) {
+        if(event.connectionStatus == 'NONE')
+          return;
+        if (event.dataStatus == 'AVAILABLE') {
+          String _foundBoucle = event.data!;
+          if (_foundBoucle.length > 15)
+            _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
+          _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 5);
+          _searchText = _foundBoucle;
+          _filter.text = _foundBoucle;
+          searchPressed();
+        }
+        this._view.bluetoothState = event;
+      }
+  }
+
+  void handleDataBlueTooth(StatusBlueTooth event) {
+
   }
 
   void dispose() {

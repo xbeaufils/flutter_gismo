@@ -18,17 +18,17 @@ class BluetoothManager {
   static const String LISTEN = "LISTEN";
   static const String ERROR = "ERROR";
 
-  Future<BluetoothState> startReadBluetooth() async {
-    BluetoothState state;
+  Future<StatusBlueTooth> startReadBluetooth() async {
+    StatusBlueTooth state;
     //FlutterSecureStorage storage = new FlutterSecureStorage();
     //String address = await storage.read(key: "address");
     //debug.log("read data status " + address, name: "GismoBloc::startReadBluetooth");
     String status = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth" ); //, { 'address': address});
     debug.log("read status " + status, name: "BluetoothManager::startReadBluetooth");
-    state = BluetoothState.fromResult(json.decode(status));
+    state = StatusBlueTooth.fromResult(json.decode(status));
     return state;
   }
-
+/*
   Stream<BluetoothState> streamConnectBluetooth(String address) async* {
     BluetoothState state;
     /*FlutterSecureStorage storage = new FlutterSecureStorage();
@@ -41,7 +41,7 @@ class BluetoothManager {
       debug.log("Erreur ", error: e );
     }
   }
-
+*/
   Future<BluetoothState> connectBlueTooth(String address) async {
     String status = await BLUETOOTH_CHANNEL.invokeMethod("connectBlueTooth" , { 'address': address});
     return BluetoothState.fromResult(json.decode(status));
@@ -68,13 +68,13 @@ class BluetoothManager {
     return state;
   }
 
-  Future<BluetoothState> readBluetooth() async {
+  Future<StatusBlueTooth> readBluetooth() async {
     String status;
-    BluetoothState state;
+    StatusBlueTooth state;
     status = await BLUETOOTH_CHANNEL.invokeMethod("dataBlueTooth");
     await Future.delayed(Duration(seconds: 1));
-    debug.log("data status " + status, name: "BluetoothManager::streamReadBluetooth");
-    state = BluetoothState.fromResult(json.decode(status));
+    debug.log("data status " + status, name: "BluetoothManager::readBluetooth");
+    state = StatusBlueTooth.fromResult(json.decode(status));
     return state;
 }
 

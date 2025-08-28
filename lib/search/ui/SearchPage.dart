@@ -9,6 +9,7 @@ import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/search/presenter/SearchPresenter.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -27,8 +28,8 @@ abstract class SearchContract extends GismoContract {
   void goPreviousPage(Bete bete);
   void setBoucle(String numBoucle);
   void toggleSearchBar(Icon icon, Widget appbarTitile);
-  String get bluetoothState;
-  set bluetoothState(String value);
+  StatusBlueTooth get bluetoothState;
+  set bluetoothState(StatusBlueTooth value);
   set filteredBetes(List<Bete> value);
   set betes(List<Bete> value);
   GismoPage get nextPage;
@@ -49,11 +50,14 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   } //new List();
   List<Bete> _filteredBetes = <Bete>[]; //new List();
 
-  String _bluetoothState ="NONE";
-  set bluetoothState(String value) {
-    _bluetoothState = value;
+  StatusBlueTooth _bluetoothState = StatusBlueTooth.none();
+
+  set bluetoothState(StatusBlueTooth value) {
+    setState(() {
+      _bluetoothState = value;
+    });
   }
-  String get bluetoothState => _bluetoothState;
+  StatusBlueTooth get bluetoothState => _bluetoothState;
 
   late Icon _searchIcon ; //= Icon(Icons.search);
   late Widget _appBarTitle; // = Text( S.current.earring_search );
@@ -69,6 +73,10 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
     });*/
     this._presenter.getBetes(null);
     this._presenter.buildSearchBar();
+    if (AuthService().subscribe && defaultTargetPlatform == TargetPlatform.android)
+      new Future.delayed(Duration.zero,() {
+        this._presenter.startService();
+      });
     super.initState();
   }
 
@@ -89,11 +97,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   }
 
   Widget build(BuildContext context) {
-    if (AuthService().subscribe && defaultTargetPlatform == TargetPlatform.android)
-      new Future.delayed(Duration.zero,() {
-        this._presenter.startService();
-      });
-    if ( ! AuthService().subscribe ) {
+     if ( ! AuthService().subscribe ) {
       this._adBanner = BannerAd(
         adUnitId: _getBannerAdUnitId(), //'<ad unit ID>',
         size: AdSize.banner,
@@ -129,19 +133,21 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
     if ( ! AuthService().subscribe )
       return Container();
     List<Widget> status = <Widget>[]; //new List();
-    switch (_bluetoothState) {
-      case "NONE":
-        status.add(Icon(Icons.bluetooth));
-        status.add(Text(S.of(context).not_connected));
-        break;
-      case "WAITING":
-        status.add(Icon(Icons.bluetooth));
-        status.add(Expanded(child: LinearProgressIndicator(),));
-        break;
-      case "AVAILABLE":
-        status.add(Icon(Icons.bluetooth));
-        status.add(Text(S.of(context).data_available));
+    if (_bluetoothState.connectionStatus == "CONNECTED")
+      switch (_bluetoothState.dataStatus) {
+         case "WAITING":
+          status.add(Icon(Icons.bluetooth));
+          status.add(Expanded(child: LinearProgressIndicator(),));
+          break;
+        case "AVAILABLE":
+          status.add(Icon(Icons.bluetooth));
+          status.add(Text(S.of(context).data_available));
+      }
+    else {
+      status.add(Icon(Icons.bluetooth));
+      status.add(Text(S.of(context).not_connected));
     }
+
     return Row(children: status,);
   }
 

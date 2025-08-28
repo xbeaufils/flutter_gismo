@@ -3,6 +3,7 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/ui/Bete.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
+import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/services/BeteService.dart';
 import 'package:flutter_gismo/services/BluetoothService.dart';
 import 'package:intl/intl.dart';
@@ -71,7 +72,7 @@ class BetePresenter {
     return null;
   }
 
-  Future<BluetoothState> startReadBluetooth() {
+  Future<StatusBlueTooth> startReadBluetooth() {
     return _bluetoothService.startReadBluetooth();
   }
 
