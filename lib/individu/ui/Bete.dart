@@ -253,31 +253,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
         BluetoothState _bluetoothState =  await this._presenter.startReadBluetooth();
         if (_bluetoothState.status != null)
           debug.log("Start status " + _bluetoothState.status!, name: "_BetePageState::_startService");
-        if (_bluetoothState.status == BluetoothManager.CONNECTED
-            || _bluetoothState.status == BluetoothManager.STARTED) {
-          this._bluetoothStream = this._btBloc.streamReadBluetooth();
-          this._bluetoothSubscription = this._bluetoothStream.listen(
-        //this.widget._bloc.streamBluetooth().listen(
-                (BluetoothState event) {
-                  if (this._bluetoothState != event.status)
-                    setState(() {
-                      this._bluetoothState = event.status!;
-                      if (event.status == 'AVAILABLE') {
-                        String ? _foundBoucle = event.data;
-                        if ( _foundBoucle != null) {
-                          if (_foundBoucle.length > 15)
-                            _foundBoucle = _foundBoucle.substring(
-                                _foundBoucle.length - 15);
-                          _numBoucleCtrl.text =
-                              _foundBoucle.substring(_foundBoucle.length - 5);
-                          _numMarquageCtrl.text = _foundBoucle.substring(
-                              0, _foundBoucle.length - 5);
-                        }
-                      }
-                    });
-                  });
-      }
-    } on Exception catch (e, stackTrace) {
+     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
     }
     String start= "toto";
@@ -287,6 +263,25 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
     return start;
   }
 
+  void handleBluetoothData(BluetoothState event) {
+      if (this._bluetoothState != event.status)
+        setState(() {
+          this._bluetoothState = event.status!;
+          if (event.status == 'AVAILABLE') {
+            String ? _foundBoucle = event.data;
+            if ( _foundBoucle != null) {
+              if (_foundBoucle.length > 15)
+                _foundBoucle = _foundBoucle.substring(
+                    _foundBoucle.length - 15);
+              _numBoucleCtrl.text =
+                  _foundBoucle.substring(_foundBoucle.length - 5);
+              _numMarquageCtrl.text = _foundBoucle.substring(
+                  0, _foundBoucle.length - 5);
+            }
+          }
+        });
+
+    }
   @override
   void dispose() {
     // other dispose methods

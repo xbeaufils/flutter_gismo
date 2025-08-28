@@ -6,14 +6,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
+import 'package:flutter_gismo/model/DeviceModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class BluetoothService {
-  static const  BLUETOOTH_CHANNEL =  MethodChannel('nemesys.rfid.bluetooth');
+  bool _streamStatus = false;
   final BluetoothManager _mgr = BluetoothManager();
-  String _bluetoothState ="NONE";
-  StreamSubscription<BluetoothState> ? _bluetoothSubscription;
+  StreamSubscription<BluetoothState> ? _bluetoothReadSubscription;
   StreamSubscription<StatusBlueTooth> ? _bluetoothStatusSubscription;
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
 
@@ -22,77 +22,68 @@ class BluetoothService {
       return "start";
     try {
       //if ( await this._bloc.configIsBt()) {
-      debug.log("Start service ", name: "_BetePageState::_startService");
+      debug.log("Start service ", name: "BluetoothService::startService");
       BluetoothState _bluetoothState =  await startReadBluetooth();
       if (_bluetoothState.status != null)
-        debug.log("Start status " + _bluetoothState.status!, name: "_BetePageState::_startService");
-      if (_bluetoothState.status == BluetoothManager.CONNECTED
-          || _bluetoothState.status == BluetoothManager.STARTED) {
-        this._bluetoothSubscription = this._mgr.streamReadBluetooth().listen(
-          //this.widget._bloc.streamBluetooth().listen(
-                (BluetoothState event) {
-              if (this._bluetoothState != event.status)
-                //setState(() {
-                  this._bluetoothState = event.status!;
-                  if (event.status == 'AVAILABLE') {
-                    String ? _foundBoucle = event.data;
-                    if ( _foundBoucle != null) {
-                      if (_foundBoucle.length > 15)
-                        _foundBoucle = _foundBoucle.substring(
-                            _foundBoucle.length - 15);/*
-                      _numBoucleCtrl.text =
-                          _foundBoucle.substring(_foundBoucle.length - 5);
-                      _numMarquageCtrl.text = _foundBoucle.substring(
-                          0, _foundBoucle.length - 5);*/
-                    }
-                  }
-                //});
-            });
-      }
+        debug.log("Start status " + _bluetoothState.status!, name: "BluetoothService::startService");
     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
     }
-    String start= await PLATFORM_CHANNEL.invokeMethod("start");
+    String start= "start";// await PLATFORM_CHANNEL.invokeMethod("start");
     //setState(() {
       //_rfidPresent =  (start == "start");
     //});
     return start;
   }
 
-  Stream<BluetoothState> streamConnectBluetooth(String address) async* {
-    BluetoothState state;
-    /*FlutterSecureStorage storage = new FlutterSecureStorage();
-    String address = await storage.read(key: "address");*/
-    try {
-      String status = await BLUETOOTH_CHANNEL.invokeMethod("connectBlueTooth", { 'address': address});
-      debug.log("Connect status " + status, name: "streamConnectBluetooth");
-      yield  state = BluetoothState.fromResult(json.decode(status));
+  Future<BluetoothState> connectBluetooth(String address, Function f) async {
+     try {
+       BluetoothState state = await this._mgr.connectBlueTooth(address);
+       return state;
     } on PlatformException catch(e) {
       debug.log("Erreur ", error: e );
     }
+    return BluetoothState.none();
+  }
+
+  Stream<StatusBlueTooth> _streamStatusBluetooth() async* {
+    StatusBlueTooth  state;
+    /*if (_streamStatus)
+      return;*/
+    _streamStatus = true;
+    while (_streamStatus) {
+      await Future.delayed(Duration(milliseconds: 500));
+      yield state = await _mgr.getStatus();
+    }
+  }
+
+  void handleStatus(Function f) {
+    _bluetoothStatusSubscription = this._streamStatusBluetooth().listen((StatusBlueTooth event) => f(event));
   }
 
   Future<BluetoothState> startReadBluetooth() async {
     if (kIsWeb)
       return BluetoothState.none();
-    BluetoothState state;
-    //FlutterSecureStorage storage = new FlutterSecureStorage();
-    //String address = await storage.read(key: "address");
-    //debug.log("read data status " + address, name: "GismoBloc::startReadBluetooth");
-    String status = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth" ); //, { 'address': address});
-    debug.log("read status " + status, name: "GismoBloc::startReadBluetooth");
-    state = BluetoothState.fromResult(json.decode(status));
-    return state;
-  }
+    return await this._mgr.startReadBluetooth();
+
+ }
 
   void stopBluetooth() {
-    BLUETOOTH_CHANNEL.invokeMethod("stopBlueTooth");
+    this._mgr.stopBluetooth();
   }
 
   void stopReadBluetooth() {
-    BLUETOOTH_CHANNEL.invokeMethod("stopReadBlueTooth");
+    this._mgr.stopReadBluetooth();
   }
-  Stream <BluetoothState> streamReadBluetooth() {
-    return _mgr.streamReadBluetooth();
+
+  void stopStream() {
+    if (_bluetoothStatusSubscription != null)
+      _bluetoothStatusSubscription!.cancel();
+    _streamStatus = false;
   }
+
+  Future<List<DeviceModel>> getDeviceList() async {
+    return await _mgr.getDeviceList();
+   }
+
 }

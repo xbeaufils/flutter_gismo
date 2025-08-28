@@ -173,48 +173,5 @@ class LambPageState extends GismoStatePage<LambPage> implements LambContract {
       ) ;
   }
 
-  List<Widget> _getActionButton() {
-    List <Widget> actionButtons = [];
-    if (this.widget._lamb == null)
-      actionButtons.add(Container());
-    else {
-      if (_sante != Sante.VIVANT)
-        actionButtons.add(Container());
-      else {
-        if (this.widget._lamb!.dateDeces != null ||
-            this.widget._lamb!.numBoucle != null)
-          actionButtons.add(Container());
-        else {
-          actionButtons.add(
-            IconButton(
-              icon: Image.asset("assets/peseur.png"),
-              onPressed: () {
-                this._presenter.peser(this.widget._lamb!);
-              },),);
-          actionButtons.add(
-            IconButton(
-              icon: Image.asset("assets/syringe.png"),
-              onPressed: () {
-                this._presenter.traitement(this.widget._lamb!);
-              },),);
-          actionButtons.add(
-            IconButton(
-              icon: Image.asset("assets/tomb.png"),
-              onPressed: () {
-                this._presenter.mort(this.widget._lamb!);
-              },),);
-          actionButtons.add(
-              IconButton(
-                icon: Image.asset("assets/bouclage.png"),
-                onPressed: () {
-                  this._presenter.boucle(this.widget._lamb!);
-                },));
-        }
-      }
-    }
-    return actionButtons;
-  }
-
-
 }
 

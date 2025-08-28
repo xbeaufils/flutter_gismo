@@ -160,28 +160,6 @@ class SearchPresenter {
       BluetoothState _bluetoothState = await this._mgr.startReadBluetooth();
       if (_bluetoothState.status != null)
         debug.log("Start status " + _bluetoothState.status!, name: "_SearchPageState::_startService");
-      if (_bluetoothState.status == BluetoothManager.CONNECTED
-          || _bluetoothState.status == BluetoothManager.STARTED) {
-        Stream<BluetoothState> bluetoothStream = this._mgr.streamReadBluetooth();
-        this._bluetoothSubscription = bluetoothStream.listen(
-                (BluetoothState event) {
-              if ( event.status != null)
-                debug.log("Status " + event.status!, name: "_SearchPageState::_startService");
-              if (this._view.bluetoothState != event.status)
-                //setState(() {
-                  this._view.bluetoothState = event.status!;
-                  if (event.status == 'AVAILABLE') {
-                    String _foundBoucle = event.data!;
-                    if (_foundBoucle.length > 15)
-                      _foundBoucle =
-                          _foundBoucle.substring(_foundBoucle.length - 15);
-                    _foundBoucle =
-                        _foundBoucle.substring(_foundBoucle.length - 5);
-                    this._view.setBoucle(_foundBoucle);
-                  }
-                //});
-            });
-      }
     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       debug.log(e.toString());

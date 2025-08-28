@@ -17,6 +17,7 @@ class BluetoothPermissionPage extends StatefulWidget {
   @override
   BluetoothPermissionPageState createState() => new BluetoothPermissionPageState();
 }
+
 abstract class BluetoothPermissionContract extends GismoContract {
 
 }
@@ -118,13 +119,7 @@ abstract class BluetoothContract implements GismoContract {
 }
 
 class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements BluetoothContract {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  //final GismoBloc _bloc;
   late BluetoothPresenter _presenter;
-  static const  BLUETOOTH_CHANNEL = const MethodChannel('nemesys.rfid.bluetooth');
-  late Stream<BluetoothState> _bluetoothStream;
-  //StreamSubscription<BluetoothState> ? _bluetoothSubscription;
-  //StreamSubscription<StatusBlueTooth> ? _bluetoothStatusSubscription;
 
   String _bluetoothState = BluetoothManager.NONE;
 
@@ -189,19 +184,19 @@ class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements B
     if ( this._isDeviceSelected(device)) {
       switch( this._bluetoothState) {
         case BluetoothManager.NONE:
-          return Switch(value: false, onChanged: (value) { this._presenter.startBlueTooth(value);
+          return Switch(value: false, onChanged: (value) { this._presenter.connect(value);
               //_switchBluetooth(value, device.address);
           } );
         case BluetoothManager.CONNECTING:
           return CircularProgressIndicator();
         case BluetoothManager.LISTEN:
         case BluetoothManager.CONNECTED :
-          return Switch(value: true, onChanged: (value) { this._presenter.startBlueTooth(value);
+          return Switch(value: true, onChanged: (value) { this._presenter.connect(value);
           //_switchBluetooth(value, device.address);
           } );
         case BluetoothManager.ERROR:
           this._presenter.stopBluetoothStream();
-           return Switch(value: false, onChanged: (value) { this._presenter.startBlueTooth(value);
+           return Switch(value: false, onChanged: (value) { this._presenter.connect(value);
            //_switchBluetooth(value, device.address);
            } );
 

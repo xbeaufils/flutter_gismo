@@ -14,45 +14,33 @@ import 'dart:developer' as debug;
 class BluetoothPresenter {
 
   final BluetoothContract _view;
-  final BluetoothManager _mgr = BluetoothManager();
   final BluetoothService _service = BluetoothService();
   StreamSubscription<BluetoothState> ? _bluetoothSubscription;
   StreamSubscription<StatusBlueTooth> ? _bluetoothStatusSubscription;
   late Stream<BluetoothState> _bluetoothStream;
 
-  BluetoothPresenter(this._view);
+  BluetoothPresenter(this._view) {
+    this._service.handleStatus( this.handlerStatus);
+  }
+
+  void handlerStatus(StatusBlueTooth event) {
+    if (event.connectionStatus == null)
+      event.connectionStatus =  BluetoothManager.NONE;
+   if (_view.bluetoothState != event.connectionStatus)
+        _view.bluetoothState = event.connectionStatus!;
+   }
 
   Future<List<DeviceModel>> getDeviceList() async {
-    List<DeviceModel> lstReturnDevice = await _mgr.getDeviceList();
+    List<DeviceModel> lstReturnDevice = await _service.getDeviceList();
     DeviceModel ? selectedDevice;
     lstReturnDevice.forEach((device) {
       if (device.connected )
         selectedDevice = device;
     });
-    if (selectedDevice != null) {
-      try {
-        _bluetoothStatusSubscription =
-            this._mgr.streamStatusBluetooth().listen((event) {
-              if (this._view.bluetoothState != event.connect) {
-                this._view.bluetoothState = event.connect;
-                if (event.connect == BluetoothManager.CONNECTED) {
-                  selectedDevice!.connected = true;
-                  //this._bluetoothStatusSubscription!.cancel();
-                }
-              }
-              if (this._view.bluetoothState == BluetoothManager.ERROR)
-                this._view.showMessage("Erreur bluetooth");
-            });
-      } on Exception catch (e, stackTrace) {
-        Sentry.captureException(e, stackTrace: stackTrace);
-        debug.log(e.toString());
-      }
-      this._view.selectedDevice = selectedDevice;
-    }
     return lstReturnDevice;
   }
 
-  void startBlueTooth(value) {
+  void connect(value) {
     DeviceModel selectedDevice =  this._view.selectedDevice! ;
 
     if (! value) {
@@ -62,21 +50,18 @@ class BluetoothPresenter {
       _view.selectedDevice = selectedDevice;
       return;
     }
-    try {
-      _bluetoothStream = _service.streamConnectBluetooth(selectedDevice.address);
-      _bluetoothSubscription = _bluetoothStream.listen((BluetoothState event) {
-        _view.bluetoothState = event.status!;
-        if (event.status == BluetoothManager.STARTED) {
-          debug.log("Change connected " + value.toString(),  name: "_startBlueTooth");
-          DeviceModel selectedDevice = _view.selectedDevice!;
-          selectedDevice.connected = value;
-          _view.selectedDevice = selectedDevice;
-        }
-      });
-    } on Exception catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace : stackTrace);
-      debug.log(e.toString());
+    _service.connectBluetooth(selectedDevice.address, handleState);
+  }
+
+  void handleState(bool value, BluetoothState event) {
+    _view.bluetoothState = event.status!;
+    if (event.status == BluetoothManager.STARTED) {
+      debug.log("Change connected " + value.toString(),  name: "BluetoothPresenter::startBlueTooth");
+      DeviceModel selectedDevice = _view.selectedDevice!;
+      selectedDevice.connected = value;
+      _view.selectedDevice = selectedDevice;
     }
+
   }
 
   void stopBluetoothStream()  {
@@ -84,8 +69,8 @@ class BluetoothPresenter {
       this._bluetoothSubscription?.cancel();
     if (this._bluetoothStatusSubscription != null) {
       this._bluetoothStatusSubscription!.cancel();
-      this._mgr.stopStream();
     }
+    this._service.stopStream();
   }
 
   void selectDevice (DeviceModel device) {

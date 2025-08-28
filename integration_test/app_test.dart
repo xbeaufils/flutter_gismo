@@ -47,7 +47,7 @@ void main() {
           final btSave = find.text("Enregistrer");
           await tester.tap(btSave);
         });
-    //testAgnelage();
+    testAgnelage();
     testLot();
    });
 }

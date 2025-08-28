@@ -7,7 +7,6 @@ import 'package:flutter_gismo/lamb/ui/LambPage.dart';
 import 'package:flutter_gismo/lamb/ui/LambTimeLine.dart';
 import 'package:flutter_gismo/lamb/ui/Mort.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/services/LambingService.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
@@ -75,35 +74,6 @@ class LambPresenter {
     }
   }
 
-  void boucle(LambModel lamb) async {
-    Bete ? bete = await this._view.goNextPage( BouclagePage(lamb));
-    if (bete == null)
-      return;
-    try {
-      this.service.boucler(lamb, bete);
-      if (bete.idBd != null)
-        lamb.idDevenir = bete.idBd;
-      lamb.numBoucle = bete.numBoucle;
-      lamb.numMarquage = bete.numMarquage;
-    } on GismoException catch (e) {
-      this._view.showMessage(e.message, true);
-    }
-  }
-
-  void mort(LambModel lamb) {
-    this._view.goNextPage( MortPage(lamb));
-  }
-
-  void peser(LambModel lamb) async {
-    await this._view.goNextPage(  PeseePage( null, lamb ));
-    this._view.hideSaving();
-  }
-
-  void traitement(LambModel lamb) async {
-    await this._view.goNextPage( SanitairePage(null, lamb ));
-    this._view.hideSaving();
-  }
-
 }
 
 class BouclagePresenter {
@@ -117,7 +87,6 @@ class BouclagePresenter {
     lamb.numBoucle = numBoucle;
     Bete bete = new Bete(null, numBoucle, numMarquage, null, null, null, lamb.sex, 'NAISSANCE');
     this._view.returnBete(bete);
-    //Navigator.pop(context, bete);
   }
 
 }

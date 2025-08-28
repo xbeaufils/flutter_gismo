@@ -118,51 +118,15 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
     public void onCreate(Bundle  bundle) {
         super.onCreate(bundle);
 
-/*        new MethodChannel(getFlutterEngine().getDartExecutor().getBinaryMessenger(), CHANNEL_RT610)
-                .setMethodCallHandler(this::onMethodCall);*/
         new MethodChannelBlueTooth(getFlutterEngine().getDartExecutor().getBinaryMessenger(), CHANNEL_BLUETOOTH);
         new LocationMethod(getFlutterEngine().getDartExecutor().getBinaryMessenger(), CHANNEL_GPS, this.getContext());
-        /*
-        Intent intent = getIntent();
-        intent.getAction();
-        intent.getType();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("nemesys.rfid.LF134.result");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            super.registerReceiver(this.receiver, intentFilter, Context.RECEIVER_EXPORTED);
-        } else {
-            ContextCompat.registerReceiver(super.getContext(), this.receiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
-        }*/
         this.context = this.getContext();
     }
 
     public void onDestroy() {
         super.onDestroy();
- /*       if (receiver != null) {
-            unregisterReceiver(receiver);
-        }*/
-    }
-/*
-    public class RFIDReceiver extends BroadcastReceiver {
-        public RFIDReceiver() {
-        }
-
-        public void onReceive(Context context, Intent intent) {
-            Bundle extras;
-            String action = intent.getAction();
-            Log.d("boucleReceiver", "action " + action);
-            if (action.equals("nemesys.rfid.LF134.result") && (extras = intent.getExtras()) != null) {
-                id = extras.getString("id");
-                nation = extras.getString("nation");
-                boucle = extras.getString("boucle");
-                marquage = extras.getString("marquage");
-                newValue = true;
-                Log.d("boucleReceiver", "id " + id + " boucle " + boucle + " marquage " + marquage);
-            }
-        }
     }
 
- */
     public class MethodChannelBlueTooth extends  MethodChannel {
         public MethodChannelBlueTooth(BinaryMessenger messenger, String name) {
             super(messenger, name);
@@ -187,23 +151,23 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
             else
                 stateBluetooth = State.NONE;
             if (call.method.contentEquals("stateBlueTooth")) {
-                result.success("{\"connect\" : \"" +stateBluetooth + "\", \"data\" : \"" + stateData + "\"}");
+                result.success("{\"connectionStatus\" : \"" +stateBluetooth + "\", \"dataStatus\" : \"" + stateData + "\"}");
             }
             else if (call.method.contentEquals("connectBlueTooth")) {
                 String address = (String) call.argument("address");
                 BluetoothHandler handler = new BluetoothHandler();
                 bluetoothConnect = new BluetoothConnect(address, handler);
                 bluetoothConnect.start();
-                result.success("{ \"status\" : \"CONNECTING\"}");
+                result.success("{ \"connectionStatus\" : \"CONNECTING\", \"dataStatus\": \"NONE\"}");
             }
             else if (call.method.contentEquals("readBlueTooth")) {
                 if (bluetoothConnect == null) {
                     Log.d(TAG, "onMethodCall: bluetoothConnect is null");
-                    result.success("{ \"status\" : \"NONE\"}");
+                    result.success("{ \"connectionStatus\" : \"NONE\",\"dataStatus\": \"NONE\"}");
                 }
                 else if (bluetoothConnect.getSocket() == null) {
                     Log.d(TAG, "onMethodCall: socket is null");
-                    result.success("{ \"status\" : \"NONE\"}");
+                    result.success("{ \"connectionStatus\" : \"NONE\", \"dataStatus\": \"NONE\"}");
                 }
                 else {
                     if (bluetoothConnect.getSocket().isConnected()) {
@@ -211,10 +175,10 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
                         reader = new BluetoothReader(bluetoothConnect.getSocket(), handler);
                         reader.start();
                         stateData = DataState.WAITING;
-                        result.success("{ \"status\" : \"STARTED\"}");
+                        result.success("{ \"connectionStatus\" : \"STARTED\",\"dataStatus\": \"NONE\"}");
                     } else {
                         Log.d(TAG, "onMethodCall: socket is not connected");
-                        result.success("{ \"status\" : \"NONE\"}");
+                        result.success("{ \"connectionStatus\" : \"NONE\",\"dataStatus\": \"NONE\"}");
                     }
 
                 }
@@ -222,18 +186,18 @@ public class MainActivity extends FlutterActivity  implements  MethodChannel.Met
             else if (call.method.contentEquals("dataBlueTooth")) {
                 switch (stateData) {
                     case  AVAILABLE :
-                        result.success("{\"status\": \"AVAILABLE\", \"data\" : \"" + dataBluetoooth + "\"}");
+                        result.success("{\"connectionStatus\" : \"" + stateBluetooth + ", \"dataStatus\": \"AVAILABLE\", \"data\" : \"" + dataBluetoooth + "\"}");
                         stateData = DataState.WAITING;
                         break;
                     case WAITING:
-                        result.success("{\"status\": \"WAITING\"}");
+                        result.success("{\"connectionStatus\" : \"" + stateBluetooth + ", \"dataStatus\": \"WAITING\"}");
                         stateData = DataState.WAITING;
                         break;
                     case ERROR:
                         result.error("Error", "Error", "Error");
                          break;
                     case NONE:
-                        result.success("{\"status\": \"NONE\"}");
+                        result.success("{\"connectionStatus\" : \"" + stateBluetooth + ", \"dataStatus\": \"NONE\"}");
                         stateData = DataState.NONE;
                         break;
                 }

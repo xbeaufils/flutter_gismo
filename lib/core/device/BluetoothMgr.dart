@@ -29,6 +29,24 @@ class BluetoothManager {
     return state;
   }
 
+  Stream<BluetoothState> streamConnectBluetooth(String address) async* {
+    BluetoothState state;
+    /*FlutterSecureStorage storage = new FlutterSecureStorage();
+    String address = await storage.read(key: "address");*/
+    try {
+      String status = await BLUETOOTH_CHANNEL.invokeMethod("connectBlueTooth", { 'address': address});
+      debug.log("Connect status " + status, name: "streamConnectBluetooth");
+      yield  state = BluetoothState.fromResult(json.decode(status));
+    } on PlatformException catch(e) {
+      debug.log("Erreur ", error: e );
+    }
+  }
+
+  Future<BluetoothState> connectBlueTooth(String address) async {
+    String status = await BLUETOOTH_CHANNEL.invokeMethod("connectBlueTooth" , { 'address': address});
+    return BluetoothState.fromResult(json.decode(status));
+  }
+
   Stream<StatusBlueTooth> streamStatusBluetooth() async* {
     StatusBlueTooth state;
     if (_streamStatus)
@@ -36,25 +54,29 @@ class BluetoothManager {
     _streamStatus = true;
     while (_streamStatus) {
       String strStatus = await BLUETOOTH_CHANNEL.invokeMethod("stateBlueTooth");
-      debug.log("status " + strStatus, name: "BluetoothBloc::streamStatusBluetooth");
+      debug.log("status " + strStatus, name: "BluetoothManager::streamStatusBluetooth");
       await Future.delayed(Duration(milliseconds: 500));
       yield state = StatusBlueTooth.fromResult(json.decode(strStatus));
     }
   }
 
-  Stream <BluetoothState> streamReadBluetooth() async* {
+  Future<StatusBlueTooth> getStatus() async {
+    StatusBlueTooth state;
+    String strStatus = await BLUETOOTH_CHANNEL.invokeMethod("stateBlueTooth");
+    debug.log("status " + strStatus, name: "BluetoothManager::streamStatusBluetooth");
+    state = StatusBlueTooth.fromResult(json.decode(strStatus));
+    return state;
+  }
+
+  Future<BluetoothState> readBluetooth() async {
     String status;
     BluetoothState state;
-    if (_streamStatus)
-      return;
-    _streamStatus = true;
-    while (_streamStatus) {
-      status = await BLUETOOTH_CHANNEL.invokeMethod("dataBlueTooth");
-      await Future.delayed(Duration(seconds: 1));
-      debug.log("data status " + status, name: "BluetoothBloc::streamReadBluetooth");
-      yield  state = BluetoothState.fromResult(json.decode(status));
-    }
-  }
+    status = await BLUETOOTH_CHANNEL.invokeMethod("dataBlueTooth");
+    await Future.delayed(Duration(seconds: 1));
+    debug.log("data status " + status, name: "BluetoothManager::streamReadBluetooth");
+    state = BluetoothState.fromResult(json.decode(status));
+    return state;
+}
 
   void stopStream() {
     _streamStatus = false;
@@ -64,9 +86,13 @@ class BluetoothManager {
     BLUETOOTH_CHANNEL.invokeMethod("stopReadBlueTooth");
   }
 
+  void stopBluetooth() {
+    BLUETOOTH_CHANNEL.invokeMethod("stopBlueTooth");
+  }
+
   Future<List<DeviceModel>> getDeviceList() async {
     BluetoothModel model = new BluetoothModel();
-    debug.log("Get device List ", name: "_getDeviceList");
+    debug.log("Get device List ", name: "BluetoothManager::getDeviceList");
     String response = await BLUETOOTH_CHANNEL.invokeMethod("listBlueTooth");
     List<DeviceModel> lstReturnDevice = ( jsonDecode(response) as List).map( (i) => DeviceModel.fromResult(i)).toList();
     return lstReturnDevice;

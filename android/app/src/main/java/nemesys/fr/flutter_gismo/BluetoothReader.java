@@ -71,7 +71,7 @@ public class BluetoothReader extends Thread {
                 Sentry.captureException(e);
                 return;
             } catch (InterruptedException e) {
-                 e.printStackTrace();
+                 Log.e(TAG,"Erreur", e);
              }
         }
         Log.d(TAG, "run: End of run : reading = " + reading.get());

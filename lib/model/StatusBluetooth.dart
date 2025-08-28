@@ -1,14 +1,17 @@
 class StatusBlueTooth {
  static String CONNECTED="CONNECTED";
 
-  late String connect;
+  late String connectionStatus;
+  late String dataStatus;
   //\" : \"" +stateBluetooth + "\", "
   late String data;
   //\" : \"" + stateData + "\"}");
 
   StatusBlueTooth.fromResult(result) {
-    connect= result["connect"] ;
-    data = result["data"];
+    connectionStatus= result["connectionStatus"] ;
+    dataStatus= result["dataStatus"] ;
+    if (result["data"] != null)
+      data = result["data"];
   }
 
 }
