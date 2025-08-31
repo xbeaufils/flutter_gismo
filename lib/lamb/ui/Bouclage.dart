@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer' as debug;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
@@ -8,6 +9,8 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/lamb/presenter/LambPresenter.dart';
+import 'package:flutter_gismo/model/StatusBluetooth.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:intl/intl.dart';
 import 'package:sentry/sentry.dart';
 
@@ -22,6 +25,9 @@ class BouclagePage extends StatefulWidget {
 
 abstract class BouclageContract {
   void returnBete(Bete bete);
+  StatusBlueTooth get  bluetoothState;
+  set bluetoothState(StatusBlueTooth value);
+  updateBoucle (String numBoucle, String numMarquage);
 }
 
 class _BouclagePageState extends State<BouclagePage> implements BouclageContract {
@@ -30,9 +36,14 @@ class _BouclagePageState extends State<BouclagePage> implements BouclageContract
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   late BouclagePresenter _presenter = BouclagePresenter(this);
 
-  static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
-  String _bluetoothState ="NONE";
-  final BluetoothManager _btBloc= new BluetoothManager();
+  StatusBlueTooth _bluetoothState = StatusBlueTooth.none();
+
+  StatusBlueTooth get bluetoothState => _bluetoothState;
+  set bluetoothState(StatusBlueTooth value) {
+    setState(() {
+      _bluetoothState = value;
+    });
+  }
 
   TextEditingController _numBoucleCtrl = new TextEditingController();
   TextEditingController _numMarquageCtrl = new TextEditingController();
@@ -46,7 +57,6 @@ class _BouclagePageState extends State<BouclagePage> implements BouclageContract
         appBar: new AppBar(
           title: new Text(S.of(context).earring),
         ),
-        floatingActionButton: _buildRfid(),
         body: new Container(
             child: new Form(
               key: _formKey,
@@ -104,51 +114,49 @@ class _BouclagePageState extends State<BouclagePage> implements BouclageContract
 
   @override
   void initState() {
-    /*if (this._bloc.isLogged()!)
-      this._startService();*/
+    if (AuthService().subscribe && defaultTargetPlatform == TargetPlatform.android)
+      new Future.delayed(Duration.zero,() {
+        this._presenter.startReadBluetooth();
+      });
     super.initState();
   }
 
-  Widget _buildRfid() {
-/*    if (_bloc.isLogged()! && this._rfidPresent) {
-      return FloatingActionButton(
-          child: Icon(Icons.wifi),
-          backgroundColor: Colors.green,
-          onPressed: _readRFID);
-    }
-    else*/
+  Widget _statusBluetoothBar()  {
+    if ( ! AuthService().subscribe )
       return Container();
+    List<Widget> status = <Widget>[]; //new List();
+    if (_bluetoothState.connectionStatus == "CONNECTED")
+      switch (_bluetoothState.dataStatus) {
+        case "WAITING":
+          status.add(Icon(Icons.bluetooth));
+          status.add(Expanded(child: LinearProgressIndicator(),));
+          break;
+        case "AVAILABLE":
+          status.add(Icon(Icons.bluetooth));
+          status.add(Text(S.of(context).data_available));
+      }
+    else {
+      status.add(Icon(Icons.bluetooth));
+      status.add(Text(S.of(context).not_connected));
+    }
+
+    return Row(children: status,);
   }
 
-  Widget _statusBluetoothBar() {
-  //  if (! this._bloc.isLogged()!)
-      return Container();
-    List<Widget> status = [];
-    switch (_bluetoothState ) {
-      case "NONE":
-        status.add(Icon(Icons.bluetooth));
-        status.add(Text(S.of(context).not_connected));
-        break;
-      case "WAITING":
-        status.add(Icon(Icons.bluetooth));
-        status.add( Expanded( child: LinearProgressIndicator(),) );
-        break;
-      case "AVAILABLE":
-        status.add(Icon(Icons.bluetooth));
-        status.add(Text(S.of(context).data_available));
-    }
-    return Row(children: status,);
+  updateBoucle (String numBoucle, String numMarquage) {
+    setState(() {
+      _numBoucleCtrl.text = numBoucle;
+      _numMarquageCtrl.text = numMarquage;
+    });
   }
 
   @override
   void dispose() {
     _numBoucleCtrl.dispose();
     _numMarquageCtrl.dispose();
-    //this.widget._bloc.stopReadBluetooth();
-    this._btBloc.stopStream();
+    this._presenter.stopReadBluetooth();
     super.dispose();
   }
-
 
   void returnBete(Bete bete) {
     Navigator.pop(context, bete);

@@ -106,10 +106,6 @@ class BetePresenter {
     }
   }
 
-  void stopBluetooth() {
-    _blService.stopBluetooth();
-  }
-
   void stopReadBluetooth() {
     _blService.stopReadBluetooth();
   }

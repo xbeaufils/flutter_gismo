@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/individu/ui/PeseePage.dart';
@@ -8,9 +9,12 @@ import 'package:flutter_gismo/lamb/ui/LambTimeLine.dart';
 import 'package:flutter_gismo/lamb/ui/Mort.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/model/StatusBluetooth.dart';
+import 'package:flutter_gismo/services/BluetoothService.dart';
 import 'package:flutter_gismo/services/LambingService.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class LambTimeLinePresenter {
   final LambTimelineContract _view;
@@ -79,7 +83,7 @@ class LambPresenter {
 class BouclagePresenter {
 
   final BouclageContract _view;
-
+  final _blService = BluetoothService();
   BouclagePresenter(this._view);
 
   void createBete(LambModel lamb, String numBoucle, String numMarquage) async {
@@ -88,6 +92,43 @@ class BouclagePresenter {
     Bete bete = new Bete(null, numBoucle, numMarquage, null, null, null, lamb.sex, 'NAISSANCE');
     this._view.returnBete(bete);
   }
+  Future<void> startReadBluetooth() async {
+    try {
+      StatusBlueTooth status =  await _blService.startReadBluetooth();
+      if (status.connectionStatus == 'CONNECTED') {
+        await this._blService.readBluetooth();
+        this._blService.handleData(this.handleBlueTooth);
+      }
+    } on Exception catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      debug.log(e.toString());
+    }
+  }
+
+  void handleBlueTooth(StatusBlueTooth event) {
+    if ( event.connectionStatus != null)
+      debug.log("Status " + event.connectionStatus!, name: "BetePresenter::handleBlueTooth");
+    if (this._view.bluetoothState.dataStatus != event.dataStatus
+        || this._view.bluetoothState.connectionStatus != event.dataStatus ) {
+      if(event.connectionStatus == 'NONE')
+        return;
+      if (event.dataStatus == 'AVAILABLE') {
+        String _foundBoucle = event.data!;
+        if (_foundBoucle.length > 15)
+          _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
+        String numBoucle = _foundBoucle.substring(_foundBoucle.length - 5);
+        String numMarquage = _foundBoucle.substring(0, _foundBoucle.length - 5);
+
+        this._view.updateBoucle(numBoucle, numMarquage);
+      }
+      this._view.bluetoothState = event;
+    }
+  }
+
+  void stopReadBluetooth() {
+    _blService.stopReadBluetooth();
+  }
+
 
 }
 

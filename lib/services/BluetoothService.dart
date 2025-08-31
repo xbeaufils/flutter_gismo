@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer' as debug;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
-import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/model/DeviceModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 
 class BluetoothService {
   bool _streamStatus = false;
