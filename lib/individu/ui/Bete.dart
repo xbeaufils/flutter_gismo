@@ -27,8 +27,16 @@ class BetePage extends StatefulWidget {
 
 abstract class BeteContract extends GismoContract {
   Bete ? get bete;
+
   set bete(Bete ? value);
+
   void backWithBete();
+
+  StatusBlueTooth get bluetoothState;
+
+  set bluetoothState(StatusBlueTooth value);
+
+  void updateBoucle(String _foundBoucle);
 }
 
 class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
@@ -47,7 +55,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
 
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
   bool _rfidPresent = false;
-  String _bluetoothState ="NONE";
+  StatusBlueTooth _bluetoothState = StatusBlueTooth.none();
   final BluetoothManager _btBloc = new BluetoothManager();
   late Stream<BluetoothState> _bluetoothStream;
   StreamSubscription<BluetoothState> ? _bluetoothSubscription;
@@ -58,7 +66,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
     if (! AuthService().subscribe)
       return Container();
     List<Widget> status = [];
-    switch (_bluetoothState ) {
+    switch (_bluetoothState.dataStatus ) {
       case "NONE":
         status.add(Icon(Icons.bluetooth));
         status.add(Text(S.of(context).not_connected));
@@ -251,24 +259,19 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
     try {
       //if ( await this._bloc.configIsBt()) {
         debug.log("Start service ", name: "_BetePageState::_startService");
-        StatusBlueTooth _bluetoothState =  await this._presenter.startReadBluetooth();
-        if (_bluetoothState.connectionStatus != null)
-          debug.log("Start status " + _bluetoothState.connectionStatus!, name: "_BetePageState::_startService");
+        await this._presenter.startReadBluetooth();
      } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
     }
     String start= "toto";
-    setState(() {
-      _rfidPresent =  (start == "start");
-    });
     return start;
   }
 
-  void handleBluetoothData(BluetoothState event) {
-      if (this._bluetoothState != event.status)
+  void handleBluetoothData(StatusBlueTooth event) {
+      if (this._bluetoothState.dataStatus != event.dataStatus)
         setState(() {
-          this._bluetoothState = event.status!;
-          if (event.status == 'AVAILABLE') {
+          this._bluetoothState.dataStatus = event.dataStatus!;
+          if (event.dataStatus == 'AVAILABLE') {
             String ? _foundBoucle = event.data;
             if ( _foundBoucle != null) {
               if (_foundBoucle.length > 15)
@@ -290,7 +293,6 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
     _numBoucleCtrl.dispose();
     _numMarquageCtrl.dispose();
     this._presenter.stopReadBluetooth();
-    this._btBloc.stopStream();
     if (this._bluetoothSubscription != null)
       this._bluetoothSubscription?.cancel();
     super.dispose();
@@ -306,5 +308,28 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
    set bete(Bete ? value) {
      this.widget._bete = value;
    }
+
+   StatusBlueTooth get bluetoothState => _bluetoothState;
+
+   set bluetoothState(StatusBlueTooth value) {
+     setState(() {
+       _bluetoothState = value;
+     });
+   }
+
+  void updateBoucle(String _foundBoucle) {
+    if ( _foundBoucle != null) {
+      if (_foundBoucle.length > 15)
+        _foundBoucle = _foundBoucle.substring(
+            _foundBoucle.length - 15);
+      setState(() {
+        _numBoucleCtrl.text =
+            _foundBoucle.substring(_foundBoucle.length - 5);
+        _numMarquageCtrl.text = _foundBoucle.substring(
+            0, _foundBoucle.length - 5);
+
+      });
+    }
+  }
 
 }

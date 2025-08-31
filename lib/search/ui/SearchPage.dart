@@ -31,7 +31,6 @@ abstract class SearchContract extends GismoContract {
   StatusBlueTooth get bluetoothState;
   set bluetoothState(StatusBlueTooth value);
   set filteredBetes(List<Bete> value);
-  set betes(List<Bete> value);
   GismoPage get nextPage;
 }
 
@@ -40,14 +39,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   late SearchPresenter _presenter ;
   BannerAd ? _adBanner;
-  String _searchText = "";
-  List<Bete> _betes = <Bete>[];
 
-  set betes(List<Bete> value) {
-    setState(() {
-      _betes = value;
-    });
-  } //new List();
   List<Bete> _filteredBetes = <Bete>[]; //new List();
 
   StatusBlueTooth _bluetoothState = StatusBlueTooth.none();
@@ -62,15 +54,9 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   late Icon _searchIcon ; //= Icon(Icons.search);
   late Widget _appBarTitle; // = Text( S.current.earring_search );
 
-  _SearchPageState() {
-    this._presenter = SearchPresenter(this);
-
-  }
-
   @override
-  void initState() {     /*
-    testWidgets('Start appli', (tester,) async {
-    });*/
+  void initState() {
+    this._presenter = SearchPresenter(this);
     this._presenter.getBetes(null);
     this._presenter.buildSearchBar();
     if (AuthService().subscribe && defaultTargetPlatform == TargetPlatform.android)
@@ -187,7 +173,6 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
 
   void setBoucle(String numBoucle) {
     setState(() {
-      _searchText = numBoucle;
       _filter.text = numBoucle;
     });
   }

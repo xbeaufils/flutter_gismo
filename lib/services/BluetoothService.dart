@@ -93,6 +93,8 @@ class BluetoothService {
   }
 
   void stopReadBluetooth() {
+    if (this._bluetoothReadSubscription != null)
+      this._bluetoothReadSubscription!.cancel();
     this._mgr.stopReadBluetooth();
   }
 

@@ -3,7 +3,6 @@ import 'dart:developer' as debug;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
@@ -28,7 +27,7 @@ class SearchPresenter {
 
   final SearchContract _view;
   final TextEditingController _filter = new TextEditingController();
-  String _searchText = "";
+
 
   List<Bete> _filteredBetes = <Bete>[];
   List<Bete> _betes = <Bete>[];
@@ -77,7 +76,6 @@ class SearchPresenter {
       }
     }
     _filteredBetes.addAll(_betes);
-    //this._view.betes = _betes;
     this._view.filteredBetes = _betes;
   }
 
@@ -190,7 +188,6 @@ class SearchPresenter {
           if (_foundBoucle.length > 15)
             _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
           _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 5);
-          _searchText = _foundBoucle;
           _filter.text = _foundBoucle;
           searchPressed();
         }
@@ -198,16 +195,9 @@ class SearchPresenter {
       }
   }
 
-  void handleDataBlueTooth(StatusBlueTooth event) {
-
-  }
-
   void dispose() {
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
-      this._mgr.stopReadBluetooth();
-      if (this._bluetoothSubscription != null)
-        this._bluetoothSubscription?.cancel();
+      this._blService.stopReadBluetooth();
     }
-
   }
 }

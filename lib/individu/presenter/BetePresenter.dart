@@ -1,3 +1,5 @@
+import 'dart:developer' as debug;
+
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/ui/Bete.dart';
@@ -7,12 +9,13 @@ import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/services/BeteService.dart';
 import 'package:flutter_gismo/services/BluetoothService.dart';
 import 'package:intl/intl.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class BetePresenter {
 
   final BeteContract _view;
   final BeteService _service = BeteService();
-  final BluetoothService _bluetoothService = BluetoothService();
+  final BluetoothService _blService = BluetoothService();
   BetePresenter(this._view);
 
   Future<void> add (String ? numBoucle, String ? numMarquage, Sex ? sex, String ? nom, String ? obs, String dateEntree, String ? motif) async {
@@ -72,16 +75,43 @@ class BetePresenter {
     return null;
   }
 
-  Future<StatusBlueTooth> startReadBluetooth() {
-    return _bluetoothService.startReadBluetooth();
+  Future<void> startReadBluetooth() async {
+    try {
+      StatusBlueTooth status =  await _blService.startReadBluetooth();
+      if (status.connectionStatus == 'CONNECTED') {
+        await this._blService.readBluetooth();
+        this._blService.handleData(this.handleBlueTooth);
+      }
+    } on Exception catch (e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      debug.log(e.toString());
+    }
+
+  }
+
+  void handleBlueTooth(StatusBlueTooth event) {
+    if ( event.connectionStatus != null)
+      debug.log("Status " + event.connectionStatus!, name: "BetePresenter::handleBlueTooth");
+    if (this._view.bluetoothState.dataStatus != event.dataStatus
+        || this._view.bluetoothState.connectionStatus != event.dataStatus ) {
+      if(event.connectionStatus == 'NONE')
+        return;
+      if (event.dataStatus == 'AVAILABLE') {
+        String _foundBoucle = event.data!;
+        if (_foundBoucle.length > 15)
+          _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
+        this._view.updateBoucle(_foundBoucle);
+      }
+      this._view.bluetoothState = event;
+    }
   }
 
   void stopBluetooth() {
-    _bluetoothService.stopBluetooth();
+    _blService.stopBluetooth();
   }
 
   void stopReadBluetooth() {
-    _bluetoothService.stopReadBluetooth();
+    _blService.stopReadBluetooth();
   }
 }
 
