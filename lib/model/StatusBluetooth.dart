@@ -4,6 +4,7 @@ class StatusBlueTooth {
   late String connectionStatus;
   late String dataStatus;
   //\" : \"" +stateBluetooth + "\", "
+  String ? device;
   String ? data;
   //\" : \"" + stateData + "\"}");
  StatusBlueTooth.none() {
@@ -15,6 +16,8 @@ class StatusBlueTooth {
   StatusBlueTooth.fromResult(result) {
     connectionStatus= result["connectionStatus"] ;
     dataStatus= result["dataStatus"] ;
+    if (result["device"] != "")
+      device = result["device"];
     if (result["data"] != null)
       data = result["data"];
   }

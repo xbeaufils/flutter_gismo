@@ -17,33 +17,16 @@ class BluetoothService {
   StreamSubscription<StatusBlueTooth> ? _bluetoothStatusSubscription;
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
 
-  Future<String> startService() async{
-    if (kIsWeb)
-      return "start";
-    try {
-      //if ( await this._bloc.configIsBt()) {
-      debug.log("Start service ", name: "BluetoothService::startService");
-      StatusBlueTooth _bluetoothState =  await startReadBluetooth();
-      if (_bluetoothState.connectionStatus != null)
-        debug.log("Start status " + _bluetoothState.connectionStatus!, name: "BluetoothService::startService");
-    } on Exception catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace : stackTrace);
-    }
-    String start= "start";// await PLATFORM_CHANNEL.invokeMethod("start");
-    //setState(() {
-      //_rfidPresent =  (start == "start");
-    //});
-    return start;
-  }
 
-  Future<BluetoothState> connectBluetooth(String address, Function f) async {
+  Future<StatusBlueTooth> connectBluetooth(String address, Function f) async {
      try {
-       BluetoothState state = await this._mgr.connectBlueTooth(address);
+       StatusBlueTooth state = await this._mgr.connectBlueTooth(address);
+       this.handleStatus(f);
        return state;
     } on PlatformException catch(e) {
       debug.log("Erreur ", error: e );
     }
-    return BluetoothState.none();
+    return StatusBlueTooth.none();
   }
 
   Stream<StatusBlueTooth> _streamStatusBluetooth() async* {

@@ -8,6 +8,7 @@ import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/infra/presenter/BluetoothPresenter.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/model/DeviceModel.dart';
+import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:provider/provider.dart';
 
 class BluetoothPermissionPage extends StatefulWidget {
@@ -114,23 +115,23 @@ class BluetoothPage extends StatefulWidget {
 abstract class BluetoothContract implements GismoContract {
   DeviceModel ? get selectedDevice;
   set selectedDevice(DeviceModel ? device);
-  String get bluetoothState;
-  set bluetoothState(String value);
+  StatusBlueTooth get bluetoothState;
+  set bluetoothState(StatusBlueTooth value);
 }
 
 class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements BluetoothContract {
   late BluetoothPresenter _presenter;
 
-  String _bluetoothState = BluetoothManager.NONE;
+  StatusBlueTooth _bluetoothState = StatusBlueTooth.none();
 
   _BluetoothPagePageState() {
     this._presenter = BluetoothPresenter(this);
   }
   DeviceModel ? _selectedDevice;
 
-  String get bluetoothState => _bluetoothState;
+  StatusBlueTooth get bluetoothState => _bluetoothState;
 
-  set bluetoothState(String value) {
+  set bluetoothState(StatusBlueTooth value) {
     setState(() {
       _bluetoothState = value;
     });
@@ -182,7 +183,7 @@ class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements B
 
   Widget _stateButton(DeviceModel device) {
     if ( this._isDeviceSelected(device)) {
-      switch( this._bluetoothState) {
+      switch( this._bluetoothState.connectionStatus) {
         case BluetoothManager.NONE:
           return Switch(value: false, onChanged: (value) { this._presenter.connect(value);
               //_switchBluetooth(value, device.address);
@@ -205,101 +206,19 @@ class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements B
     return Container(width: 10,);
   }
 
-  /*
-  Future<List<DeviceModel>> _getDeviceList() async {
-    BluetoothModel model = new BluetoothModel();
-    //final bool permission = await model.requestBlueToothPermission();
-    //if (permission)
-    debug.log("Get device List ", name: "_getDeviceList");
-    String response = await BLUETOOTH_CHANNEL.invokeMethod("listBlueTooth");
-    this._lstDevice = ( jsonDecode(response) as List).map( (i) => DeviceModel.fromResult(i)).toList();
-    List<DeviceModel> lstReturnDevice = this._lstDevice!;
-    //this._preferredAddress = await this._bloc.configBt();
-    this._lstDevice!.forEach((device) {
-      if (device.connected )
-        this._selectedDevice = device;
-    });
-    if (_selectedDevice != null)
-      try {
-        _bluetoothStatusSubscription = this._btBloc.streamStatusBluetooth().listen((event) {
-          if (_bluetoothState  !=  event.connect) {
-            _bluetoothState = event.connect;
-            setState(() {
-              if (event.connect == BluetoothManager.CONNECTED) {
-                this._selectedDevice!.connected = true;
-                //this._bluetoothStatusSubscription!.cancel();
-              }
-            });
-            if (this._bluetoothState == BluetoothManager.ERROR )
-              ScaffoldMessenger.of(context).showSnackBar(new SnackBar(content: Text("Erreur bluetooth"),));
-          }
-        });
-      } on Exception catch (e, stackTrace) {
-        Sentry.captureException(e, stackTrace : stackTrace);
-        debug.log(e.toString());
-      }
-    return lstReturnDevice;
-  }
-   */
-/*
-  void _switchBluetooth(bool on, String address) {
-    this._startBlueTooth(on);
-    if (on) {
-      //_preferredAddress = address;
-    }
-    else {
-      // TODO : Stop bluetooth
 
-    }
-  }
-*/
   set selectedDevice(DeviceModel ? device) {
     setState(() {
       _selectedDevice = device;
     });
   }
 
- /* void _startBlueTooth(value) {
-    if (! value) {
-      this._stopBluetoothStream();
-      this._bloc.stopBluetooth();
-      setState(() {
-        this._selectedDevice!.connected = false;
-      });
-      return;
-    }
-    try {
-      this._bluetoothStream = this._bloc.streamConnectBluetooth(this._selectedDevice!.address);
-      this._bluetoothSubscription = this._bluetoothStream.listen((BluetoothState event) {
-        setState(() {
-          _bluetoothState = event.status!;
-          if (event.status == BluetoothManager.STARTED) {
-            debug.log("Change connected " + value.toString(),  name: "_startBlueTooth");
-            this._selectedDevice!.connected = value;
-          }
-        });
-      });
-     } on Exception catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace : stackTrace);
-      debug.log(e.toString());
-    }
-  }
-*/
-  @override
+   @override
   void dispose() {
     super.dispose();
     this._presenter.stopBluetoothStream();
   }
-/*
-  void _stopBluetoothStream()  {
-    if (this._bluetoothSubscription != null)
-      this._bluetoothSubscription?.cancel();
-    if (this._bluetoothStatusSubscription != null) {
-      this._bluetoothStatusSubscription!.cancel();
-      this._btBloc.stopStream();
-    }
-   }
-*/
+
   DeviceModel ? get selectedDevice => _selectedDevice;
 
   List<DeviceModel> ? get lstDevice => _lstDevice;
