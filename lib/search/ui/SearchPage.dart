@@ -12,6 +12,7 @@ import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/search/presenter/SearchPresenter.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
+import 'package:flutter_gismo/sheepyGreenScheme.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class SearchPage extends StatefulWidget {
@@ -27,7 +28,6 @@ class SearchPage extends StatefulWidget {
 abstract class SearchContract extends GismoContract {
   void goPreviousPage(Bete bete);
   void setBoucle(String numBoucle);
-  void toggleSearchBar(Icon icon, Widget appbarTitile);
   StatusBlueTooth get bluetoothState;
   set bluetoothState(StatusBlueTooth value);
   set filteredBetes(List<Bete> value);
@@ -51,18 +51,11 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   }
   StatusBlueTooth get bluetoothState => _bluetoothState;
 
-  late Icon _searchIcon ; //= Icon(Icons.search);
-  late Widget _appBarTitle; // = Text( S.current.earring_search );
-
   @override
   void initState() {
+    debug.log("Démarrage", name: "_SearchPageState::initState");
     this._presenter = SearchPresenter(this);
     this._presenter.getBetes(null);
-    this._presenter.buildSearchBar();
-    if (AuthService().subscribe && defaultTargetPlatform == TargetPlatform.android)
-      new Future.delayed(Duration.zero,() {
-        this._presenter.startService();
-      });
     super.initState();
   }
 
@@ -99,13 +92,26 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
       );
     }
     return Scaffold(
-      appBar: _buildBar(context),
+      appBar: AppBar(
+        centerTitle: true,
+        primary: true,
+        title: Text(S.current.earring_search),
+        actions: [_statusBluetooth()],
+      ),
       key: _scaffoldKey,
       body:
         Column(
           children: [
-            _statusBluetoothBar(context),
-            this._showCount(S.current.herd_size + ": " + _filteredBetes.length.toString()),
+            Container(
+              color: sheepyGreenSheme.primaryColor,
+              child:
+              Padding(padding:  const EdgeInsets.all(8.0), child:
+                SearchBar(
+                  leading: Badge(label: Text(_filteredBetes.length.toString()), child: Icon(Icons.search)),
+                  hintText:  S.of(context).search,
+                  onChanged: (text) {this._presenter.filtre(text);},
+                  controller: _filter,
+                ),),),
             Expanded(child: _buildList(context) ),
             this._getAdmobAdvice(),
             this._getFacebookAdvice(),
@@ -115,28 +121,22 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
     );
   }
 
-  Widget _statusBluetoothBar(BuildContext context)  {
+  Widget _statusBluetooth() {
     if ( ! AuthService().subscribe )
       return Container();
     List<Widget> status = <Widget>[]; //new List();
     if (_bluetoothState.connectionStatus == "CONNECTED")
       switch (_bluetoothState.dataStatus) {
-         case "WAITING":
-          status.add(Icon(Icons.bluetooth));
-          status.add(Expanded(child: LinearProgressIndicator(),));
-          break;
+        case "WAITING":
+          return Icon(Icons.bluetooth_searching);
         case "AVAILABLE":
-          status.add(Icon(Icons.bluetooth));
-          status.add(Text(S.of(context).data_available));
+          return Icon(Icons.bluetooth_connected);
       }
     else {
-      status.add(Icon(Icons.bluetooth));
-      status.add(Text(S.of(context).not_connected));
+      return Icon(Icons.bluetooth_disabled_sharp);
     }
-
-    return Row(children: status,);
+    return Card(child: Row(children: status,));
   }
-
 
   Widget _getAdmobAdvice() {
     if (AuthService().subscribe  ) {
@@ -174,23 +174,8 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   void setBoucle(String numBoucle) {
     setState(() {
       _filter.text = numBoucle;
+      this._presenter.filtre(numBoucle);
     });
-  }
-
-
-  AppBar _buildBar(BuildContext context) {
-    //this._appBarTitle = new Text( S.of(context).earring_search );
-    return new AppBar(
-      centerTitle: true,
-      title: _appBarTitle,
-      actions: <Widget>[
-        IconButton(
-            icon: _searchIcon,
-            tooltip: S.of(context).search,
-            onPressed: () => _presenter.searchPressed()
-            ),
-      ],
-    );
   }
 
   Widget _buildList(BuildContext context) {
@@ -214,24 +199,6 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
         );
       },
     );
-  }
-
-  Widget _showCount(String libelle) {
-    return Row(children: <Widget>[
-      Expanded(child:
-        Card( /*color: Theme.of(context).primaryColor, */ child:
-          Center(child:
-            Text( libelle,/* style: TextStyle(fontSize: 16.0, color: Colors.white),*/),),
-        ),
-      ),
-    ],);
-  }
-
-  void toggleSearchBar(Icon icon, Widget appbarTitle) {
-    setState(() {
-      this._searchIcon = icon;
-      this._appBarTitle = appbarTitle;
-    });
   }
 
   void goPreviousPage(Bete bete) {

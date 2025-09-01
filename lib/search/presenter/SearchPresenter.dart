@@ -4,8 +4,6 @@ import 'dart:developer' as debug;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
-import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/ui/EchoPage.dart';
 import 'package:flutter_gismo/individu/ui/NECPage.dart';
 import 'package:flutter_gismo/individu/ui/PeseePage.dart';
@@ -14,34 +12,28 @@ import 'package:flutter_gismo/individu/ui/TimeLine.dart';
 import 'package:flutter_gismo/lamb/ui/lambing.dart';
 import 'package:flutter_gismo/memo/ui/MemoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:flutter_gismo/services/BeteService.dart';
 import 'package:flutter_gismo/services/BluetoothService.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-enum mode{typing, ready}
 
 class SearchPresenter {
 
   final SearchContract _view;
   final TextEditingController _filter = new TextEditingController();
 
-
   List<Bete> _filteredBetes = <Bete>[];
   List<Bete> _betes = <Bete>[];
   BeteService _service = BeteService();
   BluetoothService _blService = BluetoothService();
-  BluetoothManager _mgr = BluetoothManager();
-  StreamSubscription<BluetoothState> ? _bluetoothSubscription;
 
   SearchPresenter(this._view){
-    _filter.addListener(() =>this.filtre());
+    debug.log("Constructor", name: "SearchPresenter::SearchPresenter");
   }
 
-  void filtre() {
-    String searchText = _filter.text;
+  void filtre(String searchText) {
     _filteredBetes.clear();
     if (searchText.isNotEmpty) {
       for (int i = 0; i < _betes.length; i++) {
@@ -57,7 +49,6 @@ class SearchPresenter {
     this._view.filteredBetes = _filteredBetes;
   }
 
-  mode _mode = mode.ready;
 
   void getBetes(Sex ? searchSex) async {
     if (searchSex == null) {
@@ -71,42 +62,10 @@ class SearchPresenter {
         case Sex.male :
           _betes = await this._service.getBeliers();
           break;
-        default :
-          _betes = await this._service.getBetes();
       }
     }
     _filteredBetes.addAll(_betes);
     this._view.filteredBetes = _betes;
-  }
-
-  void buildSearchBar() {
-    if (this._mode == mode.typing) {
-      this._view.toggleSearchBar(Icon(Icons.close),
-          TextField(
-            autofocus: true,
-            controller: _filter,
-            keyboardType: TextInputType.number,
-            decoration: new InputDecoration(
-                prefixIcon: new Icon(Icons.search),
-                hintText: S.current.earring
-            ),
-          ));
-    } else {
-      this._view.toggleSearchBar(Icon(Icons.search), Text( S.current.earring_search ));
-    }
-
-  }
-
-  void searchPressed() {
-      if (this._mode == mode.ready) {
-        _mode = mode.typing;
-        this.buildSearchBar();
-      } else {
-        _mode = mode.ready;
-        _filteredBetes = this._betes;
-        _filter.clear();
-        this.buildSearchBar();
-      }
   }
 
   void selectBete(Bete bete) async {
@@ -158,13 +117,6 @@ class SearchPresenter {
   Future<void> startService() async{
     try {
       debug.log("Start service ", name: "SearchPresenter::startService");
-      /*
-      StatusBlueTooth _bluetoothState = await this._blService.startReadBluetooth();
-      if (_bluetoothState.connectionStatus != null)
-        debug.log("Start status " + _bluetoothState.connectionStatus!, name: "SearchPresenter::startService");
-      this._view.bluetoothState = _bluetoothState;
-      this._blService.handleStatus(this.handleBlueTooth);
-       */
       StatusBlueTooth status= await this._blService.startReadBluetooth();
       if (status.connectionStatus == 'CONNECTED') {
         await this._blService.readBluetooth();
@@ -189,7 +141,7 @@ class SearchPresenter {
             _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
           _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 5);
           _filter.text = _foundBoucle;
-          searchPressed();
+          this._view.setBoucle(_foundBoucle);
         }
         this._view.bluetoothState = event;
       }
@@ -200,4 +152,6 @@ class SearchPresenter {
       this._blService.stopReadBluetooth();
     }
   }
+
+
 }
