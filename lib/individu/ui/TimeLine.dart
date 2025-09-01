@@ -5,7 +5,6 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/individu/ui/EventPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/individu/presenter/TimeLinePresenter.dart';
 import 'package:intl/intl.dart';
 
@@ -95,46 +94,6 @@ class _TimeLinePageState extends GismoStatePage<TimeLinePage> with SingleTickerP
 
   Widget _getEvents() {
     return EventSheepPage(this, this.widget._bete);
-  }
-
-  Future _showDialog(BuildContext context, Event event) {
-     return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(S.of(context).title_delete),
-          content: Text(S.of(context).text_delete),
-          actions: [
-            _cancelButton(),
-            _continueButton(event),
-          ],
-        );
-      },
-    );
-  }
-
-  // set up the buttons
-  Widget _cancelButton() {
-    return TextButton(
-      child: Text(S.of(context).bt_cancel),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-  }
-
-  Widget _continueButton(Event event) {
-    return TextButton(
-      child: Text(S.of(context).bt_continue),
-      onPressed: ()  {
-        if (event.type == EventType.pesee || event.type == EventType.NEC || event.type == EventType.saillie)
-          setState(() async {
-            String message = await this._presenter.deleteEvent(event);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-          });
-        Navigator.of(context).pop();
-      },
-    );
   }
 
   Future<String ?> editPage(StatefulWidget page ) async {

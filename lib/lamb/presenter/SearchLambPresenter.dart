@@ -7,7 +7,7 @@ import 'package:flutter_gismo/services/LambingService.dart';
 class SearchLambPresenter {
   final LambingService _service = LambingService();
   final SearchLambContract _view;
-
+  List<CompleteLambModel> _lambs = <CompleteLambModel>[];
   SearchLambPresenter(this._view);
 
   void selectLambs(CompleteLambModel lamb) async  {
@@ -15,7 +15,7 @@ class SearchLambPresenter {
     if (newLamb == null)
       return;
     //this._service.saveLamb(newLamb);
-    this._view.lambs.forEach((aLamb) {
+    this._lambs.forEach((aLamb) {
       if (aLamb.idBd == newLamb.idBd) {
         aLamb.sex = newLamb.sex;
         aLamb.allaitement = newLamb.allaitement;
@@ -29,20 +29,32 @@ class SearchLambPresenter {
   }
 
   void deleteLamb(CompleteLambModel lamb) async {
-    String message = await this._service.deleteLamb(lamb);
-    this._view.lambs  = await this._service.getAllLambs();
-    //setState(() {
-      this._view.filteredLambs = this._view.lambs;
-
-    //});
-    this._view.showMessage(message);
+    bool ok = await this._view.showDialogOkCancel();
+    if (ok) {
+      String message = await this._service.deleteLamb(lamb);
+      this._view.showMessage(message);
+      this._view.hideSaving();
+    }
   }
 
   void getLambs() async {
-    this._view.lambs = await this._service.getAllLambs();
-    //setState(() {
-      this._view.filteredLambs = this._view.lambs;
-    //});
+    this._lambs = await this._service.getAllLambs();
+    this._view.filteredLambs = this._lambs;
   }
 
+  void filtre(String text) {
+    List<CompleteLambModel> tempList = <CompleteLambModel>[]; //new List();
+    for (int i = 0; i < _lambs.length; i++) {
+      if (_lambs[i].marquageProvisoire != null) {
+        if (_lambs[i].marquageProvisoire!.isNotEmpty) {
+          if (_lambs[i].marquageProvisoire!.toLowerCase().contains(
+              text.toLowerCase())) {
+            tempList.add(_lambs[i]);
+          }
+        }
+      }
+    }
+    this._view.filteredLambs = tempList;
+
+  }
 }

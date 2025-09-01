@@ -125,15 +125,17 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
     if ( ! AuthService().subscribe )
       return Container();
     List<Widget> status = <Widget>[]; //new List();
+    _bluetoothState.connectionStatus = "CONNECTED";
+    _bluetoothState.dataStatus = "AVAILABLE";
     if (_bluetoothState.connectionStatus == "CONNECTED")
       switch (_bluetoothState.dataStatus) {
         case "WAITING":
-          return Icon(Icons.bluetooth_searching);
+          return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:Chip(label: Icon(Icons.bluetooth_searching) ,avatar: CircularProgressIndicator(),));
         case "AVAILABLE":
-          return Icon(Icons.bluetooth_connected);
+          return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:Chip(label: Icon(Icons.bluetooth_connected)));
       }
     else {
-      return Icon(Icons.bluetooth_disabled_sharp);
+      return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:  Chip(label:/*Text("Bluetooth"), avatar: */Icon(Icons.bluetooth_disabled_sharp)));
     }
     return Card(child: Row(children: status,));
   }
