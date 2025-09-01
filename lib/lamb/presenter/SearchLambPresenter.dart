@@ -32,8 +32,8 @@ class SearchLambPresenter {
     bool ok = await this._view.showDialogOkCancel();
     if (ok) {
       String message = await this._service.deleteLamb(lamb);
-      this._view.showMessage(message);
       this._view.hideSaving();
+      this._view.showMessage(message);
     }
   }
 
