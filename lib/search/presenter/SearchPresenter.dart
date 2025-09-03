@@ -108,9 +108,11 @@ class SearchPresenter {
       //Navigator.of(context).pop(bete);
     }
     else {
+      this._blService.stopReadBluetooth();
       String ? message = await this._view.goNextPage(page);
       if (message != null)
         this._view.showMessage(message);
+      this.startService();
     }
   }
 
