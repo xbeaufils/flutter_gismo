@@ -1,5 +1,6 @@
 import 'dart:developer' as debug;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/ui/Bete.dart';
@@ -107,7 +108,9 @@ class BetePresenter {
   }
 
   void stopReadBluetooth() {
-    _blService.stopReadBluetooth();
+    if ((defaultTargetPlatform == TargetPlatform.android)) {
+      _blService.stopReadBluetooth();
+    }
   }
 }
 

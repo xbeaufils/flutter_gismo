@@ -1,3 +1,5 @@
+import 'dart:developer' as debug;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/sheepyGreenScheme.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
@@ -41,9 +43,12 @@ class GismoStatePage<T extends StatefulWidget> extends  State<T> {
   }
 
   void backWithMessage(String message, [bool error = false,]) {
-    ScaffoldMessenger.of(context).showSnackBar(this._buildSnackBar(message, error))
-        .closed
-        .then((e) => {Navigator.of(context).pop()});
+    if (mounted && context.mounted )
+      ScaffoldMessenger.of(context).showSnackBar(this._buildSnackBar(message, error))
+          .closed
+          .then((e) => {Navigator.of(context).pop()});
+    else
+      debug.log("Not mounted", name: "GismoStatePage::backWithMessage");
   }
 
   void back() {

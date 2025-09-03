@@ -54,7 +54,6 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
         Column(children: [
           Expanded(child:
             GridView.count(
-            //gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
               scrollDirection: Axis.vertical,padding: EdgeInsets.all(10),
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
@@ -73,64 +72,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
                 _buildGriTile("assets/Truck.png", S.of(context).output, _presenter.sortiePressed, ),
                 _buildGriTile("assets/parcelles.png", "Parcelles", _presenter.parcellePressed ),
               ]),),
-               /*
-                Card(
-                  child: Center(
-                    child : SingleChildScrollView (
-                      scrollDirection: Axis.horizontal,
-                      child : ButtonBar(
-                        mainAxisSize: MainAxisSize.max,
-                        //alignment: MainAxisAlignment.spaceBetween,
-                          alignment: MainAxisAlignment.center,
-                        buttonMinWidth: 90.0,
-                        children: <Widget>[
-                          _buildButton(S.of(context).batch, "assets/Lot.png", _presenter.lotPressed),
-                          _buildButton(S.of(context).sheep, "assets/brebis.png", _presenter.individuPressed),
-                          _buildButton(S.of(context).lambs, 'assets/jumping_lambs.png', _presenter.lambPressed),
-                        ])))),
-                Card(
-                  child: Center(
-                  child:  SingleChildScrollView (
-                    scrollDirection: Axis.horizontal,
-                    child: ButtonBar(
-                      mainAxisSize: MainAxisSize.max,
-                      alignment: MainAxisAlignment.spaceEvenly,
-                      buttonMinWidth: 90.0,
-                      children: <Widget>[
-                        _buildButton(S.of(context).mating, "assets/saillie.png", _presenter.sailliePressed),
-                        _buildButton(S.of(context).ultrasound, 'assets/ultrasound.png', _presenter.echoPressed),
-                        _buildButton( S.of(context).lambing, 'assets/lamb.png', _presenter.lambingPressed),
-                      ])))),
-                Card(
-                  child: Center(
-                  child: SingleChildScrollView (
-                    scrollDirection: Axis.horizontal,
-                    child: ButtonBar(
-                      mainAxisSize: MainAxisSize.max,
-                      alignment: MainAxisAlignment.spaceEvenly,
-                      buttonMinWidth: 90.0,
-                      children: <Widget>[
-                        _buildButton(S.of(context).treatment, "assets/syringe.png",_presenter.traitementPressed),
-                        _buildButton(S.of(context).body_cond, "assets/etat_corporel.png", _presenter.necPressed), //Etat corporel
-                        _buildButton(S.of(context).weighing, 'assets/peseur.png', _presenter.peseePressed), // Pesée
-                    ])))),
-                Card(
-                  child: Center(
-                    child: SingleChildScrollView (
-                    scrollDirection: Axis.horizontal,
-                    child:
-                      ButtonBar(
-                      alignment: MainAxisAlignment.spaceEvenly,
-                      buttonMinWidth: 90.0,
-                      children: <Widget>[
-                        _buildButton(S.of(context).input, "assets/home.png", _presenter.entreePressed), // Entrée
-                        _buildButton(S.of(context).output, "assets/Truck.png", _presenter.sortiePressed),
-                        _buildButton("Parcelles", "assets/parcelles.png", ()  {
-                          (AuthService().subscribe ? _presenter.parcellePressed(): showMessage("Les parcelles ne sont pas visibles en mode autonome"));} ),
-                      //  _buildButton("Lecteur BT", "assets/baton_allflex.png", _choixBt)
-                      ])))),
-                */
-                this._getAdmobAdvice(),
+                 this._getAdmobAdvice(),
                 this._getFacebookAdvice(),
         ]),
         drawer: GismoDrawer(),);
@@ -152,18 +94,17 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
 
   Widget _buildGriTile(String imageName, String title, Function() press ) {
     //return GridTile(child: _buildButton(title, imageName, press));
-    return GridTile(
-        child:
-            Column(children: [
-            FilledButton(
-              style: ElevatedButton.styleFrom(
-                // The width will be 100% of the parent widget
-                // The height will be 60
-                  minimumSize: const Size.fromHeight(60)),
-              child: Image.asset(imageName),
-              onPressed : press,),
-            Text(title) ]),
-            );
+    return GridTile(child:
+      Column(children: [
+        FilledButton(
+          style: ElevatedButton.styleFrom(
+            // The width will be 100% of the parent widget
+            // The height will be 60
+              minimumSize: const Size.fromHeight(60)),
+          child: Image.asset(imageName),
+          onPressed : press,),
+        Text(title) ]),
+      );
   }
 
   Widget _getFacebookAdvice() {

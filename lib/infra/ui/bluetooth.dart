@@ -126,7 +126,9 @@ class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements B
 
   _BluetoothPagePageState() {
     this._presenter = BluetoothPresenter(this);
+    this._presenter.startStatus();
   }
+
   DeviceModel ? _selectedDevice;
 
   StatusBlueTooth get bluetoothState => _bluetoothState;

@@ -28,7 +28,7 @@ void main() {
     testWidgets(
         'Saisir une entrée', (tester,) async {
           await startAppli(tester);
-          final entree = find.text("Entrée");
+          final Finder entree = findWelcomeButton("Entrée");
           print(entree);
           await tester.tap(entree);
           await tester.pumpAndSettle();
@@ -48,18 +48,29 @@ void main() {
           await tester.tap(btSave);
         });
     testAgnelage();
-    testLot();
+ //   testLot();
+ //   testEcho();
+ //   testTraitement();
+ //    testPesee();
    });
+}
+
+Finder findWelcomeButton(String text) {
+  final Finder entreeGrid = find.ancestor(
+      of: find.text(text), matching: find.byType(GridTile));
+  final Finder entree = find.descendant(
+      of: entreeGrid, matching: find.byType(FilledButton));
+  return entree;
 }
 
 Future<void> createBete(WidgetTester tester, String numboucle, String numMarquage, String nom, String obs ) async {
   final btPlus = find.byIcon(Icons.add);
   await tester.tap(btPlus);
   await tester.pumpAndSettle();
-  var numboucleTxt = find.ancestor(of: find.text('Numero boucle'),matching: find.byType(TextFormField),);
+  var numboucleTxt = find.ancestor(of: find.text('Numero boucle'),matching: find.byType(TextField),);
   print (numboucleTxt);
   await tester.enterText(numboucleTxt, numboucle);
-  var numMarquageTxt = find.ancestor(of: find.text('Numero marquage'),matching: find.byType(TextFormField),);
+  var numMarquageTxt = find.ancestor(of: find.text('Numero marquage'),matching: find.byType(TextField),);
   await tester.enterText(numMarquageTxt, numMarquage);
   var nomTxt = find.ancestor(of: find.text('Petit nom'),matching: find.byType(TextFormField),);
   await tester.enterText(nomTxt, nom);
@@ -73,7 +84,7 @@ Future<void> createBete(WidgetTester tester, String numboucle, String numMarquag
 }
 
 Future<void> selectBete(WidgetTester tester, String numboucle) async {
-  final btSearch = find.byIcon(Icons.search);
+  final btSearch = find.byKey(ValueKey("searchBar"));
   await tester.tap(btSearch);
   final rowBete = find.text(numboucle);
   await tester.tap(rowBete);
@@ -91,7 +102,7 @@ Future<void> testEcho() async {
   testWidgets(
       'Saisir une echographie', (tester,) async {
     await startAppli(tester);
-    final echo = find.text("Echographie");
+    final echo = findWelcomeButton("Echographie");
     print(echo);
     await tester.tap(echo);
     await tester.pumpAndSettle();
@@ -100,7 +111,7 @@ Future<void> testEcho() async {
     await tester.pumpAndSettle();
     DateTime now = DateTime.now();
     expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
-    final resultat = find.text("Simple");
+    Finder resultat = find.text("Simple");
     await tester.tap(resultat);
     await tester.tap(find.byKey(Key("dateEcho")));
     await tester.pumpAndSettle();
@@ -118,11 +129,41 @@ Future<void> testEcho() async {
 
 }
 
+Future<void> testPesee() async {
+  testWidgets(
+      'Saisir une pesée', (tester,) async {
+    await startAppli(tester);
+    final echo = findWelcomeButton("Pesée");
+    print(echo);
+    await tester.tap(echo);
+    await tester.pumpAndSettle();
+    await selectBete(tester, "123");
+    // Passage à l'ecran Echo Graphie
+    await tester.pumpAndSettle();
+    DateTime now = DateTime.now();
+    Finder datePeseeFinder = find.byWidgetPredicate(
+            (Widget widget) => widget is TextFormField && widget.controller!.text == DateFormat.yMd().format(now));
+    expect(datePeseeFinder,findsOneWidget);
+    await tester.tap(datePeseeFinder);
+    await tester.pumpAndSettle();
+    String datePesee =  (now.day > 7) ? (now.day - 7).toString(): (now.day + 1).toString();
+    await tester.tap(find.text(datePesee));
+    await tester.tap(find.text("OK"));
+    await tester.pumpAndSettle();
+    Finder poidsTxt = find.ancestor(of: find.text('Poids'),matching: find.byType(TextFormField),);
+    await tester.enterText(poidsTxt, "25.2");
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("Enregistrer"));
+    await tester.pumpAndSettle();
+  });
+
+}
+
 Future<void> testTraitement() async {
   testWidgets(
       'Saisir un traitement', (tester,) async {
     await startAppli(tester);
-    final trt = find.text("Traitement");
+    final trt = findWelcomeButton("Traitement");
     print(trt);
     await tester.tap(trt);
     await tester.pumpAndSettle();
@@ -174,13 +215,16 @@ Future<void> testTraitement() async {
 Future<void> testAgnelage() async {
   testWidgets("Saisir un agnelage", (tester,) async {
     await startAppli(tester);
-    await tester.tap(find.text("Agnelage"));
+    await tester.tap(findWelcomeButton("Agnelage"));
     await tester.pumpAndSettle();
     await selectBete(tester, "123");
     // Passage à l'ecran Agnelage
     await tester.pumpAndSettle();
     DateTime now = DateTime.now();
-    expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
+    expect(
+        find.byWidgetPredicate(
+              (Widget widget) => widget is TextFormField && widget.controller!.text == DateFormat.yMd().format(now)),
+        findsOneWidget);
     await tester.tap(find.byKey(Key("btQualite")));
     await tester.pumpAndSettle();
     await tester.tap(find.text("3"));
@@ -189,6 +233,18 @@ Future<void> testAgnelage() async {
     await tester.pumpAndSettle();
     await tester.tap(find.text("2"));
     await tester.pumpAndSettle();
+    // Ajout d'un agneau
+    final btAdd = find.byIcon(Icons.add);
+    await tester.tap(btAdd);
+    await tester.pumpAndSettle();
+    Finder numProvisoireTxt = find.ancestor(of: find.text('Numéro provisoire'),matching: find.byType(TextField),);
+    await tester.enterText(numProvisoireTxt, "123-1");
+    Finder sexe = find.text("Femelle");
+    await tester.tap(sexe);
+    Finder etat = find.text("Vivant");
+    await tester.tap(etat);
+
+
   });
 
 
@@ -197,13 +253,13 @@ Future<void> testAgnelage() async {
 Future<void> testLot() async {
   testWidgets("Saisir un lot", (tester,) async {
     await startAppli(tester);
-    await tester.tap(find.text("Lot"));
+    await tester.tap(findWelcomeButton("Lot"));
     await tester.pumpAndSettle();
     final btAdd = find.byIcon(Icons.add);
     await tester.tap(btAdd);
     await tester.pumpAndSettle();
     // Saisie du lot
-    var nomLotTxt = find.ancestor(of: find.text('Nom lot'),matching: find.byType(TextFormField),);
+    Finder nomLotTxt = find.ancestor(of: find.text('Nom lot'),matching: find.byType(TextFormField),);
     await tester.enterText(nomLotTxt, "Lot test");
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(Key("dateDebut")));

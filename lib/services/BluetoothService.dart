@@ -14,11 +14,18 @@ class BluetoothService {
   StreamSubscription<StatusBlueTooth> ? _bluetoothStatusSubscription;
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
 
+  Future<StatusBlueTooth> startStatus(Function f) async {
+    StatusBlueTooth state = await this._mgr.getStatus();
+    this._streamStatus = true;
+    this.handleStatus(f);
+    return state;
+  }
 
-  Future<StatusBlueTooth> connectBluetooth(String address, Function f) async {
+
+  Future<StatusBlueTooth> connectBluetooth(String address) async {
      try {
        StatusBlueTooth state = await this._mgr.connectBlueTooth(address);
-       this.handleStatus(f);
+       this._streamStatus = true;
        return state;
     } on PlatformException catch(e) {
       debug.log("Erreur ", error: e );
@@ -28,9 +35,8 @@ class BluetoothService {
 
   Stream<StatusBlueTooth> _streamStatusBluetooth() async* {
     StatusBlueTooth  state;
-    /*if (_streamStatus)
-      return;*/
-    _streamStatus = true;
+    if ( ! _streamStatus)
+      return;
     while (_streamStatus) {
       await Future.delayed(Duration(milliseconds: 500));
       yield state = await _mgr.getStatus();
@@ -44,14 +50,14 @@ class BluetoothService {
   Future<StatusBlueTooth> startReadBluetooth() async {
     if (kIsWeb)
       return StatusBlueTooth.none();
+    this._streamStatus = true;
     return await this._mgr.startReadBluetooth();
  }
 
   Stream<StatusBlueTooth> _streamReadBluetooth() async* {
     StatusBlueTooth  state;
-    /*if (_streamStatus)
-      return;*/
-    _streamStatus = true;
+    if ( ! _streamStatus)
+      return;
     while (_streamStatus) {
       await Future.delayed(Duration(milliseconds: 500));
       yield state = await _mgr.readBluetooth();
@@ -75,6 +81,7 @@ class BluetoothService {
   void stopReadBluetooth() {
     if (this._bluetoothReadSubscription != null)
       this._bluetoothReadSubscription!.cancel();
+    this._streamStatus = false;
     this._mgr.stopReadBluetooth();
   }
 

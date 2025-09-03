@@ -148,7 +148,7 @@ class SearchPresenter {
   }
 
   void dispose() {
-    if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
+    if ((defaultTargetPlatform == TargetPlatform.android)) {
       this._blService.stopReadBluetooth();
     }
   }

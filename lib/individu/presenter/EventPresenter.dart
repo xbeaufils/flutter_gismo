@@ -15,9 +15,6 @@ import 'package:flutter_gismo/services/LambingService.dart';
 import 'package:flutter_gismo/services/TraitementService.dart';
 import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
 
-abstract class EventService {
-
-}
 
 abstract class EventPresenter {
   final _beteService = BeteService();

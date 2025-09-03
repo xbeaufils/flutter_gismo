@@ -20,9 +20,6 @@ class BluetoothManager {
 
   Future<StatusBlueTooth> startReadBluetooth() async {
     StatusBlueTooth state;
-    //FlutterSecureStorage storage = new FlutterSecureStorage();
-    //String address = await storage.read(key: "address");
-    //debug.log("read data status " + address, name: "GismoBloc::startReadBluetooth");
     String status = await BLUETOOTH_CHANNEL.invokeMethod("readBlueTooth" ); //, { 'address': address});
     debug.log("read status " + status, name: "BluetoothManager::startReadBluetooth");
     state = StatusBlueTooth.fromResult(json.decode(status));
@@ -65,7 +62,6 @@ class BluetoothManager {
   }
 
   Future<List<DeviceModel>> getDeviceList() async {
-    BluetoothModel model = new BluetoothModel();
     debug.log("Get device List ", name: "BluetoothManager::getDeviceList");
     String response = await BLUETOOTH_CHANNEL.invokeMethod("listBlueTooth");
     List<DeviceModel> lstReturnDevice = ( jsonDecode(response) as List).map( (i) => DeviceModel.fromResult(i)).toList();

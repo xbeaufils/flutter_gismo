@@ -56,6 +56,10 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
     debug.log("Démarrage", name: "_SearchPageState::initState");
     this._presenter = SearchPresenter(this);
     this._presenter.getBetes(null);
+    if (AuthService().subscribe && defaultTargetPlatform == TargetPlatform.android)
+      new Future.delayed(Duration.zero,() {
+        this._presenter.startService();
+      });
     super.initState();
   }
 
@@ -107,6 +111,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
               child:
               Padding(padding:  const EdgeInsets.all(8.0), child:
                 SearchBar(
+                  key: Key("searchBar"),
                   leading: Badge(label: Text(_filteredBetes.length.toString()), child: Icon(Icons.search)),
                   hintText:  S.of(context).search,
                   onChanged: (text) {this._presenter.filtre(text);},
@@ -132,7 +137,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
         case "WAITING":
           return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:Chip(label: Icon(Icons.bluetooth_searching) ,avatar: CircularProgressIndicator(),));
         case "AVAILABLE":
-          return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:Chip(label: Icon(Icons.bluetooth_connected)));
+          return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:Chip(label: Icon(Icons.bluetooth_connected), backgroundColor: Colors.lightGreen,));
       }
     else {
       return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:  Chip(label:/*Text("Bluetooth"), avatar: */Icon(Icons.bluetooth_disabled_sharp)));

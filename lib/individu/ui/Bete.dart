@@ -40,11 +40,9 @@ abstract class BeteContract extends GismoContract {
 }
 
 class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
-   DateTime _selectedDate = DateTime.now();
-  //final df = new DateFormat('dd/MM/yyyy');
+  DateTime _selectedDate = DateTime.now();
   late BetePresenter _presenter;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  //BluetoothWidget btWidget;
   TextEditingController _dateEntreCtrl = new TextEditingController();
   TextEditingController _numBoucleCtrl = new TextEditingController();
   TextEditingController _numMarquageCtrl = new TextEditingController();
@@ -56,9 +54,6 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
   bool _rfidPresent = false;
   StatusBlueTooth _bluetoothState = StatusBlueTooth.none();
-  final BluetoothManager _btBloc = new BluetoothManager();
-  late Stream<BluetoothState> _bluetoothStream;
-  StreamSubscription<BluetoothState> ? _bluetoothSubscription;
 
   _BetePageState();
 
@@ -84,8 +79,6 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
 
   @override
   Widget build(BuildContext context) {
-    if (AuthService().subscribe)
-      this._startService();
     return new Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(
@@ -241,7 +234,8 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   void initState() {
     super.initState();
     this._presenter = BetePresenter(this);
-    //this.btWidget = new BluetoothWidget(this.widget._bloc);
+    if (AuthService().subscribe)
+      this._presenter.startReadBluetooth();
     if (this.bete == null )
       _dateEntreCtrl.text = DateFormat.yMd().format(_selectedDate);
     else {
@@ -255,46 +249,13 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
     }
   }
 
-  Future<String> _startService() async{
-    try {
-      //if ( await this._bloc.configIsBt()) {
-        debug.log("Start service ", name: "_BetePageState::_startService");
-        await this._presenter.startReadBluetooth();
-     } on Exception catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace : stackTrace);
-    }
-    String start= "toto";
-    return start;
-  }
-
-  void handleBluetoothData(StatusBlueTooth event) {
-      if (this._bluetoothState.dataStatus != event.dataStatus)
-        setState(() {
-          this._bluetoothState.dataStatus = event.dataStatus!;
-          if (event.dataStatus == 'AVAILABLE') {
-            String ? _foundBoucle = event.data;
-            if ( _foundBoucle != null) {
-              if (_foundBoucle.length > 15)
-                _foundBoucle = _foundBoucle.substring(
-                    _foundBoucle.length - 15);
-              _numBoucleCtrl.text =
-                  _foundBoucle.substring(_foundBoucle.length - 5);
-              _numMarquageCtrl.text = _foundBoucle.substring(
-                  0, _foundBoucle.length - 5);
-            }
-          }
-        });
-
-    }
-  @override
+   @override
   void dispose() {
     // other dispose methods
     _dateEntreCtrl.dispose();
     _numBoucleCtrl.dispose();
     _numMarquageCtrl.dispose();
     this._presenter.stopReadBluetooth();
-    if (this._bluetoothSubscription != null)
-      this._bluetoothSubscription?.cancel();
     super.dispose();
   }
 
