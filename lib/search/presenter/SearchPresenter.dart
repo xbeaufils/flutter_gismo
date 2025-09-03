@@ -118,6 +118,7 @@ class SearchPresenter {
     try {
       debug.log("Start service ", name: "SearchPresenter::startService");
       StatusBlueTooth status= await this._blService.startReadBluetooth();
+      this._view.bluetoothState = status;
       if (status.connectionStatus == 'CONNECTED') {
         await this._blService.readBluetooth();
         this._blService.handleData(this.handleBlueTooth);

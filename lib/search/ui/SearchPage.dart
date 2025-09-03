@@ -97,26 +97,15 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
     }
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        primary: true,
-        title: Text(S.current.earring_search),
+        toolbarHeight: 80,
+        //backgroundColor: sheepyGreenSheme.primaryColor,
+        title: _buildSearchBar(), // Text(S.current.earring_search),
         actions: [_statusBluetooth()],
       ),
       key: _scaffoldKey,
       body:
         Column(
           children: [
-            Container(
-              color: sheepyGreenSheme.primaryColor,
-              child:
-              Padding(padding:  const EdgeInsets.all(8.0), child:
-                SearchBar(
-                  key: Key("searchBar"),
-                  leading: Badge(label: Text(_filteredBetes.length.toString()), child: Icon(Icons.search)),
-                  hintText:  S.of(context).search,
-                  onChanged: (text) {this._presenter.filtre(text);},
-                  controller: _filter,
-                ),),),
             Expanded(child: _buildList(context) ),
             this._getAdmobAdvice(),
             this._getFacebookAdvice(),
@@ -126,21 +115,28 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
     );
   }
 
+  Widget _buildSearchBar() {
+    return SearchBar(
+      key: Key("searchBar"),
+      leading: Badge(label: Text(_filteredBetes.length.toString()), child: Icon(Icons.search)),
+      hintText: S.of(context).search,
+      onChanged: (text) {this._presenter.filtre(text);},
+      controller: _filter,
+  );
+}
   Widget _statusBluetooth() {
     if ( ! AuthService().subscribe )
       return Container();
     List<Widget> status = <Widget>[]; //new List();
-    _bluetoothState.connectionStatus = "CONNECTED";
-    _bluetoothState.dataStatus = "AVAILABLE";
     if (_bluetoothState.connectionStatus == "CONNECTED")
       switch (_bluetoothState.dataStatus) {
         case "WAITING":
-          return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:Chip(label: Icon(Icons.bluetooth_searching) ,avatar: CircularProgressIndicator(),));
+          return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:Chip(label: Icon(Icons.bluetooth_searching) , backgroundColor: Colors.lightGreen,));
         case "AVAILABLE":
-          return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:Chip(label: Icon(Icons.bluetooth_connected), backgroundColor: Colors.lightGreen,));
+          return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:Chip(label: Icon(Icons.bluetooth_connected), backgroundColor: Colors.lightBlueAccent,));
       }
     else {
-      return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:  Chip(label:/*Text("Bluetooth"), avatar: */Icon(Icons.bluetooth_disabled_sharp)));
+      return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:  Chip(label: Icon(Icons.bluetooth_disabled_sharp)));
     }
     return Card(child: Row(children: status,));
   }

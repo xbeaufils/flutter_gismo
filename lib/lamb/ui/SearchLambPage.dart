@@ -33,8 +33,7 @@ class _SearchLambPageState extends GismoStatePage<SearchLambPage> implements Sea
     setState(() {
       _filteredLambs = value;
     });
-  } //new List();
-  Widget _appBarTitle = new Text( S.current.provisional_number );
+  }
 
   _SearchLambPageState() {
   }
@@ -47,20 +46,14 @@ class _SearchLambPageState extends GismoStatePage<SearchLambPage> implements Sea
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildBar(context),
+      appBar: AppBar(
+        toolbarHeight: 80,
+        centerTitle: true,
+        title: _builSearchBar(),
+      ),
       key: _scaffoldKey,
       body:
         Column(children: [
-          Container(
-            color: sheepyGreenSheme.primaryColor,
-            child:
-            Padding(padding:  const EdgeInsets.all(8.0), child:
-            SearchBar(
-              leading: Badge(label: Text(_filteredLambs.length.toString()), child: Icon(Icons.search)),
-              hintText:  S.of(context).search,
-              onChanged: (text) {this._presenter.filtre(text);},
-              controller: _filter,
-            ),),),
           Expanded (
             child: _buildListLamb(),// _buildFutureLambs(), //
           ),
@@ -69,11 +62,12 @@ class _SearchLambPageState extends GismoStatePage<SearchLambPage> implements Sea
     );
   }
 
-
-  AppBar _buildBar(BuildContext context) {
-    return new AppBar(
-      centerTitle: true,
-      title: _appBarTitle,
+  Widget _builSearchBar() {
+    return SearchBar(
+      leading: Badge(label: Text(_filteredLambs.length.toString()), child: Icon(Icons.search)),
+      hintText:  S.of(context).search,
+      onChanged: (text) {this._presenter.filtre(text);},
+      controller: _filter,
     );
   }
 
