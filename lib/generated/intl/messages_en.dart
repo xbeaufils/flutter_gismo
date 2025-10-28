@@ -25,6 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "aborted": MessageLookupByLibrary.simpleMessage("Aborted"),
     "ack_delete_done": MessageLookupByLibrary.simpleMessage("Deletion done"),
     "add_lamb": MessageLookupByLibrary.simpleMessage("Add a lamb"),
+    "add_medication": MessageLookupByLibrary.simpleMessage("Add medication"),
     "adoption_abandon": MessageLookupByLibrary.simpleMessage(
       "Abandoned while fleeing",
     ),

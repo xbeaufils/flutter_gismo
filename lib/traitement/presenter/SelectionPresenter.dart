@@ -11,7 +11,7 @@ class SelectionPresenter {
   SelectionPresenter(this._view);
 
   void openTraitement() async {
-    String ? message = await this._view.goNextPage( SanitairePage.collectif( this._view.betes ));
+    String ? message = await this._view.goNextPage( MultipleSanitairePage( this._view.betes ));
     if (message != null)
       this._view.backWithMessage(message);
     else

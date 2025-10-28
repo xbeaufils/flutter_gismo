@@ -185,6 +185,7 @@
   "rythme": "Rhythmus",
   "contributor": "Behandelnder",
   "reason": "Grund",
+  "add_medication": "Medikamente hinzufügen",
   "treatment_explanation" : "Fügen Sie alle Schafe hinzu, die behandelt werden sollen, bevor Sie fortfahren",
 
   "mating_date": "Deckdatum",

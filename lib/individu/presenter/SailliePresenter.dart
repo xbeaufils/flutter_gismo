@@ -23,6 +23,9 @@ class SailliePresenter {
   }
 
   void saveSaillie(String dateSaillie) async {
+    if (this.pere == null) {
+      this._view.showMessage("message", true);
+    }
     this._view.showSaving();
     if (this._view.currentSaillie == null)
       this._view.currentSaillie = new SaillieModel();

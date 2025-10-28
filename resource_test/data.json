@@ -1,0 +1,79 @@
+{
+  "entree": {
+    "motif": "",
+    "date" : "05/03/2025",
+    "betes": [
+        {
+          "numBoucle": "123",
+          "numMarquage": "456789",
+          "nom": "brebis 1",
+          "sex": "female"
+      },
+      {
+        "numBoucle": "456",
+        "numMarquage": "456789",
+        "nom": "brebis 2",
+        "sex": "female"
+      },
+      {
+        "numBoucle": "789",
+        "numMarquage": "456789",
+        "nom": "brebis 3",
+        "sex": "female"
+      }
+    ]
+  },
+  "agnelages" : [
+    {
+      "date" : "12/08/2025",
+      "numero mere" : "123",
+      "qualite" : "3",
+      "adoption" : "2",
+      "agneaux" : [
+      {
+        "numero": "123-1",
+        "sex" : "female",
+        "health": "vivant",
+        "allaitement" : "maternel"
+      },
+        {
+          "numero": "123-2",
+          "sex" : "male",
+          "health": "vivant",
+          "allaitement" : "biberonné"
+        }
+      ]
+    }
+  ],
+  "pesees": {
+    "agneaux": [
+      {
+        "numero" : "123-1",
+        "date" : "24/10/2025",
+        "poids" :"25.2"
+      },
+      {
+        "numero" : "123-2",
+        "date" : "24/10/2025",
+        "poids" :"28.4"
+      }
+    ],
+    "brebis" : [
+      {
+        "numero" :"456",
+        "date" : "24/10/2025",
+        "poids" : "69.2"
+      }
+    ]
+  },
+  "Lot" : {
+    "nom" : "Lot test",
+    "debut" : "18/03/2025",
+    "fin" : "06/04/2025",
+    "brebis" : [
+      {"numero" :  "456"},
+      {"numero" :  "789"}
+    ]
+  }
+
+}

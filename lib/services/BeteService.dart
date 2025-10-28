@@ -140,7 +140,7 @@ class BeteService {
       List<SaillieModel> lstSaillie = await this._saillieRepository.getSaillies(bete);
       List<MemoModel> lstMemos = await this._memorepository.getMemos(bete);
       lstLambs.forEach((lambing)  { lstEvents.add( new Event(lambing.idBd!, EventType.agnelage, lambing.dateAgnelage!, lambing.lambs.length.toString()));});
-      lstTraitement.forEach( (traitement)  {lstEvents.add(new Event(traitement.idBd!, EventType.traitement, traitement.debut, traitement.medicament));});
+      lstTraitement.forEach( (traitement)  {lstEvents.add(new Event(traitement.idBd!, EventType.traitement, traitement.debut, traitement.medic!.medicament));});
       lstNotes.forEach( (note)  {lstEvents.add(new Event(note.idBd!, EventType.NEC, note.date, note.note.toString()));});
       lstPoids.forEach( (poids)  {lstEvents.add(new Event(poids.id!, EventType.pesee, poids.datePesee, poids.poids.toString()));});
       lstAffect.forEach( (affect)  {lstEvents.addAll ( _makeEventforAffectation(affect) );});

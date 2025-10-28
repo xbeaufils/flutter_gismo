@@ -82,7 +82,7 @@ class LambingService {
       List<TraitementModel> lstTraitement = await this._traitementrepository.getTraitementsForLamb(lamb);
       debug.log("get pesee", name: "BeteService::getEvents");
       List<Pesee> lstPoids  = await this._peseeRepository.getPeseeForLamb(lamb);
-      lstTraitement.forEach( (traitement)  {lstEvents.add(new Event(traitement.idBd!, EventType.traitement, traitement.debut, traitement.medicament));});
+      lstTraitement.forEach( (traitement)  {lstEvents.add(new Event(traitement.idBd!, EventType.traitement, traitement.debut, traitement.medic!.medicament));});
       lstPoids.forEach( (poids)  {lstEvents.add(new Event(poids.id!, EventType.pesee, poids.datePesee, poids.poids.toString()));});
       lstEvents.sort((a, b) =>  _compareDate(a, b));
       return lstEvents;

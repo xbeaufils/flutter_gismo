@@ -21,8 +21,8 @@ class TraitementService {
     return this._repository.saveTraitement(traitement);
   }
 
-  Future<String> saveTraitementCollectif(TraitementModel traitement, List<Bete> betes) {
-    return this._repository.saveTraitementCollectif(traitement, betes);
+  Future<String> saveTraitementCollectif(TraitementModel traitement, List<MedicModel> medics, List<Bete> betes) {
+    return this._repository.saveTraitementCollectif(traitement, medics, betes);
   }
 
   Future<List<TraitementModel>> getTraitements(Bete bete) {

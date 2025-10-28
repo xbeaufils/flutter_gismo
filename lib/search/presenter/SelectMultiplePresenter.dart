@@ -25,7 +25,7 @@ class SelectMultiplePresenter {
       this._view.goPreviousPage(betes);
     }
     else {
-      var navigationResult = this._view.goNextPage(SanitairePage.collectif(this._view.betes));
+      var navigationResult = this._view.goNextPage(MultipleSanitairePage(this._view.betes));
       navigationResult.then((message) {
         if (message != null)
           this._view.showMessage(message);

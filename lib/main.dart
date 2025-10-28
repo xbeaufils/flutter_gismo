@@ -37,10 +37,10 @@ void startApp()
     // MapboxOptions.setAccessToken("pk.eyJ1IjoieGJlYXUiLCJhIjoiY2s4anVjamdwMGVsdDNucDlwZ2I0bGJwNSJ9.lc21my1ozaQZ2-EriDSY5w");
 
     Environnement.init(
-//        "https://www.neme-sys.fr/bd", "http://10.0.2.2:8080/gismoApp/api",
+        "https://www.neme-sys.fr/bd", "http://10.0.2.2:8080/gismoApp/api",
 //        "https://www.neme-sys.fr/bd", "http://192.168.1.86:8080/gismoApp/api",
 
-        "https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api",
+//        "https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api",
         new FlavorOvin());
     String nextPage = '/splash';
     if (kIsWeb)

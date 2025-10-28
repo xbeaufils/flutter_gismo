@@ -188,9 +188,8 @@ class LocalLambRepository extends LocalRepository implements LambRepository {
     Database db = await this.database;
     db.transaction((txn) async {
       int idAgnelage = await _saveLambing(lambing, txn);
-      lambing.lambs.forEach((lamb) => {
-        _saveLamb(lamb, txn, idAgnelage)
-      });
+      lambing.lambs.forEach((lamb) =>
+        _saveLamb(lamb, txn, idAgnelage));
     });
     return S.current.record_saved;
   }
@@ -347,7 +346,7 @@ class LocalLambRepository extends LocalRepository implements LambRepository {
     db.update('agneaux', lamb.toBdJson(), where: "id = ?",
         whereArgs: <int>[lamb.idBd!]);
     db.rawUpdate(
-        'udpate traitement set beteId=? where lambId=?', [idBete, lamb.idBd]);
+        'update traitement set beteId=? where lambId=?', [idBete, lamb.idBd]);
     db.rawUpdate(
         "UPDATE pesee set bete_id=? where lamb_id=?", [idBete, lamb.idBd]);
     return "Bouclage enregistré";

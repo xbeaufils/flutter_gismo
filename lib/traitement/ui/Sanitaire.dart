@@ -1,5 +1,3 @@
-//import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
@@ -9,32 +7,252 @@ import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/traitement/presenter/TraitementPresenter.dart';
 import 'package:intl/intl.dart';
 
-class SanitairePage extends StatefulWidget {
-  Bete ? _malade;
-  List<Bete> ? _betes;
-  LambModel ? _bebeMalade;
-  TraitementModel ? _currentTraitement;
 
-  SanitairePage( this._malade, this._bebeMalade, {Key ? key}) : super(key: key);
-  SanitairePage.edit( this._currentTraitement, {Key ? key}) : super(key: key);
-  SanitairePage.modify(this._currentTraitement, {Key ? key}) : super(key: key);
-  SanitairePage.collectif(this._betes, {Key ? key}): super(key: key);
+
+class ModifySanitairePage extends StatefulWidget {
+  Bete ? _malade;
+  LambModel ? _bebeMalade;
+
+  Bete ? get malade => _malade;
+  final TraitementModel _currentTraitement;
+
+  ModifySanitairePage(this._currentTraitement);
 
   @override
-  _SanitairePageState createState() => new _SanitairePageState();
+  SanitairePageState createState() => new ModifySanitairePageState();
+
+  LambModel ? get bebeMalade => _bebeMalade;
+
+  TraitementModel ? get currentTraitement => _currentTraitement;
+}
+
+class LambSanitairePage extends StatefulWidget {
+  final LambModel _bebeMalade;
+  LambSanitairePage(this._bebeMalade);
+
+  @override
+  State<StatefulWidget> createState() => new LambSanitairePageState();
+}
+
+class MultipleSanitairePage extends  StatefulWidget {
+  List<Bete> _betes;
+
+  List<Bete> get betes => _betes;
+
+  MultipleSanitairePage(this._betes);
+
+  @override
+  SanitairePageState createState() => new MultipleSanitairePageState();
 }
 
 abstract class SanitaireContract extends GismoContract {
-  Bete ? get malade;
+ /* Bete ? get malade;
   List<Bete> ? get betes;
   LambModel ? get bebeMalade;
+  TraitementModel ? get currentTraitement;*/
+}
+
+abstract class ModifySanitaireContract extends SanitaireContract {
   TraitementModel ? get currentTraitement;
+}
+
+class ModifySanitairePageState extends SanitairePageState<ModifySanitairePage> implements ModifySanitaireContract {
+
+  Widget _buildMedic() {
+    return Column(children: [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:
+          TextFormField(
+            controller: _medicamentCtl,
+            decoration: InputDecoration(labelText: S.of(context).medication,),
+          ),
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Flexible( child:
+          Padding(padding: const EdgeInsets.all(8.0),
+            child:
+            TextFormField(
+              controller: _voieCtl,
+              decoration: InputDecoration(labelText: S.of(context).route,),
+            ),
+          )),
+          Flexible( child:
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child:
+            TextFormField(
+              controller: _doseCtl,
+              decoration: InputDecoration(labelText: S.of(context).dose,),
+            ),
+          )),
+          Flexible( child:
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child:
+            TextFormField(
+              controller: _rythmeCtl,
+              decoration: InputDecoration(labelText: S.of(context).rythme,),
+            ),
+          )),
+        ]
+    )]);
+  }
+
+  Widget _buildButtons() {
+    return Flex(
+        direction: Axis.horizontal,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(padding: const EdgeInsets.all(8.0),
+              child:
+              ElevatedButton(
+                  onPressed: () => _showDialog(context),
+                  child: Text(S.of(context).bt_delete))),
+          FilledButton(key:Key("Enregistrer"), onPressed: () =>
+              this._presenter.saveModify(_dateDebutCtl.text, _dateFinCtl.text, _doseCtl.text,
+                  _intervenantCtl.text, _observationCtl.text, _motifCtl.text, _medicamentCtl.text, _ordonnanceCtl.text,
+                  _rythmeCtl.text, _voieCtl.text),
+            //color: Colors.lightGreen[700],
+            child: new Text(S.of(context).bt_save),)
+        ]
+    );
+  }
+
+  void initState() {
+    super.initState();
+    _dateDebutCtl.text =
+        DateFormat.yMd().format(this.currentTraitement!.debut);
+    _doseCtl.text = this.currentTraitement?.medic!.dose as String;
+    _dateFinCtl.text = DateFormat.yMd().format(this.currentTraitement!.fin);
+    _intervenantCtl.text = this.currentTraitement?.intervenant as String;
+    _observationCtl.text = this.currentTraitement?.observation as String;
+    _motifCtl.text = this.currentTraitement?.motif as String;
+    _medicamentCtl.text = this.currentTraitement?.medic!.medicament as String;
+    _ordonnanceCtl.text = this.currentTraitement?.ordonnance as String;
+    _rythmeCtl.text = this.currentTraitement?.medic!.rythme as String;
+    _voieCtl.text = this.currentTraitement?.medic!.voie as String;
+  }
+
+  @override
+  TraitementModel? get currentTraitement => this.widget._currentTraitement;
+}
+
+abstract class MultipleSanitaireContract extends SanitaireContract {
+  List<Bete> ? get betes;
+  List<MedicModel> ? get medics;
+
+  void add(MedicModel medic);
+}
+
+class MultipleSanitairePageState extends SanitairePageState<MultipleSanitairePage> implements MultipleSanitaireContract {
+  List<MedicModel> _medics = [];
+
+  List<MedicModel> get medics => _medics;
+
+  @override
+  List<Bete>? get betes => this.widget._betes;
+
+  MultipleSanitairePageState();
+
+  Widget _buildMedic() {
+    return SizedBox(
+        height: 200,
+        child:
+            Column(children: [
+              Flexible(
+                child: ListView.builder(
+                  itemCount: this._medics.length,
+                  itemBuilder: (context, index) {
+                    MedicModel medic = this._medics[index];
+                    return ListTile(
+                      //leading: _getImageType(event.type),
+                      title: Text(medic.medicament),
+                      subtitle: Text((medic.dose == null) ? medic.dose! : ""),
+                      trailing: IconButton(icon: Icon(Icons.edit),
+                          onPressed: () => _presenter.edit(medic)),
+                    );
+                  })
+              ),
+              ElevatedButton(
+                child: Text(S.current.add_medication),
+                onPressed: () => this._presenter.add(context),
+              ),
+            ])
+    );
+  }
+
+  Widget _buildButtons() {
+    return Flex(
+        direction: Axis.horizontal,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          FilledButton(key: Key("Enregistrer"), onPressed: () =>
+              this._presenter.saveMultiple(
+                  _dateDebutCtl.text,
+                  _dateFinCtl.text,
+                  _doseCtl.text,
+                  _intervenantCtl.text,
+                  _observationCtl.text,
+                  _motifCtl.text,
+                  _medicamentCtl.text,
+                  _ordonnanceCtl.text,
+                  _rythmeCtl.text,
+                  _voieCtl.text),
+            //color: Colors.lightGreen[700],
+            child: new Text(S
+                .of(context)
+                .bt_save),)
+        ]
+    );
+  }
+
+  void add(MedicModel medic) {
+    setState(() {
+      _medics.add(medic);
+    });
+  }
 
 }
 
-class _SanitairePageState extends GismoStatePage<SanitairePage> implements SanitaireContract {
+abstract class LambSanitaireContract extends SanitaireContract {
+  LambModel ? get bebeMalade;
+}
+
+class LambSanitairePageState extends SanitairePageState<LambSanitairePage> implements LambSanitaireContract{
+  @override
+  Widget _buildMedic() {
+    // TODO: implement _buildMedic
+    throw UnimplementedError();
+  }
+
+  Widget _buildButtons() {
+    return Flex(
+        direction: Axis.horizontal,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          FilledButton(key:Key("Enregistrer"), onPressed: () =>
+              this._presenter.saveLamb(_dateDebutCtl.text, _dateFinCtl.text, _doseCtl.text,
+                  _intervenantCtl.text, _observationCtl.text, _motifCtl.text, _medicamentCtl.text, _ordonnanceCtl.text,
+                  _rythmeCtl.text, _voieCtl.text),
+            //color: Colors.lightGreen[700],
+            child: new Text(S.of(context).bt_save),)
+        ]
+    );
+  }
+
+  @override
+  LambModel ? get bebeMalade => this.widget._bebeMalade;
+}
+
+// class _SanitairePageState extends GismoStatePage<SanitairePage> implements SanitaireContract {
+abstract class SanitairePageState<T extends StatefulWidget> extends GismoStatePage<T> implements SanitaireContract {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  _SanitairePageState();
+  SanitairePageState();
   late TraitementPresenter _presenter;
 
   TextEditingController _dateDebutCtl = TextEditingController();
@@ -48,6 +266,9 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
   TextEditingController _motifCtl = TextEditingController();
   TextEditingController _observationCtl = TextEditingController();
 
+  Widget _buildMedic();
+
+  Widget _buildButtons();
 
   @override
   Widget build(BuildContext context) {
@@ -120,6 +341,7 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
 
                     ),
                   ),
+                  Card(child:  this._buildMedic(),),
                   Card(child:
                       Column(
                         children: <Widget> [
@@ -131,47 +353,7 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
                                     decoration: InputDecoration(labelText: S.of(context).prescription,),
                               )
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child:
-                              TextFormField(
-                                  controller: _medicamentCtl,
-                                  decoration: InputDecoration(labelText: S.of(context).medication,),
-                                ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Flexible( child:
-                                Padding(padding: const EdgeInsets.all(8.0),
-                                    child:
-                                    TextFormField(
-                                        controller: _voieCtl,
-                                        decoration: InputDecoration(labelText: S.of(context).route,),
-                                      ),
-                                  )),
-                              Flexible( child:
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child:
-                                        TextFormField(
-                                          controller: _doseCtl,
-                                          decoration: InputDecoration(labelText: S.of(context).dose,),
-                                        ),
-                                  )),
-                              Flexible( child:
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child:
-                                      TextFormField(
-                                    controller: _rythmeCtl,
-                                    decoration: InputDecoration(labelText: S.of(context).rythme,),
-                                  ),
-                                  )),
-                                ]
-                          ),
+                          //this._buildMedic(),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child:
@@ -202,31 +384,14 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
                           ]
                       )
                   ),
-                  Flex(
-                    direction: Axis.horizontal,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      (this.widget._currentTraitement == null) ?
-                          Container():
-                      Padding(padding: const EdgeInsets.all(8.0),
-                          child:
-                          ElevatedButton(
-                            onPressed: () => _showDialog(context),
-                            child: Text(S.of(context).bt_delete))),
-                        FilledButton(key:Key("Enregistrer"), onPressed: () =>
-                          this._presenter.save(_dateDebutCtl.text, _dateFinCtl.text, _doseCtl.text,
-                            _intervenantCtl.text, _observationCtl.text, _motifCtl.text, _medicamentCtl.text, _ordonnanceCtl.text,
-                          _rythmeCtl.text, _voieCtl.text),
-                        //color: Colors.lightGreen[700],
-                        child: new Text(S.of(context).bt_save),)
-                    ]
-                  )
+                  this._buildButtons(),
                   ])
 
           )
     );
   }
   // set up the buttons
+
   Widget _cancelButton() {
     return TextButton(
       child: Text(S.of(context).bt_cancel),
@@ -238,7 +403,7 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
 
   Widget _continueButton() {
     return TextButton(
-      child: Text(S.of(context).bt_continue),
+      child: Text(S.current.bt_continue),
       onPressed: () {
         this._presenter.delete();
       },
@@ -261,48 +426,13 @@ class _SanitairePageState extends GismoStatePage<SanitairePage> implements Sanit
     );
   }
 
-
-
   @override
   void initState() {
     DateTime selectedDate = DateTime.now();
     _presenter = TraitementPresenter(this);
     super.initState();
-    if (this.widget._currentTraitement != null) {
-      _dateDebutCtl.text = DateFormat.yMd().format(this.widget._currentTraitement!.debut);
-      _doseCtl.text = this.widget._currentTraitement?.dose  as String;
-      _dateFinCtl.text = DateFormat.yMd().format(this.widget._currentTraitement!.fin);
-      _intervenantCtl.text = this.widget._currentTraitement?.intervenant as String;
-      _observationCtl.text = this.widget._currentTraitement?.observation  as String;
-      _motifCtl.text = this.widget._currentTraitement?.motif as String;
-      _medicamentCtl.text = this.widget._currentTraitement?.medicament  as String;
-      _ordonnanceCtl.text = this.widget._currentTraitement?.ordonnance  as String;
-      _rythmeCtl.text = this.widget._currentTraitement?.rythme as String;
-      _voieCtl.text = this.widget._currentTraitement?.voie  as String;
-    }
-    else {
       _dateDebutCtl.text = DateFormat.yMd().format(selectedDate);
       _dateFinCtl.text = DateFormat.yMd().format(selectedDate);
-    }
   }
 
-  @override
-  TraitementModel ? get currentTraitement {
-    return this.widget._currentTraitement;
-  }
-
-  @override
-  LambModel ? get bebeMalade {
-    return this.widget._bebeMalade;
-  }
-
-  @override
-  List<Bete> ? get betes {
-    return this.widget._betes;
-  }
-
-  @override
-  Bete ? get malade {
-    return this.widget._malade;
-  }
 }

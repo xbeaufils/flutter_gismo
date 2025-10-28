@@ -196,6 +196,7 @@
   "rythme" : "Rhythm",
   "contributor" : "Contributor",
   "reason" : "Reason",
+  "add_medication": "Add medication",
   "treatment_explanation" : "Add all individuals who will receive treatment before continuing",
 
   "bt_cancel" : "Cancel",

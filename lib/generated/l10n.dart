@@ -1509,6 +1509,16 @@ class S {
     return Intl.message('Reason', name: 'reason', desc: '', args: []);
   }
 
+  /// `Add medication`
+  String get add_medication {
+    return Intl.message(
+      'Add medication',
+      name: 'add_medication',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Add all individuals who will receive treatment before continuing`
   String get treatment_explanation {
     return Intl.message(

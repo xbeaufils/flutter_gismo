@@ -50,7 +50,7 @@ class LambTimeLinePresenter {
   }
 
   void traitement(LambModel lamb) async {
-    await this._view.goNextPage( SanitairePage(null, lamb ));
+    await this._view.goNextPage( LambSanitairePage(lamb));
     this._view.hideSaving();
   }
 

@@ -192,6 +192,7 @@
   "rythme" : "Rythme",
   "contributor" : "Intervenant",
   "reason" : "Motif",
+  "add_medication": "Ajouter medicament",
   "treatment_explanation" : "Ajoutez tous les individus qui vont recevoir le traitement avant de continuer",
 
   "mating_date" : "Date de saillie",

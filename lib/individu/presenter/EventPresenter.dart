@@ -62,7 +62,7 @@ abstract class EventPresenter {
   }
 
   void _editTraitement(TraitementModel traitement) async {
-    String ? message = await this.view.editPage(SanitairePage.modify(traitement));
+    String ? message = await this.view.editPage(ModifySanitairePage(traitement));
     if (message != null)
       this.view.showMessage(message);
     this.view.hideSaving();

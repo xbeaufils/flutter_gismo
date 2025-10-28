@@ -27,6 +27,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Löschvorgang abgeschlossen",
     ),
     "add_lamb": MessageLookupByLibrary.simpleMessage("Lamm hinzufügen"),
+    "add_medication": MessageLookupByLibrary.simpleMessage(
+      "Medikamente hinzufügen",
+    ),
     "adoption_abandon": MessageLookupByLibrary.simpleMessage(
       "Verlässt durch Flucht",
     ),

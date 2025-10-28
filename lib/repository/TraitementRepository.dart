@@ -12,7 +12,7 @@ import 'package:sentry/sentry.dart';
 abstract class Traitementrepository {
   Future<String> deleteTraitement(int idBd) ;
   Future<String> saveTraitement(TraitementModel traitement) ;
-  Future<String> saveTraitementCollectif(TraitementModel traitement, List<Bete> betes) ;
+  Future<String> saveTraitementCollectif(TraitementModel traitement, List<MedicModel> medics, List<Bete> betes) ;
   Future<List<TraitementModel>> getTraitementsForLamb(LambModel lamb);
   Future<List<TraitementModel>> getTraitements(Bete bete) ;
   Future<TraitementModel?> searchTraitement(int idBd);
@@ -37,8 +37,8 @@ class WebTraitementRepository  extends WebRepository implements Traitementreposi
   }
 
   @override
-  Future<String> saveTraitementCollectif (TraitementModel traitement, List<Bete> betes) async {
-    TraitementCollectif col = new TraitementCollectif(traitement, betes);
+  Future<String> saveTraitementCollectif (TraitementModel traitement, List<MedicModel> medics, List<Bete> betes) async {
+    TraitementMultiMedic col = new TraitementMultiMedic(traitement, medics, betes);
     final Map<String, dynamic> data = col.toJson();
     try {
       final response = await super.doPostMessage(
@@ -111,12 +111,14 @@ class LocalTraitementRepository extends LocalRepository implements Traitementrep
     }
   }
 
-  Future<String> saveTraitementCollectif(TraitementModel traitement, List<Bete> betes) async{
+  Future<String> saveTraitementCollectif(TraitementModel traitement, List<MedicModel> medics, List<Bete> betes) async{
     betes.forEach((bete)  {
       TraitementModel entity = new TraitementModel.fromResult(traitement.toJson());
-      entity.idBete  = bete.idBd;
-      //entity.medicament = traitement.medicament;
-      this.saveTraitement(entity);
+      medics.forEach((medic) {
+        entity.idBete = bete.idBd;
+        entity.medic = medic;
+        this.saveTraitement(entity);
+      });
     });
     return " Enregistrement effectué";
   }

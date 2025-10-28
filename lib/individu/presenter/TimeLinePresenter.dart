@@ -78,7 +78,7 @@ class TimeLinePresenter {
   }
 
   void _editTraitement(TraitementModel traitement) async {
-    String ? message = await this._view.editPage(SanitairePage.modify(traitement));
+    String ? message = await this._view.editPage(ModifySanitairePage(traitement));
     if (message != null)
       this._view.showMessage(message);
   }

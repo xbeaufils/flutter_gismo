@@ -1,16 +1,11 @@
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:intl/intl.dart';
 
-class TraitementModel {
+abstract class TraitementAbstract {
   final _df = new DateFormat('dd/MM/yyyy');
-
   int ? _idBd;
   late DateTime _debut;
   late DateTime _fin;
-  late String _medicament;
-  String ? _voie;
-  String ? _dose;
-  String ? _rythme;
   late String  _numBoucle;
   late String _numMarquage;
   int ? _idBete;
@@ -25,7 +20,6 @@ class TraitementModel {
   DateTime get fin =>_fin;
   String get numBoucle =>_numBoucle;
   String get numMarquage =>_numMarquage;
-  String get medicament =>_medicament;
   String ? get ordonnance =>_ordonnance;
   String ? get intervenant =>_intervenant;
   String ? get motif =>_motif;
@@ -74,6 +68,39 @@ class TraitementModel {
     _numMarquage = value!;
   }
 
+   set fin(DateTime value) {
+    _fin = value;
+  }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (_idBd != null)
+      data["idBd"] = _idBd ;
+    data["debut"] = _df.format(_debut);
+    data["fin"] = _df.format(_fin);
+    if (_idBete != null)
+      data["beteId"] = _idBete.toString();
+    if (_idLamb != null)
+      data["lambId"] = _idLamb.toString();
+    data["ordonnance"] = _ordonnance;
+    data["intervenant"] = _intervenant;
+    data["motif"] = _motif;
+    data["observation"] = _observation;
+    return data;
+  }
+
+}
+
+class MedicModel {
+  late String _medicament;
+  String ? _voie;
+  String ? _dose;
+  String ? _rythme;
+
+  MedicModel();
+  MedicModel.build(this._medicament, this._voie, this._dose, this._rythme);
+
+  String get medicament =>_medicament;
+
   set medicament(String ? value) {
     _medicament = value!;
   }
@@ -84,9 +111,6 @@ class TraitementModel {
     _voie = value;
   }
 
-  set fin(DateTime value) {
-    _fin = value;
-  }
 
   String ? get dose => _dose;
 
@@ -100,16 +124,29 @@ class TraitementModel {
     _dose = value;
   }
 
+}
+
+class TraitementModel extends TraitementAbstract{
+  final _df = new DateFormat('dd/MM/yyyy');
+
+  MedicModel ? _medic;
+
+  MedicModel ? get medic => _medic;
+
+  set medic(MedicModel ? value) {
+    _medic = value;
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (_idBd != null)
       data["idBd"] = _idBd ;
     data["debut"] = _df.format(_debut);
     data["fin"] = _df.format(_fin);
-    data["medicament"] = _medicament;
-    data["voie"] = _voie;
-    data["dose"] = _dose;
-    data["rythme"] = _rythme;
+    data["medicament"] = medic!.medicament;
+    data["voie"] = medic!.voie;
+    data["dose"] = medic!.dose;
+    data["rythme"] = medic!.rythme;
     if (_idBete != null)
       data["beteId"] = _idBete.toString();
     if (_idLamb != null)
@@ -121,16 +158,19 @@ class TraitementModel {
     return data;
   }
 
-  TraitementModel() ;
+  TraitementModel() {
+    _medic = MedicModel();
+  }
 
   TraitementModel.fromResult(result) {
+    _medic = MedicModel();
     _idBd= result["idBd"] ;
     _debut = _df.parse(result["debut"]) ;
     _fin = _df.parse(result["fin"] );
-    _medicament = result["medicament"] ;
-    _voie = result["voie"] ;
-    _dose = result["dose"] ;
-    _rythme = result["rythme"] ;
+    medic!.medicament = result["medicament"] ;
+    medic!.voie = result["voie"] ;
+    medic!.dose = result["dose"] ;
+    medic!.rythme = result["rythme"] ;
     _idBete = result["beteId"] ;
     _idLamb = result["lambId"];
     _ordonnance = result["ordonnance"] ;
@@ -141,21 +181,50 @@ class TraitementModel {
   }
 }
 
+class TraitementMultiMedic extends TraitementAbstract {
+  late List<Bete> _betes;
+  late List<MedicModel> _medics;
+
+  TraitementMultiMedic(TraitementModel traitement, this._medics, this._betes) {
+    _idBd = traitement.idBd;
+    _debut = traitement.debut;
+    _fin = traitement.fin;
+    _ordonnance = traitement.ordonnance;
+    _intervenant = traitement.intervenant;
+    _motif = traitement.motif;
+    _observation = traitement.observation;
+  }
+
+  TraitementMultiMedic.fromResult(result) {
+    _betes = result["betes"];
+    _medics = result["medics"];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data["traitement"] = super.toJson;
+    data["betes"] = _betes;
+    data["medics"] = _medics;
+    return data;
+  }
+
+}
+
 class TraitementCollectif {
   late List<Bete> betes;
-  late TraitementModel traitement;
+  late List<TraitementModel> traitements;
 
-  TraitementCollectif(this.traitement, this.betes);
+  TraitementCollectif(this.traitements, this.betes);
 
   TraitementCollectif.fromResult(result) {
     betes = result["betes"];
-    traitement = result["traitement"];
+    traitements = result["traitement"];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data["betes"] = betes;
-    data["traitement"] = traitement;
+    data["traitements"] = traitements;
     return data;
   }
 }
