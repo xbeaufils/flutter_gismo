@@ -95,6 +95,7 @@ class WebTraitementRepository  extends WebRepository implements Traitementreposi
 }
 
 class LocalTraitementRepository extends LocalRepository implements Traitementrepository {
+
   @override
   Future<String> saveTraitement(TraitementModel traitement) async{
     try {
@@ -112,12 +113,13 @@ class LocalTraitementRepository extends LocalRepository implements Traitementrep
   }
 
   Future<String> saveTraitementCollectif(TraitementModel traitement, List<MedicModel> medics, List<Bete> betes) async{
+
     betes.forEach((bete)  {
-      TraitementModel entity = new TraitementModel.fromResult(traitement.toJson());
-      medics.forEach((medic) {
+      medics.forEach((medic) async {
+        TraitementModel entity = TraitementModel.fromResult(traitement.toJson());
         entity.idBete = bete.idBd;
         entity.medic = medic;
-        this.saveTraitement(entity);
+        await saveTraitement(traitement);
       });
     });
     return " Enregistrement effectué";
