@@ -67,7 +67,10 @@ class MedicPageState extends GismoStatePage<MedicPage>  implements MedicContract
               )),
             ]
         ),
-        Row(children: [
+        Flex(
+        direction: Axis.horizontal,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
           FilledButton(
               child: Text(S.of(context).bt_add),
               key: Key("Enregistrer"), onPressed: () => {_addMedicament()})

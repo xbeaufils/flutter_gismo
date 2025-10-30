@@ -222,8 +222,48 @@ abstract class LambSanitaireContract extends SanitaireContract {
 class LambSanitairePageState extends SanitairePageState<LambSanitairePage> implements LambSanitaireContract{
   @override
   Widget _buildMedic() {
-    // TODO: implement _buildMedic
-    throw UnimplementedError();
+    return Column(children: [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:
+        TextFormField(
+          controller: _medicamentCtl,
+          decoration: InputDecoration(labelText: S.of(context).medication,),
+        ),
+      ),
+      Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Flexible( child:
+            Padding(padding: const EdgeInsets.all(8.0),
+              child:
+              TextFormField(
+                controller: _voieCtl,
+                decoration: InputDecoration(labelText: S.of(context).route,),
+              ),
+            )),
+            Flexible( child:
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child:
+              TextFormField(
+                controller: _doseCtl,
+                decoration: InputDecoration(labelText: S.of(context).dose,),
+              ),
+            )),
+            Flexible( child:
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child:
+              TextFormField(
+                controller: _rythmeCtl,
+                decoration: InputDecoration(labelText: S.of(context).rythme,),
+              ),
+            )),
+          ]
+      )]);
   }
 
   Widget _buildButtons() {

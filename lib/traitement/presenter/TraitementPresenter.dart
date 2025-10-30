@@ -16,9 +16,10 @@ class TraitementPresenter {
     if (this._view is ModifySanitairePageState) {
       ModifySanitaireContract viewModify = this._view as ModifySanitaireContract;
       if (viewModify.currentTraitement != null) {
+        viewModify.back(); // Ferme la boite de dialogue
         var message = await _service.deleteTraitement(
             viewModify.currentTraitement!.idBd!);
-        viewModify.backWithMessage(S.current.record_saved);
+        viewModify.backWithMessage(S.current.ack_delete_done);
       }
       else
         this._view.back();
@@ -45,6 +46,7 @@ class TraitementPresenter {
     traitement.medic!.voie = voie;
     traitement.medic!.rythme = rythme;
     traitement.idBete = modifyView.currentTraitement?.idBete;
+    traitement.idLamb = modifyView.currentTraitement?.idLamb;
     traitement.idBd = modifyView.currentTraitement?.idBd;
     await this._service.saveTraitement(traitement);
     this._view.backWithMessage(S.current.record_saved);
@@ -69,6 +71,7 @@ class TraitementPresenter {
     traitement.idLamb = lambView.bebeMalade!.idBd;
     String message = "";
     message = await _service.saveTraitement(traitement);
+    this._view.backWithMessage(S.current.record_saved);
   }
 
   TraitementModel _save(String debut, String fin, String intervenant, String observation, String motif, String ordonnance)  {
