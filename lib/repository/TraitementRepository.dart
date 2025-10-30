@@ -113,14 +113,17 @@ class LocalTraitementRepository extends LocalRepository implements Traitementrep
   }
 
   Future<String> saveTraitementCollectif(TraitementModel traitement, List<MedicModel> medics, List<Bete> betes) async{
-
+    List<TraitementModel> tempList = [];
     betes.forEach((bete)  {
       medics.forEach((medic) async {
         TraitementModel entity = TraitementModel.fromResult(traitement.toJson());
         entity.idBete = bete.idBd;
         entity.medic = medic;
-        await saveTraitement(traitement);
+        tempList.add(entity);
       });
+    });
+    tempList.forEach( (entity) async {
+      await saveTraitement(entity);
     });
     return " Enregistrement effectué";
   }

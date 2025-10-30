@@ -1,25 +1,28 @@
 {
   "entree": {
-    "motif": "",
+    "motif": "Creation",
     "date" : "05/03/2025",
     "betes": [
         {
           "numBoucle": "123",
           "numMarquage": "456789",
           "nom": "brebis 1",
-          "sex": "female"
+          "sex": "female",
+          "observation": "obs 1"
       },
       {
         "numBoucle": "456",
         "numMarquage": "456789",
         "nom": "brebis 2",
-        "sex": "female"
+        "sex": "female",
+        "observation": "obs 2"
       },
       {
         "numBoucle": "789",
         "numMarquage": "456789",
         "nom": "brebis 3",
-        "sex": "female"
+        "sex": "female",
+        "observation": "obs 3"
       }
     ]
   },
@@ -74,6 +77,28 @@
       {"numero" :  "456"},
       {"numero" :  "789"}
     ]
+  },
+  "traitements" : {
+    "betes": [
+      {"numero": "123"},
+      {"numero": "789"}
+    ],
+    "medicaments": [
+      {"nom":  "Tolfine",
+      "voie" :  "IM",
+      "dose" :  "2cc",
+      "rythme": "1 f/j"},
+      {"nom":  "Paracetamol",
+        "voie" :  "SC",
+        "dose" :  "4cc",
+        "rythme": "2 f/j"
+      }
+    ],
+    "debut" : "11/05/2025",
+    "fin" : "16/05/2025",
+    "ordonnance": "ORD-12345",
+    "motif" : "bobo",
+    "observation": "RAS",
+    "intervenant": "Paco"
   }
-
 }

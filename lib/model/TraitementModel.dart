@@ -1,8 +1,49 @@
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:intl/intl.dart';
 
+
+class MedicModel {
+  String _medicament = "";
+  String ? _voie;
+  String ? _dose;
+  String ? _rythme;
+
+  MedicModel();
+  MedicModel.build(this._medicament, this._voie, this._dose, this._rythme);
+
+  String get medicament =>_medicament;
+
+  set medicament(String ? value) {
+    _medicament = value!;
+  }
+
+  String ? get voie => _voie;
+
+  set voie(String ? value) {
+    _voie = value;
+  }
+
+
+  String ? get dose => _dose;
+
+  String ? get rythme => _rythme;
+
+  set rythme(String  ? value) {
+    _rythme = value;
+  }
+
+  set dose(String ? value) {
+    _dose = value;
+  }
+
+}
+
+
 abstract class TraitementAbstract {
-  final _df = new DateFormat('dd/MM/yyyy');
+  TraitementAbstract.build( this._debut, this._fin, this._ordonnance, this._intervenant, this._motif, this._observation) ;
+
+  TraitementAbstract();
+    final _df = new DateFormat('dd/MM/yyyy');
   int ? _idBd;
   late DateTime _debut;
   late DateTime _fin;
@@ -71,6 +112,7 @@ abstract class TraitementAbstract {
    set fin(DateTime value) {
     _fin = value;
   }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (_idBd != null)
@@ -86,42 +128,6 @@ abstract class TraitementAbstract {
     data["motif"] = _motif;
     data["observation"] = _observation;
     return data;
-  }
-
-}
-
-class MedicModel {
-  late String _medicament;
-  String ? _voie;
-  String ? _dose;
-  String ? _rythme;
-
-  MedicModel();
-  MedicModel.build(this._medicament, this._voie, this._dose, this._rythme);
-
-  String get medicament =>_medicament;
-
-  set medicament(String ? value) {
-    _medicament = value!;
-  }
-
-  String ? get voie => _voie;
-
-  set voie(String ? value) {
-    _voie = value;
-  }
-
-
-  String ? get dose => _dose;
-
-  String ? get rythme => _rythme;
-
-  set rythme(String  ? value) {
-    _rythme = value;
-  }
-
-  set dose(String ? value) {
-    _dose = value;
   }
 
 }
@@ -138,39 +144,29 @@ class TraitementModel extends TraitementAbstract{
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (_idBd != null)
-      data["idBd"] = _idBd ;
-    data["debut"] = _df.format(_debut);
-    data["fin"] = _df.format(_fin);
+    Map<String, dynamic> data = super.toJson();
     data["medicament"] = medic!.medicament;
     data["voie"] = medic!.voie;
     data["dose"] = medic!.dose;
     data["rythme"] = medic!.rythme;
-    if (_idBete != null)
-      data["beteId"] = _idBete.toString();
-    if (_idLamb != null)
-      data["lambId"] = _idLamb.toString();
-    data["ordonnance"] = _ordonnance;
-    data["intervenant"] = _intervenant;
-    data["motif"] = _motif;
-    data["observation"] = _observation;
     return data;
   }
 
   TraitementModel() {
-    _medic = MedicModel();
+    this._medic = MedicModel();
   }
+
+  TraitementModel.build( debut, fin, ordonnance, intervenant, motif, observation) : super.build(debut, fin, ordonnance,intervenant, motif, observation) ;
 
   TraitementModel.fromResult(result) {
     _medic = MedicModel();
     _idBd= result["idBd"] ;
     _debut = _df.parse(result["debut"]) ;
     _fin = _df.parse(result["fin"] );
-    medic!.medicament = result["medicament"] ;
-    medic!.voie = result["voie"] ;
-    medic!.dose = result["dose"] ;
-    medic!.rythme = result["rythme"] ;
+    _medic!.medicament = result["medicament"] ;
+    _medic!.voie = result["voie"] ;
+    _medic!.dose = result["dose"] ;
+    _medic!.rythme = result["rythme"] ;
     _idBete = result["beteId"] ;
     _idLamb = result["lambId"];
     _ordonnance = result["ordonnance"] ;
@@ -201,8 +197,7 @@ class TraitementMultiMedic extends TraitementAbstract {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["traitement"] = super.toJson;
+    final Map<String, dynamic> data = super.toJson();
     data["betes"] = _betes;
     data["medics"] = _medics;
     return data;

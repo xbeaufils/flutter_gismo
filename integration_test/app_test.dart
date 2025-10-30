@@ -7,6 +7,7 @@ import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/core/repository/LocalRepository.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -15,8 +16,8 @@ import 'package:intl/intl.dart';
 void main() async {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   int count = 0;
-  final file = new File('test_resources/data.json');
-  final Map<String, dynamic>  jsonData = jsonDecode(await file.readAsString());
+  String dataTest = await rootBundle.loadString('resource_test/data.json');
+  final Map<String, dynamic>  jsonData = jsonDecode(dataTest);
   setUpAll(()  async {
     print("---------");
     print ("| count $count |");
@@ -52,18 +53,17 @@ void main() async {
           final btCreation = find.text("Creation");
           await tester.tap(btCreation);
           await tester.pump();
-          entree["betes"].forEach((Map<String, dynamic> bete) async {
+          for (Map<String, dynamic> bete in entree["betes"])
             await createBete(
-                tester, bete["numBoucle"], bete["numMarquage"], bete["brebis1"],
-                bete["obs1"]);
-          });
+                tester, bete["numBoucle"], bete["numMarquage"], bete["nom"],
+                bete["observation"]);
           final btSave = find.text("Enregistrer");
           await tester.tap(btSave);
         });
-    testAgnelage();
+ //   testAgnelage();
  //   testLot();
  //   testEcho();
- //   testTraitement();
+      testTraitement(jsonData["traitements"]);
  //    testPesee();
    });
 }
@@ -76,7 +76,7 @@ Finder findWelcomeButton(String text) {
   return entree;
 }
 
-Future<void> createBete(WidgetTester tester, String numboucle, String numMarquage, String nom, String obs ) async {
+Future<void> createBete(WidgetTester tester, String numboucle, String numMarquage, String nom, String ? obs ) async {
   final btPlus = find.byIcon(Icons.add);
   await tester.tap(btPlus);
   await tester.pumpAndSettle();
@@ -90,7 +90,7 @@ Future<void> createBete(WidgetTester tester, String numboucle, String numMarquag
   var sexeRd = find.text("Femelle");
   await tester.tap(sexeRd);
   var obsTxt = find.ancestor(of: find.text('Observations'),matching: find.byType(TextFormField),);
-  await tester.enterText(obsTxt, obs);
+  await tester.enterText(obsTxt, obs!);
   var addBt = find.text("Ajouter");
   await tester.tap(addBt);
   await tester.pumpAndSettle();
@@ -172,7 +172,7 @@ Future<void> testPesee() async {
 
 }
 
-Future<void> testTraitement() async {
+Future<void> testTraitement(Map<String, dynamic> traitement ) async {
   testWidgets(
       'Saisir un traitement', (tester,) async {
     await startAppli(tester);
@@ -181,42 +181,41 @@ Future<void> testTraitement() async {
     await tester.tap(trt);
     await tester.pumpAndSettle();
     final btSearch = find.byIcon(Icons.settings_remote);
-    await tester.tap(btSearch);
-    await tester.pumpAndSettle();
-    await selectBete(tester, "123");
-    await tester.pumpAndSettle();
-    await tester.tap(btSearch);
-    await tester.pumpAndSettle();
-    await selectBete(tester, "456");
-    await tester.pumpAndSettle();
+    for (Map<String, dynamic> bete in traitement["betes"]) {
+      await tester.tap(btSearch);
+      await tester.pumpAndSettle();
+      await selectBete(tester, bete["numero"]);
+      await tester.pumpAndSettle();
+    }
     await tester.tap(find.text("Continuer"));
     await tester.pumpAndSettle(Duration(seconds: 2));
-    await tester.tap(find.byKey(Key("dateDebut")));
+    //await tester.tap(find.byKey(Key("dateDebut")));
+    await tester.enterText(find.byKey(Key("dateDebut")), traitement["debut"]);
     await tester.pumpAndSettle();
-    await tester.tap(find.text("5"));
-    await tester.tap(find.text("OK"));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(Key("dateFin")));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text("15"));
-    await tester.tap(find.text("OK"));
+    await tester.enterText(find.byKey(Key("dateFin")), traitement["fin"]);
     await tester.pumpAndSettle();
     Finder ordonnanceTxt = find.ancestor(of: find.text('Ordonnance'),matching: find.byType(TextFormField),);
-    await tester.enterText(ordonnanceTxt, "ord 1");
-    var MedicamentTxt = find.ancestor(of: find.text('Medicament'),matching: find.byType(TextFormField),);
-    await tester.enterText(MedicamentTxt, "Medoc");
-    var voieTxt = find.ancestor(of: find.text('Voie'),matching: find.byType(TextFormField),);
-    await tester.enterText(voieTxt, "Oral");
-    var doseTxt = find.ancestor(of: find.text('Dose'),matching: find.byType(TextFormField),);
-    await tester.enterText(doseTxt, "1 ml");
-    var rythmeTxt = find.ancestor(of: find.text('Rythme'),matching: find.byType(TextFormField),);
-    await tester.enterText(rythmeTxt, "2 / j");
+    await tester.enterText(ordonnanceTxt, traitement["ordonnance"]);
+    for (Map<String, dynamic> medicament in traitement["medicaments"]) {
+      await tester.tap(find.text("Ajouter medicament"));
+      await tester.pumpAndSettle();
+      var MedicamentTxt = find.ancestor(of: find.text('Medicament'),matching: find.byType(TextFormField),);
+      await tester.enterText(MedicamentTxt, medicament["nom"]);
+      var voieTxt = find.ancestor(of: find.text('Voie'),matching: find.byType(TextFormField),);
+      await tester.enterText(voieTxt, medicament["voie"]);
+      var doseTxt = find.ancestor(of: find.text('Dose'),matching: find.byType(TextFormField),);
+      await tester.enterText(doseTxt, medicament["dose"]);
+      var rythmeTxt = find.ancestor(of: find.text('Rythme'),matching: find.byType(TextFormField),);
+      await tester.enterText(rythmeTxt, medicament["rythme"]);
+      await tester.tap(find.text("Ajouter"));
+      await tester.pumpAndSettle();
+    }
     var interTxt = find.ancestor(of: find.text('Intervenant'),matching: find.byType(TextFormField),);
-    await tester.enterText(interTxt, "Berger");
+    await tester.enterText(interTxt, traitement["intervenant"]);
     var motifTxt = find.ancestor(of: find.text('Motif'),matching: find.byType(TextFormField),);
-    await tester.enterText(motifTxt, "Malalde");
+    await tester.enterText(motifTxt, traitement["motif"]);
     var obsTxt = find.ancestor(of: find.text('Observations'),matching: find.byType(TextFormField),);
-    await tester.enterText(obsTxt, "Observation");
+    await tester.enterText(obsTxt, traitement["observation"]);
     await tester.pump();
     await tester.sendKeyEvent(LogicalKeyboardKey.close);
     await tester.tap(find.text("Enregistrer"));

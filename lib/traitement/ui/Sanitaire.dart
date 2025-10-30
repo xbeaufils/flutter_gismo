@@ -195,14 +195,10 @@ class MultipleSanitairePageState extends SanitairePageState<MultipleSanitairePag
               this._presenter.saveMultiple(
                   _dateDebutCtl.text,
                   _dateFinCtl.text,
-                  _doseCtl.text,
                   _intervenantCtl.text,
                   _observationCtl.text,
                   _motifCtl.text,
-                  _medicamentCtl.text,
-                  _ordonnanceCtl.text,
-                  _rythmeCtl.text,
-                  _voieCtl.text),
+                  _ordonnanceCtl.text),
             //color: Colors.lightGreen[700],
             child: new Text(S
                 .of(context)
