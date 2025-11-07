@@ -79,26 +79,35 @@
     ]
   },
   "traitements" : {
-    "betes": [
-      {"numero": "123"},
-      {"numero": "789"}
-    ],
-    "medicaments": [
-      {"nom":  "Tolfine",
-      "voie" :  "IM",
-      "dose" :  "2cc",
-      "rythme": "1 f/j"},
-      {"nom":  "Paracetamol",
-        "voie" :  "SC",
-        "dose" :  "4cc",
-        "rythme": "2 f/j"
-      }
-    ],
-    "debut" : "11/05/2025",
-    "fin" : "16/05/2025",
-    "ordonnance": "ORD-12345",
-    "motif" : "bobo",
-    "observation": "RAS",
-    "intervenant": "Paco"
+    "creation": {
+      "betes": [
+        {"numero": "123"},
+        {"numero": "789"}
+      ],
+      "medicaments": [
+        {"nom":  "Tolfine",
+        "voie" :  "IM",
+        "dose" :  "2cc",
+        "rythme": "1 f/j"},
+        {"nom":  "Paracetamol",
+          "voie" :  "SC",
+          "dose" :  "4cc",
+          "rythme": "2 f/j"
+        }
+      ],
+      "debut" : "11/05/2025",
+      "fin" : "16/05/2025",
+      "ordonnance": "ORD-12345",
+      "motif" : "bobo",
+      "observation": "RAS",
+      "intervenant": "Paco"
+    },
+    "modification": {
+        "bete": "789",
+        "medicament" : {
+          "ancien": "Paracetamol",
+          "nouveau": "Metacam"
+        }
+    }
   }
 }
