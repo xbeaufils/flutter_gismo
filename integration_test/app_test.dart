@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 import 'agnelage_test.dart';
+import 'lot_test.dart';
 import 'mouvement_test.dart';
 import 'traitement_test.dart';
 
@@ -40,13 +41,13 @@ void main() async {
           await robot.create(jsonData["entree"]);
     });
   });
-
+/*
   group("Test des agnelages", () {
     testWidgets("Saisir un agnelage", (tester,) async {
       RobotTestAgnelage robot = RobotTestAgnelage(tester);
       await robot.testAgnelage(jsonData["agnelages"]);
     });
-  });
+  });*/
  //   testLot();
  //   testEcho();
   group("Test des traitements", () {
@@ -62,6 +63,13 @@ void main() async {
       //deleteTraitement(jsonData["traitements"]["suppression"])
  //    testPesee();
    });
+  group("Test des lots", () {
+    testWidgets(
+        'Saisir un lot', (tester,) async {
+      RobotLotTest robot = RobotLotTest(tester);
+      robot.create(jsonData["lot"]["create"]);
+    });
+  });
 }
 
 

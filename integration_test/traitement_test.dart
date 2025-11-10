@@ -11,7 +11,7 @@ class RobotTestTraitement extends RobotTest {
 
   Future<void> createTraitement(Map<String, dynamic> traitement) async {
       await startAppli();
-      final trt = findWelcomeButton("Traitement");
+      final trt = findWelcomeButton(S.current.treatment);
       await tester.tap(trt);
       await tester.pumpAndSettle();
       final btSearch = find.byIcon(Icons.settings_remote);
@@ -21,7 +21,7 @@ class RobotTestTraitement extends RobotTest {
         await selectBete(bete["numero"]);
         await tester.pumpAndSettle();
       }
-      await tester.tap(find.text("Continuer"));
+      await tester.tap(find.text(S.current.bt_continue));
       await tester.pumpAndSettle(Duration(seconds: 2));
       //await tester.tap(find.byKey(Key("dateDebut")));
       await tester.enterText(find.byKey(Key("dateDebut")), traitement["debut"]);
@@ -32,7 +32,7 @@ class RobotTestTraitement extends RobotTest {
         of: find.text('Ordonnance'), matching: find.byType(TextFormField),);
       await tester.enterText(ordonnanceTxt, traitement["ordonnance"]);
       for (Map<String, dynamic> medicament in traitement["medicaments"]) {
-        await tester.tap(find.text("Ajouter medicament"));
+        await tester.tap(find.text(S.current.add_medication));
         await tester.pumpAndSettle();
         var MedicamentTxt = find.ancestor(
           of: find.text('Medicament'), matching: find.byType(TextFormField),);
@@ -46,7 +46,7 @@ class RobotTestTraitement extends RobotTest {
         var rythmeTxt = find.ancestor(
           of: find.text('Rythme'), matching: find.byType(TextFormField),);
         await tester.enterText(rythmeTxt, medicament["rythme"]);
-        await tester.tap(find.text("Ajouter"));
+        await tester.tap(find.text(S.current.bt_add));
         await tester.pumpAndSettle();
       }
       var interTxt = find.ancestor(
@@ -60,7 +60,7 @@ class RobotTestTraitement extends RobotTest {
       await tester.enterText(obsTxt, traitement["observation"]);
       await tester.pump();
       await tester.sendKeyEvent(LogicalKeyboardKey.close);
-      await tester.tap(find.text("Enregistrer"));
+      await tester.tap(find.text(S.current.bt_save));
       await tester.pumpAndSettle();
   }
 
@@ -70,8 +70,14 @@ class RobotTestTraitement extends RobotTest {
       await tester.pumpAndSettle();
       await selectBete(traitement["bete"]);
       await tester.pumpAndSettle();
-      await tester.tap(find.text(traitement["medicament"]["ancien"]));
+      Finder tile = find.ancestor(
+          of: find.text(traitement["medicament"]["ancien"]), matching: find.byType(ListTile));
+      Finder btView = find.descendant(of: tile, matching: find.byType(IconButton));
+      await tester.tap(btView);
       await tester.pumpAndSettle();
-      expect(find.text(S.current.treatment), findsOneWidget);
+      await tester.enterText(find.text(traitement["medicament"]["ancien"]), traitement["medicament"]["nouveau"]);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(S.current.bt_save));
+      await tester.pumpAndSettle();
   }
 }

@@ -13,7 +13,6 @@ class RobotTestMouvement extends RobotTest {
   Future<void> create(Map<String, dynamic> entree) async {
     await super.startAppli();
     final Finder btEntree = super.findWelcomeButton(S.current.input);
-    print(btEntree);
     await tester.tap(btEntree);
     await tester.pumpAndSettle();
     DateTime now = DateTime.now();
@@ -21,7 +20,6 @@ class RobotTestMouvement extends RobotTest {
     await tester.enterText(
         find.text(DateFormat.yMd().format(now)), entree["date"]);
     final dropDown = find.byKey(Key("Motif_Key"));
-    print(dropDown);
     await tester.tap(dropDown);
     await tester.pump();
     final btCreation = find.text(S.current.entree_creation);

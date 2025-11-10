@@ -70,13 +70,19 @@
     ]
   },
   "Lot" : {
-    "nom" : "Lot test",
-    "debut" : "18/03/2025",
-    "fin" : "06/04/2025",
-    "brebis" : [
-      {"numero" :  "456"},
-      {"numero" :  "789"}
-    ]
+    "create" : {
+      "nom": "Lot test",
+      "debut": "18/03/2025",
+      "fin": "06/04/2025",
+      "brebis": [
+        {
+          "numero": "456"
+        },
+        {
+          "numero": "789"
+        }
+      ]
+    }
   },
   "traitements" : {
     "creation": {
