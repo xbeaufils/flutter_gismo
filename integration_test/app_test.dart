@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
+import 'RobotPeseeTest.dart';
 import 'agnelage_test.dart';
 import 'lot_test.dart';
 import 'mouvement_test.dart';
@@ -35,40 +36,74 @@ void main() async {
 
   });
   group('Création du cheptel', () {
-    testWidgets(
-        'Saisir une entrée', (tester,) async {
+    testWidgets('Saisir une entrée', (tester,) async {
           RobotTestMouvement robot = RobotTestMouvement(tester);
           await robot.create(jsonData["entree"]);
     });
   });
-/*
+
   group("Test des agnelages", () {
     testWidgets("Saisir un agnelage", (tester,) async {
       RobotTestAgnelage robot = RobotTestAgnelage(tester);
-      await robot.testAgnelage(jsonData["agnelages"]);
+      await robot.create(jsonData["agnelages"]);
     });
-  });*/
- //   testLot();
+  });
  //   testEcho();
+
   group("Test des traitements", () {
-    testWidgets("Saisir un traitement", (tester,) async {
+  /*  testWidgets("Saisir un traitement", (tester,) async {
       RobotTestTraitement robot = RobotTestTraitement(tester);
-      await robot.createTraitement(jsonData["traitements"]["creation"]);
+      await robot.create(jsonData["traitements"]["creation"]);
     });
     testWidgets(
         'Modification d\'un traitement', (tester,) async {
       RobotTestTraitement robot = RobotTestTraitement(tester);
-      await robot.modifyTraitement(jsonData["traitements"]["modification"]);
+      await robot.modify(jsonData["traitements"]["modification"]);
     });
-      //deleteTraitement(jsonData["traitements"]["suppression"])
- //    testPesee();
-   });
+    //deleteTraitement(jsonData["traitements"]["suppression"])
+    */
+    testWidgets("Création d'un traitement pour agneau", (tester,) async {
+      RobotTestTraitement robot = RobotTestTraitement(tester);
+      await robot.createForLamb(jsonData["traitements"]["create_agneau"]);
+    });
+  });
+
   group("Test des lots", () {
     testWidgets(
         'Saisir un lot', (tester,) async {
       RobotLotTest robot = RobotLotTest(tester);
-      robot.create(jsonData["lot"]["create"]);
+      await robot.create(jsonData["Lot"]["create"]);
     });
+    testWidgets("Modification date de fin", (tester,) async {
+      RobotLotTest robot = RobotLotTest(tester);
+      await robot.modify(jsonData["Lot"]["modification"]);
+    });
+  });
+  group("Test des pesées", () {
+    testWidgets(
+        'Saisir une pesée de brebis', (tester,) async {
+          RobotPeseeTest robot = RobotPeseeTest(tester);
+          await robot.create(jsonData["pesees"]["brebis"]);
+    });
+    testWidgets(
+        'Saisir une pesée d\'agneaux', (tester,) async {
+      RobotPeseeTest robot = RobotPeseeTest(tester);
+      await robot.create(jsonData["pesees"]["agneau"]);
+    });
+  });
+
+  group("Test des agneaux", () {
+    testWidgets(
+        'Mort d\'un agneau', (tester,) async {
+      RobotTestAgnelage robot = RobotTestAgnelage(tester);
+      await robot.mort(jsonData["agnelages"]["mort"]);
+    });
+    testWidgets(
+        'Bouclage d\'un agneau', (tester,) async {
+      RobotTestAgnelage robot = RobotTestAgnelage(tester);
+      await robot.boucle(jsonData["agnelages"]["bouclage"]);
+    });
+
   });
 }
 
@@ -81,17 +116,4 @@ Future<void> testEcho() async {
       'Saisir une echographie', (tester,) async {
    });
 
-}
-
-Future<void> testPesee() async {
-  testWidgets(
-      'Saisir une pesée', (tester,) async {
-   });
-
-}
-
-
-
-Future<void> testLot() async {
-  testWidgets("Saisir un lot", (tester,) async {});
 }

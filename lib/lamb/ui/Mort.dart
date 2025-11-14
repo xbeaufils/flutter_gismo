@@ -72,7 +72,7 @@ class _MortPageState extends  GismoStatePage<MortPage> implements MortContract {
     return new Scaffold(
         key: _scaffoldKey,
         appBar: new AppBar(
-        title: new Text('Mort'),
+        title: new Text(S.current.mort),
     ),
     body:
       new Column(
@@ -105,7 +105,7 @@ class _MortPageState extends  GismoStatePage<MortPage> implements MortContract {
                             DateTime ? date = DateTime.now();
                             FocusScope.of(context).requestFocus(new FocusNode());
                             date = await showDatePicker(
-                                locale: const Locale("fr","FR"),
+                                //locale: const Locale("fr","FR"),
                                 context: context,
                                 initialDate:DateTime.now(),
                                 firstDate:DateTime(1900),
@@ -117,6 +117,7 @@ class _MortPageState extends  GismoStatePage<MortPage> implements MortContract {
                             }
                           })),
                     new DropdownButton<String>(
+                      key: Key("Motif_Key"),
                       value: _currentMotif,
                       items: _getCauseMortItems(),
                       hint: Text(S.of(context).select_death_cause),

@@ -144,6 +144,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "localuser": MessageLookupByLibrary.simpleMessage("Usuario local"),
     "mating": MessageLookupByLibrary.simpleMessage("Apareamiento"),
     "memo": MessageLookupByLibrary.simpleMessage("Nota"),
+    "mort": MessageLookupByLibrary.simpleMessage("Muerte"),
     "name": MessageLookupByLibrary.simpleMessage("Nombre pequeño"),
     "name_hint": MessageLookupByLibrary.simpleMessage("Apellido"),
     "new_lamb": MessageLookupByLibrary.simpleMessage("Nuevo cordero"),

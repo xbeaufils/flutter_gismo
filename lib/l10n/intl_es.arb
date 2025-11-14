@@ -122,5 +122,7 @@
   "lamb_help": "Ayudado",
   "lamb_replace": "Cordero reemplazado",
   "lamb_deliverance": "Buscar la liberación",
-  "lamb_fouille": "Buscar al cordero"
+  "lamb_fouille": "Buscar al cordero",
+
+  "mort": "Muerte"
 }

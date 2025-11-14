@@ -47,7 +47,7 @@ abstract class EventPage extends StatelessWidget {
       case EventType.traitement:
       case EventType.echo:
       case EventType.memo:
-        return IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: () => presenter.searchEvent(event), );
+        return IconButton(icon: Icon(Icons.chevron_right), onPressed: () => presenter.searchEvent(event), );
         break;
       case EventType.saillie:
       case EventType.NEC:

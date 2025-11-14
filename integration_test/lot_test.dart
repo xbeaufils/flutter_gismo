@@ -9,7 +9,7 @@ class RobotLotTest extends RobotTest {
 
   RobotLotTest(super.tester);
 
-  void create(Map<String, dynamic> lot) async {
+  Future<void> create(Map<String, dynamic> lot) async {
     await startAppli();
     await tester.tap(findWelcomeButton("Lot"));
     await tester.pumpAndSettle();
@@ -35,6 +35,24 @@ class RobotLotTest extends RobotTest {
       await selectBete(bete["numero"]);
       await tester.pumpAndSettle();
     }
+  }
 
+  Future<void> modify(Map<String, dynamic> lot) async {
+    await startAppli();
+    await tester.tap(findWelcomeButton("Lot"));
+    await tester.pumpAndSettle();
+    Finder btView = super.findByChevron(lot["nom"]);
+    await tester.tap(btView);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(Key("ewe")));
+    await tester.pumpAndSettle();
+    btView  = super.findByCalendar(lot["bete"]);
+    await tester.tap(btView);
+    await tester.pumpAndSettle();
+    Finder finTxt = find.ancestor(of: find.text(S.current.dateDeparture),matching: find.byType(TextFormField),);
+    await tester.enterText(finTxt, lot["fin"]);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(S.current.bt_save));
+    await tester.pumpAndSettle();
   }
 }

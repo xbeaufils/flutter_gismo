@@ -93,7 +93,7 @@ class _SearchLambPageState extends GismoStatePage<SearchLambPage> implements Sea
             ],),
           trailing:
             IconButton(
-              icon: new Icon(Icons.keyboard_arrow_right),
+              icon: new Icon(Icons.chevron_right),
               onPressed: () {
                 setState(() {
                   this._presenter.selectLambs(_filteredLambs[index]);

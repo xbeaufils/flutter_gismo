@@ -1009,6 +1009,11 @@ class S {
     );
   }
 
+  /// `Death`
+  String get mort {
+    return Intl.message('Death', name: 'mort', desc: '', args: []);
+  }
+
   /// `Farrowing`
   String get mort_mise_bas {
     return Intl.message('Farrowing', name: 'mort_mise_bas', desc: '', args: []);

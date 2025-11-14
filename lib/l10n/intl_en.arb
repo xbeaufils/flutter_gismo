@@ -125,6 +125,7 @@
   "agnelage_delivrance" : "Manual remove of retained placenta",
   "agnelage_fouille": "Fouillée pour l'agneau",
 
+  "mort" : "Death",
   "mort_mise_bas" : "Farrowing",
   "mort_pas_de_contraction_dilatation":"No contraction/dilation",
   "mort_prolapsus":"Prolapsus",

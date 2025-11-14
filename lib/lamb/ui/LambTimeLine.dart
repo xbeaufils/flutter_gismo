@@ -77,24 +77,28 @@ class LambTimeLinePageState extends GismoStatePage<LambTimeLinePage> with Single
         else {
           actionButtons.add(
             IconButton(
+              key: Key("peseeBt"),
               icon: Image.asset("assets/peseur.png"),
               onPressed: () {
                 this._presenter.peser(this.widget._lamb!);
               },),);
           actionButtons.add(
             IconButton(
+              key: Key("traitementBt"),
               icon: Image.asset("assets/syringe.png"),
               onPressed: () {
                 this._presenter.traitement(this.widget._lamb!);
               },),);
           actionButtons.add(
             IconButton(
+              key: Key("mortBt"),
               icon: Image.asset("assets/tomb.png"),
               onPressed: () {
                 this._presenter.mort(this.widget._lamb!);
               },),);
           actionButtons.add(
               IconButton(
+                key: Key("boucleBt"),
                 icon: Image.asset("assets/bouclage.png"),
                 onPressed: () {
                   this._presenter.boucle(this.widget._lamb!);

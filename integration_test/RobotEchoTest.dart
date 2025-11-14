@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
@@ -7,31 +8,33 @@ import 'RobotTest.dart';
 class RobotEchoTest extends RobotTest {
   RobotEchoTest(super.tester);
 
-  void create() async {
+  void create(Map<String, dynamic> echoData) async {
     await startAppli();
-    final echo = findWelcomeButton("Echographie");
+    final echo = findWelcomeButton(S.current.ultrasound);
     print(echo);
     await tester.tap(echo);
     await tester.pumpAndSettle();
-    await selectBete( "123");
+    await selectBete( echoData["numero"] );
     // Passage à l'ecran Echo Graphie
     await tester.pumpAndSettle();
     DateTime now = DateTime.now();
     expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
-    Finder resultat = find.text("Simple");
-    await tester.tap(resultat);
-    await tester.tap(find.byKey(Key("dateEcho")));
+    switch (echoData["nombre"]) {
+      case 0:await tester.tap(find.text(S.current.empty));
+        break;
+      case 1:await tester.tap(find.text(S.current.simple));
+        break;
+      case 2:await tester.tap(find.text(S.current.double));
+        break;
+      case 3:await tester.tap(find.text(S.current.triplet));
+        break;
+    }
     await tester.pumpAndSettle();
-    String dateEcho =  (now.day > 7) ? (now.day - 7).toString(): (now.day + 1).toString();
-    await tester.tap(find.text(dateEcho));
-    await tester.tap(find.text("OK"));
+    await tester.enterText(find.byKey(Key("dateEcho")), echoData["dateEcho"]);
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(Key("dateSaillie")));
+    await tester.enterText(find.byKey(Key("dateSaillie")), echoData["dateSaillie"]);
     await tester.pumpAndSettle();
-    await tester.tap(find.text("OK"));
+    await tester.tap(find.text(S.current.bt_save));
     await tester.pumpAndSettle();
-    await tester.tap(find.text("Enregistrer"));
-    await tester.pumpAndSettle();
-
   }
 }

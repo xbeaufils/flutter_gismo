@@ -119,6 +119,8 @@
   "agnelage_replace": "Lamm ersetzt",
   "agnelage_delivrance": "Manuelle Nachgeburt",
   "agnelage_fouille": "Manuelles Eingreifen für das Lamm",
+
+  "mort" : "Tod",
   "mort_mise_bas": "Geburt",
   "mort_pas_de_contraction_dilatation": "Keine Kontraktionen/Erweiterung",
   "mort_prolapsus": "Vorfall",

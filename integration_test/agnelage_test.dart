@@ -10,7 +10,7 @@ class RobotTestAgnelage extends RobotTest {
 
   RobotTestAgnelage(super.tester);
 
-  Future<void> testAgnelage( List<dynamic> agnelages) async {
+  Future<void> create( List<dynamic> agnelages) async {
       await super.startAppli();
       for (Map<String, dynamic> lambing in agnelages) {
         await tester.tap(super.findWelcomeButton(S.current.lambing));
@@ -25,6 +25,9 @@ class RobotTestAgnelage extends RobotTest {
                 widget is TextFormField &&
                     widget.controller!.text == DateFormat.yMd().format(now)),
             findsOneWidget);
+        expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
+        await tester.enterText(
+            find.text(DateFormat.yMd().format(now)), lambing["date"]);
 
         await tester.tap(find.byKey(Key("btQualite")));
         await tester.pumpAndSettle();
@@ -48,8 +51,16 @@ class RobotTestAgnelage extends RobotTest {
           } else {
             await tester.tap(find.text(S.current.female));
           }
-          if (agneau["etat"] == "vivant") {
-            await tester.tap(find.text("Vivant"));
+          switch (agneau["etat"]) {
+            case "vivant":
+              await tester.tap(find.text(S.current.alive));
+              break;
+            case "mort":
+              await tester.tap(find.text(S.current.stillborn));
+              break;
+            case "avorte" :
+              await tester.tap(find.text(S.current.aborted));
+              break;
           }
           await tester.tap(find.text(MethodeAllaitement.ALLAITEMENT_MATERNEL.libelle));
           await tester.pump(
@@ -71,5 +82,35 @@ class RobotTestAgnelage extends RobotTest {
       }
   }
 
+  Future<void> mort(Map<String, dynamic> lamb) async {
+    await startAppli();
+    await selectLamb(lamb["numero"]);
+    await tester.tap(find.byKey( Key("mortBt")));
+    await tester.pumpAndSettle();
+    DateTime now = DateTime.now();
+    expect(
+        find.byWidgetPredicate(
+                (Widget widget) =>
+            widget is TextFormField &&
+                widget.controller!.text == DateFormat.yMd().format(now)),
+        findsOneWidget);
+    await tester.enterText(
+        find.text(DateFormat.yMd().format(now)), lamb["date"]);
+    final dropDown = find.byKey(Key("Motif_Key"));
+    await tester.tap(dropDown);
+    await tester.pump();
+    final btCreation = find.text(S.current.mort_accident);
+    await tester.tap(btCreation);
+    await tester.pump();
+    await tester.tap(find.text(S.current.bt_save));
+  }
 
+  Future<void> boucle(Map<String, dynamic> lamb) async {
+    await startAppli();
+    await selectLamb(lamb["numero"]);
+    await tester.tap(find.byKey(Key("boucleBt")));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.text(S.current.identity_number), lamb["num_boucle"]);
+    await tester.enterText(find.text(S.current.flock_number), lamb["num_marquage"]);
+  }
 }

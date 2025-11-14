@@ -211,6 +211,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "medication": MessageLookupByLibrary.simpleMessage("Medicament"),
     "memo": MessageLookupByLibrary.simpleMessage("Memo"),
+    "mort": MessageLookupByLibrary.simpleMessage("Mort"),
     "mort_accident": MessageLookupByLibrary.simpleMessage("Accident"),
     "mort_arthrite_gros_nombril": MessageLookupByLibrary.simpleMessage(
       "Arthrite/gros nombril",

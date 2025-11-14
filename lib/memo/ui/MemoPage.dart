@@ -53,66 +53,72 @@ class MemoPageState extends GismoStatePage<MemoPage> implements MemoContract {
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      new Flexible( child:
-                        new TextFormField(
-                          keyboardType: TextInputType.datetime,
-                          controller: _dateDebutCtl,
-                          decoration: InputDecoration(
-                              labelText: S.of(context).date_debut,
-                              hintText: 'jj/mm/aaaa'),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return S.of(context).no_date_debut;
-                            }},
-                          onSaved: (value) {
-                            setState(() {
-                              _dateDebutCtl.text = value!;
-                            });
-                          },
-                          onTap: () async{
-                            DateTime ? date = DateTime.now();
-                            FocusScope.of(context).requestFocus(new FocusNode());
-                            date = await showDatePicker(
-                                //locale: const Locale("fr","FR"),
-                                context: context,
-                                initialDate:DateTime.now(),
-                                firstDate:DateTime(1900),
-                                lastDate: DateTime(2100));
-                            if (date != null) {
+                      Flexible( child:
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child:
+                            TextFormField(
+                              keyboardType: TextInputType.datetime,
+                              controller: _dateDebutCtl,
+                              decoration: InputDecoration(
+                                  labelText: S.of(context).date_debut,
+                                  hintText: 'jj/mm/aaaa'),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return S.of(context).no_date_debut;
+                                }},
+                              onSaved: (value) {
+                                setState(() {
+                                  _dateDebutCtl.text = value!;
+                                });
+                              },
+                              onTap: () async{
+                                DateTime ? date = DateTime.now();
+                                FocusScope.of(context).requestFocus(new FocusNode());
+                                date = await showDatePicker(
+                                    //locale: const Locale("fr","FR"),
+                                    context: context,
+                                    initialDate:DateTime.now(),
+                                    firstDate:DateTime(1900),
+                                    lastDate: DateTime(2100));
+                                if (date != null) {
+                                  setState(() {
+                                    _dateDebutCtl.text = DateFormat.yMd().format(date!);
+                                  });
+                                }
+                              }),
+                      )),
+                      Flexible( child:
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child:
+                          TextFormField(
+                            keyboardType: TextInputType.datetime,
+                            controller: _dateFinCtl,
+                            decoration: InputDecoration(
+                                labelText: S.of(context).date_fin,
+                                hintText: 'jj/mm/aaaa'),
+                            onSaved: (value) {
                               setState(() {
-                                _dateDebutCtl.text = DateFormat.yMd().format(date!);
+                                _dateFinCtl.text = value!;
                               });
-                            }
-                          }),
-                ),
-                      new Flexible( child:
-                      new TextFormField(
-                          keyboardType: TextInputType.datetime,
-                          controller: _dateFinCtl,
-                          decoration: InputDecoration(
-                              labelText: S.of(context).date_fin,
-                              hintText: 'jj/mm/aaaa'),
-                          onSaved: (value) {
-                            setState(() {
-                              _dateFinCtl.text = value!;
-                            });
-                          },
-                          onTap: () async{
-                            DateTime ? date = DateTime.now();
-                            FocusScope.of(context).requestFocus(new FocusNode());
-                            date = await showDatePicker(
-                                //locale: const Locale("fr","FR"),
-                                context: context,
-                                initialDate:DateTime.now(),
-                                firstDate:DateTime(1900),
-                                lastDate: DateTime(2100));
-                            if (date != null) {
-                              setState(() {
-                                _dateFinCtl.text = DateFormat.yMd().format(date!);
-                              });
-                            }
-                          }),
-                      ),
+                            },
+                            onTap: () async{
+                              DateTime ? date = DateTime.now();
+                              FocusScope.of(context).requestFocus(new FocusNode());
+                              date = await showDatePicker(
+                                  //locale: const Locale("fr","FR"),
+                                  context: context,
+                                  initialDate:DateTime.now(),
+                                  firstDate:DateTime(1900),
+                                  lastDate: DateTime(2100));
+                              if (date != null) {
+                                setState(() {
+                                  _dateFinCtl.text = DateFormat.yMd().format(date!);
+                                });
+                              }
+                            }),
+                      )),
               ])),
               Row(
                 children: [
@@ -136,23 +142,26 @@ class MemoPageState extends GismoStatePage<MemoPage> implements MemoContract {
                   Icon(Icons.info_outlined),  Text(S.of(context).info),Spacer(),
                 ],
               ),
-              TextFormField(
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 3,
-                  controller: _noteCtl,
-                  decoration: InputDecoration(
-                      labelText: S.of(context).note_label,
-                      hintText: S.of(context).note_hint),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return S.of(context).no_note;
-                    }},
-                  onSaved: (value) {
-                    setState(() {
-                      _noteCtl.text = value!;
-                    });
-                  }
-              ),
+              Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child:
+                    TextFormField(
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 3,
+                      controller: _noteCtl,
+                      decoration: InputDecoration(
+                          labelText: S.of(context).note_label,
+                          hintText: S.of(context).note_hint),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return S.of(context).no_note;
+                        }},
+                      onSaved: (value) {
+                        setState(() {
+                          _noteCtl.text = value!;
+                        });
+                      }
+                  )),
               //(_isSaving) ? CircularProgressIndicator():
               FilledButton(
                   child: Text(S.of(context).bt_save,),

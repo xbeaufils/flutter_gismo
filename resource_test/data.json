@@ -26,48 +26,54 @@
       }
     ]
   },
-  "agnelages" : [
-    {
-      "date" : "12/08/2025",
-      "numero mere" : "123",
-      "qualite" : "3",
-      "adoption" : "2",
-      "agneaux" : [
+  "agnelages" : {
+    "create":
       {
-        "numero": "123-1",
-        "sex" : "female",
-        "health": "vivant",
-        "allaitement" : "maternel"
-      },
+        "date" : "12/08/2025",
+        "numero mere" : "123",
+        "qualite" : "3",
+        "adoption" : "2",
+        "agneaux" : [
         {
-          "numero": "123-2",
-          "sex" : "male",
+          "numero": "123-1",
+          "sex" : "female",
           "health": "vivant",
-          "allaitement" : "biberonné"
-        }
-      ]
-    }
-  ],
-  "pesees": {
-    "agneaux": [
-      {
-        "numero" : "123-1",
-        "date" : "24/10/2025",
-        "poids" :"25.2"
+          "allaitement" : "maternel"
+        },
+          {
+            "numero": "123-2",
+            "sex" : "male",
+            "health": "vivant",
+            "allaitement" : "biberonné"
+          }
+        ]
       },
+    "mort" : {
+      "date" : "22/08/2025",
+      "numero" : "123",
+      "cause" : "Accident"
+    },
+    "bouclage" : {
+      "numero" : "123-2",
+      "date" : "22/08/2025",
+      "num_boucle" : "147",
+      "num_marquage" : "456789"
+    }
+  },
+
+  "pesees": {
+    "agneau":
       {
         "numero" : "123-2",
         "date" : "24/10/2025",
-        "poids" :"28.4"
-      }
-    ],
-    "brebis" : [
+        "poids" :"25.2"
+      },
+    "brebis" :
       {
         "numero" :"456",
         "date" : "24/10/2025",
         "poids" : "69.2"
       }
-    ]
   },
   "Lot" : {
     "create" : {
@@ -82,6 +88,11 @@
           "numero": "789"
         }
       ]
+    },
+    "modification": {
+      "nom": "Lot test",
+      "bete" : "456",
+      "fin": "01/04/2025"
     }
   },
   "traitements" : {
@@ -114,6 +125,26 @@
           "ancien": "Paracetamol",
           "nouveau": "Metacam"
         }
+    },
+    "create_agneau": {
+      "numero": "123-2",
+      "nom":  "Tolfine",
+      "voie" :  "IM",
+      "dose" :  "2cc",
+      "rythme": "1 f/j",
+      "debut" : "11/05/2025",
+      "fin" : "16/05/2025",
+      "ordonnance": "ORD-12345",
+      "motif" : "bobo",
+      "observation": "RAS",
+      "intervenant": "Paco"
     }
+  },
+  "echo" : {
+    "numero": "123",
+    "dateEcho" : "21/06/2025",
+    "dateSaillie": "21/04/2025",
+    "nombre" : 1
+
   }
 }
