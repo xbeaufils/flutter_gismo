@@ -27,7 +27,7 @@
     ]
   },
   "agnelages" : {
-    "create":
+    "create": [
       {
         "date" : "12/08/2025",
         "numero mere" : "123",
@@ -48,17 +48,51 @@
           }
         ]
       },
+      {
+        "date" : "15/08/2025",
+        "numero mere" : "456",
+        "qualite" : "3",
+        "adoption" : "2",
+        "agneaux" : [
+          {
+            "numero": "456-1",
+            "sex" : "female",
+            "health": "vivant",
+            "allaitement" : "maternel"
+          },
+          {
+            "numero": "456-2",
+            "sex" : "male",
+            "health": "vivant",
+            "allaitement" : "biberonné"
+          }
+        ]
+      }],
     "mort" : {
       "date" : "22/08/2025",
-      "numero" : "123",
+      "numero" : "123-1",
       "cause" : "Accident"
     },
-    "bouclage" : {
+    "bouclage" :[
+      {
       "numero" : "123-2",
       "date" : "22/08/2025",
       "num_boucle" : "147",
       "num_marquage" : "456789"
-    }
+      },
+      {
+        "numero" : "456-1",
+        "date" : "22/08/2025",
+        "num_boucle" : "852",
+        "num_marquage" : "456789"
+      },
+      {
+      "numero" : "456-2",
+      "date" : "22/08/2025",
+      "num_boucle" : "963",
+      "num_marquage" : "456789"
+      }
+    ]
   },
 
   "pesees": {
@@ -77,7 +111,7 @@
   },
   "Lot" : {
     "create" : {
-      "nom": "Lot test",
+      "nom": "Test",
       "debut": "18/03/2025",
       "fin": "06/04/2025",
       "brebis": [
@@ -90,7 +124,7 @@
       ]
     },
     "modification": {
-      "nom": "Lot test",
+      "nom": "Test",
       "bete" : "456",
       "fin": "01/04/2025"
     }
@@ -146,5 +180,45 @@
     "dateSaillie": "21/04/2025",
     "nombre" : 1
 
+  },
+  "verifications": [
+    {
+      "bete": "123",
+      "agnelage": {
+        "nombre": 2,
+        "date": "21/11/2025"
+      },
+      "traitement": {
+        "medicament": "Paracetamol",
+        "date": "11/05/2025"
+      },
+      "echo": {
+        "date": "21/06/2025",
+        "nombre": 1
+      }
+    },
+    {
+      "bete" : "456",
+      "agnelage" : {
+        "date": "15/08/2025",
+        "nombre": 2
+      },
+      "lot" : {
+        "debut": "18/03/2025",
+        "nom": "Test"
+      },
+      "pesee": {
+        "date": "24/10/2025" ,
+        "poids": "69.2"
+      }
+    }],
+  "sortie" : {
+    "dateSortie" : "21/11/2025",
+    "motif" : "vente",
+    "betes": [
+      { "numero": "147"},
+      { "numero": "852"},
+      { "numero": "963"}
+    ]
   }
 }

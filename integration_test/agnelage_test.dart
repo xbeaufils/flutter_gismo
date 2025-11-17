@@ -12,9 +12,9 @@ class RobotTestAgnelage extends RobotTest {
 
   Future<void> create( List<dynamic> agnelages) async {
       await super.startAppli();
+      await tester.tap(super.findWelcomeButton(S.current.lambing));
+      await tester.pumpAndSettle();
       for (Map<String, dynamic> lambing in agnelages) {
-        await tester.tap(super.findWelcomeButton(S.current.lambing));
-        await tester.pumpAndSettle();
         await super.selectBete(lambing["numero mere"]);
         // Passage à l'ecran Agnelage
         await tester.pumpAndSettle();
@@ -79,6 +79,8 @@ class RobotTestAgnelage extends RobotTest {
           await tester.pumpAndSettle(const Duration(seconds: 1));
         }
         await tester.tap(find.text(S.current.validate_lambing));
+        await tester.pumpAndSettle();
+        await tester.pumpAndSettle(const Duration(seconds: 5));
       }
   }
 
@@ -98,19 +100,36 @@ class RobotTestAgnelage extends RobotTest {
         find.text(DateFormat.yMd().format(now)), lamb["date"]);
     final dropDown = find.byKey(Key("Motif_Key"));
     await tester.tap(dropDown);
-    await tester.pump();
-    final btCreation = find.text(S.current.mort_accident);
+    await tester.pump(
+        const Duration(seconds: 1)); // finish the menu animation
+    //await tester.scrollUntilVisible(find.text(S.current.mort_accident).last, 3);
+    final btCreation = find.text(S.current.mort_chetif_maigre);
     await tester.tap(btCreation);
     await tester.pump();
     await tester.tap(find.text(S.current.bt_save));
   }
 
-  Future<void> boucle(Map<String, dynamic> lamb) async {
+  Future<void> boucle(List<dynamic> lambs) async {
     await startAppli();
-    await selectLamb(lamb["numero"]);
-    await tester.tap(find.byKey(Key("boucleBt")));
-    await tester.pumpAndSettle();
-    await tester.enterText(find.text(S.current.identity_number), lamb["num_boucle"]);
-    await tester.enterText(find.text(S.current.flock_number), lamb["num_marquage"]);
+    for (Map<String, dynamic> lamb in lambs) {
+      await selectLamb(lamb["numero"]);
+      await tester.tap(find.byKey(Key("boucleBt")));
+      await tester.pumpAndSettle();
+      var numboucleTxt = find.ancestor(
+        of: find.text(S.current.identity_number),
+        matching: find.byType(TextField),);
+      await tester.enterText(numboucleTxt, lamb["num_boucle"]);
+      var numMarquageTxt = find.ancestor(
+        of: find.text(S.current.flock_number),
+        matching: find.byType(TextField),);
+      await tester.enterText(numMarquageTxt, lamb["num_marquage"]);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(S.current.place_earring));
+      await tester.pumpAndSettle();
+      await tester.tap(find.backButton()); // Retour à la liste des agneaux
+      await tester.pumpAndSettle();
+      await tester.tap(find.backButton()); // Retour à la pacge d'accueil
+      await tester.pumpAndSettle();
+    }
   }
 }

@@ -8,7 +8,7 @@ import 'RobotTest.dart';
 class RobotEchoTest extends RobotTest {
   RobotEchoTest(super.tester);
 
-  void create(Map<String, dynamic> echoData) async {
+  Future<void> create(Map<String, dynamic> echoData) async {
     await startAppli();
     final echo = findWelcomeButton(S.current.ultrasound);
     print(echo);

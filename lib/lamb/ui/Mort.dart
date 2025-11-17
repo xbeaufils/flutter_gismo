@@ -13,7 +13,6 @@ class MortPage extends StatefulWidget {
   _MortPageState createState() => new _MortPageState();
 }
 abstract class MortContract extends GismoContract {
-  void showError(String message);
 }
 
 class _MortPageState extends  GismoStatePage<MortPage> implements MortContract {
@@ -140,28 +139,6 @@ class _MortPageState extends  GismoStatePage<MortPage> implements MortContract {
     setState(() {
       _currentMotif= selectedMotif!;
     });
-  }
-
-/*
-    var message  = this.widget._bloc.mort(this.widget._currentLamb, _currentMotif!, _dateMortCtl.text);
-    message
-        .then( (message) {goodSaving(message);})
-        .catchError( (message) {showError(message);});
-
- */
-
-  void showError(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  void goodSaving(String message) {
-    message = "Décès : " + message;
-    this.widget._currentLamb.motifDeces = _currentMotif;
-    this.widget._currentLamb.dateDeces = DateFormat.yMd().parse( _dateMortCtl.text );
-    Navigator.pop(context, this.widget._currentLamb);
   }
 
   @override

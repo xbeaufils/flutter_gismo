@@ -25,6 +25,7 @@ class LambTimeLinePresenter {
   void view(LambModel lamb) {
     this._view.goNextPage(LambPage.edit(lamb));
   }
+
   void boucle(LambModel lamb) async {
     Bete ? bete = await this._view.goNextPage( BouclagePage(lamb));
     if (bete == null)
@@ -144,19 +145,17 @@ class DeathPresenter {
     } on GismoException catch(e) {
       this._view.showMessage(e.message, true);
     }  on MissingDeathDateException {
-      this._view.showError(S.current.no_death_date);
+      this._view.showMessage(S.current.no_death_date, true);
     } on MissingMotifException {
-      this._view.showError(S.current.death_cause_mandatory);
+      this._view.showMessage(S.current.death_cause_mandatory, true);
     }
     throw Exception();
   }
 
   Future<String> _save(LambModel lamb, String dateMort, String? motif) async {
     if (dateMort.isEmpty) {
-      _view.showError(S.current.no_death_date);
       throw MissingDeathDateException();
     }
-
     if (motif == null) {
       throw MissingMotifException();
     }

@@ -21,7 +21,7 @@ abstract class LambTimelineContract extends  TimelineContract {
   CompleteLambModel get lamb;
 }
 
-class LambTimeLinePageState extends GismoStatePage<LambTimeLinePage> with SingleTickerProviderStateMixin implements LambTimelineContract {
+class LambTimeLinePageState extends GismoStatePage<LambTimeLinePage> implements LambTimelineContract {
   late LambTimeLinePresenter _presenter;
 
   @override

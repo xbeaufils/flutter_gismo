@@ -33,8 +33,7 @@ class RobotTestMouvement extends RobotTest {
     await tester.tap(btSave);
   }
 
-  Future<void> _createBete(String numboucle, String numMarquage, String nom, String sex,
-      String ? obs) async {
+  Future<void> _createBete(String numboucle, String numMarquage, String nom, String sex,String ? obs) async {
     final btPlus = find.byIcon(Icons.add);
     await tester.tap(btPlus);
     await tester.pumpAndSettle();
@@ -55,5 +54,30 @@ class RobotTestMouvement extends RobotTest {
     var addBt = find.text(S.current.bt_add);
     await tester.tap(addBt);
     await tester.pumpAndSettle();
+  }
+
+  Future<void> sortie(Map<String, dynamic> sortie) async {
+    await super.startAppli();
+    final Finder btSortie = super.findWelcomeButton(S.current.output);
+    await tester.tap(btSortie);
+    await tester.pumpAndSettle();
+    DateTime now = DateTime.now();
+    expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
+    await tester.enterText(
+        find.text(DateFormat.yMd().format(now)), sortie["dateSortie"]);
+    final dropDown = find.byKey(Key("motifSortie"));
+    await tester.tap(dropDown);
+    await tester.pump();
+    final btCreation = find.text(S.current.output_boucherie);
+    await tester.tap(btCreation);
+    await tester.pump();
+    for (Map<String, dynamic> bete in sortie["betes"]) {
+      await tester.tap(find.byIcon(Icons.add));
+      await tester.pumpAndSettle();
+      await selectBete(bete["numero"]);
+      await tester.pumpAndSettle();
+    }
+    final btSave = find.text(S.current.bt_save);
+    await tester.tap(btSave);
   }
 }

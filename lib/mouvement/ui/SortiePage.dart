@@ -102,6 +102,7 @@ class _SortiePageState extends GismoStatePage<SortiePage> implements SortieContr
                         }
                       })),
                   DropdownButton<String>(
+                    key: Key("motifSortie"),
                     value: _currentMotif,
                     items: _motifSortieItems,
                     hint: Text(S.of(context).output_select),

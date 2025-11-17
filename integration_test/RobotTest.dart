@@ -31,8 +31,7 @@ class RobotTest {
   Future<void> selectLamb(String numBoucle) async {
     await tester.tap(this.findWelcomeButton(S.current.lambs));
     await tester.pumpAndSettle();
-    Finder btView = this.findByChevron(numBoucle);
-    await tester.tap(btView);
+    await tester.tap(this.findByChevron(numBoucle));
     await tester.pumpAndSettle();
 
   }
