@@ -20,13 +20,13 @@ class RobotEchoTest extends RobotTest {
     DateTime now = DateTime.now();
     expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
     switch (echoData["nombre"]) {
-      case 0:await tester.tap(find.text(S.current.empty));
+      case 0:await tester.tap(find.byKey( Key("rdEmpty")));
         break;
-      case 1:await tester.tap(find.text(S.current.simple));
+      case 1:await tester.tap(find.byKey( Key("rdSimple")));
         break;
-      case 2:await tester.tap(find.text(S.current.double));
+      case 2:await tester.tap(find.byKey( Key("rdDouble")));
         break;
-      case 3:await tester.tap(find.text(S.current.triplet));
+      case 3:await tester.tap(find.byKey( Key("rdTriple")));
         break;
     }
     await tester.pumpAndSettle();

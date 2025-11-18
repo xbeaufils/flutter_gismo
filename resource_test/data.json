@@ -154,10 +154,14 @@
       "intervenant": "Paco"
     },
     "modification": {
-        "bete": "789",
+        "bete": "123",
         "medicament" : {
           "ancien": "Paracetamol",
           "nouveau": "Metacam"
+        },
+        "debut" : {
+          "ancien": "11/05/2025",
+          "nouveau": "12/05/2025"
         }
     },
     "create_agneau": {
@@ -185,23 +189,23 @@
     {
       "bete": "123",
       "agnelage": {
-        "nombre": 2,
-        "date": "21/11/2025"
+        "nombre": "2",
+        "date": "12/08/2025"
       },
       "traitement": {
-        "medicament": "Paracetamol",
-        "date": "11/05/2025"
+        "medicament": "Metacam",
+        "date": "12/05/2025"
       },
       "echo": {
         "date": "21/06/2025",
-        "nombre": 1
+        "nombre": "1"
       }
     },
     {
       "bete" : "456",
       "agnelage" : {
         "date": "15/08/2025",
-        "nombre": 2
+        "nombre": "2"
       },
       "lot" : {
         "debut": "18/03/2025",

@@ -9,6 +9,7 @@ class GismoDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      key: Key("drawer"),
       child: ListView(
         children: [
           this._userstatus(context),

@@ -101,6 +101,7 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Radio(
+                    key: Key("rdEmpty"),
                     value: 0,
                     groupValue: _nombre,
                     onChanged: _handleRdNombreChange,
@@ -110,6 +111,7 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
                     style: new TextStyle(fontSize: 16.0),
                   ),
                   Radio(
+                    key: Key("rdSimple"),
                     value: 1,
                     groupValue: _nombre,
                     onChanged: _handleRdNombreChange,
@@ -125,6 +127,7 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Radio(
+                    key: Key("rdDouble"),
                     value: 2,
                     groupValue: _nombre,
                     onChanged: _handleRdNombreChange,
@@ -134,6 +137,7 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
                     style: new TextStyle(fontSize: 16.0),
                   ),
                   new Radio(
+                    key: Key("rdTriple"),
                     value: 3,
                     groupValue: _nombre,
                     onChanged: _handleRdNombreChange,

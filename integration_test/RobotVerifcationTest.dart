@@ -7,10 +7,10 @@ import 'RobotTest.dart';
 class RobotVerificationTest extends RobotTest {
   RobotVerificationTest(super.tester);
 
-  Future<void> verify (List<Map<String, dynamic>> verifs) async {
+  Future<void> verify (List<dynamic> verifs) async {
+    await startAppli();
+    await tester.tap(findWelcomeButton(S.current.sheep));
     for (Map<String, dynamic> verif in verifs) {
-      await startAppli();
-      await tester.tap(findWelcomeButton(S.current.sheep));
       await tester.pumpAndSettle();
       await selectBete( verif["bete"] );
       await tester.pumpAndSettle();
@@ -31,7 +31,7 @@ class RobotVerificationTest extends RobotTest {
       }
       await tester.pumpAndSettle();
       await tester.tap(find.backButton());
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(Duration(seconds: 5));
     }
   }
 

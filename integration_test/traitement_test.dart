@@ -37,6 +37,9 @@ class RobotTestTraitement extends RobotTest {
   }
 
   Future<void> _tapeFiche(Map<String, dynamic> traitement) async {
+    await tester.enterText(find.byKey(Key("dateDebut")), traitement["debut"]);
+    await tester.enterText(find.byKey(Key("dateFin")), traitement["fin"]);
+
     Finder ordonnanceTxt = find.ancestor(
       of: find.text(S.current.prescription), matching: find.byType(TextFormField),);
     await tester.enterText(ordonnanceTxt, traitement["ordonnance"]);
@@ -67,6 +70,8 @@ class RobotTestTraitement extends RobotTest {
       await tester.tap(btView);
       await tester.pumpAndSettle();
       await tester.enterText(find.text(traitement["medicament"]["ancien"]), traitement["medicament"]["nouveau"]);
+      await tester.pumpAndSettle();
+      await tester.enterText(find.text(traitement["debut"]["ancien"]), traitement["debut"]["nouveau"]);
       await tester.pumpAndSettle();
       await tester.tap(find.text(S.current.bt_save));
       await tester.pumpAndSettle();

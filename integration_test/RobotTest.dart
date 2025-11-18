@@ -59,5 +59,10 @@ class RobotTest {
     return btView;
   }
 
-
+  Finder findByHint(String text) {
+    Finder textField = find.ancestor(
+      of: find.text(text),
+      matching: find.byType(TextField),);
+    return textField;
+  }
 }
