@@ -28,11 +28,6 @@ class SplashScreenState extends State<SplashScreen> {
     if (! kIsWeb)
       AuthService.init()
         .then( (message) => route(message));
-    /*
-    this._bloc.init().then( (message) => route(message))
-        .catchError( (e)  {_initError(e);});
-
-     */
   }
 
 

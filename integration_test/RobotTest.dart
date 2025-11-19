@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
+import 'package:flutter_gismo/env/Environnement.dart';
+import 'package:flutter_gismo/flavor/FlavorOvin.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/infra/ui/welcome.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class RobotTest {
@@ -14,11 +17,28 @@ class RobotTest {
   @protected
   Future<void> startAppli() async {
     // Load app widget.
+    Environnement.init(
+        "https://www.neme-sys.fr/bd", "http://10.0.2.2:8080/gismoApp/api",
+        new FlavorOvin());
     await this._tester.pumpWidget(GismoApp(RunningMode.test, initialRoute: '/splash'));
+    await this._pumpUntilFound(find.byType(WelcomePage));
     final splash = find.byKey(ValueKey('splashScreen'));
     await this._tester.pumpAndSettle();
   }
 
+  Future<void> _pumpUntilFound(
+      Finder finder, {
+        Duration timeout = const Duration(seconds: 10),
+        Duration interval = const Duration(milliseconds: 100),
+      }) async {
+    final endTime = DateTime.now().add(timeout);
+    while (DateTime.now().isBefore(endTime)) {
+      await _tester.pump();
+      if (finder.evaluate().isNotEmpty) return;
+      await Future.delayed(interval);
+    }
+    throw Exception('Widget $finder non trouvé après timeout');
+  }
 
   @protected
   Future<void> selectBete(String numboucle) async {

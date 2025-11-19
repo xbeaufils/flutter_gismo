@@ -31,6 +31,7 @@ class RobotTestMouvement extends RobotTest {
           bete["observation"]);
     final btSave = find.text(S.current.bt_save);
     await tester.tap(btSave);
+    await tester.pumpAndSettle(Duration(seconds: 5));
   }
 
   Future<void> _createBete(String numboucle, String numMarquage, String nom, String sex,String ? obs) async {
