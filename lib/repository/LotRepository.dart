@@ -188,7 +188,7 @@ class LocalLotRepository extends LocalRepository implements LotRepository {
   Future<List<Affectation>> getBeliersForLot(int idLot) async {
     Database db = await this.database;
     List<Map<String, dynamic>> maps = await db.rawQuery(
-        'Select affectation.idBd, bete.numBoucle, bete.numMarquage, affectation.dateEntree, affectation.dateSortie '
+        'Select affectation.idBd, affectation.lotId, affectation.brebisId, bete.numBoucle, bete.numMarquage, affectation.dateEntree, affectation.dateSortie '
             'from affectation INNER JOIN bete ON affectation.brebisId = bete.id '
             'where lotId = ' + idLot.toString()
             + " AND bete.sex = 'male' ");
