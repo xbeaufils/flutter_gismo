@@ -41,7 +41,15 @@ class Affectation {
     lotName = result["lotName"];
     if (result['dateEntree'] != null)
       dateEntree = _df.parse(result["dateEntree"]);
+    else {
+      if (result['dateDebutLutte'] != null)
+        dateEntree = _df.parse(result["dateDebutLutte"]);
+    }
     if (result["dateSortie"] != null)
       dateSortie = _df.parse(result["dateSortie"]);
+    else {
+      if (result['dateFinLutte'] != null)
+        dateSortie = _df.parse(result["dateFinLutte"]);
+    }
   }
 }

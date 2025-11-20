@@ -36,6 +36,16 @@ class MedicModel {
     _dose = value;
   }
 
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> data = new Map<String, dynamic>();
+    data["medicament"] = _medicament;
+    data["voie"] = _voie;
+    data["dose"] = _dose;
+    data["rythme"] = _rythme;
+    return data;
+  }
+
+
 }
 
 
@@ -200,6 +210,7 @@ class TraitementMultiMedic extends TraitementAbstract {
     final Map<String, dynamic> data = super.toJson();
     data["betes"] = _betes;
     data["medics"] = _medics;
+    data["traitement"] = super.toJson();
     return data;
   }
 

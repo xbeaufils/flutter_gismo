@@ -21,7 +21,7 @@ class RobotConfigTest extends RobotTest {
     await tester.enterText(findByHint(S.current.password), "zaza");
     await tester.pumpAndSettle();
     await tester.tap(find.text(S.current.connection));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(Duration(seconds: 4));
     await tester.tap(find.byIcon(Icons.save));
     await tester.pumpAndSettle();
     print("Totorial");

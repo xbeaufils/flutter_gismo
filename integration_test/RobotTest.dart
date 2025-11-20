@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/env/Environnement.dart';

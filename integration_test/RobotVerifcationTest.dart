@@ -29,7 +29,6 @@ class RobotVerificationTest extends RobotTest {
       if (verif["echo"] != null) {
         this._echo(verif["echo"]);
       }
-      await tester.pumpAndSettle();
       await tester.tap(find.backButton());
       await tester.pumpAndSettle(Duration(seconds: 5));
     }
