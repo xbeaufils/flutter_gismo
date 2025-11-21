@@ -296,6 +296,8 @@ class LocalLotRepository extends LocalRepository implements LotRepository {
     try {
       for (Affectation affect in toAdd) {
         Map<String, dynamic> dataDb = new Map.from(affect.toJson());
+        dataDb.remove("numBoucle");
+        dataDb.remove("numMarquage");
         await db.insert("affectation", dataDb,
             conflictAlgorithm: ConflictAlgorithm.replace);
       }
