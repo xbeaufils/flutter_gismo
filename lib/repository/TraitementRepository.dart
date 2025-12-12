@@ -54,7 +54,7 @@ class WebTraitementRepository  extends WebRepository implements Traitementreposi
   @override
   Future<List<TraitementModel>> getTraitements(Bete bete) async {
     final response = await super.doGetList(
-        '/traitement/get?idBete=' + bete.idBd.toString());
+        '/traitement/bete/' + bete.idBd.toString());
     List<TraitementModel> tempList = [];
     for (int i = 0; i < response.length; i++) {
       tempList.add(new TraitementModel.fromResult(response[i]));
@@ -88,7 +88,7 @@ class WebTraitementRepository  extends WebRepository implements Traitementreposi
   @override
   Future<TraitementModel> searchTraitement(int idBd) async {
     final response = await super.doGet(
-        '/traitement/search?idBd=' + idBd.toString());
+      '/traitement/get/' + idBd.toString());
     return new TraitementModel.fromResult(response);
   }
 

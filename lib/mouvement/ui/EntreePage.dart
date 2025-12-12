@@ -82,7 +82,7 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
       body:
       new Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             new Card(key: null,
@@ -106,17 +106,17 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
                         });
                       },
                       onTap: () async{
-                        DateTime date = DateTime.now();
+                        DateTime ? date = DateTime.now();
                         FocusScope.of(context).requestFocus(new FocusNode());
                         date = (await showDatePicker(
                           //locale: const Locale("fr","FR"),
                           context: context,
                           initialDate:DateTime.now(),
                           firstDate:DateTime(1900),
-                          lastDate: DateTime(2100)))!;
+                          lastDate: DateTime(2100))) ;
                         if (date != null) {
                           setState(() {
-                            _dateEntreeCtl.text = DateFormat.yMd().format(date);
+                            _dateEntreeCtl.text = DateFormat.yMd().format(date!);
                           });
                         }
                       })),

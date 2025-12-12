@@ -32,7 +32,7 @@ class WebNecRepository extends WebRepository implements NecRepository{
   @override
   Future<List<NoteModel>> get(Bete bete) async {
     final response = await super.doGetList(
-        '/nec/get?idBete=' + bete.idBd.toString());
+        '/nec/get/' + bete.idBd.toString());
     List<NoteModel> tempList = List.empty(growable: true);
     for (int i = 0; i < response.length; i++) {
       tempList.add(new NoteModel.fromResult(response[i]));

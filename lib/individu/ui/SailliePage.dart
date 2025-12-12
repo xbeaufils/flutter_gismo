@@ -81,17 +81,17 @@ class _SailliePageState extends GismoStatePage<SailliePage> implements SaillieCo
                       });
                     },
                     onTap: () async{
-                      DateTime date = DateTime.now();
+                      DateTime ? date = DateTime.now();
                       FocusScope.of(context).requestFocus(new FocusNode());
                       date = await showDatePicker(
                           locale: const Locale("fr","FR"),
                           context: context,
                           initialDate:DateTime.now(),
                           firstDate:DateTime(1900),
-                          lastDate: DateTime(2100)) as DateTime;
+                          lastDate: DateTime(2100)) ;
                       if (date != null) {
                         setState(() {
-                          _dateSaillieCtl.text = DateFormat.yMd().format(date);
+                          _dateSaillieCtl.text = DateFormat.yMd().format(date!);
                         });
                       }
                     }),
