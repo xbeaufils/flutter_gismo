@@ -16,7 +16,7 @@ class BetePresenter {
 
   final BeteContract _view;
   final BeteService _service = BeteService();
-  final BluetoothService _blService = BluetoothService();
+  final BluetoothGismoService _blService = BluetoothGismoService();
   BetePresenter(this._view);
 
   Future<void> add (String ? numBoucle, String ? numMarquage, Sex ? sex, String ? nom, String ? obs, String dateEntree, String ? motif) async {

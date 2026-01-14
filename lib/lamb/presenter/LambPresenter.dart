@@ -84,7 +84,7 @@ class LambPresenter {
 class BouclagePresenter {
 
   final BouclageContract _view;
-  final _blService = BluetoothService();
+  final _blService = BluetoothGismoService();
   BouclagePresenter(this._view);
 
   void createBete(LambModel lamb, String numBoucle, String numMarquage) async {

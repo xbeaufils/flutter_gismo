@@ -27,7 +27,7 @@ class SearchPresenter {
   List<Bete> _filteredBetes = <Bete>[];
   List<Bete> _betes = <Bete>[];
   BeteService _service = BeteService();
-  BluetoothService _blService = BluetoothService();
+  BluetoothGismoService _blService = BluetoothGismoService();
 
   SearchPresenter(this._view){
     debug.log("Constructor", name: "SearchPresenter::SearchPresenter");

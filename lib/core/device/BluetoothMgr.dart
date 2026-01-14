@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_bluetooth_classic_serial/flutter_bluetooth_classic.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/model/DeviceModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
@@ -10,6 +11,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 class BluetoothManager {
   bool _streamStatus = false;
+  FlutterBluetoothClassic _bluetooth = FlutterBluetoothClassic();
   static const  BLUETOOTH_CHANNEL = const MethodChannel('nemesys.rfid.bluetooth');
   static const  String CONNECTED = "CONNECTED";
   static const String NONE = "NONE";
@@ -27,6 +29,12 @@ class BluetoothManager {
   }
 
   Future<StatusBlueTooth> connectBlueTooth(String address) async {
+    try {
+      await _bluetooth.connect(address);
+    } on BluetoothException catch (ex)  {
+      Sentry.captureException(ex);
+    }
+
     String status = await BLUETOOTH_CHANNEL.invokeMethod("connectBlueTooth" , { 'address': address});
     return StatusBlueTooth.fromResult(json.decode(status));
   }

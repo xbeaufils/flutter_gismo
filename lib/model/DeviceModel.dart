@@ -35,7 +35,7 @@ class DeviceModel {
     _id= result["idBd"] ;
     _address = result["address"];
     _name = result["name"];
-    _connected = result["connected"];
+    _connected =false; // result["connected"];
   }
 
   Map<String, dynamic> toJson() {

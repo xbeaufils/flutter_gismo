@@ -1,31 +1,38 @@
 import 'dart:async';
+import 'dart:typed_data';
 
-import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
 import 'package:flutter_gismo/infra/ui/bluetooth.dart';
 import 'package:flutter_gismo/model/DeviceModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
-import 'package:flutter_gismo/services/BluetoothService.dart';
 
 import 'dart:developer' as debug;
+
+import 'package:flutter_gismo/services/BluetoothService.dart';
+
 
 
 class BluetoothPresenter {
 
   final BluetoothContract _view;
-  final BluetoothService _service = BluetoothService();
+  final BluetoothGismoService _service = BluetoothGismoService();
 
   BluetoothPresenter(this._view) {
-    this._service.handleStatus( this.handlerStatus);
+    _service.handleStatus(this.handlerStatus);
+    this._service.init();
+    // this._service.onStateChanged( this.handlerStatus);
   }
-
+  void handlerStatus(Uint8List data) {
+    debug.log(String.fromCharCodes(data));
+  }
+  /*
   void handlerStatus(StatusBlueTooth event) {
-    if (event.connectionStatus == null)
-      event.connectionStatus =  BluetoothManager.NONE;
+    if (event.connectionStatus == null);
+      //event.connectionStatus =  BluetoothManager.NONE;
      if (_view.bluetoothState.connectionStatus != event.connectionStatus) {
        debug.log("Connection status " + event.connectionStatus, name: "BluetoothPresenter::handlerStatus");
        _view.bluetoothState = event;
      }
-   }
+   }*/
 
   Future<List<DeviceModel>> getDeviceList() async {
     List<DeviceModel> lstReturnDevice = await _service.getDeviceList();
@@ -45,11 +52,10 @@ class BluetoothPresenter {
 
   void connect(value) async {
     DeviceModel selectedDevice =  this._view.selectedDevice! ;
-
     if (! value) {
-      _service.stopBluetooth();
+      await _service.disconnect();
       this._view.bluetoothState = StatusBlueTooth.none();
-      selectedDevice.connected = false;
+      // FIXME selectedDevice.connected = false;
       _view.selectedDevice = selectedDevice;
       return;
     }
@@ -58,7 +64,7 @@ class BluetoothPresenter {
   }
 
   void stopBluetoothStream()  {
-    this._service.stopStream();
+    //this._service.stopStream();
   }
 
   void selectDevice (DeviceModel device) {
