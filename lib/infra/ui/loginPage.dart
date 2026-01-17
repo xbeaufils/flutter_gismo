@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/infra/presenter/LoginPresenter.dart';
-import 'package:flutter_gismo/model/User.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -50,38 +50,32 @@ class _LoginPageState extends GismoStatePage<LoginPage> implements LoginContract
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      new Text(
-                        "email",
-                      ),
+                      new Text(S.of(context).email,),
                       new TextField(
                         controller: _emailCtrl,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                             contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            hintText: "Email",
+                            hintText: S.of(context).email,
                             border:
                             OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                       ),
                       new Text(
-                        "Mot de passe",
+                        S.of(context).password,
                       ),
                       new TextField(
                         controller: _passwordCtrl,
                         obscureText: true,
                         decoration: InputDecoration(
                             contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            hintText: "Mot de passe",
+                            hintText: S.of(context).password,
                             border:
                             OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                        ),
-                      new ElevatedButton(key:null, onPressed: this._presenter.loginWeb(_emailCtrl.text, _passwordCtrl.text),
+                      new FilledButton(key:null, onPressed: this._presenter.loginWeb(_emailCtrl.text, _passwordCtrl.text),
                           //color: const Color(0xFFe0e0e0),
                           child:
-                          new Text(
-                            "Connexion",
-                            style: new TextStyle(
-                                color: const Color(0xFF000000),),
-                          )
+                          new Text(S.of(context).connection,),
                       )
                     ]
 

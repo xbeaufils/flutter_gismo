@@ -5,11 +5,11 @@ enum Sex { male, femelle }
 
 class Bete  {
   int ? _idBd;
-  late String _numBoucle;
+  String ? _numBoucle;
   String ? _numMarquage;
   String ? _nom;
   DateTime ? _dateEntree;
-  late Sex _sex = Sex.male;
+  Sex ? _sex = Sex.male;
   //Motif_Entree _motifEntree = Motif_Entree.achat;
   String ? _observations;
   String ? _motifEntree ;
@@ -49,11 +49,11 @@ class Bete  {
   }
 
   int ? get idBd => _idBd;
-  String get numBoucle =>_numBoucle;
+  String get numBoucle =>_numBoucle!;
   String get numMarquage =>_numMarquage!;
   String ? get nom =>_nom;
   DateTime get dateEntree => _dateEntree! ;
-  Sex get sex => _sex;
+  Sex get sex => _sex!;
   String get motifEntree =>_motifEntree!;
 
   String ? get observations => _observations;

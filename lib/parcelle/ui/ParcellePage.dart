@@ -53,20 +53,10 @@ class _ParcellePageState extends GismoStatePage<ParcellePage> implements Parcell
   _ParcellePageState();
   late ParcellePresenter _presenter;
 
-  List<Parcelle?> _myParcelles=[];
   List<dynamic> featuresJson=[];
-  Map<String, dynamic> ? _cadastreJson;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  /*
-  MapBox
-   */
-  MapboxMap ? _mapBox;
 
-  LocationBloc _locBloc = new LocationBloc();
-  Position ? _curentPosition;
-  late Stream<LocationResult> _locationStream;
-  StreamSubscription<LocationResult> ? _locationSubscription;
   bool _locationProgress = true;
 
   set locationProgress(bool value) {
@@ -80,22 +70,25 @@ class _ParcellePageState extends GismoStatePage<ParcellePage> implements Parcell
 
   void _onMapCreated(MapboxMap map) {
     _presenter.mapboxMap = map;
-   //this._initLocation();
-    //this._drawParcelles(this._curentPosition);
     debug.log("Map created" , name: "_ParcellePageState::_onMapCreated" );
   }
 
 
+  _onStyleLoadedCallback(StyleLoadedEventData data) async {
+    this._presenter.initLocation();
+  }
 
-  @override
+
+
+    @override
   Widget build(BuildContext context) {
     final MapWidget mapWidget = MapWidget(
         key: ValueKey("mapWidget"),
-        cameraOptions: CameraOptions(zoom: 14, center: Point(coordinates: Position(5.73, 45.26))),
-        //onTapListener:  _presenter.onMapClick,
-
-        onMapCreated: _onMapCreated);
-
+        styleUri: MapboxStyles.STANDARD_SATELLITE,
+        cameraOptions: CameraOptions(zoom: 14, center: Point(coordinates: Position( 3.095640494315918, 45.156240837225205))),
+        onTapListener:  _presenter.onMapClick,
+        onStyleLoadedListener: _onStyleLoadedCallback,
+        onMapCreated: this._onMapCreated);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -160,6 +153,6 @@ class _ParcellePageState extends GismoStatePage<ParcellePage> implements Parcell
   void initState() {
     super.initState();
     this._presenter = ParcellePresenter(this);
-    this._presenter.initLocation();
+    //this._presenter.initLocation();
   }
 }

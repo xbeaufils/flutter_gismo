@@ -108,7 +108,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                                     filled: true,
                                     fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
                                     labelText: S.of(context).identity_number,
-                                    hintText: S.of(context).flock_number_hint),
+                                    hintText: S.of(context).identity_number_hint),
                                   onChanged: (value) {
                                       setState(() {
                                         _numBoucleCtrl.text = value;
@@ -182,23 +182,14 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                             maxLines: 3,
                             onChanged: (value)  =>_obs = value,)
                       )]),),
+                  (this.bete == null)?
                   FilledButton(
-                      child: new Text((this.bete == null)? S.of(context).bt_add: S.of(context).bt_save,),
-                      onPressed: () {
-                        try {
-                          this._presenter.save(_numBoucleCtrl.text, _numMarquageCtrl.text, _sex, _nom, _obs, _dateEntreCtrl.text, _motif);
-                        } on MissingNumBoucle {
-                          super.showMessage(S.of(context).identity_number_warn);
-                        } on MissingNumMarquage {
-                          super.showMessage(S.of(context).flock_number_warn);
-                        } on MissingSex {
-                          super.showMessage(S.of(context).sex_warn);
-                        } on ExistingBete {
-                          super.showMessage(S.of(context).identity_number_error);
-                        }
-                      } ,
-
-                  ),
+                      child: new Text(S.of(context).bt_add),
+                      onPressed: () => this._presenter.add(_numBoucleCtrl.text, _numMarquageCtrl.text, _sex, _nom, _obs, _dateEntreCtrl.text, _motif)
+                  ):
+                  FilledButton(
+                      onPressed: () => this._presenter.save(_numBoucleCtrl.text, _numMarquageCtrl.text, _sex, _nom, _obs, _dateEntreCtrl.text, _motif),
+                      child: Text( S.of(context).bt_save,)),
         ]))
     ));
 

@@ -91,17 +91,11 @@ class _SelectMultiplePageState extends GismoStatePage<SelectMultiplePage> with T
         Column(
           children: [
             Expanded(child:  _buildList(context) ),
-            ButtonBar(alignment: MainAxisAlignment.start,
-                children : [ ElevatedButton(key:null,
+            Center(
+                child :  FilledButton(key:null,
                     onPressed: ()=> _sendSelecttion(_selectedBete.values.toList()),
-                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.lightGreen[700])),
-                    //color: Colors.lightGreen[700],
-                    child:
-                    new Text(
-                      S.of(context).bt_validate,
-                      style: new TextStyle(color: Colors.white, ), )
+                    child: Text(S.of(context).bt_validate)
                 )
-                ]
             ),
 
             this._getAdmobAdvice(),
@@ -182,7 +176,6 @@ class _SelectMultiplePageState extends GismoStatePage<SelectMultiplePage> with T
                     else
                       this._selectedBete.remove(_betes[index].idBd!);
                   }
-                  var test = _betes[index].numBoucle;
                 });
               },
               value: _selectedBete.containsKey(_betes[index].idBd),

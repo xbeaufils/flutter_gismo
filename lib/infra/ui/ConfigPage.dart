@@ -90,14 +90,10 @@ class _ConfigPageState extends GismoStatePage<ConfigPage> implements ConfigContr
                           border:
                           OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                     ),
-                    new ElevatedButton(key:null, onPressed:() => this._presenter.login(_emailCtrl.text, _passwordCtrl.text) ,
+                    ElevatedButton(key:null, onPressed:() => this._presenter.login(_emailCtrl.text, _passwordCtrl.text) ,
                         //color: const Color(0xFFe0e0e0),
-                        child:
-                        new Text(S.of(context).connection,
-                          style: new TextStyle(
-                            color: const Color(0xFF000000),),
+                        child: Text(S.of(context).connection),
                         )
-                    )
                   ]
               ),
             )
@@ -150,10 +146,7 @@ class _ConfigPageState extends GismoStatePage<ConfigPage> implements ConfigContr
       new ElevatedButton(key:null, onPressed: this._presenter.copyBD,
           //color: const Color(0xFFe0e0e0),
           child:
-          new Text(S.of(context).copy_base,
-            style: new TextStyle(
-              color: const Color(0xFF000000),),
-          )
+          new Text(S.of(context).copy_base),
       )
 
     ],
