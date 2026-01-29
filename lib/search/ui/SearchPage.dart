@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer' as debug;
 import 'dart:io';
 
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+// import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
@@ -90,10 +90,10 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
       // See in https://dev-yakuza.posstree.com/en/flutter/admob/#configure-app-id-on-android
       debug.log("Load Ad Banner");
       //this._adBanner!.load();
-      FacebookAudienceNetwork.init(
+     /* FacebookAudienceNetwork.init(
         testingId: "a77955ee-3304-4635-be65-81029b0f5201",
         iOSAdvertiserTrackingEnabled: true,
-      );
+      );*/
     }
     return Scaffold(
       appBar: AppBar(
@@ -157,7 +157,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   }
 
   Widget _getFacebookAdvice() {
-    if ( AuthService().subscribe ) {
+ /*   if ( AuthService().subscribe ) {
       return SizedBox(height: 0,width: 0,);
     }
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
@@ -170,7 +170,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
             listener: (result, value) {}
           //  ),
         );
-    }
+    }*/
     return Container();
   }
 

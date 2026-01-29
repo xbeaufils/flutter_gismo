@@ -1,7 +1,7 @@
 import 'dart:developer' as debug;
 import 'dart:io';
 
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+// import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
@@ -61,10 +61,10 @@ class _SelectMultiplePageState extends GismoStatePage<SelectMultiplePage> with T
       // See in https://dev-yakuza.posstree.com/en/flutter/admob/#configure-app-id-on-android
       debug.log("Load Ad Banner");
       //this._adBanner!.load();
-      FacebookAudienceNetwork.init(
+      /*FacebookAudienceNetwork.init(
         testingId: "a77955ee-3304-4635-be65-81029b0f5201",
         iOSAdvertiserTrackingEnabled: true,
-      );
+      );*/
     }
   }
 
@@ -123,7 +123,7 @@ class _SelectMultiplePageState extends GismoStatePage<SelectMultiplePage> with T
   Widget _getFacebookAdvice() {
     if ( AuthService().subscribe ) {
       return SizedBox(height: 0,width: 0,);
-    }
+    }/*
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
       return
         //Card(child:
@@ -134,7 +134,7 @@ class _SelectMultiplePageState extends GismoStatePage<SelectMultiplePage> with T
             listener: (result, value) {}
           //  ),
         );
-    }
+    }*/
     return Container();
   }
 

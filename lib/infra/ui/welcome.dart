@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+//import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
@@ -127,17 +127,17 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
     if ( AuthService().subscribe   ) {
       return SizedBox(height: 0,width: 0,);
     }
-    if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
+    /*if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
       return
         //Card(child:
-          FacebookBannerAd(
+         FacebookBannerAd(
             placementId: '212596486937356_212596826937322',
             bannerSize: BannerSize.STANDARD,
             keepAlive: true,
             listener: (result, value) {}
         //  ),
         );
-    }
+    }*/
     return Container();
   }
 
@@ -178,10 +178,10 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
       // See in https://dev-yakuza.posstree.com/en/flutter/admob/#configure-app-id-on-android
       debug.log("Load Ad Banner");
       //this._adBanner!.load();
-      FacebookAudienceNetwork.init(
+      /*FacebookAudienceNetwork.init(
         testingId: "a77955ee-3304-4635-be65-81029b0f5201",
         iOSAdvertiserTrackingEnabled: true,
-      );
+      );*/
     }
   }
 
