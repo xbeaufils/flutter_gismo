@@ -1,9 +1,12 @@
 
 import 'package:flutter_gismo/infra/ui/welcome.dart';
+import 'package:flutter_gismo/model/MemoModel.dart';
+import 'package:flutter_gismo/services/MemoService.dart';
 
 class WelcomePresenter {
 
   final WelcomeContract _view;
+  final MemoService _service = MemoService();
 
   WelcomePresenter(this._view);
 
@@ -55,5 +58,11 @@ class WelcomePresenter {
   void sailliePressed() {
     _view.viewPage('/saillie');
   }
+  void notePressed() {
+    _view.viewPage('/note') ;
+  }
 
+  Future<List<MemoModel>> getNbNotes() {
+    return  this._service.getCheptelMemos();
+  }
 }

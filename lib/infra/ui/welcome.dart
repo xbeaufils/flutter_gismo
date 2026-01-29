@@ -10,6 +10,7 @@ import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/infra/ui/MenuPage.dart';
 import 'package:flutter_gismo/infra/presenter/WelcomePresenter.dart';
+import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:flutter_gismo/theme.dart';
 
@@ -46,6 +47,21 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
 //        backgroundColor: Colors.lightGreen,
         appBar: new AppBar(
             title: Text('Gismo ' + AuthService().cheptel!),
+            actions: [
+              FutureBuilder(
+                future: _presenter.getNbNotes(),
+                builder : (BuildContext context, AsyncSnapshot<List<MemoModel>> snapshot) {
+                  int nbNotes = 0;
+                  if (snapshot.hasData) {
+                    nbNotes = snapshot.data!.length;
+                  }
+                  return IconButton(
+                      onPressed: _presenter.notePressed,
+                      icon: Badge(
+                          child: Icon(Icons.sticky_note_2),
+                          label: Text(nbNotes.toString()),
+                      ));
+                })],
             // N'affiche pas la touche back (qui revient à la SplashScreen
             automaticallyImplyLeading: true,
              ),
@@ -133,19 +149,6 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
     }
     debug.log("Unable to find plateform");
     return "";
-  }
-
-  Widget _buildButton(String title, String imageName, Function() press) {
-    return new TextButton(
-        key: Key(title),
-        style: textButtonStyle,
-        onPressed: press,
-        child: new Column(
-          children: <Widget>[
-            new Image.asset(imageName),
-            new Text(title)
-          ],
-      ));
   }
 
   final ButtonStyle textButtonStyle = TextButton.styleFrom(

@@ -122,8 +122,9 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
       hintText: S.of(context).search,
       onChanged: (text) {this._presenter.filtre(text);},
       controller: _filter,
-  );
-}
+    );
+  }
+
   Widget _statusBluetooth() {
     if ( ! AuthService().subscribe )
       return Container();

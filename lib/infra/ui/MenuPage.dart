@@ -20,20 +20,12 @@ class GismoDrawer extends StatelessWidget {
                 leading: Icon(Icons.home),
                 onTap:() { _homePressed(context);},
               ),
-              ListTile(
-                title: Text(S.of(context).memo),
-                leading: Icon(Icons.note),
-                onTap: () { _notePressed(context);},
-              ),
-              const Divider(
-                height: 10,
-                thickness: 1,
-              ),
               _showConfig(context),
               _showBlueTooth(context),
           ]),
     ]));
   }
+
   Widget _showConfig(BuildContext context) {
     if (kIsWeb)
       return Container();
