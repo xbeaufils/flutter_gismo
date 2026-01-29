@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+// import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/model/User.dart';
 import 'package:flutter_gismo/services/UserService.dart';
@@ -54,10 +54,10 @@ class AuthService {
         debug.log("Mode autonome", name: "GismoBloc::init");
         // Ajout des pubs
         //Admob.initialize();
-        FacebookAudienceNetwork.init(
+        /*FacebookAudienceNetwork.init(
           testingId: "a77955ee-3304-4635-be65-81029b0f5201",
           iOSAdvertiserTrackingEnabled: true,
-        );
+        );*/
         if (Platform.isIOS) {
           //await Admob.requestTrackingAuthorization();
         }
