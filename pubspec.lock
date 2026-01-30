@@ -81,14 +81,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.2+3"
-  facebook_audience_network:
-    dependency: "direct main"
-    description:
-      name: facebook_audience_network
-      sha256: "44eb10576b861c5872d1eec3fc9abe7494500314e4e02c49c06dbdd549c9ade0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -312,10 +304,10 @@ packages:
     dependency: "direct main"
     description:
       name: mapbox_maps_flutter
-      sha256: "7eb50356a06c490f1f295492aee01e31452d3201553895a6ef7d8a7664d3a82d"
+      sha256: "62d696ebee5485c53c0dbbc7181069a0b7a41fcc3263ef261e49be342f00ce7a"
       url: "https://pub.dev"
     source: hosted
-    version: "2.9.1"
+    version: "2.12.0"
   matcher:
     dependency: transitive
     description:
