@@ -115,12 +115,6 @@ class PeseePageState extends GismoStatePage<PeseePage> implements PeseeContract 
     super.initState();
     _datePeseeCtl.text = DateFormat.yMd().format(DateTime.now());
   }
-  void showSaving () {
-    setState(() {
-      _isSaving = true;
-    });
-
-  }
 
   Widget _numBoucleView() {
     if (bete != null)

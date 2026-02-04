@@ -141,7 +141,10 @@ class DeathPresenter {
 
   Future<String> saveDeath(LambModel lamb, String dateMort, String? motif) async {
     try {
+      _view.showSaving();
       return this._save(lamb, dateMort, motif);
+      _view.hideSaving();
+
     } on GismoException catch(e) {
       this._view.showMessage(e.message, true);
     }  on MissingDeathDateException {

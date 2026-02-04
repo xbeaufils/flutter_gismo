@@ -330,32 +330,7 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
     );
     return newLamb;
   }
-/*
-  void _openEdit(LambModel lamb, String dateNaissance) async {
-    LambModel? newLamb = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => LambPage.edit( lamb)),
-    );
-    if (newLamb == null)
-      return;
-    //this._bloc!.saveLamb(newLamb);
-    currentLambing.lambs.forEach((aLamb) {
-      if (aLamb.idBd == newLamb.idBd) {
-        aLamb.sex = newLamb.sex;
-        aLamb.allaitement = newLamb.allaitement;
-        aLamb.marquageProvisoire = newLamb.marquageProvisoire;
-        aLamb.dateDeces = newLamb.dateDeces;
-        aLamb.motifDeces = newLamb.motifDeces;
-        aLamb.numBoucle = newLamb.numBoucle;
-        aLamb.numMarquage = newLamb.numMarquage;
-      }
-    });
-    setState(() {
 
-    });
-  }
-*/
   Widget _lambList() {
     return ListView.builder(
       itemBuilder: _buildLambItem,

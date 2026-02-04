@@ -34,6 +34,16 @@ class GismoStatePage<T extends StatefulWidget> extends  State<T> {
     );
   }
 
+  Future goDialog(StatefulWidget page) async {
+    int ? qualiteAgnelage = await Navigator.of(context).push(new MaterialPageRoute<int>(
+        builder: (BuildContext context) {
+          return page;
+        },
+        fullscreenDialog: true
+    ));
+    return qualiteAgnelage;
+   }
+
   void showMessage(String message, [bool error = false]) {
     ScaffoldMessenger.of(context).showSnackBar(this._buildSnackBar(message, error));
   }
@@ -85,13 +95,13 @@ class GismoStatePage<T extends StatefulWidget> extends  State<T> {
     });
   }
 
-  Future<dynamic> showDialogOkCancel() {
-    return showDialog(
+  Future<bool> showDialogOkCancel() async {
+    return await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(S.current.title_delete),
-          content: Text(S.current.text_delete),
+          title: Text(S.of(context).title_delete),
+          content: Text(S.of(context).text_delete),
           actions: [
             _cancelButton(),
             _continueButton(),

@@ -1,3 +1,4 @@
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/lamb/ui/LambPage.dart';
 import 'package:flutter_gismo/lamb/ui/LambTimeLine.dart';
 import 'package:flutter_gismo/lamb/ui/SearchLambPage.dart';

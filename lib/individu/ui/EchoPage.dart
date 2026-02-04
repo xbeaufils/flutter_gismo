@@ -214,7 +214,7 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
         children: <Widget>[
           (this.widget._currentEcho != null) ?
           TextButton(
-              onPressed: () => _showDialog(context),
+              onPressed: () => this._presenter.delete(),
               child: Text(S.of(context).bt_delete)):
           Container(),
           FilledButton(
@@ -224,51 +224,6 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
         ])]));
   }
 
-  // set up the buttons
-  Widget _cancelButton() {
-    return TextButton(
-      child: Text(S.of(context).bt_cancel),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-  }
-
-  Widget _continueButton() {
-    return TextButton(
-      child: Text(S.of(context).bt_continue),
-      onPressed: () {
-        this._presenter.delete();
-        Navigator.of(context).pop();
-      },
-    );
-  }
-
-  Future _showDialog(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(S.of(context).title_delete),
-          content: Text(S.of(context).text_delete),
-          actions: [
-            _cancelButton(),
-            _continueButton(),
-          ],
-        );
-      },
-    );
-  }
-/*
-  void _delete () async {
-    if (this.widget._currentEcho != null) {
-      var message  = await _bloc!.deleteEcho(this.widget._currentEcho!);
-      Navigator.pop(context, message);
-    }
-    else
-      Navigator.of(context).pop();
-  }
-*/
   @override
   void initState() {
     super.initState();

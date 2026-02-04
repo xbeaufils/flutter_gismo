@@ -49,6 +49,7 @@ abstract class EventPresenter {
   void delete(Event event) async {
     bool ok = await this.view.showDialogOkCancel();
     if (ok) {
+      this.view.showSaving();
       await _beteService.deleteEvent(event);
       this.view.hideSaving();
     }

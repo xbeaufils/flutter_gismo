@@ -10,8 +10,11 @@ class EchoPresenter {
 
   void delete () async {
     if (this._view.currentEcho != null) {
-      var message  = await _service.delete(this._view.currentEcho!);
-      _view.backWithMessage(message);
+      bool Ok = await this._view.showDialogOkCancel();
+      if (Ok) {
+          var message = await _service.delete(this._view.currentEcho!);
+          _view.backWithMessage(message);
+      }
     }
     else
       _view.back();
