@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:flutter_bluetooth_classic_serial/flutter_bluetooth_classic.dart';
 import 'package:flutter_gismo/infra/ui/bluetooth.dart';
 import 'package:flutter_gismo/model/DeviceModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
@@ -11,19 +12,21 @@ import 'package:flutter_gismo/services/BluetoothService.dart';
 
 
 
+
 class BluetoothPresenter {
 
   final BluetoothContract _view;
   final BluetoothGismoService _service = BluetoothGismoService();
 
   BluetoothPresenter(this._view) {
-    _service.handleStatus(this.handlerStatus);
-    this._service.init();
-    // this._service.onStateChanged( this.handlerStatus);
+    _service.init(onConnectionStateChanged, null);
   }
-  void handlerStatus(Uint8List data) {
-    debug.log(String.fromCharCodes(data));
-  }
+
+   onConnectionStateChanged(BluetoothConnectionState state) {
+    debug.log("state $state.status", name: "BluetoothPresenter::onConnectionStateChanged");
+    this._view.bluetoothState = state;
+   }
+
   /*
   void handlerStatus(StatusBlueTooth event) {
     if (event.connectionStatus == null);
@@ -47,20 +50,21 @@ class BluetoothPresenter {
   }
 
   void startStatus() async {
-    this._view.bluetoothState = await _service.startStatus(handlerStatus);
+    //this._view.bluetoothState = await _service.startStatus(handlerStatus);
   }
 
   void connect(value) async {
-    DeviceModel selectedDevice =  this._view.selectedDevice! ;
     if (! value) {
       await _service.disconnect();
-      this._view.bluetoothState = StatusBlueTooth.none();
+      // this._view.bluetoothState = StatusBlueTooth.none();
       // FIXME selectedDevice.connected = false;
-      _view.selectedDevice = selectedDevice;
+      //_view.selectedDevice = selectedDevice;
       return;
     }
-    StatusBlueTooth status = await _service.connectBluetooth(selectedDevice.address);
-    this._view.bluetoothState = status;
+    bool status = await _service.connect(this._view.selectedDevice!.address);
+    /*if (status) {
+      this._view.bluetoothState = StatusBlueTooth.CONNECTED;
+    }*/
   }
 
   void stopBluetoothStream()  {

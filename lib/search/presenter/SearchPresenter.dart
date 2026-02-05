@@ -108,7 +108,7 @@ class SearchPresenter {
       //Navigator.of(context).pop(bete);
     }
     else {
-      this._blService.stopReadBluetooth();
+      //this._blService.stopReadBluetooth();
       String ? message = await this._view.goNextPage(page);
       if (message != null)
         this._view.showMessage(message);
@@ -117,6 +117,7 @@ class SearchPresenter {
   }
 
   Future<void> startService() async{
+    /*
     try {
       debug.log("Start service ", name: "SearchPresenter::startService");
       StatusBlueTooth status= await this._blService.startReadBluetooth();
@@ -128,7 +129,7 @@ class SearchPresenter {
     } on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       debug.log(e.toString());
-    }
+    }*/
   }
 
   void handleBlueTooth(StatusBlueTooth event) {
@@ -151,9 +152,10 @@ class SearchPresenter {
   }
 
   void dispose() {
+    /*
     if ((defaultTargetPlatform == TargetPlatform.android)) {
       this._blService.stopReadBluetooth();
-    }
+    }*/
   }
 
 

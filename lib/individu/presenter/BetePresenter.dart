@@ -77,7 +77,7 @@ class BetePresenter {
   }
 
   Future<void> startReadBluetooth() async {
-    try {
+ /*   try {
       StatusBlueTooth status =  await _blService.startReadBluetooth();
       if (status.connectionStatus == 'CONNECTED') {
         await this._blService.readBluetooth();
@@ -87,7 +87,7 @@ class BetePresenter {
       Sentry.captureException(e, stackTrace : stackTrace);
       debug.log(e.toString());
     }
-
+*/
   }
 
   void handleBlueTooth(StatusBlueTooth event) {
@@ -108,9 +108,9 @@ class BetePresenter {
   }
 
   void stopReadBluetooth() {
-    if ((defaultTargetPlatform == TargetPlatform.android)) {
+  /*  if ((defaultTargetPlatform == TargetPlatform.android)) {
       _blService.stopReadBluetooth();
-    }
+    }*/
   }
 }
 

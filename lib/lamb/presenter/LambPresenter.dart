@@ -94,6 +94,7 @@ class BouclagePresenter {
     this._view.returnBete(bete);
   }
   Future<void> startReadBluetooth() async {
+    /*
     try {
       StatusBlueTooth status =  await _blService.startReadBluetooth();
       if (status.connectionStatus == 'CONNECTED') {
@@ -104,6 +105,7 @@ class BouclagePresenter {
       Sentry.captureException(e, stackTrace : stackTrace);
       debug.log(e.toString());
     }
+     */
   }
 
   void handleBlueTooth(StatusBlueTooth event) {
@@ -127,7 +129,7 @@ class BouclagePresenter {
   }
 
   void stopReadBluetooth() {
-    _blService.stopReadBluetooth();
+    //_blService.stopReadBluetooth();
   }
 
 

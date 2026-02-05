@@ -4,12 +4,14 @@ import 'dart:developer' as debug;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bluetooth_classic_serial/bluetooth_service.dart';
+import 'package:flutter_bluetooth_classic_serial/flutter_bluetooth_classic.dart';
 import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/infra/presenter/BluetoothPresenter.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/model/DeviceModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
+import 'package:flutter_gismo/services/BluetoothService.dart';
 import 'package:provider/provider.dart';
 
 class BluetoothPermissionPage extends StatefulWidget {
@@ -116,14 +118,14 @@ class BluetoothPage extends StatefulWidget {
 abstract class BluetoothContract implements GismoContract {
   DeviceModel ? get selectedDevice;
   set selectedDevice(DeviceModel ? device);
-  StatusBlueTooth get bluetoothState;
-  set bluetoothState(StatusBlueTooth value);
+  BluetoothConnectionState ? get bluetoothState;
+  set bluetoothState(BluetoothConnectionState ? value);
 }
 
 class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements BluetoothContract {
   late BluetoothPresenter _presenter;
 
-  StatusBlueTooth _bluetoothState = StatusBlueTooth.none();
+  BluetoothConnectionState ? _bluetoothState = null;
 
   _BluetoothPagePageState() {
     this._presenter = BluetoothPresenter(this);
@@ -132,9 +134,9 @@ class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements B
 
   DeviceModel ? _selectedDevice;
 
-  StatusBlueTooth get bluetoothState => _bluetoothState;
+  BluetoothConnectionState ? get bluetoothState => _bluetoothState;
 
-  set bluetoothState(StatusBlueTooth value) {
+  set bluetoothState(BluetoothConnectionState ? value) {
     setState(() {
       _bluetoothState = value;
     });
@@ -186,24 +188,19 @@ class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements B
 
   Widget _stateButton(DeviceModel device) {
     if ( this._isDeviceSelected(device)) {
-      switch( this._bluetoothState.connectionStatus) {
-        case BluetoothManager.NONE:
-          return Switch(value: false, onChanged: (value) { this._presenter.connect(value);
-              //_switchBluetooth(value, device.address);
-          } );
-        case BluetoothManager.CONNECTING:
+      switch( BluetoothAdapter.fromString(this._bluetoothState!.status)) {
+        case BluetoothAdapter.STATE_OFF:
+          return Switch(value: false, onChanged: (value) { this._presenter.connect(value);});
+        case BluetoothAdapter.STATE_ON:
+          return Switch(value: true, onChanged: (value) { this._presenter.connect(value);});
+        case BluetoothAdapter.STATE_TURNING_ON:
           return CircularProgressIndicator();
-        case BluetoothManager.LISTEN:
-        case BluetoothManager.CONNECTED :
-          return Switch(value: true, onChanged: (value) { this._presenter.connect(value);
-          //_switchBluetooth(value, device.address);
-          } );
-        case BluetoothManager.ERROR:
-          this._presenter.stopBluetoothStream();
-           return Switch(value: false, onChanged: (value) { this._presenter.connect(value);
-           //_switchBluetooth(value, device.address);
-           } );
-
+        case BluetoothAdapter.STATE_TURNING_OFF:
+          // TODO: Handle this case.
+          throw UnimplementedError();
+        case BluetoothAdapter.UNKNOWN:
+          // TODO: Handle this case.
+          throw UnimplementedError();
       }
     }
     return Container(width: 10,);
