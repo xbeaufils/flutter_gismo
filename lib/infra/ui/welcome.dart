@@ -57,7 +57,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
                   }
                   return IconButton(
                       onPressed: _presenter.notePressed,
-                      icon: Badge(
+                      icon: (nbNotes == 0) ? Icon(Icons.sticky_note_2): Badge(
                           child: Icon(Icons.sticky_note_2),
                           label: Text(nbNotes.toString()),
                       ));
