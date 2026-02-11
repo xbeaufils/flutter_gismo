@@ -19,12 +19,16 @@ class BluetoothPresenter {
   final BluetoothGismoService _service = BluetoothGismoService();
 
   BluetoothPresenter(this._view) {
-    _service.init(onConnectionStateChanged, null);
+    _service.init(onConnectionStateChanged, onConnectionError, null);
   }
 
    onConnectionStateChanged(BluetoothConnectionState state) {
-    debug.log("state $state.status", name: "BluetoothPresenter::onConnectionStateChanged");
+    debug.log("state " + state.status + " " + state.isConnected.toString(), name: "BluetoothPresenter::onConnectionStateChanged");
     this._view.bluetoothState = state;
+   }
+
+   onConnectionError(error) {
+    debug.log("error " + error.toString(), name: "BluetoothPresenter::onConnectionError");
    }
 
   /*
@@ -55,16 +59,12 @@ class BluetoothPresenter {
 
   void connect(value) async {
     if (! value) {
+      this._view.bluetoothState = BluetoothConnectionState(isConnected: false, deviceAddress: this._view.selectedDevice!.address, status: "DISCONNECTING");
       await _service.disconnect();
-      // this._view.bluetoothState = StatusBlueTooth.none();
-      // FIXME selectedDevice.connected = false;
-      //_view.selectedDevice = selectedDevice;
       return;
     }
+    this._view.bluetoothState = BluetoothConnectionState(isConnected: false, deviceAddress: this._view.selectedDevice!.address, status: "CONNECTING");
     bool status = await _service.connect(this._view.selectedDevice!.address);
-    /*if (status) {
-      this._view.bluetoothState = StatusBlueTooth.CONNECTED;
-    }*/
   }
 
   void stopBluetoothStream()  {
@@ -72,6 +72,14 @@ class BluetoothPresenter {
   }
 
   void selectDevice (DeviceModel device) {
+    if (this._service.connectedDevice != null) {
+      if (this._service.connectedDevice!.address == device.address)
+        this._view.bluetoothState = BluetoothConnectionState(isConnected: true, deviceAddress: device.address, status: "CONNECTED");
+      else
+        this._view.bluetoothState = BluetoothConnectionState(isConnected: false, deviceAddress: device.address, status: "DISCONNECTED");
+    }
+    else
+      this._view.bluetoothState = BluetoothConnectionState(isConnected: false, deviceAddress: device.address, status: "DISCONNECTED");
     _view.selectedDevice = device;
   }
 

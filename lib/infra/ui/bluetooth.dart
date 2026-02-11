@@ -2,15 +2,11 @@ import 'dart:async';
 import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bluetooth_classic_serial/bluetooth_service.dart';
 import 'package:flutter_bluetooth_classic_serial/flutter_bluetooth_classic.dart';
-import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/infra/presenter/BluetoothPresenter.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
 import 'package:flutter_gismo/model/DeviceModel.dart';
-import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/services/BluetoothService.dart';
 import 'package:provider/provider.dart';
 
@@ -137,9 +133,11 @@ class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements B
   BluetoothConnectionState ? get bluetoothState => _bluetoothState;
 
   set bluetoothState(BluetoothConnectionState ? value) {
-    setState(() {
-      _bluetoothState = value;
-    });
+    _bluetoothState = value;
+    if (mounted)
+      setState(() {
+        _bluetoothState = value;
+      });
   }
 
   List<DeviceModel> ? _lstDevice;
@@ -188,19 +186,27 @@ class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements B
 
   Widget _stateButton(DeviceModel device) {
     if ( this._isDeviceSelected(device)) {
+      if (this._bluetoothState == null)
+        return Switch(value: false, onChanged: (value) { this._presenter.connect(value);});
+      debug.log( "BluetoothState " + this._bluetoothState!.status, name: "_BluetoothPagePageState::_stateButton");
       switch( BluetoothAdapter.fromString(this._bluetoothState!.status)) {
         case BluetoothAdapter.STATE_OFF:
           return Switch(value: false, onChanged: (value) { this._presenter.connect(value);});
         case BluetoothAdapter.STATE_ON:
+        case BluetoothAdapter.CONNECTED:
           return Switch(value: true, onChanged: (value) { this._presenter.connect(value);});
         case BluetoothAdapter.STATE_TURNING_ON:
+        case BluetoothAdapter.CONNECTING:
+        case BluetoothAdapter.DISCONNECTING:
           return CircularProgressIndicator();
         case BluetoothAdapter.STATE_TURNING_OFF:
-          // TODO: Handle this case.
-          throw UnimplementedError();
+          return Container(width: 10,);
         case BluetoothAdapter.UNKNOWN:
-          // TODO: Handle this case.
-          throw UnimplementedError();
+          return Container(width: 10,);
+        case  BluetoothAdapter.ERROR:
+          return Icon(Icons.error);
+        case BluetoothAdapter.DISCONNECTED:
+          return Switch(value: false, onChanged: (value) { this._presenter.connect(value);});
       }
     }
     return Container(width: 10,);
