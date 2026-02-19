@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bluetooth_classic_serial/flutter_bluetooth_classic.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
@@ -28,8 +29,8 @@ class SearchPage extends StatefulWidget {
 abstract class SearchContract extends GismoContract {
   void goPreviousPage(Bete bete);
   void setBoucle(String numBoucle);
-  StatusBlueTooth get bluetoothState;
-  set bluetoothState(StatusBlueTooth value);
+  BluetoothConnectionState get bluetoothState;
+  set bluetoothState(BluetoothConnectionState value);
   set filteredBetes(List<Bete> value);
   GismoPage get nextPage;
 }
@@ -42,24 +43,20 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
 
   List<Bete> _filteredBetes = <Bete>[]; //new List();
 
-  StatusBlueTooth _bluetoothState = StatusBlueTooth.none();
+  BluetoothConnectionState _bluetoothState = BluetoothConnectionState(deviceAddress: "",isConnected: false, status: "DISCONNECTED");
 
-  set bluetoothState(StatusBlueTooth value) {
+  set bluetoothState(BluetoothConnectionState value) {
     setState(() {
       _bluetoothState = value;
     });
   }
-  StatusBlueTooth get bluetoothState => _bluetoothState;
+  BluetoothConnectionState get bluetoothState => _bluetoothState;
 
   @override
   void initState() {
     debug.log("Démarrage", name: "_SearchPageState::initState");
     this._presenter = SearchPresenter(this);
     this._presenter.getBetes(null);
-    if (AuthService().subscribe && defaultTargetPlatform == TargetPlatform.android)
-      new Future.delayed(Duration.zero,() {
-        this._presenter.startService();
-      });
     super.initState();
   }
 
@@ -128,17 +125,11 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
     if ( ! AuthService().subscribe )
       return Container();
     List<Widget> status = <Widget>[]; //new List();
-    if (_bluetoothState.connectionStatus == "CONNECTED")
-      switch (_bluetoothState.dataStatus) {
-        case "WAITING":
-          return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:Chip(label: Icon(Icons.bluetooth_searching) , backgroundColor: Colors.lightGreen,));
-        case "AVAILABLE":
+    if (_bluetoothState.status == "CONNECTED")
           return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:Chip(label: Icon(Icons.bluetooth_connected), backgroundColor: Colors.lightBlueAccent,));
-      }
     else {
       return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:  Chip(label: Icon(Icons.bluetooth_disabled_sharp)));
     }
-    return Card(child: Row(children: status,));
   }
 
   Widget _getAdmobAdvice() {
@@ -175,10 +166,11 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
 
 
   void setBoucle(String numBoucle) {
-    setState(() {
-      _filter.text = numBoucle;
-      this._presenter.filtre(numBoucle);
-    });
+    if (mounted)
+      setState(() {
+        _filter.text = numBoucle;
+        this._presenter.filtre(numBoucle);
+      });
   }
 
   Widget _buildList(BuildContext context) {

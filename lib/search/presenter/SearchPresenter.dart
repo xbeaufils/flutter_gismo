@@ -3,6 +3,7 @@ import 'dart:developer' as debug;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bluetooth_classic_serial/flutter_bluetooth_classic.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/individu/ui/EchoPage.dart';
 import 'package:flutter_gismo/individu/ui/NECPage.dart';
@@ -31,7 +32,37 @@ class SearchPresenter {
 
   SearchPresenter(this._view){
     debug.log("Constructor", name: "SearchPresenter::SearchPresenter");
+    if (_blService.connectedDevice != null) {
+      this._blService.init(onConnectionStateChanged, onConnectionError, onDataReceived);
+      this._view.bluetoothState = BluetoothConnectionState(isConnected: true,
+          deviceAddress: _blService.connectedDevice!.address,
+          status: "CONNECTED");
+    }
   }
+  void onConnectionStateChanged(BluetoothConnectionState state) {
+    debug.log("state " + state.status + " " + state.isConnected.toString(), name: "BluetoothPresenter::onConnectionStateChanged");
+    if (state.status.startsWith("ERR")) {
+      state = BluetoothConnectionState(isConnected: false,
+          deviceAddress: state.deviceAddress,
+          status: "ERROR");
+    }
+    this._view.bluetoothState = state;
+  }
+
+  void onConnectionError(error) {
+    debug.log("error " + error.toString(), name: "SearchPresenter::onConnectionError");
+  }
+
+  void onDataReceived(BluetoothData data) {
+    String _foundBoucle = data.asString().trim();
+    if (_foundBoucle.length > 15)
+      _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
+    _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 5);
+    debug.log("received " + _foundBoucle, name: "SearchPresenter::onDataReceived");
+    _filter.text = _foundBoucle;
+    this._view.setBoucle(_foundBoucle);
+  }
+
 
   void filtre(String searchText) {
     _filteredBetes.clear();
@@ -112,7 +143,6 @@ class SearchPresenter {
       String ? message = await this._view.goNextPage(page);
       if (message != null)
         this._view.showMessage(message);
-      this.startService();
     }
   }
 
@@ -132,7 +162,7 @@ class SearchPresenter {
     }*/
   }
 
-  void handleBlueTooth(StatusBlueTooth event) {
+ /* void handleBlueTooth(StatusBlueTooth event) {
     if ( event.connectionStatus != null)
     debug.log("Status " + event.connectionStatus!, name: "SearchPresenter::handleBlueTooth");
       if (this._view.bluetoothState.dataStatus != event.dataStatus
@@ -149,8 +179,9 @@ class SearchPresenter {
         }
         this._view.bluetoothState = event;
       }
-  }
 
+  }
+  */
   void dispose() {
     /*
     if ((defaultTargetPlatform == TargetPlatform.android)) {

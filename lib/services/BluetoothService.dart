@@ -74,16 +74,25 @@ enum   BluetoothAdapter{
 }
 
 class BluetoothGismoService {
+  // Singleton instance
+  static final BluetoothGismoService _instance = BluetoothGismoService._internal();
+
+  // Private constructor
+  BluetoothGismoService._internal();
+
+  // Factory constructor returns the same instance every time
+  factory BluetoothGismoService() => _instance;
+
   bool _streamStatus = false;
 
   final FlutterBluetoothClassic _bluetooth = FlutterBluetoothClassic();
   BluetoothConnectionState? _connectionState;
   List<BluetoothDevice> _pairedDevices = [];
-  BluetoothDevice? _connectedDevice;
+  DeviceModel? _connectedDevice;
 
-  BluetoothDevice ? get connectedDevice  => _connectedDevice;
+  DeviceModel ? get connectedDevice  => _connectedDevice;
 
-  set connectedDevice(BluetoothDevice ? value) {
+  set connectedDevice(DeviceModel ? value) {
     _connectedDevice = value;
   }
 
@@ -93,8 +102,7 @@ class BluetoothGismoService {
 
   String _receivedData = '';
 
-  void init (Function onConnectionStateChanged , Function onConnectionError,
-      Function onDataReceived(BluetoothData)?) {
+  void init (Function onConnectionStateChanged , Function onConnectionError, Function onDataReceived) {
     // Listen for Bluetooth state changes
     this._stateSubscription = _bluetooth.onStateChanged.listen(
       (state) {
@@ -108,16 +116,16 @@ class BluetoothGismoService {
     _connectionSubscription = _bluetooth.onConnectionChanged.listen(
       (BluetoothConnectionState state) => onConnectionStateChanged(state),
       onError: (error) {
-        debugPrint('Connection state error: $error');
+        debug.log('Connection state error: $error');
         return BluetoothConnectionState(deviceAddress: "", isConnected: false, status: "ERROR");
       },
     );
 
     // Listen for incoming data
     _dataSubscription = _bluetooth.onDataReceived.listen(
-      onDataReceived,
+      (BluetoothData data) => onDataReceived(data),
       onError: (error) {
-        debugPrint('Data received error: $error');
+        debug.log('Data received error: $error');
       },
     );
   }
@@ -125,10 +133,11 @@ class BluetoothGismoService {
   StreamSubscription<StatusBlueTooth> ? _bluetoothStatusSubscription;
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
 
-  Future<bool> connect(String address) async {
+  Future<bool> connect(DeviceModel device) async {
     try {
-      bool status = await _bluetooth.connect(address);
-      this._connectedDevice = _pairedDevices.firstWhere((device) => device.address == address);
+      bool status = await _bluetooth.connect(device.address);
+      if (status)
+        this._connectedDevice =  device;
       return status;
      } on BluetoothException catch (ex)  {
       debug.log(ex.message, name: "BluetoothGismoService::connect");
@@ -139,6 +148,7 @@ class BluetoothGismoService {
 
   Future<bool> disconnect() async {
     bool status = await _bluetooth.disconnect();
+    this._connectedDevice = null;
     return status;
   }
 
