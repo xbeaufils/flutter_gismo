@@ -140,9 +140,8 @@ class SearchPresenter {
           return;
         if (event.dataStatus == 'AVAILABLE') {
           String _foundBoucle = event.data!;
-          if (_foundBoucle.length > 15)
-            _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
-          _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 5);
+          _foundBoucle = _foundBoucle.substring(7, 22);
+          _foundBoucle = _foundBoucle.substring(10);
           _filter.text = _foundBoucle;
           this._view.setBoucle(_foundBoucle);
         }

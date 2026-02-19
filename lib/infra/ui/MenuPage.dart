@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class GismoDrawer extends StatelessWidget {
   GismoDrawer();
@@ -22,10 +23,32 @@ class GismoDrawer extends StatelessWidget {
               ),
               _showConfig(context),
               _showBlueTooth(context),
+              Divider(),
+              _packageInfo()
           ]),
     ]));
   }
 
+  Widget _packageInfo() {
+    return FutureBuilder(
+      builder: (context, AsyncSnapshot info){
+        if (info.data == null)
+          return Container();
+        return Card(
+          child: ListTile(
+              title: Text("Version " + info.data.version ),
+              subtitle: Text("BuildNumber " + info.data.buildNumber),)
+        );
+      },
+      future: _getPackage(),
+    );
+
+  }
+
+  Future<PackageInfo> _getPackage() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    return packageInfo;
+  }
   Widget _showConfig(BuildContext context) {
     if (kIsWeb)
       return Container();
@@ -74,7 +97,7 @@ class GismoDrawer extends StatelessWidget {
       userName = new Text(AuthService().email!);
       cheptel = new Text(AuthService().cheptel!);
     }
-    return DrawerHeader(
+      return DrawerHeader(
       decoration: BoxDecoration(
         color: Colors.lightGreen,
       ),
