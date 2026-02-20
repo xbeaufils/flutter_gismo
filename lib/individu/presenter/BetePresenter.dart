@@ -5,7 +5,7 @@ import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/ui/Bete.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/BuetoothModel.dart';
+import 'package:flutter_gismo/model/BoucleModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/services/BeteService.dart';
 import 'package:flutter_gismo/services/BluetoothService.dart';
@@ -98,9 +98,7 @@ class BetePresenter {
       if(event.connectionStatus == 'NONE')
         return;
       if (event.dataStatus == 'AVAILABLE') {
-        String _foundBoucle = event.data!;
-        if (_foundBoucle.length > 15)
-          _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
+        BoucleModel _foundBoucle = BoucleModel(event.data!);
         this._view.updateBoucle(_foundBoucle);
       }
       this._view.bluetoothState = event;

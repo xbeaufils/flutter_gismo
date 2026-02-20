@@ -4,11 +4,10 @@ import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gismo/core/device/BluetoothMgr.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/BuetoothModel.dart';
+import 'package:flutter_gismo/model/BoucleModel.dart';
 import 'package:flutter_gismo/individu/presenter/BetePresenter.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
@@ -36,7 +35,7 @@ abstract class BeteContract extends GismoContract {
 
   set bluetoothState(StatusBlueTooth value);
 
-  void updateBoucle(String _foundBoucle);
+  void updateBoucle(BoucleModel _foundBoucle);
 }
 
 class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
@@ -278,19 +277,11 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
      });
    }
 
-  void updateBoucle(String _foundBoucle) {
-    if ( _foundBoucle != null) {
-      if (_foundBoucle.length > 15)
-        _foundBoucle = _foundBoucle.substring(
-            _foundBoucle.length - 15);
-      setState(() {
-        _numBoucleCtrl.text =
-            _foundBoucle.substring(_foundBoucle.length - 5);
-        _numMarquageCtrl.text = _foundBoucle.substring(
-            0, _foundBoucle.length - 5);
-
-      });
-    }
+  void updateBoucle(BoucleModel _foundBoucle) {
+    setState(() {
+      _numBoucleCtrl.text = _foundBoucle.ordre;
+      _numMarquageCtrl.text = _foundBoucle.marquage;
+    });
   }
 
 }

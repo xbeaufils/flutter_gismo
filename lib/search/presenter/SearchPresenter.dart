@@ -12,6 +12,7 @@ import 'package:flutter_gismo/individu/ui/TimeLine.dart';
 import 'package:flutter_gismo/lamb/ui/lambing.dart';
 import 'package:flutter_gismo/memo/ui/MemoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/BoucleModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:flutter_gismo/services/BeteService.dart';
@@ -139,11 +140,9 @@ class SearchPresenter {
         if(event.connectionStatus == 'NONE')
           return;
         if (event.dataStatus == 'AVAILABLE') {
-          String _foundBoucle = event.data!;
-          _foundBoucle = _foundBoucle.substring(7, 22);
-          _foundBoucle = _foundBoucle.substring(10);
-          _filter.text = _foundBoucle;
-          this._view.setBoucle(_foundBoucle);
+          BoucleModel boucle= BoucleModel(event.data!);
+          _filter.text = boucle.ordre;
+          this._view.setBoucle(boucle.ordre);
         }
         this._view.bluetoothState = event;
       }
