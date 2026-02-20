@@ -34,7 +34,7 @@ void startApp()
     }
     // Pass your access token to MapboxOptions so you can load a map
     String ACCESS_TOKEN = const String.fromEnvironment("map_box_token");
-    // MapboxOptions.setAccessToken("pk.eyJ1IjoieGJlYXUiLCJhIjoiY2s4anVjamdwMGVsdDNucDlwZ2I0bGJwNSJ9.lc21my1ozaQZ2-EriDSY5w");
+
 
     Environnement.init(
     //    "https://www.neme-sys.fr/bd", "http://10.0.2.2:8080/gismoApp/api",
