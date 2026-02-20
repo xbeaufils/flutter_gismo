@@ -7,6 +7,7 @@ import 'RobotTest.dart';
 
 class RobotTestMouvement extends RobotTest {
 
+
   RobotTestMouvement(WidgetTester tester) : super(tester);
 
 
@@ -17,8 +18,9 @@ class RobotTestMouvement extends RobotTest {
     await tester.pumpAndSettle();
     DateTime now = DateTime.now();
     expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
+    DateTime entreeDate = frenchForm.parse(entree["date"] + now.year.toString());
     await tester.enterText(
-        find.text(DateFormat.yMd().format(now)), entree["date"]);
+        find.text(DateFormat.yMd().format(now)), DateFormat.yMd().format(entreeDate));
     final dropDown = find.byKey(Key("Motif_Key"));
     await tester.tap(dropDown);
     await tester.pump();
@@ -64,8 +66,9 @@ class RobotTestMouvement extends RobotTest {
     await tester.pumpAndSettle();
     DateTime now = DateTime.now();
     expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
+    DateTime sortieDate = frenchForm.parse(sortie["dateSortie"] + now.year.toString());
     await tester.enterText(
-        find.text(DateFormat.yMd().format(now)), sortie["dateSortie"]);
+        find.text(DateFormat.yMd().format(now)), DateFormat.yMd().format(sortieDate));
     final dropDown = find.byKey(Key("motifSortie"));
     await tester.tap(dropDown);
     await tester.pump();

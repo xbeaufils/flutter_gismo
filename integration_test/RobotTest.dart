@@ -5,8 +5,12 @@ import 'package:flutter_gismo/flavor/FlavorOvin.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/infra/ui/welcome.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 
 class RobotTest {
+
+  DateFormat frenchForm = DateFormat("dd/MM/yyyy");
+
   WidgetTester _tester;
 
   WidgetTester get tester => _tester;

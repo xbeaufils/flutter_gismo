@@ -33,7 +33,8 @@ class RobotPeseeTest extends RobotTest {
     Finder datePeseeFinder = find.byWidgetPredicate(
             (Widget widget) => widget is TextFormField && widget.controller!.text == DateFormat.yMd().format(now));
     expect(datePeseeFinder,findsOneWidget);
-    await tester.enterText(datePeseeFinder, pesee["date"]);
+    DateTime datePesee = frenchForm.parse(pesee["date"] + now.year.toString());
+    await tester.enterText(datePeseeFinder, DateFormat.yMd().format(datePesee));
     await tester.pumpAndSettle();
     Finder poidsTxt = find.ancestor(of: find.text(S.current.weight),matching: find.byType(TextFormField),);
     await tester.enterText(poidsTxt, pesee["poids"]);

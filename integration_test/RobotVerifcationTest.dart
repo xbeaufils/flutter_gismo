@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 
 import 'RobotTest.dart';
 
@@ -39,7 +40,7 @@ class RobotVerificationTest extends RobotTest {
   }
 
   Future<void> _lot(Map<String, dynamic> lot) async {
-    this._verify("assets/Lot_entree.png", lot["debut"], lot["nom"]);
+    this._verify("assets/Lot_entree.png",  lot["nom"], lot["debut"]);
   }
 
   Future<void> _pesee(Map<String, dynamic> pesee) async {
@@ -55,11 +56,13 @@ class RobotVerificationTest extends RobotTest {
   }
 
   Future<void> _verify(String image, String searchText, String searchDate) async {
+    DateTime now = DateTime.now();
+    DateTime date = frenchForm.parse(searchDate + now.year.toString());
     Finder tile = find.ancestor(
         of: find.image(AssetImage(image)), matching: find.byType(ListTile));
     expect(find.descendant(of: tile, matching: find.text(searchText)),
         findsOneWidget);
-    expect(find.descendant(of: tile, matching: find.text(searchDate)),
+    expect(find.descendant(of: tile, matching: find.text(DateFormat.yMd().format(date))),
         findsOneWidget);
   }
 }

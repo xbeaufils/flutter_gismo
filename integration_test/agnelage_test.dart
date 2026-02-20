@@ -26,8 +26,9 @@ class RobotTestAgnelage extends RobotTest {
                     widget.controller!.text == DateFormat.yMd().format(now)),
             findsOneWidget);
         expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
+        DateTime lambingDate = frenchForm.parse(lambing["date"] + now.year.toString());
         await tester.enterText(
-            find.text(DateFormat.yMd().format(now)), lambing["date"]);
+            find.text(DateFormat.yMd().format(now)), DateFormat.yMd().format(lambingDate));
 
         await tester.tap(find.byKey(Key("btQualite")));
         await tester.pumpAndSettle();
@@ -96,8 +97,9 @@ class RobotTestAgnelage extends RobotTest {
             widget is TextFormField &&
                 widget.controller!.text == DateFormat.yMd().format(now)),
         findsOneWidget);
+    DateTime mortDate = frenchForm.parse(lamb["date"] + now.year.toString());
     await tester.enterText(
-        find.text(DateFormat.yMd().format(now)), lamb["date"]);
+        find.text(DateFormat.yMd().format(now)), DateFormat.yMd().format(mortDate));
     final dropDown = find.byKey(Key("Motif_Key"));
     await tester.tap(dropDown);
     await tester.pump(

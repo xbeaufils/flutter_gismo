@@ -111,7 +111,7 @@ class _MortPageState extends  GismoStatePage<MortPage> implements MortContract {
                                 lastDate: DateTime(2100));
                             if (date != null) {
                               setState(() {
-                                _dateMortCtl.text = _df.format(date!);
+                                _dateMortCtl.text =  DateFormat.yMd().format(date!);
                               });
                             }
                           })),
@@ -144,7 +144,7 @@ class _MortPageState extends  GismoStatePage<MortPage> implements MortContract {
   @override
   void initState() {
     super.initState();
-    _dateMortCtl.text = _df.format(DateTime.now());
+    _dateMortCtl.text =  DateFormat.yMd().format(DateTime.now());
   }
 
 }

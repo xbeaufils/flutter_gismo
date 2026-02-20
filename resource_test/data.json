@@ -1,7 +1,7 @@
 {
   "entree": {
     "motif": "Creation",
-    "date" : "05/03/2025",
+    "date" : "05/03/",
     "betes": [
         {
           "numBoucle": "123",
@@ -29,7 +29,7 @@
   "agnelages" : {
     "create": [
       {
-        "date" : "12/08/2025",
+        "date" : "12/08/",
         "numero mere" : "123",
         "qualite" : "3",
         "adoption" : "2",
@@ -49,7 +49,7 @@
         ]
       },
       {
-        "date" : "15/08/2025",
+        "date" : "15/08/",
         "numero mere" : "456",
         "qualite" : "3",
         "adoption" : "2",
@@ -69,7 +69,7 @@
         ]
       }],
     "mort" : {
-      "date" : "22/08/2025",
+      "date" : "22/08/",
       "numero" : "123-1",
       "cause" : "Accident"
     },
@@ -82,7 +82,7 @@
       },
       {
         "numero" : "456-1",
-        "date" : "22/08/2025",
+        "date" : "22/08/",
         "num_boucle" : "852",
         "num_marquage" : "456789"
       },
@@ -99,21 +99,21 @@
     "agneau":
       {
         "numero" : "123-2",
-        "date" : "24/10/2025",
+        "date" : "24/10/",
         "poids" :"25.2"
       },
     "brebis" :
       {
         "numero" :"456",
-        "date" : "24/10/2025",
+        "date" : "24/10/",
         "poids" : "69.2"
       }
   },
   "Lot" : {
     "create" : {
       "nom": "Test",
-      "debut": "18/03/2026",
-      "fin": "06/04/2026",
+      "debut": "18/03/",
+      "fin": "06/04/",
       "brebis": [
         {
           "numero": "456"
@@ -126,7 +126,7 @@
     "modification": {
       "nom": "Test",
       "bete" : "456",
-      "fin": "01/04/2025"
+      "fin": "01/04/"
     }
   },
   "traitements" : {
@@ -146,8 +146,8 @@
           "rythme": "2 f/j"
         }
       ],
-      "debut" : "11/05/2025",
-      "fin" : "16/05/2025",
+      "debut" : "11/05/",
+      "fin" : "16/05/",
       "ordonnance": "ORD-12345",
       "motif" : "bobo",
       "observation": "RAS",
@@ -160,8 +160,8 @@
           "nouveau": "Metacam"
         },
         "debut" : {
-          "ancien": "11/05/2025",
-          "nouveau": "12/05/2025"
+          "ancien": "11/05/",
+          "nouveau": "12/05/"
         }
     },
     "create_agneau": {
@@ -170,8 +170,8 @@
       "voie" :  "IM",
       "dose" :  "2cc",
       "rythme": "1 f/j",
-      "debut" : "11/05/2025",
-      "fin" : "16/05/2025",
+      "debut" : "11/05/",
+      "fin" : "16/05/",
       "ordonnance": "ORD-12345",
       "motif" : "bobo",
       "observation": "RAS",
@@ -180,8 +180,8 @@
   },
   "echo" : {
     "numero": "123",
-    "dateEcho" : "21/06/2025",
-    "dateSaillie": "21/04/2025",
+    "dateEcho" : "21/06/",
+    "dateSaillie": "21/04/",
     "nombre" : 1
 
   },
@@ -190,34 +190,34 @@
       "bete": "123",
       "agnelage": {
         "nombre": "2",
-        "date": "12/08/2025"
+        "date": "12/08/"
       },
       "traitement": {
         "medicament": "Metacam",
-        "date": "12/05/2025"
+        "date": "12/05/"
       },
       "echo": {
-        "date": "21/06/2025",
+        "date": "21/06/",
         "nombre": "1"
       }
     },
     {
       "bete" : "456",
       "agnelage" : {
-        "date": "15/08/2025",
+        "date": "15/08/",
         "nombre": "2"
       },
       "lot" : {
-        "debut": "18/03/2026",
+        "debut": "18/03/",
         "nom": "Test"
       },
       "pesee": {
-        "date": "24/10/2025" ,
+        "date": "24/10/" ,
         "poids": "69.2"
       }
     }],
   "sortie" : {
-    "dateSortie" : "21/11/2025",
+    "dateSortie" : "21/11/",
     "motif" : "vente",
     "betes": [
       { "numero": "147"},
