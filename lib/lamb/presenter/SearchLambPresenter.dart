@@ -16,6 +16,9 @@ class SearchLambPresenter {
     if (newLamb == null)
       return;
     //this._service.saveLamb(newLamb);
+    this.getLambs();
+    this._view.hideSaving();
+    /*
     this._lambs.forEach((aLamb) {
       if (aLamb.idBd == newLamb.idBd) {
         aLamb.sex = newLamb.sex;
@@ -27,6 +30,7 @@ class SearchLambPresenter {
         aLamb.numMarquage = newLamb.numMarquage;
       }
     });
+    */
   }
 
   void deleteLamb(CompleteLambModel lamb) async {

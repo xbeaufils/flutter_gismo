@@ -7,6 +7,7 @@ import 'package:flutter_gismo/lamb/ui/Bouclage.dart';
 import 'package:flutter_gismo/lamb/ui/LambPage.dart';
 import 'package:flutter_gismo/lamb/ui/LambTimeLine.dart';
 import 'package:flutter_gismo/lamb/ui/Mort.dart';
+import 'package:flutter_gismo/lamb/ui/SearchLambPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BoucleModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
@@ -32,18 +33,26 @@ class LambTimeLinePresenter {
     if (bete == null)
       return;
     try {
-      this.service.boucler(lamb, bete);
-      if (bete.idBd != null)
-        lamb.idDevenir = bete.idBd;
-      lamb.numBoucle = bete.numBoucle;
-      lamb.numMarquage = bete.numMarquage;
+      String ? message = await this.service.boucler(lamb, bete);
+      if (message != null) {
+        this._view.showMessage(message);
+        this._view.backWithObject(lamb);
+      }
     } on GismoException catch (e) {
       this._view.showMessage(e.message, true);
     }
   }
 
-  void mort(LambModel lamb) {
-    this._view.goNextPage( MortPage(lamb));
+  void mort(LambModel lamb) async {
+    try {
+      String ? message = await this._view.goNextPage( MortPage(lamb));
+      if (message != null) {
+        this._view.showMessage(message);
+        this._view.backWithObject(lamb);
+      }
+    } on GismoException catch (e) {
+      this._view.showMessage(e.message, true);
+    }
   }
 
   void peser(LambModel lamb) async {
@@ -92,8 +101,9 @@ class BouclagePresenter {
     lamb.numMarquage = numMarquage;
     lamb.numBoucle = numBoucle;
     Bete bete = new Bete(null, numBoucle, numMarquage, null, null, null, lamb.sex, 'NAISSANCE');
-    this._view.returnBete(bete);
+    this._view.backWithObject(bete);
   }
+
   Future<void> startReadBluetooth() async {
     try {
       StatusBlueTooth status =  await _blService.startReadBluetooth();
@@ -135,12 +145,11 @@ class DeathPresenter {
 
   DeathPresenter(this._view);
 
-  Future<String> saveDeath(LambModel lamb, String dateMort, String? motif) async {
+  Future<void> saveDeath(LambModel lamb, String dateMort, String? motif) async {
     try {
       _view.showSaving();
-      return this._save(lamb, dateMort, motif);
-      _view.hideSaving();
-
+      String ? message =  await this._save(lamb, dateMort, motif);
+      _view.backWithObject(message);
     } on GismoException catch(e) {
       this._view.showMessage(e.message, true);
     }  on MissingDeathDateException {
@@ -148,7 +157,6 @@ class DeathPresenter {
     } on MissingMotifException {
       this._view.showMessage(S.current.death_cause_mandatory, true);
     }
-    throw Exception();
   }
 
   Future<String> _save(LambModel lamb, String dateMort, String? motif) async {

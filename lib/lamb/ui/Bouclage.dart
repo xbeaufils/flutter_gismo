@@ -2,6 +2,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BoucleModel.dart';
@@ -20,14 +21,14 @@ class BouclagePage extends StatefulWidget {
   _BouclagePageState createState() => new _BouclagePageState();
 }
 
-abstract class BouclageContract {
+abstract class BouclageContract  extends GismoContract {
   void returnBete(Bete bete);
   StatusBlueTooth get  bluetoothState;
   set bluetoothState(StatusBlueTooth value);
   updateBoucle (BoucleModel numBoucle);
 }
 
-class _BouclagePageState extends State<BouclagePage> implements BouclageContract {
+class _BouclagePageState extends GismoStatePage<BouclagePage> implements BouclageContract {
   final df = new DateFormat('dd/MM/yyyy');
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();

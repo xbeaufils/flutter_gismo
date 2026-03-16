@@ -15,16 +15,10 @@ abstract class GismoContract {
   Future<dynamic> showDialogOkCancel();
 }
 
-class GismoStatePage<T extends StatefulWidget> extends  State<T> {
+abstract class GismoStatePage<T extends StatefulWidget> extends  State<T> {
   bool _isSaving = false;
 
   bool get isSaving => _isSaving;
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
 
   Future<dynamic> goNextPage(StatefulWidget page) {
     return Navigator.push(
@@ -35,17 +29,18 @@ class GismoStatePage<T extends StatefulWidget> extends  State<T> {
   }
 
   Future goDialog(StatefulWidget page) async {
-    int ? qualiteAgnelage = await Navigator.of(context).push(new MaterialPageRoute<int>(
+    int ? answer = await Navigator.of(context).push(new MaterialPageRoute<int>(
         builder: (BuildContext context) {
           return page;
         },
         fullscreenDialog: true
     ));
-    return qualiteAgnelage;
+    return answer;
    }
 
   void showMessage(String message, [bool error = false]) {
-    ScaffoldMessenger.of(context).showSnackBar(this._buildSnackBar(message, error));
+    if (mounted && context.mounted)
+      ScaffoldMessenger.of(context).showSnackBar(this._buildSnackBar(message, error));
   }
 
   void backWithObject(Object object) {

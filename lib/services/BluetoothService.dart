@@ -82,7 +82,9 @@ class BluetoothService {
     if (this._bluetoothReadSubscription != null)
       this._bluetoothReadSubscription!.cancel();
     this._streamStatus = false;
-    this._mgr.stopReadBluetooth();
+    if ((defaultTargetPlatform == TargetPlatform.android)) {
+      this._mgr.stopReadBluetooth();
+    }
   }
 
   void stopStream() {
