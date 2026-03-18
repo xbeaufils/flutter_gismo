@@ -30,9 +30,10 @@ class _SearchLambPageState extends GismoStatePage<SearchLambPage> implements Sea
   List<CompleteLambModel> get filteredLambs => _filteredLambs;
 
   set filteredLambs(List<CompleteLambModel> value) {
-    setState(() {
-      _filteredLambs = value;
-    });
+    if (mounted)
+      setState(() {
+        _filteredLambs = value;
+      });
   }
 
   _SearchLambPageState() {

@@ -15,7 +15,7 @@ abstract class LambRepository {
   Future<String> deleteLamb(int idBd);
   Future<LambingModel?> searchLambing(int idBd);
   Future<List<CompleteLambModel>> getAllLambs(String cheptel);
-  Future<List<LambingModel>> getLambs(int idBete) ;
+  Future<List<LambingModel>> getLambings(int idBete) ;
   Future<String> boucler(LambModel lamb, Bete bete);
   Future<void> mort(LambModel lamb, String motif, String date);
   Future<List<Bete>> getSaillieBeliers(LambingModel lambing);
@@ -133,9 +133,9 @@ class WebLambRepository extends WebRepository implements LambRepository {
     return tempList;
   }
   @override
-  Future<List<LambingModel>> getLambs(int idBete) async {
+  Future<List<LambingModel>> getLambings(int idBete) async {
     final response = await super.doGetList(
-        '/lamb/searchAll?idMere=' + idBete.toString());
+        '/lamb/mere/' + idBete.toString());
     List<LambingModel> tempList = [];
     for (int i = 0; i < response.length; i++) {
       tempList.add(new LambingModel.fromResult(response[i]));
@@ -303,7 +303,7 @@ class LocalLambRepository extends LocalRepository implements LambRepository {
   }
 
   @override
-  Future<List<LambingModel>> getLambs(int idBete) async {
+  Future<List<LambingModel>> getLambings(int idBete) async {
     List<LambingModel> tempList = [];
     try {
       Database db = await this.database;

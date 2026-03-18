@@ -44,19 +44,30 @@ class LambingPage extends StatefulWidget {
 }
 
 abstract class LambingContract extends GismoContract {
-  Future<Bete ?> searchPere();
-  Future<Bete ?> showPerePage();
-  Future<LambModel?> addLamb();
   void refreshLambing(LambingModel _lambing);
-  Future<LambModel?> editLamb (LambModel lamb, String dateNaissance);
   LambingModel get currentLambing;
+  set adoption(AdoptionEnum value);
+  AdoptionEnum get adoption;
+  set agnelage(AgnelageEnum value);
+  AgnelageEnum get agnelage;
 }
 
 class _LambingPageState extends GismoStatePage<LambingPage> implements LambingContract {
   late LambingPresenter _presenter;
 
   AdoptionEnum _adoption = AdoptionEnum.level0;
+  AdoptionEnum get adoption => _adoption;
+  set adoption(AdoptionEnum value) {
+    _adoption = value;
+  }
+
   AgnelageEnum _agnelage = AgnelageEnum.level0;
+  AgnelageEnum get agnelage => _agnelage;
+  set agnelage(AgnelageEnum value) {
+    setState(() {
+      _agnelage = value;
+    });
+  }
 
   TextEditingController _dateAgnelageCtl = TextEditingController();
   TextEditingController _obsCtl = TextEditingController();
@@ -130,11 +141,11 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
                     ListTile(
                       title: Text(S.of(context).lambing_quality) ,
                       subtitle: Text(_agnelage.key.toString() + " : " + transAgnelage.translate(_agnelage)),
-                      trailing: new IconButton(key: Key("btQualite"), onPressed: _openAgnelageDialog, icon: new Icon(Icons.create)),),
+                      trailing: new IconButton(key: Key("btQualite"), onPressed: this._presenter.selectQualite, icon: new Icon(Icons.create)),),
                     ListTile(
                       title: Text(S.of(context).adoption_quality) ,
                       subtitle: Text(_adoption.key.toString() + " : " + transAdoption.translate(_adoption)),
-                      trailing: new IconButton(key: Key("btAdoption"), onPressed: _openAdoptionDialog, icon: new Icon(Icons.create)),),
+                      trailing: new IconButton(key: Key("btAdoption"), onPressed: this._presenter.selectAdoption, icon: new Icon(Icons.create)),),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child:
@@ -171,18 +182,11 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
         ) ,
         floatingActionButton: (currentLambing.idBd == null)?
           FloatingActionButton(
-            onPressed: _openAddEntryDialog,
+            onPressed: this._presenter.addLamb,
             tooltip: S.of(context).add_lamb,
             child: new Icon(Icons.add),
           ): null,
     );
-  }
-
-  void _addLamb(LambModel newLamb){
-    setState(() {
-      _presenter.currentLambing.lambs.add(newLamb);
-      //_lambs.add(newLamb);
-    });
   }
 
   Widget _buildPereWidget() {
@@ -197,79 +201,6 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
         trailing: (currentLambing.idPere == null ) ?
         IconButton(icon: Icon(Icons.search), onPressed: () => this._presenter.addPere(), ):
         IconButton(icon: Icon(Icons.close), onPressed: () => this._presenter.removePere(), ),);
-  }
-
-
-  Future<Bete ?> showPerePage() async {
-    Bete ? pere = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SearchPerePage( currentLambing),
-      ),
-    );
-    return pere;
-  }
-
-  Future<Bete ?> searchPere() async {
-    Bete ? pere = await Navigator.of(context).push(new MaterialPageRoute<Bete>(
-        builder: (BuildContext context) {
-          SearchPage search = new SearchPage( GismoPage.sailliePere);
-          search.searchSex = Sex.male;
-          return search;
-        },
-        fullscreenDialog: true
-    ));
-    return pere;
-  }
-
-  Future<LambModel?> addLamb() async {
-    LambModel? newLamb = await Navigator.of(context).push(new MaterialPageRoute<LambModel>(
-        builder: (BuildContext context) {
-          return new LambPage(); // AddingLambDialog(this._bloc);
-        },
-        fullscreenDialog: true
-    ));
-    return newLamb;
-  }
-
-  Future _openAddEntryDialog() async {
-    LambModel? newLamb = await Navigator.of(context).push(new MaterialPageRoute<LambModel>(
-        builder: (BuildContext context) {
-          return new LambPage(); // AddingLambDialog(this._bloc);
-        },
-        fullscreenDialog: true
-    ));
-    if (newLamb != null) {
-      _addLamb(newLamb);
-    }
-  }
-
-  Future _openAdoptionDialog() async {
-    int ? qualiteAdoption = await Navigator.of(context).push(new MaterialPageRoute<int>(
-        builder: (BuildContext context) {
-          return new AdoptionDialog(this._adoption.key);
-        },
-        fullscreenDialog: true
-    ));
-    if (qualiteAdoption != null) {
-      setState(() {
-        _adoption = AdoptionHelper.getAdoption(qualiteAdoption);
-      });
-    }
-  }
-
-  Future _openAgnelageDialog() async {
-    int ? qualiteAgnelage = await Navigator.of(context).push(new MaterialPageRoute<int>(
-        builder: (BuildContext context) {
-          return new AgnelageDialog(this._agnelage.key);
-        },
-        fullscreenDialog: true
-    ));
-    if (qualiteAgnelage != null) {
-      setState(() {
-        _agnelage = AgnelageHelper.getAgnelage(qualiteAgnelage);
-      });
-    }
   }
 
   @override
@@ -319,16 +250,7 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
     return
       IconButton(
         icon: new Icon(Icons.keyboard_arrow_right),
-        onPressed: () { this._presenter.editLamb(lamb, this._dateAgnelageCtl.text);},);
-  }
-
-  Future<LambModel?> editLamb (LambModel lamb, String dateNaissance) async {
-    LambModel? newLamb = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => LambPage.edit( lamb)),
-    );
-    return newLamb;
+        onPressed: () { this._presenter.editLamb(lamb);},);
   }
 
   Widget _lambList() {
@@ -344,6 +266,8 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
 
     });
   }
+
+
 
 }
 

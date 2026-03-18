@@ -7,7 +7,6 @@ import 'package:flutter_gismo/lamb/ui/Bouclage.dart';
 import 'package:flutter_gismo/lamb/ui/LambPage.dart';
 import 'package:flutter_gismo/lamb/ui/LambTimeLine.dart';
 import 'package:flutter_gismo/lamb/ui/Mort.dart';
-import 'package:flutter_gismo/lamb/ui/SearchLambPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BoucleModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';

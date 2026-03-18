@@ -128,7 +128,7 @@ class BeteService {
     try {
       List<Event> lstEvents = [];
       debug.log("get lambs", name: "BeteService::getEvents");
-      List<LambingModel> lstLambs = await this._lambRepository.getLambs(bete.idBd!);
+      List<LambingModel> lstLambs = await this._lambRepository.getLambings(bete.idBd!);
       debug.log("get traitements", name: "BeteService::getEvents");
       List<TraitementModel> lstTraitement = await this._traitementrepository.getTraitements(bete);
       debug.log("get lots", name: "BeteService::getEvents");

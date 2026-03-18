@@ -79,7 +79,14 @@ class RobotTestAgnelage extends RobotTest {
           await tester.tap( find.text(S.current.bt_add));
           await tester.pumpAndSettle(const Duration(seconds: 1));
         }
-        await tester.tap(find.text(S.current.validate_lambing));
+        final Finder scrollView = find.descendant(
+          of: find.byType(SingleChildScrollView),
+          matching: find.byType(Scrollable).at(0),
+        );
+        final Finder btnValidate = find.text(S.current.validate_lambing);
+        // Scroll until the item to be found appears.
+        await tester.scrollUntilVisible(btnValidate, 500.0, scrollable: scrollView);
+        await tester.tap(btnValidate);
         await tester.pumpAndSettle();
         await tester.pumpAndSettle(const Duration(seconds: 5));
       }
@@ -129,8 +136,6 @@ class RobotTestAgnelage extends RobotTest {
       await tester.tap(find.text(S.current.place_earring));
       await tester.pumpAndSettle();
       await tester.tap(find.backButton()); // Retour à la liste des agneaux
-      await tester.pumpAndSettle();
-      await tester.tap(find.backButton()); // Retour à la pacge d'accueil
       await tester.pumpAndSettle();
     }
   }

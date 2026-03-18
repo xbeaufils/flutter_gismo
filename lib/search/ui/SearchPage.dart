@@ -55,7 +55,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   void initState() {
     debug.log("Démarrage", name: "_SearchPageState::initState");
     this._presenter = SearchPresenter(this);
-    this._presenter.getBetes(null);
+    this._presenter.getBetes(this.widget.searchSex);
     if (AuthService().subscribe && defaultTargetPlatform == TargetPlatform.android)
       new Future.delayed(Duration.zero,() {
         this._presenter.startService();
@@ -207,16 +207,6 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
 
   void goPreviousPage(Bete bete) {
     Navigator.of(context).pop(bete);
-  }
-
-  Future<String?> goNextPage(StatefulWidget page) async {
-    String ? message = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => page,
-      ),
-    );
-    return message;
   }
 
   get nextPage => this.widget._nextPage;

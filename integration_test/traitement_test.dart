@@ -33,7 +33,13 @@ class RobotTestTraitement extends RobotTest {
         await tester.pumpAndSettle();
       }
       await this._tapeFiche(traitement);
-      await tester.tap(find.text(S.current.bt_save));
+      final Finder scrollView = find.descendant(
+        of: find.byType(SingleChildScrollView),
+        matching: find.byType(Scrollable).at(0),
+      );
+      final Finder btnValidate = find.text(S.current.bt_save);
+      await tester.scrollUntilVisible(btnValidate, 500.0, scrollable: scrollView);
+      await tester.tap(btnValidate);
       await tester.pumpAndSettle();
   }
 
@@ -77,7 +83,13 @@ class RobotTestTraitement extends RobotTest {
       DateTime nouveau = frenchForm.parse(traitement["debut"]["nouveau"] + _now.year.toString());
       await tester.enterText(find.text(DateFormat.yMd().format(ancien)), DateFormat.yMd().format(nouveau));
       await tester.pumpAndSettle();
-      await tester.tap(find.text(S.current.bt_save));
+      final Finder scrollView = find.descendant(
+        of: find.byType(SingleChildScrollView),
+        matching: find.byType(Scrollable).at(0),
+      );
+      final Finder btnValidate = find.text(S.current.bt_save);
+      await tester.scrollUntilVisible(btnValidate, 500.0, scrollable: scrollView);
+      await tester.tap(btnValidate);
       await tester.pumpAndSettle();
   }
 
