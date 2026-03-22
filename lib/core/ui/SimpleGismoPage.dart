@@ -44,7 +44,8 @@ abstract class GismoStatePage<T extends StatefulWidget> extends  State<T> {
   }
 
   void backWithObject(Object object) {
-    Navigator.of(context).pop( object);
+    if (mounted && context.mounted )
+      Navigator.of(context).pop( object);
   }
 
   void backWithMessage(String message, [bool error = false,]) {
