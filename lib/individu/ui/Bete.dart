@@ -48,6 +48,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   String ? _nom;
   String ? _obs;
   Sex ? _sex ;
+  Croix ? _croix ;
   String ? _motif;
 
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
@@ -102,7 +103,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child:
-                              TextField(
+                              TextField( /* Numéro boucle */
                                 controller: _numBoucleCtrl,
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
@@ -120,7 +121,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child:
-                              TextField(
+                              TextField( // Numéro Marquage
                                 controller: _numMarquageCtrl,
                                 decoration: InputDecoration(
                                     filled: true,
@@ -136,7 +137,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child:
-                        TextFormField(
+                        TextFormField( // Nom
                           //keyboardType: TextInputType.number,
                             initialValue: _nom,
                             decoration: InputDecoration(
@@ -167,6 +168,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                               ),
                           ),]
                       ),
+                      this._buildRace(),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child:
@@ -196,6 +198,57 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
 
   }
 
+  Widget _buildRace() {
+    return Card(
+      child: Column(children: [
+        Text(S.of(context).race),
+        Row(children: [
+          Flexible (child:
+            RadioListTile<Croix>(
+              title: Text("Pur"),
+              selected: _sex == Sex.male,
+              value: Croix.pur,
+              groupValue: _croix,
+              onChanged: (Croix ? value) { setState(() { _croix = value; }); },
+              )),
+          Flexible (child:
+            RadioListTile<Croix>(
+              title: Text("F1"),
+              selected: _sex == Sex.male,
+              value: Croix.F1,
+              groupValue: _croix,
+              onChanged: (Croix ? value) { setState(() { _croix = value; }); },
+            )),
+          Flexible (child:
+            RadioListTile<Croix>(
+            title: Text("F2"),
+            selected: _sex == Sex.male,
+            value: Croix.F2,
+              groupValue: _croix,
+              onChanged: (Croix ? value) { setState(() { _croix = value; }); },
+            )),
+          Flexible (child:
+            RadioListTile<Croix>(
+            title: Text("F3"),
+            selected: _sex == Sex.male,
+            value: Croix.F3,
+              groupValue: _croix,
+              onChanged: (Croix ? value) { setState(() { _croix = value; }); },
+            )),
+          Flexible (child:
+            RadioListTile<Croix>(
+              title: Text("F4"),
+              selected: _sex == Sex.male,
+              value: Croix.F4,
+              groupValue: _croix,
+              onChanged: (Croix ? value) { setState(() { _croix = value; }); },
+            )),
+
+        ],)
+      ],
+      )
+    );
+  }
   Widget _buildRfid() {
     if (AuthService().subscribe && this._rfidPresent) {
       return FloatingActionButton(

@@ -42,6 +42,7 @@
   "name" : "Name",
   "name_hint" : "Name",
   "identity_number_error" : "Identity number is already present",
+  "race": "Breed",
 
   "entree_select" : "Select an entry reason",
   "entree_reason_required" : "Entry reason is required",

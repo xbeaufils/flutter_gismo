@@ -36,6 +36,7 @@
    "identity_number_hint": "Ohrmarke",
    "enter_identity_number": "Geben Sie eine Ohrmarkennummer ein",
    "identity_number_warn": "Ohrmarkennummer fehlt",
+   "race": "Züchten",
    "sex_warn": "Geschlecht fehlt",
    "name": "Rufname",
    "name_hint": "Name",

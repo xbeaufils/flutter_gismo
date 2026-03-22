@@ -1,7 +1,9 @@
 import 'package:intl/intl.dart';
 
 enum Sex { male, femelle }
+enum Croix {pur, F1, F2, F3 , F4}
 //enum Motif_Entree {bouclage, achat}
+
 
 class Bete  {
   int ? _idBd;
@@ -97,3 +99,6 @@ class Bete  {
   }
 }
 
+class Race {
+  late Croix _croisement;
+}
