@@ -326,6 +326,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "provisional_number": MessageLookupByLibrary.simpleMessage(
       "Provisional number",
     ),
+    "race": MessageLookupByLibrary.simpleMessage("Breed"),
     "ram": MessageLookupByLibrary.simpleMessage("Ram"),
     "reason": MessageLookupByLibrary.simpleMessage("Reason"),
     "record_saved": MessageLookupByLibrary.simpleMessage("Record completed"),

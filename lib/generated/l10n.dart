@@ -339,6 +339,11 @@ class S {
     );
   }
 
+  /// `Breed`
+  String get race {
+    return Intl.message('Breed', name: 'race', desc: '', args: []);
+  }
+
   /// `Select an entry reason`
   String get entree_select {
     return Intl.message(

@@ -188,6 +188,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "provisional_number": MessageLookupByLibrary.simpleMessage(
       "Número provisional",
     ),
+    "race": MessageLookupByLibrary.simpleMessage("Criar"),
     "search": MessageLookupByLibrary.simpleMessage("Buscar"),
     "search_ram": MessageLookupByLibrary.simpleMessage("Buscar al semental"),
     "sex_warn": MessageLookupByLibrary.simpleMessage("Falta el sexo"),

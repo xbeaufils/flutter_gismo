@@ -344,6 +344,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "provisional_number": MessageLookupByLibrary.simpleMessage(
       "Numéro provisoire",
     ),
+    "race": MessageLookupByLibrary.simpleMessage("Race"),
     "ram": MessageLookupByLibrary.simpleMessage("Bélier"),
     "reason": MessageLookupByLibrary.simpleMessage("Motif"),
     "record_saved": MessageLookupByLibrary.simpleMessage(
