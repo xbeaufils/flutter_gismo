@@ -19,6 +19,7 @@ public class BluetoothReader extends Thread {
     private BluetoothSocket mmSocket;
     private Handler mHandler;
     private final static String TAG = "BluetoothRead" ;
+    private final static int CTRL_CHAR = 35;
     private AtomicBoolean reading = new AtomicBoolean(true);
 
     public BluetoothReader(BluetoothSocket socket, Handler handler) {
@@ -59,8 +60,10 @@ public class BluetoothReader extends Thread {
                              this.mHandler.obtainMessage(BluetoothMessage.READ.ordinal(), new String(buffer, 0, arr_byte.size())).sendToTarget();
                               arr_byte = new ArrayList<>();
                          } else {
-                             if (data > 16)
+                             if (data > 31)
                                  arr_byte.add(Integer.valueOf(data));
+                             else
+                                 arr_byte.add(CTRL_CHAR);
                          }
                      }
                  }
