@@ -42,7 +42,10 @@
   "name": "Nombre pequeño",
   "name_hint": "Apellido",
   "identity_number_error": "El número de bucle ya está presente",
-  "race": "Criar",
+  "race": "Raza",
+  "race_select": "Buscando una raza",
+  "generation": "Generación",
+  "genetic": "Genético",
 
   "entree_select": "Seleccione un motivo de entrada",
   "entree_reason_required": "Motivo de entrada obligatorio",

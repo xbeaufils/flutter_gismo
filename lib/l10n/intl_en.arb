@@ -43,6 +43,9 @@
   "name_hint" : "Name",
   "identity_number_error" : "Identity number is already present",
   "race": "Breed",
+  "race_select": "Search a breed",
+  "generation": "Generation",
+  "genetic": "Genetic",
 
   "entree_select" : "Select an entry reason",
   "entree_reason_required" : "Entry reason is required",

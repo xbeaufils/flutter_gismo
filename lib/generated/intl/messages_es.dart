@@ -122,6 +122,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "flock_number_warn": MessageLookupByLibrary.simpleMessage(
       "Falta el número de rebaño",
     ),
+    "generation": MessageLookupByLibrary.simpleMessage("Generación"),
+    "genetic": MessageLookupByLibrary.simpleMessage("Genético"),
     "health": MessageLookupByLibrary.simpleMessage("Estado de salud"),
     "herd_size": MessageLookupByLibrary.simpleMessage("Recuento de cabezas"),
     "identity_number": MessageLookupByLibrary.simpleMessage("Número de bucle"),
@@ -188,7 +190,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "provisional_number": MessageLookupByLibrary.simpleMessage(
       "Número provisional",
     ),
-    "race": MessageLookupByLibrary.simpleMessage("Criar"),
+    "race": MessageLookupByLibrary.simpleMessage("Raza"),
+    "race_select": MessageLookupByLibrary.simpleMessage("Buscando una raza"),
     "search": MessageLookupByLibrary.simpleMessage("Buscar"),
     "search_ram": MessageLookupByLibrary.simpleMessage("Buscar al semental"),
     "sex_warn": MessageLookupByLibrary.simpleMessage("Falta el sexo"),

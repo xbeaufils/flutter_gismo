@@ -48,7 +48,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   String ? _nom;
   String ? _obs;
   Sex ? _sex ;
-  Croix ? _croix ;
+  Generation ? _croix ;
   String ? _motif;
 
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
@@ -167,8 +167,8 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                                 onChanged: (Sex ? value) { setState(() { _sex = value; }); },
                               ),
                           ),]
-                      ),
-                      this._buildRace(),
+                      )])),
+                  this._buildRace(),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child:
@@ -184,7 +184,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                                 enabledBorder: OutlineInputBorder()),
                             maxLines: 3,
                             onChanged: (value)  =>_obs = value,)
-                      )]),),
+                  ),
                   (this.bete == null)?
                   FilledButton(
                       child: new Text(S.of(context).bt_add),
@@ -195,59 +195,78 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                       child: Text( S.of(context).bt_save,)),
         ]))
     ));
-
   }
 
   Widget _buildRace() {
+    if (! AuthService().subscribe)
+      return Container();
     return Card(
-      child: Column(children: [
-        Text(S.of(context).race),
-        Row(children: [
-          Flexible (child:
-            RadioListTile<Croix>(
-              title: Text("Pur"),
-              selected: _sex == Sex.male,
-              value: Croix.pur,
-              groupValue: _croix,
-              onChanged: (Croix ? value) { setState(() { _croix = value; }); },
-              )),
-          Flexible (child:
-            RadioListTile<Croix>(
-              title: Text("F1"),
-              selected: _sex == Sex.male,
-              value: Croix.F1,
-              groupValue: _croix,
-              onChanged: (Croix ? value) { setState(() { _croix = value; }); },
-            )),
-          Flexible (child:
-            RadioListTile<Croix>(
-            title: Text("F2"),
-            selected: _sex == Sex.male,
-            value: Croix.F2,
-              groupValue: _croix,
-              onChanged: (Croix ? value) { setState(() { _croix = value; }); },
-            )),
-          Flexible (child:
-            RadioListTile<Croix>(
-            title: Text("F3"),
-            selected: _sex == Sex.male,
-            value: Croix.F3,
-              groupValue: _croix,
-              onChanged: (Croix ? value) { setState(() { _croix = value; }); },
-            )),
-          Flexible (child:
-            RadioListTile<Croix>(
-              title: Text("F4"),
-              selected: _sex == Sex.male,
-              value: Croix.F4,
-              groupValue: _croix,
-              onChanged: (Croix ? value) { setState(() { _croix = value; }); },
-            )),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:
+          Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+          ListTile(
 
-        ],)
-      ],
-      )
-    );
+            tileColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+            title: Text(S.of(context).genetic, ),
+            trailing: new IconButton(key: Key("btRace"), onPressed: () {
+              setState(() {
+                this._presenter.selectRace();
+              });
+            },
+            icon: new Icon(Icons.create)),),
+          ListTile(
+            title: Text(S.of(context).generation),
+            subtitle: this._buildGeneration(),
+          ),
+          ListTile(
+            title: Text(S.of(context).race, ),
+            subtitle: Container(child: this._buildRaces(),),
+          )
+      ]),),);
+  }
+
+  Widget _buildRaces() {
+    if (this.bete!.croisement == null)
+      return Container();
+    if (this.bete!.croisement!.races.length == 0)
+      return Container();
+    return Wrap(children: this.bete!.croisement!.races.map((Race race){
+      return InputChip(
+          label: Text(race.nom),
+          onDeleted: () {
+            setState(() {
+              this._presenter.delete(race);
+            });
+          }
+        );
+    }).toList(),)  ;
+    /*return ListView.builder(
+        itemCount: this.bete!.croisement!.races.length,
+        itemBuilder:  (BuildContext context, int index) {
+          return  Chip(label: Text(this.bete!.croisement!.races[index].nom));
+        });*/
+  }
+
+  Widget _buildGeneration() {
+    if (this.bete!.croisement == null)
+      return Container();
+    switch (this.bete!.croisement!.niveau) {
+      case Generation.PURE:
+        return Text("Pur");
+      case Generation.F1:
+        return Text("F1");
+      case Generation.F2:
+        return Text("F2");
+      case Generation.F3:
+        return Text("F3");
+      case Generation.F4:
+        return Text("F4");
+      case Generation.INDETERMINE:
+        return Container();
+    }
   }
   Widget _buildRfid() {
     if (AuthService().subscribe && this._rfidPresent) {
@@ -338,3 +357,4 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   }
 
 }
+

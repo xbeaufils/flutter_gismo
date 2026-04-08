@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/ui/Bete.dart';
+import 'package:flutter_gismo/individu/ui/HybridationPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BoucleModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
@@ -41,6 +42,7 @@ class BetePresenter {
       return;
     }
     Bete newBete =  Bete( null, numBoucle, numMarquage, nom, obs, DateFormat.yMd().parse(dateEntree), sex, motif);
+    newBete.croisement = this._view.bete!.croisement;
     bool existant = await this._service.check(newBete);
     if (existant)
       this._view.showMessage(S.current.identity_number_error, true);
@@ -52,6 +54,7 @@ class BetePresenter {
 
   Future<String?> save(String ? numBoucle, String ? numMarquage, Sex ? sex, String ? nom, String ? obs, String dateEntree, String ? motif) async {
     Bete newBete =  Bete(this._view.bete==null ? null: this._view.bete?.idBd, numBoucle, numMarquage, nom, obs, DateFormat.yMd().parse(dateEntree), sex, motif);
+    newBete.croisement = this._view.bete!.croisement;
     try {
       String message = await _service.save(newBete);
       if (this._view.bete != null) {
@@ -110,6 +113,23 @@ class BetePresenter {
       _blService.stopReadBluetooth();
     }
   }
+
+  void selectRace() async {
+    Hybridation ? hybridation = await  this._view.goNextPage(HybridationPage(this._view.bete!.croisement));
+    if (hybridation != null) {
+      debug.log(hybridation.toJson().toString(), name: "BetePresenter::selectRace");
+      this._view.bete!.croisement = hybridation;
+      this._view.hideSaving();
+    }
+  }
+
+  void delete(Race race) {
+    this._view.bete!.croisement!.races.remove(race);
+  }
+
+  Future<List<Race>> getAllRaces() async {
+    return await _service.getAllRaces();
+  }
 }
 
 class MissingNumBoucle implements Exception {}
@@ -119,3 +139,66 @@ class MissingNumMarquage implements Exception {}
 class MissingSex implements Exception {}
 
 class ExistingBete implements Exception {}
+
+class HybridationPresenter {
+
+  final HybridationContract _view;
+  final BeteService _service = BeteService();
+  late Hybridation  _hybridation;
+
+  Hybridation get hybridation => _hybridation;
+
+  set hybridation(Hybridation value) {
+    _hybridation = value;
+  }
+
+  HybridationPresenter(this._view, Hybridation ? aHhybridation){
+    if (aHhybridation == null) {
+      this._hybridation = Hybridation();
+      this._hybridation.niveau = Generation.PURE;
+    }
+    else
+      this._hybridation = aHhybridation;
+  }
+
+  Future<List<Race>> getAllRaces() async {
+    List<Race> races = await _service.getAllRaces();
+    races.sort((a, b) => a.nom.compareTo(b.nom));
+    return races;
+  }
+
+
+  void add(Race race) {
+    race.ordre = this._hybridation.races.length + 1;
+    this._hybridation.races.add(race);
+  }
+
+  void up(int index) {
+    Race temp = this._hybridation.races[index];
+    temp.ordre = index;
+    this._hybridation.races[index] = this._hybridation.races[index - 1];
+    this._hybridation.races[index - 1] = temp;
+  }
+
+  void down(int index) {
+    if (index == 0) {
+      Race downRace = this._hybridation.races[0];
+      downRace.ordre = 2;
+      Race upRace = this._hybridation.races[1];
+      upRace.ordre = 1;
+      this._hybridation.races[0] = upRace;
+      this._hybridation.races[1] = downRace;
+    }
+  }
+
+  void remove(int index) {
+      this._hybridation.races.removeAt(index);
+      for (int i =0; i < this._hybridation.races.length; i++) {
+        this._hybridation.races[i].ordre = i + 1;
+      }
+  }
+
+  void save() {
+    this._view.backWithObject(_hybridation);
+  }
+}

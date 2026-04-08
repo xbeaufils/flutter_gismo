@@ -43,6 +43,10 @@
   "name_hint" : "Nom",
   "identity_number_error" : "Numero de boucle déja présent",
   "race": "Race",
+  "race_select": "Recherche d'une race",
+  "generation": "Generation",
+  "genetic": "Génétique",
+  "croisement": "Croisement",
 
   "entree_select" : "Sélectionnez une cause d'entree",
   "entree_reason_required" : "Cause d'entrée obligatoire",
