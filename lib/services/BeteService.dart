@@ -228,4 +228,18 @@ class BeteService {
   Future<List<Race>> getAllRaces() {
     return this._repository.getAllRaces();
   }
+
+  void delete(List<Race> races,Race race) {
+    int index = races.indexOf(race);
+    if (index != -1)
+      this.remove(races, index);
+  }
+
+  void remove(List<Race> races, int index) {
+    races.removeAt(index);
+    for (int i =0; i < races.length; i++) {
+      races[i].ordre = i + 1;
+    }
+  }
+
 }

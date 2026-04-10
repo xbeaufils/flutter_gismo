@@ -103,8 +103,8 @@ class Bete  {
     _cheptel = value;
   }
 
-  Hybridation ? get croisement => _genetique;
-  set croisement(Hybridation ? value) {
+  Hybridation ? get genetique => _genetique;
+  set genetique(Hybridation ? value) {
     _genetique = value;
   }
 
@@ -166,6 +166,7 @@ class Hybridation {
     for (int i = 0; i < result["races"].length; i++) {
       _races.add(Race.fromResult(result["races"][i]));
     }
+    _races.sort( (a,b) => a.ordre.compareTo(b.ordre));
   }
 
   List<Race> get races => _races;

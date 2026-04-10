@@ -42,7 +42,7 @@ class BetePresenter {
       return;
     }
     Bete newBete =  Bete( null, numBoucle, numMarquage, nom, obs, DateFormat.yMd().parse(dateEntree), sex, motif);
-    newBete.croisement = this._view.bete!.croisement;
+    newBete.genetique = this._view.bete!.genetique;
     bool existant = await this._service.check(newBete);
     if (existant)
       this._view.showMessage(S.current.identity_number_error, true);
@@ -54,7 +54,7 @@ class BetePresenter {
 
   Future<String?> save(String ? numBoucle, String ? numMarquage, Sex ? sex, String ? nom, String ? obs, String dateEntree, String ? motif) async {
     Bete newBete =  Bete(this._view.bete==null ? null: this._view.bete?.idBd, numBoucle, numMarquage, nom, obs, DateFormat.yMd().parse(dateEntree), sex, motif);
-    newBete.croisement = this._view.bete!.croisement;
+    newBete.genetique = this._view.bete!.genetique;
     try {
       String message = await _service.save(newBete);
       if (this._view.bete != null) {
@@ -115,16 +115,16 @@ class BetePresenter {
   }
 
   void selectRace() async {
-    Hybridation ? hybridation = await  this._view.goNextPage(HybridationPage(this._view.bete!.croisement));
+    Hybridation ? hybridation = await  this._view.goNextPage(HybridationPage(this._view.bete!.genetique));
     if (hybridation != null) {
       debug.log(hybridation.toJson().toString(), name: "BetePresenter::selectRace");
-      this._view.bete!.croisement = hybridation;
+      this._view.bete!.genetique = hybridation;
       this._view.hideSaving();
     }
   }
 
   void delete(Race race) {
-    this._view.bete!.croisement!.races.remove(race);
+    this._service.delete(this._view.bete!.genetique!.races, race);
   }
 
   Future<List<Race>> getAllRaces() async {
@@ -152,13 +152,22 @@ class HybridationPresenter {
     _hybridation = value;
   }
 
-  HybridationPresenter(this._view, Hybridation ? aHhybridation){
-    if (aHhybridation == null) {
+  HybridationPresenter(this._view, Hybridation ? aHybridation){
+    if (aHybridation == null) {
       this._hybridation = Hybridation();
       this._hybridation.niveau = Generation.PURE;
     }
-    else
-      this._hybridation = aHhybridation;
+    else {
+      this._hybridation = new Hybridation();
+      this._hybridation.niveau = aHybridation.niveau;
+      this._hybridation.races = [];
+      aHybridation.races.forEach( (race) =>
+          this._hybridation.races.add(Race.fromResult(race.toJson()))
+      );
+
+      this._hybridation.races.sort( (a, b) => a.ordre.compareTo(b.ordre));
+      debug.log(this._hybridation.toJson().toString(), name: "HybridationPresenter::HybridationPresenter");
+    }
   }
 
   Future<List<Race>> getAllRaces() async {
@@ -171,13 +180,18 @@ class HybridationPresenter {
   void add(Race race) {
     race.ordre = this._hybridation.races.length + 1;
     this._hybridation.races.add(race);
+    debug.log(this._hybridation.toJson().toString(), name: "HybridationPresenter::add");
   }
 
   void up(int index) {
-    Race temp = this._hybridation.races[index];
-    temp.ordre = index;
-    this._hybridation.races[index] = this._hybridation.races[index - 1];
-    this._hybridation.races[index - 1] = temp;
+    Race raceUp = this._hybridation.races[index];
+    raceUp.ordre = index;
+    Race raceDown = this._hybridation.races[index-1];
+    raceDown.ordre = index+1;
+    this._hybridation.races[index] = raceDown;
+    this._hybridation.races[index - 1] = raceUp;
+    this._hybridation.races.sort((a, b) => a.ordre.compareTo(b.ordre));
+    debug.log(this._hybridation.toJson().toString(), name: "HybridationPresenter::up");
   }
 
   void down(int index) {
@@ -188,14 +202,14 @@ class HybridationPresenter {
       upRace.ordre = 1;
       this._hybridation.races[0] = upRace;
       this._hybridation.races[1] = downRace;
+      this._hybridation.races.sort((a, b) => a.ordre.compareTo(b.ordre));
     }
+    debug.log(this._hybridation.toJson().toString(), name: "HybridationPresenter::down");
   }
 
   void remove(int index) {
-      this._hybridation.races.removeAt(index);
-      for (int i =0; i < this._hybridation.races.length; i++) {
-        this._hybridation.races[i].ordre = i + 1;
-      }
+    this._service.remove(this._hybridation.races, index);
+    debug.log(this._hybridation.toJson().toString(), name: "HybridationPresenter::remove");
   }
 
   void save() {

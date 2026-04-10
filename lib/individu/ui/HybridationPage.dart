@@ -20,7 +20,6 @@ abstract class HybridationContract extends GismoContract {
 }
 
 class _HybridationPageState extends GismoStatePage<HybridationPage> implements HybridationContract {
-  Generation _croix = Generation.PURE;
   late HybridationPresenter _presenter;
 
   Hybridation ? get hybridation => this.widget._hybridation;

@@ -48,7 +48,6 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   String ? _nom;
   String ? _obs;
   Sex ? _sex ;
-  Generation ? _croix ;
   String ? _motif;
 
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
@@ -229,11 +228,13 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   }
 
   Widget _buildRaces() {
-    if (this.bete!.croisement == null)
+    if (this.bete == null)
       return Container();
-    if (this.bete!.croisement!.races.length == 0)
+    if (this.bete!.genetique == null)
       return Container();
-    return Wrap(children: this.bete!.croisement!.races.map((Race race){
+    if (this.bete!.genetique!.races.length == 0)
+      return Container();
+    return Wrap(children: this.bete!.genetique!.races.map((Race race){
       return InputChip(
           label: Text(race.nom),
           onDeleted: () {
@@ -243,17 +244,14 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
           }
         );
     }).toList(),)  ;
-    /*return ListView.builder(
-        itemCount: this.bete!.croisement!.races.length,
-        itemBuilder:  (BuildContext context, int index) {
-          return  Chip(label: Text(this.bete!.croisement!.races[index].nom));
-        });*/
   }
 
   Widget _buildGeneration() {
-    if (this.bete!.croisement == null)
+    if (this.bete == null)
       return Container();
-    switch (this.bete!.croisement!.niveau) {
+    if (this.bete!.genetique == null)
+      return Container();
+    switch (this.bete!.genetique!.niveau) {
       case Generation.PURE:
         return Text("Pur");
       case Generation.F1:
@@ -292,11 +290,12 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
         });
       }
       else {
-        showMessage("Pas de boucle lue");
+        showMessage("Pas de boucle lue", true);
       }
     } on PlatformException catch (e) {
-      showMessage("Pas de boucle lue");
+      showMessage("Pas de boucle lue", true);
     } on Exception catch (e, stackTrace) {
+      showMessage(e.toString(), true);
       Sentry.captureException(e, stackTrace : stackTrace);
     }
   }
