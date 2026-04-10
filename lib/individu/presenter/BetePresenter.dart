@@ -42,7 +42,7 @@ class BetePresenter {
       return;
     }
     Bete newBete =  Bete( null, numBoucle, numMarquage, nom, obs, DateFormat.yMd().parse(dateEntree), sex, motif);
-    newBete.genetique = this._view.bete!.genetique;
+    newBete.genetique = this._view.bete.genetique;
     bool existant = await this._service.check(newBete);
     if (existant)
       this._view.showMessage(S.current.identity_number_error, true);
@@ -115,7 +115,10 @@ class BetePresenter {
   }
 
   void selectRace() async {
-    Hybridation ? hybridation = await  this._view.goNextPage(HybridationPage(this._view.bete!.genetique));
+    Hybridation ? hybridation = null;
+    if (this._view.bete != null)
+      hybridation = this._view.bete!.genetique;
+    hybridation = await  this._view.goNextPage(HybridationPage(hybridation));
     if (hybridation != null) {
       debug.log(hybridation.toJson().toString(), name: "BetePresenter::selectRace");
       this._view.bete!.genetique = hybridation;

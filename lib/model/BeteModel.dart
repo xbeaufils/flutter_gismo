@@ -20,6 +20,8 @@ class Bete  {
 
   Bete( this._idBd, this._numBoucle, this._numMarquage, this._nom, this._observations, this._dateEntree, this._sex, this._motifEntree);
 
+  Bete.create();
+
   Bete.fromResult (result){
     final _df = new DateFormat('dd/MM/yyyy');
     _idBd = result["id"];
@@ -59,7 +61,7 @@ class Bete  {
   String get numBoucle =>_numBoucle!;
   String get numMarquage =>_numMarquage!;
   String ? get nom =>_nom;
-  DateTime get dateEntree => _dateEntree! ;
+  DateTime ? get dateEntree => _dateEntree ;
   Sex get sex => _sex!;
   String get motifEntree =>_motifEntree!;
 
@@ -81,7 +83,7 @@ class Bete  {
     _sex = value;
   }
 
-  set dateEntree(DateTime value) {
+  set dateEntree(DateTime ? value) {
     _dateEntree = value;
   }
 

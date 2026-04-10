@@ -16,18 +16,23 @@ import 'package:sentry/sentry.dart';
 
 
 class BetePage extends StatefulWidget {
-  Bete ? _bete;
+  late Bete _bete;
 
-  BetePage( this._bete, {Key ? key}) : super(key: key);
+  BetePage( Bete ? bete, {Key ? key}) : super(key: key) {
+    if (bete == null)
+      this._bete = Bete.create();
+    else
+      this._bete = bete;
+  }
 
   @override
   _BetePageState createState() => new _BetePageState();
 }
 
 abstract class BeteContract extends GismoContract {
-  Bete ? get bete;
+  Bete get bete;
 
-  set bete(Bete ? value);
+  set bete(Bete value);
 
   void backWithBete();
 
@@ -184,7 +189,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                             maxLines: 3,
                             onChanged: (value)  =>_obs = value,)
                   ),
-                  (this.bete == null)?
+                  (this.bete.idBd == null)?
                   FilledButton(
                       child: new Text(S.of(context).bt_add),
                       onPressed: () => this._presenter.add(_numBoucleCtrl.text, _numMarquageCtrl.text, _sex, _nom, _obs, _dateEntreCtrl.text, _motif)
@@ -228,13 +233,11 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   }
 
   Widget _buildRaces() {
-    if (this.bete == null)
+     if (this.bete.genetique == null)
       return Container();
-    if (this.bete!.genetique == null)
+    if (this.bete.genetique!.races.length == 0)
       return Container();
-    if (this.bete!.genetique!.races.length == 0)
-      return Container();
-    return Wrap(children: this.bete!.genetique!.races.map((Race race){
+    return Wrap(children: this.bete.genetique!.races.map((Race race){
       return InputChip(
           label: Text(race.nom),
           onDeleted: () {
@@ -247,11 +250,9 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   }
 
   Widget _buildGeneration() {
-    if (this.bete == null)
+    if (this.bete.genetique == null)
       return Container();
-    if (this.bete!.genetique == null)
-      return Container();
-    switch (this.bete!.genetique!.niveau) {
+    switch (this.bete.genetique!.niveau) {
       case Generation.PURE:
         return Text("Pur");
       case Generation.F1:
@@ -306,10 +307,10 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
     this._presenter = BetePresenter(this);
     if (AuthService().subscribe)
       this._presenter.startReadBluetooth();
-    if (this.bete == null )
+    if (this.bete.dateEntree == null )
       _dateEntreCtrl.text = DateFormat.yMd().format(_selectedDate);
     else {
-      _dateEntreCtrl.text = DateFormat.yMd().format(this.bete!.dateEntree);
+      _dateEntreCtrl.text = DateFormat.yMd().format(this.bete.dateEntree!);
       _numBoucleCtrl.text = this.bete!.numBoucle;
       _numMarquageCtrl.text = this.bete!.numMarquage;
       _nom = this.bete!.nom;
@@ -334,9 +335,9 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   }
 
   @override
-  Bete ? get bete => this.widget._bete;
+  Bete get bete => this.widget._bete;
 
-   set bete(Bete ? value) {
+   set bete(Bete value) {
      this.widget._bete = value;
    }
 
