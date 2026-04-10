@@ -6,8 +6,14 @@ class BoucleModel {
   String get marquage => _marquage;
 
   BoucleModel(String numBoucle) {
-    this._marquage = numBoucle.substring(8, 18);
-    this._ordre = numBoucle.substring(18,23);
+    if (numBoucle.length >15) {
+      this._marquage = numBoucle.substring(8, 18);
+      this._ordre = numBoucle.substring(18, 23);
+    }
+    else {
+      this._marquage = numBoucle.substring(0, 10);
+      this._ordre = numBoucle.substring(10);
+    }
   }
 
  }
