@@ -20,38 +20,54 @@ class BetePresenter {
   final BluetoothService _blService = BluetoothService();
   BetePresenter(this._view);
 
-  Future<void> add (String ? numBoucle, String ? numMarquage, Sex ? sex, String ? nom, String ? obs, String dateEntree, String ? motif) async {
-    if (numBoucle == null) {
+  Future<void> add () async {
+    if (this._view.bete.numBoucleOrNull == null) {
       this._view.showMessage(S.current.identity_number_warn, true);
       return;
     }
-    if (numBoucle.isEmpty){
+    if (this._view.bete.numBoucle.isEmpty){
       this._view.showMessage(S.current.identity_number_warn, true);
       return;
     }
-    if (numMarquage == null){
+    if (this._view.bete.numMarquageOrNull == null){
       this._view.showMessage(S.current.flock_number_warn, true);
       return;
     }
-    if (numMarquage.isEmpty){
+    if (this._view.bete.numMarquage.isEmpty){
       this._view.showMessage(S.current.flock_number_warn, true);
       return;
     }
-    if (sex == null){
+    if (this._view.bete.sex == null){
       this._view.showMessage(S.current.sex_warn, true);
       return;
     }
-    Bete newBete =  Bete( null, numBoucle, numMarquage, nom, obs, DateFormat.yMd().parse(dateEntree), sex, motif);
-    newBete.genetique = this._view.bete.genetique;
-    bool existant = await this._service.check(newBete);
+    bool existant = await this._service.check(this._view.bete);
     if (existant)
       this._view.showMessage(S.current.identity_number_error, true);
     else {
-      this._view.bete = newBete;
       this._view.backWithBete();
     }
   }
 
+  Future<String?> save() async {
+    try {
+      String message = await _service.save(this._view.bete);
+      return message;
+    } on GismoException catch(e) {
+      this._view.showMessage(e.message, true);
+    } on MissingNumBoucle {
+      this._view.showMessage(S.current.identity_number_warn, true);
+    } on MissingNumMarquage {
+      this._view.showMessage(S.current.flock_number_warn, true);
+    } on MissingSex {
+      this._view.showMessage(S.current.sex_warn, true);
+    } on ExistingBete {
+      this._view.showMessage(S.current.identity_number_error, true);
+    }
+    return null;
+
+  }
+  /*
   Future<String?> save(String ? numBoucle, String ? numMarquage, Sex ? sex, String ? nom, String ? obs, String dateEntree, String ? motif) async {
     Bete newBete =  Bete(this._view.bete==null ? null: this._view.bete?.idBd, numBoucle, numMarquage, nom, obs, DateFormat.yMd().parse(dateEntree), sex, motif);
     newBete.genetique = this._view.bete!.genetique;
@@ -78,7 +94,7 @@ class BetePresenter {
     }
     return null;
   }
-
+*/
   Future<void> startReadBluetooth() async {
     try {
       StatusBlueTooth status =  await _blService.startReadBluetooth();

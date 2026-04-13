@@ -47,13 +47,6 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   DateTime _selectedDate = DateTime.now();
   late BetePresenter _presenter;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  TextEditingController _dateEntreCtrl = new TextEditingController();
-  TextEditingController _numBoucleCtrl = new TextEditingController();
-  TextEditingController _numMarquageCtrl = new TextEditingController();
-  String ? _nom;
-  String ? _obs;
-  Sex ? _sex ;
-  String ? _motif;
 
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
   bool _rfidPresent = false;
@@ -107,9 +100,9 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child:
-                              TextField( /* Numéro boucle */
-                                controller: _numBoucleCtrl,
+                              TextFormField( /* Numéro boucle */
                                 keyboardType: TextInputType.number,
+                                initialValue: this.bete.numBoucleOrNull,
                                 decoration: InputDecoration(
                                     filled: true,
                                     fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -117,7 +110,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                                     hintText: S.of(context).identity_number_hint),
                                   onChanged: (value) {
                                       setState(() {
-                                        _numBoucleCtrl.text = value;
+                                        this.bete.numBoucle = value;
                                     });
                                   }
                               ),)),
@@ -125,8 +118,8 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child:
-                              TextField( // Numéro Marquage
-                                controller: _numMarquageCtrl,
+                              TextFormField( // Numéro Marquage
+                                initialValue: this.bete.numMarquageOrNull,
                                 decoration: InputDecoration(
                                     filled: true,
                                     fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -134,7 +127,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                                     hintText: S.of(context).flock_number_hint),
                                 onChanged: (value) {
                                     setState(() {
-                                    _numMarquageCtrl.text = value;
+                                      this.bete.numMarquage = value;
                                     });
                                   })))
                       ],),
@@ -143,32 +136,32 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                         child:
                         TextFormField( // Nom
                           //keyboardType: TextInputType.number,
-                            initialValue: _nom,
+                            initialValue: this.bete.nom,
                             decoration: InputDecoration(
                                 filled: true,
                                 fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
                                 labelText: S.of(context).name,
                                 hintText: S.of(context).name_hint),
-                            onChanged:(value) => _nom = value ,
+                            onChanged:(value) => this.bete.nom =value ,
                         )),
                       Row(
                          children: <Widget>[
                             Flexible (child:
                               RadioListTile<Sex>(
                                 title: Text(S.of(context).male),
-                                selected: _sex == Sex.male,
+                                selected: bete.sex == Sex.male,
                                 value: Sex.male,
-                                groupValue: _sex,
-                                onChanged: (Sex ? value) { setState(() { _sex = value; }); },
+                                groupValue: bete.sex,
+                                onChanged: (Sex ? value) { setState(() { if (value != null ) bete.sex = value; }); },
                               ),
                           ),
                             Flexible( child:
                               RadioListTile<Sex>(
                                 title: Text(S.of(context).female),
-                                selected: _sex == Sex.femelle,
+                                selected: bete.sex == Sex.femelle,
                                 value: Sex.femelle,
-                                groupValue: _sex,
-                                onChanged: (Sex ? value) { setState(() { _sex = value; }); },
+                                groupValue: bete.sex,
+                                onChanged: (Sex ? value) { setState(() { if (value != null ) bete.sex = value; }); },
                               ),
                           ),]
                       )])),
@@ -177,8 +170,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                         padding: const EdgeInsets.all(8.0),
                         child:
                           TextFormField(
-                          //keyboardType: TextInputType.number,
-                            initialValue: _obs,
+                            initialValue: bete.observations,
                             decoration: InputDecoration(
                                 labelText: S.of(context).observations,
                                 hintText: 'Obs',
@@ -187,15 +179,15 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                                 border: OutlineInputBorder(),
                                 enabledBorder: OutlineInputBorder()),
                             maxLines: 3,
-                            onChanged: (value)  =>_obs = value,)
+                            onChanged: (value)  => bete.observations = value,)
                   ),
                   (this.bete.idBd == null)?
                   FilledButton(
                       child: new Text(S.of(context).bt_add),
-                      onPressed: () => this._presenter.add(_numBoucleCtrl.text, _numMarquageCtrl.text, _sex, _nom, _obs, _dateEntreCtrl.text, _motif)
+                      onPressed: () => this._presenter.add()
                   ):
                   FilledButton(
-                      onPressed: () => this._presenter.save(_numBoucleCtrl.text, _numMarquageCtrl.text, _sex, _nom, _obs, _dateEntreCtrl.text, _motif),
+                      onPressed: () => this._presenter.save(),
                       child: Text( S.of(context).bt_save,)),
         ]))
     ));
@@ -286,8 +278,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
       Map<String, dynamic> mpResponse = jsonDecode(response);
       if (mpResponse.length > 0) {
         setState(() {
-          _numMarquageCtrl.text = mpResponse['marquage'];
-          _numBoucleCtrl.text = mpResponse['boucle'];
+          this.bete.numMarquage = mpResponse['marquage'];
         });
       }
       else {
@@ -308,24 +299,12 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
     if (AuthService().subscribe)
       this._presenter.startReadBluetooth();
     if (this.bete.dateEntree == null )
-      _dateEntreCtrl.text = DateFormat.yMd().format(_selectedDate);
-    else {
-      _dateEntreCtrl.text = DateFormat.yMd().format(this.bete.dateEntree!);
-      _numBoucleCtrl.text = this.bete!.numBoucle;
-      _numMarquageCtrl.text = this.bete!.numMarquage;
-      _nom = this.bete!.nom;
-      _sex = this.bete!.sex;
-      _motif = this.bete!.motifEntree;
-      _obs = this.bete!.observations;
-    }
+      this.bete.dateEntree = _selectedDate;
   }
 
    @override
   void dispose() {
     // other dispose methods
-    _dateEntreCtrl.dispose();
-    _numBoucleCtrl.dispose();
-    _numMarquageCtrl.dispose();
     this._presenter.stopReadBluetooth();
     super.dispose();
   }
@@ -351,8 +330,8 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
 
   void updateBoucle(BoucleModel _foundBoucle) {
     setState(() {
-      _numBoucleCtrl.text = _foundBoucle.ordre;
-      _numMarquageCtrl.text = _foundBoucle.marquage;
+      this.bete.numBoucle = _foundBoucle.ordre;
+      this.bete.numMarquage = _foundBoucle.marquage;
     });
   }
 
