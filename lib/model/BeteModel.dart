@@ -59,7 +59,9 @@ class Bete  {
 
   int ? get idBd => _idBd;
   String get numBoucle =>_numBoucle!;
+  String ? get numBoucleOrNull =>_numBoucle;
   String get numMarquage =>_numMarquage!;
+  String ? get numMarquageOrNull =>_numMarquage;
   String ? get nom =>_nom;
   DateTime ? get dateEntree => _dateEntree ;
   Sex get sex => _sex!;
