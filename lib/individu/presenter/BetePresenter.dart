@@ -10,7 +10,6 @@ import 'package:flutter_gismo/model/BoucleModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/services/BeteService.dart';
 import 'package:flutter_gismo/services/BluetoothService.dart';
-import 'package:intl/intl.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class BetePresenter {
@@ -49,10 +48,10 @@ class BetePresenter {
     }
   }
 
-  Future<String?> save() async {
+  Future<void> save() async {
     try {
       String message = await _service.save(this._view.bete);
-      return message;
+      this._view.backWithMessage(message);
     } on GismoException catch(e) {
       this._view.showMessage(e.message, true);
     } on MissingNumBoucle {
@@ -64,37 +63,8 @@ class BetePresenter {
     } on ExistingBete {
       this._view.showMessage(S.current.identity_number_error, true);
     }
-    return null;
+  }
 
-  }
-  /*
-  Future<String?> save(String ? numBoucle, String ? numMarquage, Sex ? sex, String ? nom, String ? obs, String dateEntree, String ? motif) async {
-    Bete newBete =  Bete(this._view.bete==null ? null: this._view.bete?.idBd, numBoucle, numMarquage, nom, obs, DateFormat.yMd().parse(dateEntree), sex, motif);
-    newBete.genetique = this._view.bete!.genetique;
-    try {
-      String message = await _service.save(newBete);
-      if (this._view.bete != null) {
-        this._view.bete!.numBoucle = numBoucle!;
-        this._view.bete!.numMarquage = numMarquage!;
-        this._view.bete!.sex = sex!;
-        this._view.bete!.observations = obs;
-        this._view.backWithBete();
-      }
-      return message;
-    } on GismoException catch(e) {
-      this._view.showMessage(e.message, true);
-    } on MissingNumBoucle {
-      this._view.showMessage(S.current.identity_number_warn, true);
-    } on MissingNumMarquage {
-      this._view.showMessage(S.current.flock_number_warn, true);
-    } on MissingSex {
-      this._view.showMessage(S.current.sex_warn, true);
-    } on ExistingBete {
-      this._view.showMessage(S.current.identity_number_error, true);
-    }
-    return null;
-  }
-*/
   Future<void> startReadBluetooth() async {
     try {
       StatusBlueTooth status =  await _blService.startReadBluetooth();
