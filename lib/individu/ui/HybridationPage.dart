@@ -35,12 +35,14 @@ class _HybridationPageState extends GismoStatePage<HybridationPage> implements H
           children: <Widget> [
             Text(S.current.generation),
             SegmentedButton<Generation>(
-              segments: const [
-                ButtonSegment(value: Generation.PURE, label: Text('Pur')),
-                ButtonSegment(value: Generation.F1, label: Text('F1')),
-                ButtonSegment(value: Generation.F2, label: Text('F2')),
-                ButtonSegment(value: Generation.F3, label: Text('F3')),
-                ButtonSegment(value: Generation.F4, label: Text('F4')),
+              showSelectedIcon: false,
+              segments: [
+                const ButtonSegment(value: Generation.PURE, label: Text('Pur')),
+                const ButtonSegment(value: Generation.F1, label: Text('F1')),
+                const ButtonSegment(value: Generation.F2, label: Text('F2')),
+                const ButtonSegment(value: Generation.F3, label: Text('F3')),
+                const ButtonSegment(value: Generation.F4, label: Text('F4')),
+                ButtonSegment(value: Generation.INDETERMINE, label: Text(S.current.race_indet)),
               ],
               selected: {_presenter.hybridation.niveau},
               onSelectionChanged: (Set<Generation> newSelection) {

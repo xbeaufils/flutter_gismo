@@ -11,7 +11,6 @@ import 'package:flutter_gismo/model/BoucleModel.dart';
 import 'package:flutter_gismo/individu/presenter/BetePresenter.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
-import 'package:intl/intl.dart';
 import 'package:sentry/sentry.dart';
 
 

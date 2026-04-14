@@ -174,7 +174,7 @@ class HybridationPresenter {
   HybridationPresenter(this._view, Hybridation ? aHybridation){
     if (aHybridation == null) {
       this._hybridation = Hybridation();
-      this._hybridation.niveau = Generation.PURE;
+      this._hybridation.niveau = Generation.INDETERMINE;
     }
     else {
       this._hybridation = new Hybridation();

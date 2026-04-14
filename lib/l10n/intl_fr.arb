@@ -47,6 +47,7 @@
   "generation": "Generation",
   "genetic": "Génétique",
   "croisement": "Croisement",
+  "race_indet": "Indet",
 
   "entree_select" : "Sélectionnez une cause d'entree",
   "entree_reason_required" : "Cause d'entrée obligatoire",

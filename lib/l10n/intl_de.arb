@@ -38,8 +38,9 @@
    "identity_number_warn": "Ohrmarkennummer fehlt",
    "race": "Schafrasse",
   "race_select": "Suche nach einer Schafrasse",
-   "generation": "Generation",
-   "genetic": "Genetisch",
+  "generation": "Generation",
+  "genetic": "Genetisch",
+  "race_indet": "unbest",
 
   "sex_warn": "Geschlecht fehlt",
    "name": "Rufname",

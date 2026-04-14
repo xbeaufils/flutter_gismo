@@ -46,6 +46,7 @@
   "race_select": "Search a breed",
   "generation": "Generation",
   "genetic": "Genetic",
+  "race_indet": "Indet",
 
   "entree_select" : "Select an entry reason",
   "entree_reason_required" : "Entry reason is required",

@@ -364,6 +364,11 @@ class S {
     return Intl.message('Genetic', name: 'genetic', desc: '', args: []);
   }
 
+  /// `Indet`
+  String get race_indet {
+    return Intl.message('Indet', name: 'race_indet', desc: '', args: []);
+  }
+
   /// `Select an entry reason`
   String get entree_select {
     return Intl.message(

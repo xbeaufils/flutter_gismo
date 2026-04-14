@@ -46,6 +46,7 @@
   "race_select": "Buscando una raza",
   "generation": "Generación",
   "genetic": "Genético",
+  "race_indet": "indet",
 
   "entree_select": "Seleccione un motivo de entrada",
   "entree_reason_required": "Motivo de entrada obligatorio",

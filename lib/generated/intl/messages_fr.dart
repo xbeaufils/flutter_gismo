@@ -347,6 +347,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Numéro provisoire",
     ),
     "race": MessageLookupByLibrary.simpleMessage("Race"),
+    "race_indet": MessageLookupByLibrary.simpleMessage("Indet"),
     "race_select": MessageLookupByLibrary.simpleMessage(
       "Recherche d\'une race",
     ),

@@ -349,6 +349,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Vorläufige Nummer",
     ),
     "race": MessageLookupByLibrary.simpleMessage("Schafrasse"),
+    "race_indet": MessageLookupByLibrary.simpleMessage("unbest"),
     "race_select": MessageLookupByLibrary.simpleMessage(
       "Suche nach einer Schafrasse",
     ),

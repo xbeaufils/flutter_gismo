@@ -97,7 +97,7 @@ class WebLambRepository extends WebRepository implements LambRepository {
   @override
   Future<LambingModel> searchLambing(int idBd) async {
     final response = await super.doGet(
-        '/lamb/search?idBd=' + idBd.toString());
+        '/lamb/get/' + idBd.toString());
     return new LambingModel.fromResult(response);
   }
 
