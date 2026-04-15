@@ -339,6 +339,36 @@ class S {
     );
   }
 
+  /// `Breed`
+  String get race {
+    return Intl.message('Breed', name: 'race', desc: '', args: []);
+  }
+
+  /// `Search a breed`
+  String get race_select {
+    return Intl.message(
+      'Search a breed',
+      name: 'race_select',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Generation`
+  String get generation {
+    return Intl.message('Generation', name: 'generation', desc: '', args: []);
+  }
+
+  /// `Genetic`
+  String get genetic {
+    return Intl.message('Genetic', name: 'genetic', desc: '', args: []);
+  }
+
+  /// `Indet`
+  String get race_indet {
+    return Intl.message('Indet', name: 'race_indet', desc: '', args: []);
+  }
+
   /// `Select an entry reason`
   String get entree_select {
     return Intl.message(

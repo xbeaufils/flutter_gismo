@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Exception/EventException.dart';
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/individu/presenter/BetePresenter.dart';
 import 'package:flutter_gismo/repository/BeteRepository.dart';
 import 'package:flutter_gismo/repository/EchoRepository.dart';
@@ -212,12 +213,33 @@ class BeteService {
       throw MissingSex();
     }
     bool _existant = false;
-    _existant = await this.check(bete);
-    bete.cheptel = AuthService().cheptel!;
-    if (! _existant)
-      return this._repository.saveBete(bete);
-    else
-      throw ExistingBete();
+    try {
+      _existant = await this.check(bete);
+      bete.cheptel = AuthService().cheptel!;
+      if (!_existant)
+        return this._repository.saveBete(bete);
+      else
+        throw ExistingBete();
+    }on GismoException catch(e)  {
+      throw e;
+    }
+  }
+
+  Future<List<Race>> getAllRaces() {
+    return this._repository.getAllRaces();
+  }
+
+  void delete(List<Race> races,Race race) {
+    int index = races.indexOf(race);
+    if (index != -1)
+      this.remove(races, index);
+  }
+
+  void remove(List<Race> races, int index) {
+    races.removeAt(index);
+    for (int i =0; i < races.length; i++) {
+      races[i].ordre = i + 1;
+    }
   }
 
 }

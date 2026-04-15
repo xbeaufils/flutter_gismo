@@ -174,6 +174,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "flock_number_warn": MessageLookupByLibrary.simpleMessage(
       "Flock number missing",
     ),
+    "generation": MessageLookupByLibrary.simpleMessage("Generation"),
+    "genetic": MessageLookupByLibrary.simpleMessage("Genetic"),
     "health": MessageLookupByLibrary.simpleMessage("Health"),
     "herd_size": MessageLookupByLibrary.simpleMessage("Herd size"),
     "identity_number": MessageLookupByLibrary.simpleMessage("Identity number"),
@@ -326,6 +328,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "provisional_number": MessageLookupByLibrary.simpleMessage(
       "Provisional number",
     ),
+    "race": MessageLookupByLibrary.simpleMessage("Breed"),
+    "race_indet": MessageLookupByLibrary.simpleMessage("Indet"),
+    "race_select": MessageLookupByLibrary.simpleMessage("Search a breed"),
     "ram": MessageLookupByLibrary.simpleMessage("Ram"),
     "reason": MessageLookupByLibrary.simpleMessage("Reason"),
     "record_saved": MessageLookupByLibrary.simpleMessage("Record completed"),

@@ -40,7 +40,7 @@ class _TimeLinePageState extends GismoStatePage<TimeLinePage> with SingleTickerP
               Card(child:
                 ListTile(
                   title: Text(this.widget._bete.numBoucle + " " + this.widget._bete.numMarquage),
-                  subtitle: (this.widget._bete.dateEntree!= null) ? Text( DateFormat.yMd().format(this.widget._bete.dateEntree)): null,
+                  subtitle: (this.widget._bete.dateEntree != null) ? Text( DateFormat.yMd().format(this.widget._bete.dateEntree!)): null,
                   leading: Image.asset("assets/brebis.png") ,
                   trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () => this._presenter.viewBete(this.widget._bete), ),)
                 ,),

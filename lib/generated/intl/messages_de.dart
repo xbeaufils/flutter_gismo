@@ -182,6 +182,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "flock_number_warn": MessageLookupByLibrary.simpleMessage(
       "Herdennummer fehlt",
     ),
+    "generation": MessageLookupByLibrary.simpleMessage("Generation"),
+    "genetic": MessageLookupByLibrary.simpleMessage("Genetisch"),
     "health": MessageLookupByLibrary.simpleMessage("Gesundheitszustand"),
     "herd_size": MessageLookupByLibrary.simpleMessage("Herdengröße"),
     "identity_number": MessageLookupByLibrary.simpleMessage("Ohrmarkennummer"),
@@ -345,6 +347,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "prescription": MessageLookupByLibrary.simpleMessage("Rezept"),
     "provisional_number": MessageLookupByLibrary.simpleMessage(
       "Vorläufige Nummer",
+    ),
+    "race": MessageLookupByLibrary.simpleMessage("Schafrasse"),
+    "race_indet": MessageLookupByLibrary.simpleMessage("unbest"),
+    "race_select": MessageLookupByLibrary.simpleMessage(
+      "Suche nach einer Schafrasse",
     ),
     "ram": MessageLookupByLibrary.simpleMessage("Widder"),
     "reason": MessageLookupByLibrary.simpleMessage("Grund"),

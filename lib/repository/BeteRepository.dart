@@ -21,6 +21,7 @@ abstract class BeteRepository {
   Future<Bete?> getPere(Bete bete);
   Future<List<Bete>>getBrebis();
   Future<List<Bete>>getBeliers();
+  Future<List<Race>> getAllRaces();
 }
 
 class WebBeteRepository extends WebRepository implements BeteRepository {
@@ -161,6 +162,16 @@ class WebBeteRepository extends WebRepository implements BeteRepository {
     return tempList;
   }
 
+  @override
+  Future<List<Race>> getAllRaces() async {
+    final response = await super.doGetList(
+        '/bete/races/');
+    List<Race> tempList = [];
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new Race.fromResult(response[i]));
+    }
+    return tempList;
+  }
 }
 
 class LocalBeteRepository extends LocalRepository implements BeteRepository {
@@ -324,6 +335,11 @@ class LocalBeteRepository extends LocalRepository implements BeteRepository {
       tempList.add(new Bete.fromResult(maps[i]));
     }
     return tempList;
+  }
+
+  @override
+  Future<List<Race>> getAllRaces() {
+    throw UnimplementedError();
   }
 
 }

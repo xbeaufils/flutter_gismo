@@ -11,23 +11,27 @@ import 'package:flutter_gismo/model/BoucleModel.dart';
 import 'package:flutter_gismo/individu/presenter/BetePresenter.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
-import 'package:intl/intl.dart';
 import 'package:sentry/sentry.dart';
 
 
 class BetePage extends StatefulWidget {
-  Bete ? _bete;
+  late Bete _bete;
 
-  BetePage( this._bete, {Key ? key}) : super(key: key);
+  BetePage( Bete ? bete, {Key ? key}) : super(key: key) {
+    if (bete == null)
+      this._bete = Bete.create();
+    else
+      this._bete = bete;
+  }
 
   @override
   _BetePageState createState() => new _BetePageState();
 }
 
 abstract class BeteContract extends GismoContract {
-  Bete ? get bete;
+  Bete get bete;
 
-  set bete(Bete ? value);
+  set bete(Bete value);
 
   void backWithBete();
 
@@ -42,13 +46,6 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   DateTime _selectedDate = DateTime.now();
   late BetePresenter _presenter;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  TextEditingController _dateEntreCtrl = new TextEditingController();
-  TextEditingController _numBoucleCtrl = new TextEditingController();
-  TextEditingController _numMarquageCtrl = new TextEditingController();
-  String ? _nom;
-  String ? _obs;
-  Sex ? _sex ;
-  String ? _motif;
 
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
   bool _rfidPresent = false;
@@ -102,9 +99,9 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child:
-                              TextField(
-                                controller: _numBoucleCtrl,
+                              TextFormField( /* Numéro boucle */
                                 keyboardType: TextInputType.number,
+                                initialValue: this.bete.numBoucleOrNull,
                                 decoration: InputDecoration(
                                     filled: true,
                                     fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -112,7 +109,7 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                                     hintText: S.of(context).identity_number_hint),
                                   onChanged: (value) {
                                       setState(() {
-                                        _numBoucleCtrl.text = value;
+                                        this.bete.numBoucle = value;
                                     });
                                   }
                               ),)),
@@ -120,8 +117,8 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child:
-                              TextField(
-                                controller: _numMarquageCtrl,
+                              TextFormField( // Numéro Marquage
+                                initialValue: this.bete.numMarquageOrNull,
                                 decoration: InputDecoration(
                                     filled: true,
                                     fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -129,50 +126,50 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                                     hintText: S.of(context).flock_number_hint),
                                 onChanged: (value) {
                                     setState(() {
-                                    _numMarquageCtrl.text = value;
+                                      this.bete.numMarquage = value;
                                     });
                                   })))
                       ],),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child:
-                        TextFormField(
+                        TextFormField( // Nom
                           //keyboardType: TextInputType.number,
-                            initialValue: _nom,
+                            initialValue: this.bete.nom,
                             decoration: InputDecoration(
                                 filled: true,
                                 fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
                                 labelText: S.of(context).name,
                                 hintText: S.of(context).name_hint),
-                            onChanged:(value) => _nom = value ,
+                            onChanged:(value) => this.bete.nom =value ,
                         )),
                       Row(
                          children: <Widget>[
                             Flexible (child:
                               RadioListTile<Sex>(
                                 title: Text(S.of(context).male),
-                                selected: _sex == Sex.male,
+                                selected: bete.sex == Sex.male,
                                 value: Sex.male,
-                                groupValue: _sex,
-                                onChanged: (Sex ? value) { setState(() { _sex = value; }); },
+                                groupValue: bete.sex,
+                                onChanged: (Sex ? value) { setState(() { if (value != null ) bete.sex = value; }); },
                               ),
                           ),
                             Flexible( child:
                               RadioListTile<Sex>(
                                 title: Text(S.of(context).female),
-                                selected: _sex == Sex.femelle,
+                                selected: bete.sex == Sex.femelle,
                                 value: Sex.femelle,
-                                groupValue: _sex,
-                                onChanged: (Sex ? value) { setState(() { _sex = value; }); },
+                                groupValue: bete.sex,
+                                onChanged: (Sex ? value) { setState(() { if (value != null ) bete.sex = value; }); },
                               ),
                           ),]
-                      ),
+                      )])),
+                  this._buildRace(),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child:
                           TextFormField(
-                          //keyboardType: TextInputType.number,
-                            initialValue: _obs,
+                            initialValue: bete.observations,
                             decoration: InputDecoration(
                                 labelText: S.of(context).observations,
                                 hintText: 'Obs',
@@ -181,21 +178,86 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                                 border: OutlineInputBorder(),
                                 enabledBorder: OutlineInputBorder()),
                             maxLines: 3,
-                            onChanged: (value)  =>_obs = value,)
-                      )]),),
-                  (this.bete == null)?
+                            onChanged: (value)  => bete.observations = value,)
+                  ),
+                  (this.bete.idBd == null)?
                   FilledButton(
                       child: new Text(S.of(context).bt_add),
-                      onPressed: () => this._presenter.add(_numBoucleCtrl.text, _numMarquageCtrl.text, _sex, _nom, _obs, _dateEntreCtrl.text, _motif)
+                      onPressed: () => this._presenter.add()
                   ):
                   FilledButton(
-                      onPressed: () => this._presenter.save(_numBoucleCtrl.text, _numMarquageCtrl.text, _sex, _nom, _obs, _dateEntreCtrl.text, _motif),
+                      onPressed: () => this._presenter.save(),
                       child: Text( S.of(context).bt_save,)),
         ]))
     ));
-
   }
 
+  Widget _buildRace() {
+    if (! AuthService().subscribe)
+      return Container();
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:
+          Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+          ListTile(
+
+            tileColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+            title: Text(S.of(context).genetic, ),
+            trailing: new IconButton(key: Key("btRace"), onPressed: () {
+              setState(() {
+                this._presenter.selectRace();
+              });
+            },
+            icon: new Icon(Icons.create)),),
+          ListTile(
+            title: Text(S.of(context).generation),
+            subtitle: this._buildGeneration(),
+          ),
+          ListTile(
+            title: Text(S.of(context).race, ),
+            subtitle: Container(child: this._buildRaces(),),
+          )
+      ]),),);
+  }
+
+  Widget _buildRaces() {
+     if (this.bete.genetique == null)
+      return Container();
+    if (this.bete.genetique!.races.length == 0)
+      return Container();
+    return Wrap(children: this.bete.genetique!.races.map((Race race){
+      return InputChip(
+          label: Text(race.nom),
+          onDeleted: () {
+            setState(() {
+              this._presenter.delete(race);
+            });
+          }
+        );
+    }).toList(),)  ;
+  }
+
+  Widget _buildGeneration() {
+    if (this.bete.genetique == null)
+      return Container();
+    switch (this.bete.genetique!.niveau) {
+      case Generation.PURE:
+        return Text("Pur");
+      case Generation.F1:
+        return Text("F1");
+      case Generation.F2:
+        return Text("F2");
+      case Generation.F3:
+        return Text("F3");
+      case Generation.F4:
+        return Text("F4");
+      case Generation.INDETERMINE:
+        return Container();
+    }
+  }
   Widget _buildRfid() {
     if (AuthService().subscribe && this._rfidPresent) {
       return FloatingActionButton(
@@ -215,16 +277,16 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
       Map<String, dynamic> mpResponse = jsonDecode(response);
       if (mpResponse.length > 0) {
         setState(() {
-          _numMarquageCtrl.text = mpResponse['marquage'];
-          _numBoucleCtrl.text = mpResponse['boucle'];
+          this.bete.numMarquage = mpResponse['marquage'];
         });
       }
       else {
-        showMessage("Pas de boucle lue");
+        showMessage("Pas de boucle lue", true);
       }
     } on PlatformException catch (e) {
-      showMessage("Pas de boucle lue");
+      showMessage("Pas de boucle lue", true);
     } on Exception catch (e, stackTrace) {
+      showMessage(e.toString(), true);
       Sentry.captureException(e, stackTrace : stackTrace);
     }
   }
@@ -235,25 +297,13 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
     this._presenter = BetePresenter(this);
     if (AuthService().subscribe)
       this._presenter.startReadBluetooth();
-    if (this.bete == null )
-      _dateEntreCtrl.text = DateFormat.yMd().format(_selectedDate);
-    else {
-      _dateEntreCtrl.text = DateFormat.yMd().format(this.bete!.dateEntree);
-      _numBoucleCtrl.text = this.bete!.numBoucle;
-      _numMarquageCtrl.text = this.bete!.numMarquage;
-      _nom = this.bete!.nom;
-      _sex = this.bete!.sex;
-      _motif = this.bete!.motifEntree;
-      _obs = this.bete!.observations;
-    }
+    if (this.bete.dateEntree == null )
+      this.bete.dateEntree = _selectedDate;
   }
 
    @override
   void dispose() {
     // other dispose methods
-    _dateEntreCtrl.dispose();
-    _numBoucleCtrl.dispose();
-    _numMarquageCtrl.dispose();
     this._presenter.stopReadBluetooth();
     super.dispose();
   }
@@ -263,9 +313,9 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   }
 
   @override
-  Bete ? get bete => this.widget._bete;
+  Bete get bete => this.widget._bete;
 
-   set bete(Bete ? value) {
+   set bete(Bete value) {
      this.widget._bete = value;
    }
 
@@ -279,9 +329,10 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
 
   void updateBoucle(BoucleModel _foundBoucle) {
     setState(() {
-      _numBoucleCtrl.text = _foundBoucle.ordre;
-      _numMarquageCtrl.text = _foundBoucle.marquage;
+      this.bete.numBoucle = _foundBoucle.ordre;
+      this.bete.numMarquage = _foundBoucle.marquage;
     });
   }
 
 }
+
