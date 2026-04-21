@@ -199,6 +199,7 @@
   "mating_date": "Deckdatum",
   "no_mating_date": "Kein Datum eingegeben",
   "mating_male_text": "Wenn leer, wird die Deckung nicht registriert oder gelöscht",
+  "mating_no_father" : "Kein Widder beschlagnahmt",
 
   "bt_cancel": "Abbrechen",
   "bt_continue": "Weiter",

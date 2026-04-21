@@ -47,6 +47,7 @@
   "generation": "Generation",
   "genetic": "Genetic",
   "race_indet": "Indet",
+  "collective_genetic": "Ajoutez tous les individus qui vont avoir la génétique avant de continuer",
 
   "entree_select" : "Select an entry reason",
   "entree_reason_required" : "Entry reason is required",
@@ -188,6 +189,7 @@
   "mating_date" : "Mating date",
   "no_mating_date" : "No mating date",
   "mating_male_text" : "If empty, the mating won't be saved or will be deleted",
+  "mating_no_father" : "No ram seized",
 
   "male" : "Male",
   "female" : "Female",

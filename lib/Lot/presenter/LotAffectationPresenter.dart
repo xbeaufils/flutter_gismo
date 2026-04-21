@@ -181,7 +181,9 @@ class LotAffectionPresenter {
     } on CodeLotException {
       this._view.showMessage(S.current.batch_no_code, true);
     }
+    on DebutCampagneException {
 
+    }
     this._view.currentLot = _currentLot;
   }
 

@@ -215,6 +215,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "mating_male_text": MessageLookupByLibrary.simpleMessage(
       "Wenn leer, wird die Deckung nicht registriert oder gelöscht",
     ),
+    "mating_no_father": MessageLookupByLibrary.simpleMessage(
+      "Kein Widder beschlagnahmt",
+    ),
     "medication": MessageLookupByLibrary.simpleMessage("Medikament"),
     "memo": MessageLookupByLibrary.simpleMessage("Notiz"),
     "mort": MessageLookupByLibrary.simpleMessage("Tod"),

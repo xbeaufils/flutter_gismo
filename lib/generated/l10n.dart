@@ -369,6 +369,16 @@ class S {
     return Intl.message('Indet', name: 'race_indet', desc: '', args: []);
   }
 
+  /// `Ajoutez tous les individus qui vont avoir la génétique avant de continuer`
+  String get  collective_genetic {
+    return Intl.message(
+      'Ajoutez tous les individus qui vont avoir la génétique avant de continuer',
+      name: 'collective_genetic',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Select an entry reason`
   String get entree_select {
     return Intl.message(
@@ -1469,6 +1479,16 @@ class S {
     return Intl.message(
       'If empty, the mating won\'t be saved or will be deleted',
       name: 'mating_male_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No ram seized`
+  String get mating_no_father {
+    return Intl.message(
+      'No ram seized',
+      name: 'mating_no_father',
       desc: '',
       args: [],
     );

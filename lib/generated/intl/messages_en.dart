@@ -96,6 +96,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "bt_validate": MessageLookupByLibrary.simpleMessage(
       "Validate the selection",
     ),
+    "collective_genetic": MessageLookupByLibrary.simpleMessage(
+      "Ajoutez tous les individus qui vont avoir la génétique avant de continuer",
+    ),
     "collective_treatment": MessageLookupByLibrary.simpleMessage(
       "Collective treatment",
     ),
@@ -201,6 +204,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "mating_male_text": MessageLookupByLibrary.simpleMessage(
       "If empty, the mating won\'t be saved or will be deleted",
     ),
+    "mating_no_father": MessageLookupByLibrary.simpleMessage("No ram seized"),
     "medication": MessageLookupByLibrary.simpleMessage("Medication"),
     "memo": MessageLookupByLibrary.simpleMessage("Memo"),
     "mort": MessageLookupByLibrary.simpleMessage("Death"),

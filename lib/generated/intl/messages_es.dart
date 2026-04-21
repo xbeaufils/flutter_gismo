@@ -145,6 +145,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "lambs": MessageLookupByLibrary.simpleMessage("Corderos"),
     "localuser": MessageLookupByLibrary.simpleMessage("Usuario local"),
     "mating": MessageLookupByLibrary.simpleMessage("Apareamiento"),
+    "mating_date": MessageLookupByLibrary.simpleMessage(
+      "fecha de apareamiento",
+    ),
+    "mating_male_text": MessageLookupByLibrary.simpleMessage(
+      "Si vide, la saillie ne sera pas enregistrée ou sera supprimée",
+    ),
+    "mating_no_father": MessageLookupByLibrary.simpleMessage(
+      "Pas de père saisi",
+    ),
     "memo": MessageLookupByLibrary.simpleMessage("Nota"),
     "mort": MessageLookupByLibrary.simpleMessage("Muerte"),
     "name": MessageLookupByLibrary.simpleMessage("Nombre pequeño"),
@@ -158,6 +167,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "No se leyó el pendiente",
     ),
     "no_lamb": MessageLookupByLibrary.simpleMessage("¿Parto sin cordero?"),
+    "no_mating_date": MessageLookupByLibrary.simpleMessage(
+      "Sin fecha de apareamiento",
+    ),
     "no_ram_found": MessageLookupByLibrary.simpleMessage(
       "No se encontró ninguna memoria RAM con los criterios seleccionados",
     ),

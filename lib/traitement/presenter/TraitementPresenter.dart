@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/services/TraitementService.dart';
-import 'package:flutter_gismo/traitement/Medic.dart';
+import 'package:flutter_gismo/traitement/ui/Medic.dart';
 import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
 import 'package:intl/intl.dart';
 

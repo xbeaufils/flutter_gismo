@@ -100,6 +100,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "bt_edition": MessageLookupByLibrary.simpleMessage("Edition"),
     "bt_save": MessageLookupByLibrary.simpleMessage("Enregistrer"),
     "bt_validate": MessageLookupByLibrary.simpleMessage("Valider la sélection"),
+    "collective_genetic": MessageLookupByLibrary.simpleMessage(
+      "Ajoutez tous les individus qui vont avoir la génétique avant de continuer",
+    ),
     "collective_treatment": MessageLookupByLibrary.simpleMessage(
       "Traitement collectif",
     ),
@@ -210,6 +213,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "mating_date": MessageLookupByLibrary.simpleMessage("Date de saillie"),
     "mating_male_text": MessageLookupByLibrary.simpleMessage(
       "Si vide, la saillie ne sera pas enregistrée ou sera supprimée",
+    ),
+    "mating_no_father": MessageLookupByLibrary.simpleMessage(
+      "Pas de père saisi",
     ),
     "medication": MessageLookupByLibrary.simpleMessage("Medicament"),
     "memo": MessageLookupByLibrary.simpleMessage("Memo"),

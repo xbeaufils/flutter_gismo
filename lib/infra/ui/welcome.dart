@@ -87,6 +87,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
                 _buildGriTile("assets/home.png", S.of(context).input,  _presenter.entreePressed,) ,
                 _buildGriTile("assets/Truck.png", S.of(context).output, _presenter.sortiePressed, ),
                 _buildGriTile("assets/parcelles.png", "Parcelles", _presenter.parcellePressed ),
+                _buildGriTile("assets/adn.png", S.of(context).genetic, _presenter.geneticPressed ),
               ]),),
                  this._getAdmobAdvice(),
                 this._getFacebookAdvice(),

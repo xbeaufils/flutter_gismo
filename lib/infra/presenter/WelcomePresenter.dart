@@ -62,6 +62,10 @@ class WelcomePresenter {
     _view.viewPage('/note') ;
   }
 
+  void geneticPressed() {
+    _view.viewPage('/genetic');
+  }
+
   Future<List<MemoModel>> getNbNotes() {
     return  this._service.getCheptelMemos();
   }

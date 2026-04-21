@@ -48,6 +48,7 @@
   "genetic": "Génétique",
   "croisement": "Croisement",
   "race_indet": "Indet",
+  "collective_genetic": "Ajoutez tous les individus qui vont avoir la génétique avant de continuer",
 
   "entree_select" : "Sélectionnez une cause d'entree",
   "entree_reason_required" : "Cause d'entrée obligatoire",
@@ -205,6 +206,7 @@
   "mating_date" : "Date de saillie",
   "no_mating_date" : "Pas de date saisie",
   "mating_male_text" : "Si vide, la saillie ne sera pas enregistrée ou sera supprimée",
+  "mating_no_father" : "Pas de père saisi",
 
 
   "bt_cancel" : "Annuler",

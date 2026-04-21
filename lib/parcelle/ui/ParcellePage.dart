@@ -126,22 +126,6 @@ class _ParcellePageState extends GismoStatePage<ParcellePage> implements Parcell
       return Container();
   }
 
-/*  Widget _mapBoxView() {
-    _mapBox =  MapboxMap(
-      accessToken: 'pk.eyJ1IjoieGJlYXUiLCJhIjoiY2s4anVjamdwMGVsdDNucDlwZ2I0bGJwNSJ9.lc21my1ozaQZ2-EriDSY5w',
-      onMapCreated: _onMapCreated,
-      onMapClick: _presenter.onMapClick,
-      myLocationEnabled: true,
-      styleString: MapboxStyles.SATELLITE,
-      //onUserLocationUpdated: _onUserLocationUpdated,
-      initialCameraPosition: const CameraPosition(target: LatLng(45.26, 5.73), zoom: 14),
-      //initialCameraPosition: const CameraPosition(target: positionCamera, zoom: 14),
-    );
-    debug.log("Return mapBox", name: "_ParcellePageState::_mapBoxView]" );
-    return _mapBox!;
-  }
-*/
-
   void showStatus(String message) {
     setState(() {
       this._locationProgress = true;

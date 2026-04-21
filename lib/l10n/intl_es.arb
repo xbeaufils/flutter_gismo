@@ -129,5 +129,10 @@
   "lamb_deliverance": "Buscar la liberación",
   "lamb_fouille": "Buscar al cordero",
 
-  "mort": "Muerte"
+  "mort": "Muerte",
+
+  "mating_date" : "fecha de apareamiento",
+  "no_mating_date" : "Sin fecha de apareamiento",
+  "mating_male_text" : "Si vide, la saillie ne sera pas enregistrée ou sera supprimée",
+  "mating_no_father" : "Pas de père saisi"
 }

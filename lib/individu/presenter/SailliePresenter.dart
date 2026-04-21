@@ -1,4 +1,5 @@
 import 'package:flutter_gismo/individu/ui/SailliePage.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/SaillieModel.dart';
 import 'package:flutter_gismo/services/SaillieService.dart';
@@ -24,7 +25,8 @@ class SailliePresenter {
 
   void saveSaillie(String dateSaillie) async {
     if (this.pere == null) {
-      this._view.showMessage("message", true);
+      this._view.showMessage(S.current.mating_no_father , true);
+      return;
     }
     this._view.showSaving();
     if (this._view.currentSaillie == null)

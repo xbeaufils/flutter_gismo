@@ -27,6 +27,7 @@ class WebRepository {
   Future<Map<String, String>> _getHeaders() async{
     Map<String, String> _headers = new Map();
     _headers[HttpHeaders.contentTypeHeader] = ContentType.json.value;
+    //_headers[HttpHeaders.userAgentHeader] = 'Gismo' + packageInfo.version;
     if (this._token != null)
       _headers['token'] = this._token!;
     _headers[HttpHeaders.acceptLanguageHeader] =  Intl.shortLocale(await findSystemLocale());

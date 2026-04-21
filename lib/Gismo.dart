@@ -52,7 +52,7 @@ class GismoApp extends StatelessWidget {
         '/nec': (context) => SearchPage( GismoPage.etat_corporel),
         '/pesee': (context) => SearchPage( GismoPage.pesee),
         '/search': (context) => SearchPage( GismoPage.individu),
-        '/sanitaire' : (context) => SelectionPage([]),
+        '/sanitaire' : (context) => SelectionPage([], S.of(context).treatment_explanation, S.of(context).collective_treatment),
         '/echo' : (context) => SearchPage( GismoPage.echo),
         '/lambing' : (context) => SearchPage( GismoPage.lamb),
         '/lamb' : (context) => SearchLambPage(),
@@ -64,6 +64,7 @@ class GismoApp extends StatelessWidget {
         '/config' : (context) =>ConfigPage(),
         '/bluetooth' : (context) =>BluetoothPermissionPage(),
         '/saillie' : (context) => SearchPage(GismoPage.saillie),
+        '/genetic' : (context) => SelectionPage([],S.of(context).collective_genetic, S.of(context).genetic),
       },
     );
   }

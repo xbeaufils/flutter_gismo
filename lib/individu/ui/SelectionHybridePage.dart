@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
-import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_gismo/individu/presenter/SelectionPresenter.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/search/ui/selectionResult.dart';
-import 'package:flutter_gismo/traitement/presenter/SelectionPresenter.dart';
 
 class SelectionPage extends SelectionResultPage {
 
@@ -17,13 +15,13 @@ class SelectionPage extends SelectionResultPage {
 class _SelectionPageState extends SelectionResultPageState {
 
   _SelectionPageState();
-  late SelectionTraitementPresenter _presenter;
+  late SelectionHybridPresenter _presenter;
 
   @override
   void initState(){
     super.initState();
-    super.presenter = SelectionTraitementPresenter(this);
-    }
+    super.presenter = SelectionHybridPresenter(this);
+  }
 
 
 
