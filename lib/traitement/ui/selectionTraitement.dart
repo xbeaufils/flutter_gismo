@@ -17,7 +17,6 @@ class SelectionPage extends SelectionResultPage {
 class _SelectionPageState extends SelectionResultPageState {
 
   _SelectionPageState();
-  late SelectionTraitementPresenter _presenter;
 
   @override
   void initState(){
