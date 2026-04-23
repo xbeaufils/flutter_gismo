@@ -213,6 +213,7 @@
   "bt_add" : "Ajouter",
   "bt_delete" : "Supprimer",
   "bt_edition" : "Edition",
+  "bt_update" : "Modifier",
   "bt_validate" : "Valider la sélection",
   "record_saved": "Enregistrement effectué",
 

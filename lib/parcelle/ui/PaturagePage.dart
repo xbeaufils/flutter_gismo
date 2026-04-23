@@ -63,7 +63,7 @@ class _PaturagePageState extends GismoStatePage<PaturagePage> implements Paturag
                               firstDate:DateTime(1900),
                               lastDate: DateTime(2100));
                               if (date != null)
-                                _dateDebutCtl.text = df.format(date);
+                                _dateDebutCtl.text = DateFormat.yMd().format(date);
                             }),
                       ),
                     ),
@@ -85,7 +85,7 @@ class _PaturagePageState extends GismoStatePage<PaturagePage> implements Paturag
                                   firstDate:DateTime(1900),
                                   lastDate: DateTime(2100));
                               if (date != null)
-                                _dateFinCtl.text = df.format(date);
+                                _dateFinCtl.text = DateFormat.yMd().format(date);
                             },
                           ),
                         ))
