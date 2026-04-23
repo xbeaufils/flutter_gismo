@@ -24,7 +24,8 @@ class PaturagePresenter {
       this._view.pature.lotId = this._view.currentLotId!;
     this._view.pature.debut = DateFormat.yMd().parse(debut);
     if ( fin != null)
-      this._view.pature.fin = DateFormat.yMd().parse(fin);
+      if (fin.isNotEmpty)
+        this._view.pature.fin = DateFormat.yMd().parse(fin);
     String message = await this._service.savePature(this._view.pature);
     this._view.backWithMessage(message);
   }

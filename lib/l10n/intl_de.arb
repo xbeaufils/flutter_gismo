@@ -207,6 +207,7 @@
   "bt_add": "Hinzufügen",
   "bt_delete": "Löschen",
   "bt_edition": "Bearbeiten",
+  "bt_update":  "Aktualisieren",
   "bt_validate" : "Bestätigen Sie die Auswahl",
   "record_saved": "Aufnahme abgeschlossen",
 

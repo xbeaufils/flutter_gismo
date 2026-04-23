@@ -26,8 +26,11 @@ class TraitementPresenter {
     }
   }
 
-  void edit(MedicModel medic) {
-
+  void edit(MedicModel medic, int index) async {
+    MedicModel ? newMedic = await  this._view.goNextPage(MedicPage.edit(medic));
+    if (newMedic == null) return;
+    MultipleSanitaireContract multipleView = this._view as MultipleSanitaireContract;
+    multipleView.update(newMedic, index);
   }
 
   void add(BuildContext context) async {

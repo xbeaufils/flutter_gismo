@@ -213,6 +213,7 @@
   "bt_add" : "Add",
   "bt_delete" : "Delete",
   "bt_edition" : "Edit",
+  "bt_update" : "Update",
   "bt_validate" : "Validate the selection",
   "record_saved": "Record completed",
 

@@ -99,6 +99,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "bt_delete": MessageLookupByLibrary.simpleMessage("Supprimer"),
     "bt_edition": MessageLookupByLibrary.simpleMessage("Edition"),
     "bt_save": MessageLookupByLibrary.simpleMessage("Enregistrer"),
+    "bt_update": MessageLookupByLibrary.simpleMessage("Modifier"),
     "bt_validate": MessageLookupByLibrary.simpleMessage("Valider la sélection"),
     "collective_genetic": MessageLookupByLibrary.simpleMessage(
       "Ajoutez tous les individus qui vont avoir la génétique avant de continuer",

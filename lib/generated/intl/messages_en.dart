@@ -93,6 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "bt_delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "bt_edition": MessageLookupByLibrary.simpleMessage("Edit"),
     "bt_save": MessageLookupByLibrary.simpleMessage("Save"),
+    "bt_update": MessageLookupByLibrary.simpleMessage("Update"),
     "bt_validate": MessageLookupByLibrary.simpleMessage(
       "Validate the selection",
     ),

@@ -1614,6 +1614,11 @@ class S {
     return Intl.message('Edit', name: 'bt_edition', desc: '', args: []);
   }
 
+  /// `Update`
+  String get bt_update {
+    return Intl.message('Update', name: 'bt_update', desc: '', args: []);
+  }
+
   /// `Validate the selection`
   String get bt_validate {
     return Intl.message(
