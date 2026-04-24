@@ -4,25 +4,19 @@ import 'package:flutter_gismo/individu/presenter/BetePresenter.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 
-class HybridationPage extends StatefulWidget {
-  Hybridation ? _hybridation;
 
-  HybridationPage(Hybridation ? hybridation, {Key ? key}) : super(key: key){
-    this._hybridation = hybridation;
-  }
-
-  @override
-  _HybridationPageState createState() => new _HybridationPageState();
-
-}
-abstract class HybridationContract extends GismoContract {
-  Hybridation ? get hybridation;
+abstract class HybridationContract extends GismoContract{}
+abstract class HybridationMulitContract extends HybridationContract{
+  List<Bete> get betes;
 }
 
-class _HybridationPageState extends GismoStatePage<HybridationPage> implements HybridationContract {
+abstract class HybridationPage extends StatefulWidget {
+
+}
+
+abstract class _HybridationPageState<T extends StatefulWidget> extends GismoStatePage<T>   implements HybridationContract{
   late HybridationPresenter _presenter;
 
-  Hybridation ? get hybridation => this.widget._hybridation;
 
   @override
   Widget build(BuildContext context) {
@@ -123,9 +117,56 @@ class _HybridationPageState extends GismoStatePage<HybridationPage> implements H
               else
                 return Container();
             })),
-           ElevatedButton(onPressed: this._presenter.save, child: Text(S.current.bt_validate),),
+           this._buildSaveButton(),
           ]));
   }
+
+  Widget _buildSaveButton() ;
+}
+
+
+class HybridationMultiPage extends HybridationPage {
+  List<Bete> _betes;
+
+  List<Bete> get betes => _betes;
+
+  @override
+  _HybridationPageState  createState() => new _HybridationMultiPageState();
+
+  HybridationMultiPage(this._betes, {Key ? key});
+
+}
+
+class _HybridationMultiPageState extends _HybridationPageState<HybridationMultiPage> implements HybridationMulitContract {
+  @override
+  void initState() {
+    super.initState();
+    _presenter = HybridationPresenter(this, null);
+  }
+
+  Widget _buildSaveButton() {
+    return ElevatedButton(
+        onPressed: this._presenter.save,
+        child: Text(S.current.bt_save));
+  }
+
+  @override
+  List<Bete> get betes {
+    return this.widget._betes;
+  }
+
+}
+
+class HybridationSinglePage extends HybridationPage {
+  Hybridation ? _hybridation;
+
+  HybridationSinglePage(this._hybridation);
+  @override
+  _HybridationPageState  createState() => new _HybridationSinglePageState();
+
+}
+
+class _HybridationSinglePageState extends _HybridationPageState<HybridationSinglePage> {
 
   @override
   void initState() {
@@ -133,5 +174,10 @@ class _HybridationPageState extends GismoStatePage<HybridationPage> implements H
     _presenter = HybridationPresenter(this, this.widget._hybridation);
   }
 
+  Widget _buildSaveButton() {
+    return ElevatedButton(
+        onPressed: this._presenter.save,
+        child: Text(S.current.bt_validate));
+  }
 
 }

@@ -98,7 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Validate the selection",
     ),
     "collective_genetic": MessageLookupByLibrary.simpleMessage(
-      "Ajoutez tous les individus qui vont avoir la génétique avant de continuer",
+      "Add all the individuals who will have the genetics before continuing",
     ),
     "collective_treatment": MessageLookupByLibrary.simpleMessage(
       "Collective treatment",
@@ -280,6 +280,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "No date of departure",
     ),
     "noEntryDate": MessageLookupByLibrary.simpleMessage("No entry date"),
+    "no_bete_selected": MessageLookupByLibrary.simpleMessage(
+      "No sheep selected",
+    ),
     "no_date_debut": MessageLookupByLibrary.simpleMessage("No begin date"),
     "no_death_date": MessageLookupByLibrary.simpleMessage("No death date"),
     "no_earring_read": MessageLookupByLibrary.simpleMessage("No ear tag read"),

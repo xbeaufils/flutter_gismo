@@ -104,7 +104,7 @@ class BetePresenter {
     Hybridation ? hybridation = null;
     if (this._view.bete != null)
       hybridation = this._view.bete!.genetique;
-    hybridation = await  this._view.goNextPage(HybridationPage(hybridation));
+    hybridation = await  this._view.goNextPage(HybridationSinglePage(hybridation));
     if (hybridation != null) {
       debug.log(hybridation.toJson().toString(), name: "BetePresenter::selectRace");
       this._view.bete!.genetique = hybridation;
@@ -136,10 +136,6 @@ class HybridationPresenter {
   late Hybridation  _hybridation;
 
   Hybridation get hybridation => _hybridation;
-
-  set hybridation(Hybridation value) {
-    _hybridation = value;
-  }
 
   HybridationPresenter(this._view, Hybridation ? aHybridation){
     if (aHybridation == null) {
@@ -201,7 +197,17 @@ class HybridationPresenter {
     debug.log(this._hybridation.toJson().toString(), name: "HybridationPresenter::remove");
   }
 
-  void save() {
-    this._view.backWithObject(_hybridation);
+  void save() async {
+    this._view as HybridationMulitContract;
+    if (this._view.betes.isEmpty) {
+      this._view.showMessage(S.current.no_bete_selected, true);
+      return;
+    }
+    await this._service.saveMultiHybridation(this._view.betes, this._hybridation);
+    this._view.backWithMessage(S.current.record_saved);
+  }
+
+  void validate() {
+      this._view.backWithObject(this._hybridation);
   }
 }

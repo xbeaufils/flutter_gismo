@@ -79,6 +79,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
      if ( ! AuthService().subscribe ) {
       this._adBanner = BannerAd(

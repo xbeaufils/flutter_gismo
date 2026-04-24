@@ -47,6 +47,8 @@
   "generation": "Generación",
   "genetic": "Genético",
   "race_indet": "indet",
+  "collective_genetic": "Agregue a todas las personas que tendrán la genética antes de continuar.\n\n",
+  "no_bete_selected" : "Ninguna oveja seleccionada",
 
   "entree_select": "Seleccione un motivo de entrada",
   "entree_reason_required": "Motivo de entrada obligatorio",

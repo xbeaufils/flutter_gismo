@@ -76,6 +76,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "breastfeeding_not_specified": MessageLookupByLibrary.simpleMessage(
       "Lactancia materna no especificada",
     ),
+    "collective_genetic": MessageLookupByLibrary.simpleMessage(
+      "Agregue a todas las personas que tendrán la genética antes de continuar.\n\n",
+    ),
     "configuration": MessageLookupByLibrary.simpleMessage("Configuración"),
     "data_available": MessageLookupByLibrary.simpleMessage("Datos recibidos"),
     "dateDeparture": MessageLookupByLibrary.simpleMessage("Fecha de salida"),
@@ -163,6 +166,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Sin fecha de salida",
     ),
     "noEntryDate": MessageLookupByLibrary.simpleMessage("Sin fecha de entrada"),
+    "no_bete_selected": MessageLookupByLibrary.simpleMessage(
+      "Ninguna oveja seleccionada",
+    ),
     "no_earring_read": MessageLookupByLibrary.simpleMessage(
       "No se leyó el pendiente",
     ),

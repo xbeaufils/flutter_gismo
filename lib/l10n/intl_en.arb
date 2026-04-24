@@ -47,7 +47,8 @@
   "generation": "Generation",
   "genetic": "Genetic",
   "race_indet": "Indet",
-  "collective_genetic": "Ajoutez tous les individus qui vont avoir la génétique avant de continuer",
+  "collective_genetic": "Add all the individuals who will have the genetics before continuing",
+  "no_bete_selected" : "No sheep selected",
 
   "entree_select" : "Select an entry reason",
   "entree_reason_required" : "Entry reason is required",

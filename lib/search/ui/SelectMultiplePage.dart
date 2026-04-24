@@ -93,7 +93,7 @@ class _SelectMultiplePageState extends GismoStatePage<SelectMultiplePage> with T
             Expanded(child:  _buildList(context) ),
             Center(
                 child :  FilledButton(key:null,
-                    onPressed: ()=> _sendSelecttion(_selectedBete.values.toList()),
+                    onPressed: ()=> this._presenter.sendSelecttion(_selectedBete.values.toList()),
                     child: Text(S.of(context).bt_validate)
                 )
             ),
@@ -186,42 +186,6 @@ class _SelectMultiplePageState extends GismoStatePage<SelectMultiplePage> with T
               subtitle: Text(_betes[index].numMarquage),
             );
       });
-  }
-
-  void _sendSelecttion(List<Bete> betes) {
-    var page;
-    switch (this.widget.nextPage) {
-      case GismoPage.sanitaire:
-        page = null; //SelectionPage(this._bloc, betes);
-        break;
-      case GismoPage.sortie:
-      case GismoPage.lot:
-      case GismoPage.sailliePere:
-        page = null;
-        break;
-    }
-
-    if (page  == null) {
-      Navigator.of(context).pop(betes);
-    }
-    else {
-      var navigationResult = Navigator
-        .of(context)
-        .pushReplacement(MaterialPageRoute(builder: (BuildContext context) => page));
-
-      navigationResult.then((message) {
-        if (message != null)
-          _showMessage(message);
-      });
-    }
-  }
-
-  void _showMessage(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    //_scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
   void _searchPressed(BuildContext context) {

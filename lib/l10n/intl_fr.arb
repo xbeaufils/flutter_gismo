@@ -49,6 +49,7 @@
   "croisement": "Croisement",
   "race_indet": "Indet",
   "collective_genetic": "Ajoutez tous les individus qui vont avoir la génétique avant de continuer",
+  "no_bete_selected" : "Pas de bête sélectionnée",
 
   "entree_select" : "Sélectionnez une cause d'entree",
   "entree_reason_required" : "Cause d'entrée obligatoire",

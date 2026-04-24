@@ -7,7 +7,7 @@ class SelectionHybridPresenter extends SelectionPresenter {
   SelectionHybridPresenter(SelectionContract view) : super(view);
 
   void nextPage() async {
-    String ? message = await this.view.goNextPage( HybridationPage(null));
+    String ? message = await this.view.goNextPage( HybridationMultiPage(this.view.betes));
     if (message != null)
       this.view.backWithMessage(message);
     else

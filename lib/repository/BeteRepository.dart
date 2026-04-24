@@ -22,6 +22,7 @@ abstract class BeteRepository {
   Future<List<Bete>>getBrebis();
   Future<List<Bete>>getBeliers();
   Future<List<Race>> getAllRaces();
+  Future<String> saveMultiHybridation(List<Bete> betes, Hybridation hybdrid);
 }
 
 class WebBeteRepository extends WebRepository implements BeteRepository {
@@ -30,6 +31,7 @@ class WebBeteRepository extends WebRepository implements BeteRepository {
 
   final DateFormat _df = new DateFormat('dd/MM/yyyy');
 
+  @override
   Future<List<Bete>> getBetes(String cheptel) async {
     final response = await super.doGetList(
         '/bete/cheptel/' + cheptel);
@@ -40,6 +42,7 @@ class WebBeteRepository extends WebRepository implements BeteRepository {
     return tempList;
   }
 
+  @override
   Future<String> saveBete(Bete bete) async {
     String action;
     if (bete.idBd == null)
@@ -57,7 +60,6 @@ class WebBeteRepository extends WebRepository implements BeteRepository {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
-
 
   @override
   Future<bool> checkBete(Bete bete) async {
@@ -172,11 +174,29 @@ class WebBeteRepository extends WebRepository implements BeteRepository {
     }
     return tempList;
   }
+
+  @override
+  Future<String> saveMultiHybridation(List<Bete> betes, Hybridation hybdrid) async {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['betes'] = betes.map((bete) => bete.toJson()).toList();
+    data['hybridation'] = hybdrid.toJson();
+    try {
+      final response = await super.doPostMessage(
+          '/bete/genetic', data);
+      return response;
+    } on GismoException catch(e) {
+      throw e;
+    } catch ( e) {
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+
+  }
 }
 
 class LocalBeteRepository extends LocalRepository implements BeteRepository {
   final _df = new DateFormat('dd/MM/yyyy');
 
+  @override
   Future<Bete?> _searchBete(int idBd) async {
     Database db = await this.database;
     List<Map<String, dynamic>> futureMaps = await db.query('bete' ,where: 'id = ?', whereArgs: [idBd]);
@@ -339,6 +359,11 @@ class LocalBeteRepository extends LocalRepository implements BeteRepository {
 
   @override
   Future<List<Race>> getAllRaces() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> saveMultiHybridation(List<Bete> betes, Hybridation hybdrid) {
     throw UnimplementedError();
   }
 

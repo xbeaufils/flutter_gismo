@@ -294,6 +294,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "noEntryDate": MessageLookupByLibrary.simpleMessage(
       "Pas de date d\'entrée",
     ),
+    "no_bete_selected": MessageLookupByLibrary.simpleMessage(
+      "Pas de bête sélectionnée",
+    ),
     "no_date_debut": MessageLookupByLibrary.simpleMessage(
       "Pas de date de début",
     ),

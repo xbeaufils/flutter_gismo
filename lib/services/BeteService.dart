@@ -242,4 +242,7 @@ class BeteService {
     }
   }
 
+  Future<void> saveMultiHybridation(List<Bete> betes, Hybridation hybdrid) async {
+    String message = await _repository.saveMultiHybridation(betes, hybdrid);
+  }
 }

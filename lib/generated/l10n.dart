@@ -369,11 +369,21 @@ class S {
     return Intl.message('Indet', name: 'race_indet', desc: '', args: []);
   }
 
-  /// `Ajoutez tous les individus qui vont avoir la génétique avant de continuer`
-  String get  collective_genetic {
+  /// `Add all the individuals who will have the genetics before continuing`
+  String get collective_genetic {
     return Intl.message(
-      'Ajoutez tous les individus qui vont avoir la génétique avant de continuer',
+      'Add all the individuals who will have the genetics before continuing',
       name: 'collective_genetic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No sheep selected`
+  String get no_bete_selected {
+    return Intl.message(
+      'No sheep selected',
+      name: 'no_bete_selected',
       desc: '',
       args: [],
     );

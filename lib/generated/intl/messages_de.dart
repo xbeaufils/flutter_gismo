@@ -99,6 +99,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "bt_validate": MessageLookupByLibrary.simpleMessage(
       "Bestätigen Sie die Auswahl",
     ),
+    "collective_genetic": MessageLookupByLibrary.simpleMessage(
+      "Fügen Sie alle Personen hinzu, die die entsprechende genetische Veranlagung besitzen, bevor Sie fortfahren.",
+    ),
     "collective_treatment": MessageLookupByLibrary.simpleMessage(
       "Kollektive Behandlung",
     ),
@@ -299,6 +302,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Kein Austrittsdatum",
     ),
     "noEntryDate": MessageLookupByLibrary.simpleMessage("Kein Eintrittsdatum"),
+    "no_bete_selected": MessageLookupByLibrary.simpleMessage(
+      "Keine Schafe ausgewählt",
+    ),
     "no_date_debut": MessageLookupByLibrary.simpleMessage("Kein Startdatum"),
     "no_death_date": MessageLookupByLibrary.simpleMessage("Kein Todesdatum"),
     "no_earring_read": MessageLookupByLibrary.simpleMessage(

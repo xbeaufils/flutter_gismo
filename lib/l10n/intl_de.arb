@@ -41,6 +41,8 @@
   "generation": "Generation",
   "genetic": "Genetisch",
   "race_indet": "unbest",
+  "collective_genetic": "Fügen Sie alle Personen hinzu, die die entsprechende genetische Veranlagung besitzen, bevor Sie fortfahren.",
+  "no_bete_selected" : "Keine Schafe ausgewählt",
 
   "sex_warn": "Geschlecht fehlt",
    "name": "Rufname",
