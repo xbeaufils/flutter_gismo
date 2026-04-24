@@ -75,19 +75,19 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
               mainAxisSpacing: 10,
               crossAxisCount: 3,
               children: <Widget>[
-                _buildGriTile("assets/Lot.png", S.of(context).batch, _presenter.lotPressed) ,
-                _buildGriTile("assets/brebis.png", S.of(context).sheep, _presenter.individuPressed),
-                _buildGriTile("assets/jumping_lambs.png", S.of(context).lambs, _presenter.lambPressed ),
-                _buildGriTile("assets/saillie.png", S.of(context).mating, _presenter.sailliePressed, ),
-                _buildGriTile("assets/ultrasound.png", S.of(context).ultrasound, _presenter.echoPressed,) ,
-                _buildGriTile("assets/lamb.png", S.of(context).lambing, _presenter.lambingPressed,) ,
-                _buildGriTile("assets/syringe.png", S.of(context).treatment, _presenter.traitementPressed,) ,
-                _buildGriTile("assets/peseur.png", S.of(context).weighing, _presenter.peseePressed,) ,
-                _buildGriTile("assets/etat_corporel.png", S.of(context).body_cond, _presenter.necPressed,),
-                _buildGriTile("assets/home.png", S.of(context).input,  _presenter.entreePressed,) ,
-                _buildGriTile("assets/Truck.png", S.of(context).output, _presenter.sortiePressed, ),
-                _buildGriTile("assets/parcelles.png", "Parcelles", _presenter.parcellePressed ),
-                _buildGriTile("assets/adn.png", S.of(context).genetic, _presenter.geneticPressed ),
+                _buildGriTile("assets/Lot.png", S.of(context).batch, false, _presenter.lotPressed) ,
+                _buildGriTile("assets/brebis.png", S.of(context).sheep, false, _presenter.individuPressed),
+                _buildGriTile("assets/jumping_lambs.png", S.of(context).lambs, false, _presenter.lambPressed ),
+                _buildGriTile("assets/saillie.png", S.of(context).mating, false, _presenter.sailliePressed, ),
+                _buildGriTile("assets/ultrasound.png", S.of(context).ultrasound, false, _presenter.echoPressed,) ,
+                _buildGriTile("assets/lamb.png", S.of(context).lambing, false, _presenter.lambingPressed,) ,
+                _buildGriTile("assets/syringe.png", S.of(context).treatment, false, _presenter.traitementPressed,) ,
+                _buildGriTile("assets/peseur.png", S.of(context).weighing, false, _presenter.peseePressed,) ,
+                _buildGriTile("assets/etat_corporel.png", S.of(context).body_cond, false, _presenter.necPressed,),
+                _buildGriTile("assets/home.png", S.of(context).input,  false, _presenter.entreePressed,) ,
+                _buildGriTile("assets/Truck.png", S.of(context).output, false, _presenter.sortiePressed, ),
+                _buildGriTile("assets/parcelles.png", "Parcelles", true, _presenter.parcellePressed ),
+                _buildGriTile("assets/adn.png", S.of(context).genetic, true, _presenter.geneticPressed ),
               ]),),
                  this._getAdmobAdvice(),
                 this._getFacebookAdvice(),
@@ -109,19 +109,25 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
     return Container();
   }
 
-  Widget _buildGriTile(String imageName, String title, Function() press ) {
-    //return GridTile(child: _buildButton(title, imageName, press));
-    return GridTile(child:
-      Column(children: [
-        FilledButton(
-          style: ElevatedButton.styleFrom(
-            // The width will be 100% of the parent widget
-            // The height will be 60
-              minimumSize: const Size.fromHeight(60)),
-          child: Image.asset(imageName),
-          onPressed : press,),
-        Text(title) ]),
-      );
+  Widget _buildGriTile(String imageName, String title, bool needSubscribe, Function() press ) {
+    bool afficheBtn = false;
+    if (! needSubscribe)
+      afficheBtn = true;
+    else if (AuthService().subscribe)
+      afficheBtn = true;
+    if ( afficheBtn)
+      return GridTile(child:
+        Column(children: [
+          FilledButton(
+            style: ElevatedButton.styleFrom(
+              // The width will be 100% of the parent widget
+              // The height will be 60
+                minimumSize: const Size.fromHeight(60)),
+            child: Image.asset(imageName),
+            onPressed : press,),
+          Text(title) ]),
+        );
+    return Container();
   }
 
   Widget _getFacebookAdvice() {
