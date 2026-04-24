@@ -176,7 +176,7 @@ class _HybridationSinglePageState extends _HybridationPageState<HybridationSingl
 
   Widget _buildSaveButton() {
     return ElevatedButton(
-        onPressed: this._presenter.save,
+        onPressed: this._presenter.validate,
         child: Text(S.current.bt_validate));
   }
 
