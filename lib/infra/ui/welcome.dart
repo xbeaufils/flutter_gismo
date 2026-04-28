@@ -12,6 +12,7 @@ import 'package:flutter_gismo/infra/ui/MenuPage.dart';
 import 'package:flutter_gismo/infra/presenter/WelcomePresenter.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
+import 'package:flutter_gismo/sheepyGreenScheme.dart';
 import 'package:flutter_gismo/theme.dart';
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -32,9 +33,9 @@ abstract class WelcomeContract extends GismoContract {
 }
 
 class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeContract {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late WelcomePresenter _presenter;
-
+  int _selectedIndex = 0;
   _WelcomePageState();
   BannerAd ? _adBanner;
 
@@ -42,7 +43,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
   @override
   Widget build(BuildContext context) {
     debug.log("Build", name: "Welcome:::build");
-    return new Scaffold(
+    return Scaffold(
         key: _scaffoldKey,
 //        backgroundColor: Colors.lightGreen,
         appBar: new AppBar(
@@ -92,6 +93,30 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
                  this._getAdmobAdvice(),
                 this._getFacebookAdvice(),
         ]),
+          bottomNavigationBar: BottomNavigationBar(
+            selectedItemColor: sheepyGreenSheme.colorScheme.onPrimaryContainer,
+            // backgroundColor: sheepyGreenSheme.colorScheme.onPrimaryContainer, NO RESULT
+            type: BottomNavigationBarType.fixed,
+          onTap: (index) {
+              switch (index) {
+                 case 0:
+                  this._openMenuEffectif(context);
+                  break;
+                case 1:
+                  this._openMenuBreeding(context);
+                  break;
+                case 2:
+                  this._openMenuHealth();
+                  break;
+                default:
+              }
+          } ,
+          items: [
+            BottomNavigationBarItem(icon: ImageIcon(AssetImage("assets/brebis.png")), label: S.of(context).effectif),
+            BottomNavigationBarItem(icon: ImageIcon(AssetImage("assets/sheep_lamb.png")), label: S.of(context).reproduction),
+            BottomNavigationBarItem(icon: Icon(Icons.health_and_safety), label: S.of(context).sante),
+          ],)
+      ,
         drawer: GismoDrawer(),);
   }
 
@@ -213,7 +238,76 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
     });
 
   }
+  // AnimationStyle? _animationStyle = ;
 
+  void _openMenuEffectif(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Column(children: [
+            ListTile(
+              leading: Image.asset("assets/Lot.png"),
+              title: Text(S.of(context).batch),
+              onTap: _presenter.lotPressed,),
+            ListTile(
+              leading: Image.asset("assets/brebis.png"),
+              title: Text(S.of(context).sheep),
+              onTap: _presenter.individuPressed,),
+            ListTile(
+              leading: Image.asset("assets/jumping_lambs.png"),
+              title: Text(S.of(context).lambs),
+              onTap: _presenter.lambPressed,),
+            ListTile(
+              leading: Image.asset("assets/home.png"),
+              title: Text(S.of(context).input),
+             onTap: _presenter.entreePressed,),
+            ListTile(
+              leading: Image.asset("assets/Truck.png"),
+              title: Text(S.of(context).output),
+              onTap: _presenter.sortiePressed,),
+          ],);
+        });
+  }
 
+  void _openMenuBreeding(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Column(children: [
+            ListTile(
+              leading: Image.asset("assets/saillie.png"),
+              title: Text(S.of(context).batch),
+              onTap: _presenter.sailliePressed,),
+            ListTile(
+              leading: Image.asset("assets/ultrasound.png"),
+              title: Text(S.of(context).sheep),
+              onTap: _presenter.echoPressed,),
+            ListTile(
+              leading: Image.asset("assets/lamb.png"),
+              title: Text(S.of(context).lambs),
+              onTap: _presenter.lambingPressed,),
+          ],);
+        });
+  }
 
+  void _openMenuHealth() {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Column(children: [
+            ListTile(
+              leading: SizedBox(child: Image.asset("assets/syringe.png"), width: 55,),
+              title: Text(S.of(context).treatment),
+              onTap: _presenter.traitementPressed,),
+            ListTile(
+              leading: SizedBox(child: Image.asset("assets/peseur.png"), width: 55,),
+              title: Text(S.of(context).weighing),
+              onTap: _presenter.peseePressed,),
+            ListTile(
+              leading: SizedBox(child: Image.asset("assets/etat_corporel.png"), width: 55,),
+              title: Text(S.of(context).body_cond),
+              onTap: _presenter.necPressed,),
+          ]);}
+    );
+  }
 }

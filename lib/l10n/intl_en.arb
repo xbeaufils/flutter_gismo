@@ -1,5 +1,10 @@
 {
   "@@locale": "en",
+
+  "effectif": "Livestock",
+  "reproduction": "Breeding",
+  "sante" : "Health",
+
   "batch" : "Batch",
   "sheep" : "Sheep",
   "lambing" : "Lambing",
@@ -13,7 +18,7 @@
   "treatment" : "Treatment",
   "input": "Entry",
   "output": "Departure",
-  "welcome" : "Welcome",
+  "welcome" : "Home",
   "memo" : "Memo",
   "configuration" : "Configuration",
   "localuser" : "Local user",

@@ -1,5 +1,10 @@
 {
   "@@locale": "fr",
+
+  "effectif": "Troupeau",
+  "reproduction": "Reproduction",
+  "sante" : "Santé",
+
   "batch" : "Lot",
   "sheep" : "Individu",
   "lambing" : "Agnelage",

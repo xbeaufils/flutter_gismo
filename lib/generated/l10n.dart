@@ -54,6 +54,21 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Livestock`
+  String get effectif {
+    return Intl.message('Livestock', name: 'effectif', desc: '', args: []);
+  }
+
+  /// `Breeding`
+  String get reproduction {
+    return Intl.message('Breeding', name: 'reproduction', desc: '', args: []);
+  }
+
+  /// `Health`
+  String get sante {
+    return Intl.message('Health', name: 'sante', desc: '', args: []);
+  }
+
   /// `Batch`
   String get batch {
     return Intl.message('Batch', name: 'batch', desc: '', args: []);
@@ -124,9 +139,9 @@ class S {
     return Intl.message('Departure', name: 'output', desc: '', args: []);
   }
 
-  /// `Welcome`
+  /// `Home`
   String get welcome {
-    return Intl.message('Welcome', name: 'welcome', desc: '', args: []);
+    return Intl.message('Home', name: 'welcome', desc: '', args: []);
   }
 
   /// `Memo`

@@ -1,4 +1,5 @@
 
+import 'package:flutter/material.dart';
 import 'package:flutter_gismo/infra/ui/welcome.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/services/MemoService.dart';
@@ -69,4 +70,5 @@ class WelcomePresenter {
   Future<List<MemoModel>> getNbNotes() {
     return  this._service.getCheptelMemos();
   }
+
 }

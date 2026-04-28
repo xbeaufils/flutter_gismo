@@ -136,6 +136,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Allows to evaluate the maternal qualities according to the criteria of Stéphanie Maubé",
     ),
     "edit_lamb": MessageLookupByLibrary.simpleMessage("edit"),
+    "effectif": MessageLookupByLibrary.simpleMessage("Livestock"),
     "email": MessageLookupByLibrary.simpleMessage("Email"),
     "empty": MessageLookupByLibrary.simpleMessage("Empty"),
     "empty_folder": MessageLookupByLibrary.simpleMessage("Empty folder"),
@@ -342,6 +343,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "ram": MessageLookupByLibrary.simpleMessage("Ram"),
     "reason": MessageLookupByLibrary.simpleMessage("Reason"),
     "record_saved": MessageLookupByLibrary.simpleMessage("Record completed"),
+    "reproduction": MessageLookupByLibrary.simpleMessage("Breeding"),
     "restore_bd": MessageLookupByLibrary.simpleMessage("Restore database"),
     "restore_bd_text": MessageLookupByLibrary.simpleMessage(
       "Current data will be overwritten.",
@@ -349,6 +351,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "result": MessageLookupByLibrary.simpleMessage("Result"),
     "route": MessageLookupByLibrary.simpleMessage("Route"),
     "rythme": MessageLookupByLibrary.simpleMessage("Rhythm"),
+    "sante": MessageLookupByLibrary.simpleMessage("Health"),
     "save_config": MessageLookupByLibrary.simpleMessage("save configuration"),
     "search": MessageLookupByLibrary.simpleMessage("Search"),
     "search_ram": MessageLookupByLibrary.simpleMessage("Search ram"),
@@ -393,7 +396,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "weighing_hint": MessageLookupByLibrary.simpleMessage("Weight in Kg"),
     "weight": MessageLookupByLibrary.simpleMessage("Weight"),
-    "welcome": MessageLookupByLibrary.simpleMessage("Welcome"),
+    "welcome": MessageLookupByLibrary.simpleMessage("Home"),
     "with_subscription": MessageLookupByLibrary.simpleMessage(
       "With subscription",
     ),

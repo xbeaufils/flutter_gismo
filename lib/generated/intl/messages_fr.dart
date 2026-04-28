@@ -142,6 +142,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Permet d\'évaluer les qualités maternelles suivant les critères de Stéphanie Maubé",
     ),
     "edit_lamb": MessageLookupByLibrary.simpleMessage("modification"),
+    "effectif": MessageLookupByLibrary.simpleMessage("Troupeau"),
     "email": MessageLookupByLibrary.simpleMessage("Email"),
     "empty": MessageLookupByLibrary.simpleMessage("Vide"),
     "empty_folder": MessageLookupByLibrary.simpleMessage("Répertoire vide"),
@@ -366,6 +367,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "record_saved": MessageLookupByLibrary.simpleMessage(
       "Enregistrement effectué",
     ),
+    "reproduction": MessageLookupByLibrary.simpleMessage("Reproduction"),
     "restore_bd": MessageLookupByLibrary.simpleMessage("Restauration de la BD"),
     "restore_bd_text": MessageLookupByLibrary.simpleMessage(
       "Les données actuelles seront remplacées.",
@@ -373,6 +375,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "result": MessageLookupByLibrary.simpleMessage("Résultat"),
     "route": MessageLookupByLibrary.simpleMessage("Voie"),
     "rythme": MessageLookupByLibrary.simpleMessage("Rythme"),
+    "sante": MessageLookupByLibrary.simpleMessage("Santé"),
     "save_config": MessageLookupByLibrary.simpleMessage(
       "Enregistrer la configuration",
     ),
