@@ -4,6 +4,7 @@
   "effectif": "Troupeau",
   "reproduction": "Reproduction",
   "sante" : "Santé",
+  "other" : "Autres",
 
   "batch" : "Lot",
   "sheep" : "Individu",

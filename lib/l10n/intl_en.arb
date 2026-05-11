@@ -4,6 +4,7 @@
   "effectif": "Livestock",
   "reproduction": "Breeding",
   "sante" : "Health",
+  "other" : "Others",
 
   "batch" : "Batch",
   "sheep" : "Sheep",

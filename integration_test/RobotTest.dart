@@ -52,7 +52,8 @@ class RobotTest {
   }
 
   Future<void> selectLamb(String numBoucle) async {
-    await tester.tap(this.findWelcomeButton(S.current.lambs));
+    Finder btLambs = await this.findWelcomeButton(Key("btTroupeau"), S.current.lambs);
+    await tester.tap(btLambs);
     await tester.pumpAndSettle();
     await tester.tap(this.findByChevron(numBoucle));
     await tester.pumpAndSettle();
@@ -60,12 +61,11 @@ class RobotTest {
   }
 
   @protected
-  Finder findWelcomeButton(String text) {
-    final Finder entreeGrid = find.ancestor(
-        of: find.text(text), matching: find.byType(GridTile));
-    final Finder entree = find.descendant(
-        of: entreeGrid, matching: find.byType(FilledButton));
-    return entree;
+  Future<Finder> findWelcomeButton(Key key, String text) async {
+    await tester.tap(find.byKey(key));
+    await tester.pumpAndSettle();
+    final Finder button = find.text(text);
+    return button;
   }
 
   Finder findByChevron(String text) {

@@ -13,7 +13,7 @@ class RobotTestTraitement extends RobotTest {
 
   Future<void> create(Map<String, dynamic> traitement) async {
       await startAppli();
-      final trt = findWelcomeButton(S.current.treatment);
+      final Finder trt = await findWelcomeButton(Key("btSante"), S.current.treatment);
       await tester.tap(trt);
       await tester.pumpAndSettle();
       final btSearch = find.byIcon(Icons.settings_remote);
@@ -68,7 +68,8 @@ class RobotTestTraitement extends RobotTest {
 
   Future<void> modify(Map<String, dynamic> traitement) async {
       await startAppli();
-      await tester.tap(findWelcomeButton(S.current.sheep));
+      Finder btIndividu = await findWelcomeButton(Key("btTroupeau"),S.current.sheep);
+      await tester.tap(btIndividu);
       await tester.pumpAndSettle();
       await selectBete(traitement["bete"]);
       await tester.pumpAndSettle();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Exception/EventException.dart';
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/individu/presenter/BetePresenter.dart';
+import 'package:flutter_gismo/model/Dashboard.dart';
 import 'package:flutter_gismo/repository/BeteRepository.dart';
 import 'package:flutter_gismo/repository/EchoRepository.dart';
 import 'package:flutter_gismo/repository/LambRepository.dart';
@@ -244,5 +245,9 @@ class BeteService {
 
   Future<void> saveMultiHybridation(List<Bete> betes, Hybridation hybdrid) async {
     String message = await _repository.saveMultiHybridation(betes, hybdrid);
+  }
+
+  Future<DashBoardEffectif> getDashBoardEffectif() async {
+    return this._repository.getDashBoardEffectif();
   }
 }

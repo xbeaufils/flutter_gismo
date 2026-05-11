@@ -333,6 +333,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Le nombre de foetus est vide",
     ),
     "observations": MessageLookupByLibrary.simpleMessage("Observations"),
+    "other": MessageLookupByLibrary.simpleMessage("Autres"),
     "output": MessageLookupByLibrary.simpleMessage("Sortie"),
     "output_auto": MessageLookupByLibrary.simpleMessage("Sortie Automatique"),
     "output_boucherie": MessageLookupByLibrary.simpleMessage("Vente boucherie"),

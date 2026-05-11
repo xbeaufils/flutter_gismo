@@ -14,7 +14,8 @@ class RobotLotTest extends RobotTest {
 
   Future<void> create(Map<String, dynamic> lot) async {
     await startAppli();
-    await tester.tap(findWelcomeButton(S.current.batch));
+    Finder btLot = await findWelcomeButton(Key("btTroupeau"), S.current.batch);
+    await tester.tap(btLot);
     await tester.pumpAndSettle();
     final btAdd = find.byIcon(Icons.add);
     await tester.tap(btAdd);
@@ -44,7 +45,8 @@ class RobotLotTest extends RobotTest {
 
   Future<void> modifyEnd(Map<String, dynamic> lot) async {
     await startAppli();
-    await tester.tap(findWelcomeButton(S.current.batch));
+    Finder btLot = await findWelcomeButton(Key("btTroupeau"), S.current.batch);
+    await tester.tap(btLot);
     await tester.pumpAndSettle();
     Finder btView = super.findByChevron(lot["nom"]);
     await tester.tap(btView);
@@ -64,7 +66,8 @@ class RobotLotTest extends RobotTest {
 
   Future<void> modifyBegin(Map<String, dynamic> lot) async {
     await startAppli();
-    await tester.tap(findWelcomeButton("Lot"));
+    Finder btLot = await findWelcomeButton(Key("btTroupeau"), S.current.batch);
+    await tester.tap(btLot);
     await tester.pumpAndSettle();
     Finder btView = super.findByChevron(lot["nom"]);
     await tester.tap(btView);

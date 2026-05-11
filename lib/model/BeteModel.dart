@@ -28,7 +28,7 @@ class Bete  {
     _numBoucle = result["numBoucle"];
     _numMarquage = result["numMarquage"];
     _nom = result["nom"];
-    _dateEntree = _df.parse(result["dateEntree"]);
+    _dateEntree = _df.tryParse(result["dateEntree"]);
     _observations = result["observations"];
     if (result['sex'] != null)
       _sex= Sex.values.firstWhere((e) => e.toString() == 'Sex.' + result["sex"]);

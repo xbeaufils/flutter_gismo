@@ -10,9 +10,8 @@ class RobotEchoTest extends RobotTest {
 
   Future<void> create(Map<String, dynamic> echoData) async {
     await startAppli();
-    final echo = findWelcomeButton(S.current.ultrasound);
-    print(echo);
-    await tester.tap(echo);
+    Finder btEcho = await findWelcomeButton(Key("btBreeding"),S.current.ultrasound);
+    await tester.tap(btEcho);
     await tester.pumpAndSettle();
     await selectBete( echoData["numero"] );
     // Passage à l'ecran Echo Graphie

@@ -169,6 +169,11 @@ class LocalRepository {
     _createTableMemo(db);
   }
 
+  void _migrate13to14(Database db) {
+    this.backupBd();
+
+  }
+
   void _createTableAgnelage(Database db) {
     db.execute("CREATE TABLE `agnelage` ( "
         "`id` INTEGER PRIMARY KEY,"
@@ -288,8 +293,6 @@ class LocalRepository {
   }
 
   Future<String> backupBd() async {
-    String databasePath = await getDatabasesPath();
-    String databaseFile = join(databasePath , 'gismo_database.db');
     Database db = await this.database;
     Map<String, dynamic> mapBase = new Map();
     mapBase['lots'] = await db.query('lot');

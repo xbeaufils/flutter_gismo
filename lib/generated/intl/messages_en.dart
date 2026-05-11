@@ -311,6 +311,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "The number of fetuses is empty",
     ),
     "observations": MessageLookupByLibrary.simpleMessage("Observations"),
+    "other": MessageLookupByLibrary.simpleMessage("Others"),
     "output": MessageLookupByLibrary.simpleMessage("Departure"),
     "output_auto": MessageLookupByLibrary.simpleMessage("Automatic output"),
     "output_boucherie": MessageLookupByLibrary.simpleMessage(

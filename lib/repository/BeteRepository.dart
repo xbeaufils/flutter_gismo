@@ -3,6 +3,7 @@ import 'dart:developer' as debug;
 import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/Dashboard.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/core/repository/LocalRepository.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:intl/intl.dart';
 import 'package:sentry/sentry.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite/utils/utils.dart';
 
 abstract class BeteRepository {
   Future<List<Bete>> getBetes(String cheptel);
@@ -23,6 +25,7 @@ abstract class BeteRepository {
   Future<List<Bete>>getBeliers();
   Future<List<Race>> getAllRaces();
   Future<String> saveMultiHybridation(List<Bete> betes, Hybridation hybdrid);
+  Future<DashBoardEffectif> getDashBoardEffectif();
 }
 
 class WebBeteRepository extends WebRepository implements BeteRepository {
@@ -191,12 +194,18 @@ class WebBeteRepository extends WebRepository implements BeteRepository {
     }
 
   }
+
+  Future<DashBoardEffectif> getDashBoardEffectif() async {
+    final response = await super.doGet(
+        '/home/' + AuthService().cheptel!);
+    return DashBoardEffectif.fromResult(response);
+
+  }
 }
 
 class LocalBeteRepository extends LocalRepository implements BeteRepository {
   final _df = new DateFormat('dd/MM/yyyy');
 
-  @override
   Future<Bete?> _searchBete(int idBd) async {
     Database db = await this.database;
     List<Map<String, dynamic>> futureMaps = await db.query('bete' ,where: 'id = ?', whereArgs: [idBd]);
@@ -348,8 +357,9 @@ class LocalBeteRepository extends LocalRepository implements BeteRepository {
     Database db = await this.database;
     List<Map<String, dynamic>> maps = await db.rawQuery(
         'Select * from bete '
-            + "WHERE bete.sex = 'femelle' "
-            "AND cheptel = '" + AuthService().cheptel! + "'");
+          "WHERE bete.sex = 'femelle' "
+          "AND dateSortie IS NULL "
+          "AND cheptel = '" + AuthService().cheptel! + "'");
     List<Bete> tempList = [];
     for (int i = 0; i < maps.length; i++) {
       tempList.add(new Bete.fromResult(maps[i]));
@@ -367,4 +377,46 @@ class LocalBeteRepository extends LocalRepository implements BeteRepository {
     throw UnimplementedError();
   }
 
+  Future<DashBoardEffectif> getDashBoardEffectif() async {
+    Database db = await this.database;
+    DateFormat df = new DateFormat('yyyy-MM-dd');
+    DateTime now = DateTime.now();
+    DateTime jourRef = now.subtract(const Duration(days: 365));
+    final nbBrebis = firstIntValue(
+      await db.rawQuery("SELECT COUNT(*) FROM bete WHERE cheptel = ? AND bete.sex = 'femelle' AND dateSortie IS NULL", [AuthService().cheptel!]),)!;
+    final nbBrebisAdulte = firstIntValue(
+      await db.rawQuery("SELECT COUNT(*) FROM bete "
+          "WHERE cheptel = ? "
+          "AND bete.sex = 'femelle' "
+          "AND ( ( motifEntree != 'NAISSANCE' ) OR ( motifEntree = 'NAISSANCE' AND dateEntree < ?) ) "
+          "AND dateSortie IS NULL",
+          [AuthService().cheptel!, df.format(jourRef)]),)!;
+    final nbBrebisAntenais = firstIntValue(
+      await db.rawQuery("SELECT COUNT(*) FROM bete "
+          "WHERE cheptel = ? "
+          "AND bete.sex = 'femelle' "
+          "AND  motifEntree = 'NAISSANCE' AND dateEntree  > ? "
+          "AND dateSortie IS NULL",
+          [AuthService().cheptel!, df.format(jourRef)]),)!;
+    final nbBelier = firstIntValue(
+      await db.rawQuery("SELECT COUNT(*) FROM bete "
+          "WHERE cheptel = ? "
+          "AND bete.sex = 'male' "
+          "AND dateSortie IS NULL", [AuthService().cheptel!]),)!;
+    final nbBeliersAdulte = firstIntValue(
+      await db.rawQuery("SELECT COUNT(*) FROM bete "
+          "WHERE cheptel = ? "
+          "AND bete.sex = 'male' "
+          "AND ( ( motifEntree != 'NAISSANCE' ) OR ( motifEntree = 'NAISSANCE' AND dateEntree < ?) ) "
+          "AND dateSortie IS NULL",
+          [AuthService().cheptel!, df.format(jourRef)]),)!;
+    final _nbBeliersAntenais = firstIntValue(
+      await db.rawQuery("SELECT COUNT(*) FROM bete "
+          "WHERE cheptel = ? "
+          "AND bete.sex = 'male' "
+          "AND motifEntree = 'NAISSANCE' AND dateEntree  > ?  "
+          "AND dateSortie IS NULL",
+          [AuthService().cheptel!, df.format(jourRef)]),)!;
+    return DashBoardEffectif(nbBrebis, nbBrebisAdulte, nbBrebisAntenais, nbBelier, nbBeliersAdulte, _nbBeliersAntenais);
+  }
 }

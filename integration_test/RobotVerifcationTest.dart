@@ -10,7 +10,8 @@ class RobotVerificationTest extends RobotTest {
 
   Future<void> verify (List<dynamic> verifs) async {
     await startAppli();
-    await tester.tap(findWelcomeButton(S.current.sheep));
+    Finder btIndividu = await findWelcomeButton(Key("btTroupeau"),S.current.sheep);
+    await tester.tap(btIndividu);
     for (Map<String, dynamic> verif in verifs) {
       await tester.pumpAndSettle();
       await selectBete( verif["bete"] );

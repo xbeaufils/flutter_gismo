@@ -69,6 +69,11 @@ class S {
     return Intl.message('Health', name: 'sante', desc: '', args: []);
   }
 
+  /// `Others`
+  String get other {
+    return Intl.message('Others', name: 'other', desc: '', args: []);
+  }
+
   /// `Batch`
   String get batch {
     return Intl.message('Batch', name: 'batch', desc: '', args: []);

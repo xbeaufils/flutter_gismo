@@ -11,7 +11,7 @@ class RobotPeseeTest extends RobotTest {
 
   Future<void> create(Map<String, dynamic> pesee) async {
     await startAppli();
-    final weight = findWelcomeButton(S.current.weighing);
+    final Finder weight = await findWelcomeButton(Key("btSante"), S.current.weighing);
     await tester.tap(weight);
     await tester.pumpAndSettle();
     await selectBete( pesee["numero"]);

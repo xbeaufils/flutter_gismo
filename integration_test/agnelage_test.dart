@@ -12,7 +12,8 @@ class RobotTestAgnelage extends RobotTest {
 
   Future<void> create( List<dynamic> agnelages) async {
       await super.startAppli();
-      await tester.tap(super.findWelcomeButton(S.current.lambing));
+      Finder btAgnelage = await super.findWelcomeButton(Key("btBreeding"), S.current.lambing);
+      await tester.tap(btAgnelage);
       await tester.pumpAndSettle();
       for (Map<String, dynamic> lambing in agnelages) {
         await super.selectBete(lambing["numero mere"]);

@@ -13,7 +13,7 @@ class RobotTestMouvement extends RobotTest {
 
   Future<void> create(Map<String, dynamic> entree) async {
     await super.startAppli();
-    final Finder btEntree = super.findWelcomeButton(S.current.input);
+    final Finder btEntree = await super.findWelcomeButton(Key("btTroupeau"), S.current.input);
     await tester.tap(btEntree);
     await tester.pumpAndSettle();
     DateTime now = DateTime.now();
@@ -61,7 +61,7 @@ class RobotTestMouvement extends RobotTest {
 
   Future<void> sortie(Map<String, dynamic> sortie) async {
     await super.startAppli();
-    final Finder btSortie = super.findWelcomeButton(S.current.output);
+    final Finder btSortie = await super.findWelcomeButton(Key("btTroupeau"), S.current.output);
     await tester.tap(btSortie);
     await tester.pumpAndSettle();
     DateTime now = DateTime.now();

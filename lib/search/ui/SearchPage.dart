@@ -196,6 +196,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
       itemCount: _filteredBetes.length,
       itemBuilder: (BuildContext context, int index) {
         return ListTile(
+          tileColor: (index%2==0)?sheepyGreenSheme.colorScheme.onPrimary:sheepyGreenSheme.colorScheme.surface,
           leading: (_filteredBetes[index].sex == Sex.male) ? ImageIcon(  AssetImage("assets/male.png")): ImageIcon(  AssetImage("assets/female.png")),
           title: Text( _filteredBetes[index].numBoucle),
           subtitle: Text(_filteredBetes[index].numMarquage ),
