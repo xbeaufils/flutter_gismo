@@ -70,32 +70,32 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
 //        bottomNavigationBar: this._navigationBar(),
         body:
         Column(children: [
-          Text("* Dont la date de naissance est supérieure à 1 an ou est inconnue"),
-          Text("** Dont la date de naissance est inférieure à 1 an"),
-          Expanded(child:
+          Flexible(child:
             FutureBuilder(
               future: _presenter.getDashBoardEffectif(),
               builder : (BuildContext context, AsyncSnapshot<DashBoardEffectif> snapshot) {
                 if (snapshot.data == null)
-                  return CircularProgressIndicator();
+                  return SizedBox(child: CircularProgressIndicator(), width: 60, height: 60,);
                 return GridView.count(
                   scrollDirection: Axis.vertical,padding: EdgeInsets.all(10),
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                   crossAxisCount: 3,
                   children: <Widget>[
-                    _buildTileEffectif( "Nbre Femelles", snapshot.data!.nbBrebis),
-                    _buildTileEffectif( "Nbre Brebis (*)", snapshot.data!.nbBrebisAdulte),
-                    _buildTileEffectif( "Nbre Agnelles (**)", snapshot.data!.nbBrebisAntenais),
-                    _buildTileEffectif( "Nbre Males", snapshot.data!.nbBeliers),
-                    _buildTileEffectif( "Nbre Beliers (*) ", snapshot.data!.nbBeliersAdulte),
-                    _buildTileEffectif( "Nbre Agneaux (**)", snapshot.data!.nbBeliersAntenais),
+                    _buildTileEffectif( "Femelles", snapshot.data!.nbBrebis),
+                    _buildTileEffectif( "Brebis (*)", snapshot.data!.nbBrebisAdulte),
+                    _buildTileEffectif( "Agnelles (**)", snapshot.data!.nbBrebisAntenais),
+                    _buildTileEffectif( "Males", snapshot.data!.nbBeliers),
+                    _buildTileEffectif( "Beliers (*) ", snapshot.data!.nbBeliersAdulte),
+                    _buildTileEffectif( "Agneaux (**)", snapshot.data!.nbBeliersAntenais),
                   ]);
               })),
-          Column(children: [
-            Text("* Dont la date de naissance est supérieure à 1 an ou est inconnue"),
-            Text("** Dont la date de naissance est inférieure à 1 an")
-          ],),
+          Expanded(child:
+            Column(crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+              Text("* Dont la date de naissance est supérieure à 1 an ou est inconnue",style: TextStyle(fontStyle: FontStyle.italic),),
+              Text("** Dont la date de naissance est inférieure à 1 an", style: TextStyle(fontStyle: FontStyle.italic))
+            ],)),
           this._getAdmobAdvice(),
           this._getFacebookAdvice(),
         ]),

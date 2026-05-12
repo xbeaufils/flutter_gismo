@@ -77,7 +77,7 @@ class _SearchLambPageState extends GismoStatePage<SearchLambPage> implements Sea
       itemCount: _filteredLambs.length,
       itemBuilder: (BuildContext context, int index) {
         return new ListTile(
-          tileColor: (index%2==0)?sheepyGreenSheme.colorScheme.onPrimary:sheepyGreenSheme.colorScheme.surface,
+          tileColor: (index%2==0)?sheepyGreenSheme.colorScheme.primaryContainer:sheepyGreenSheme.colorScheme.surface,
           leading: (_filteredLambs[index].sex == Sex.male) ? ImageIcon(  AssetImage("assets/male.png")): ImageIcon(  AssetImage("assets/female.png")),
           title: Row(
             children: <Widget>[

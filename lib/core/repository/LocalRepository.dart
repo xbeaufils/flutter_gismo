@@ -83,11 +83,13 @@ class LocalRepository {
           this._migrate11to12(db);
         if (oldVersion < 13 )
           this._migrate12to13(db);
+        if (oldVersion < 14 )
+          this._migrate13to14(db);
 
       },
       // Set the version. This executes the onCreate function and provides a
       // path to perform database upgrades and downgrades.
-      version:13,
+      version:14,
     );
     this._sendReport(database);
     return database;
@@ -170,8 +172,8 @@ class LocalRepository {
   }
 
   void _migrate13to14(Database db) {
-    this.backupBd();
-
+    db.execute("ALTER TABLE 'bete' ADD COLUMN `dateEntree_json` TEXT");
+    db.execute("update bete set dateEntree_json =  substr(dateEntree, 7,4) || '-' || substr(dateEntree,4,2) || '-' || substr(dateEntree, 1,2)");
   }
 
   void _createTableAgnelage(Database db) {

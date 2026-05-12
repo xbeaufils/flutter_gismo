@@ -26,7 +26,7 @@ class WelcomePresenter {
   }
 
   void sortiePressed() {
-  //  Navigator.pop(this._view.context);
+    Navigator.pop(this._view.context);
     _view.viewPageMessage( '/sortie');
   }
 

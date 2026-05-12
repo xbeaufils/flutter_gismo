@@ -40,14 +40,17 @@ class Bete  {
 
   Map<String, dynamic> toJson() {
     final _df = new DateFormat('dd/MM/yyyy');
+    final DateFormat _dfJson = new DateFormat('yyyy-MM-dd');
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (_idBd != null)
       data["id"] = _idBd ;
     data["numBoucle"] = _numBoucle;
     data["numMarquage"] = _numMarquage;
     data["nom"] = _nom;
-    if (_dateEntree != null)
+    if (_dateEntree != null) {
       data["dateEntree"] = _df.format(_dateEntree!);
+      data["dateEntree_json"] = _dfJson.format(_dateEntree!);
+    }
     data["observations"] = _observations;
     data["sex"]= _sex.toString().split('.').last;
     data["motifEntree"] = _motifEntree.toString().split('.').last;

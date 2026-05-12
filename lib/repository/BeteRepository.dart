@@ -388,14 +388,14 @@ class LocalBeteRepository extends LocalRepository implements BeteRepository {
       await db.rawQuery("SELECT COUNT(*) FROM bete "
           "WHERE cheptel = ? "
           "AND bete.sex = 'femelle' "
-          "AND ( ( motifEntree != 'NAISSANCE' ) OR ( motifEntree = 'NAISSANCE' AND dateEntree < ?) ) "
+          "AND ( ( motifEntree != 'NAISSANCE' ) OR ( motifEntree = 'NAISSANCE' AND dateEntree_json < ?) ) "
           "AND dateSortie IS NULL",
           [AuthService().cheptel!, df.format(jourRef)]),)!;
     final nbBrebisAntenais = firstIntValue(
       await db.rawQuery("SELECT COUNT(*) FROM bete "
           "WHERE cheptel = ? "
           "AND bete.sex = 'femelle' "
-          "AND  motifEntree = 'NAISSANCE' AND dateEntree  > ? "
+          "AND  motifEntree = 'NAISSANCE' AND dateEntree_json  > ? "
           "AND dateSortie IS NULL",
           [AuthService().cheptel!, df.format(jourRef)]),)!;
     final nbBelier = firstIntValue(
@@ -407,14 +407,14 @@ class LocalBeteRepository extends LocalRepository implements BeteRepository {
       await db.rawQuery("SELECT COUNT(*) FROM bete "
           "WHERE cheptel = ? "
           "AND bete.sex = 'male' "
-          "AND ( ( motifEntree != 'NAISSANCE' ) OR ( motifEntree = 'NAISSANCE' AND dateEntree < ?) ) "
+          "AND ( ( motifEntree != 'NAISSANCE' ) OR ( motifEntree = 'NAISSANCE' AND dateEntree_json < ?) ) "
           "AND dateSortie IS NULL",
           [AuthService().cheptel!, df.format(jourRef)]),)!;
     final _nbBeliersAntenais = firstIntValue(
       await db.rawQuery("SELECT COUNT(*) FROM bete "
           "WHERE cheptel = ? "
           "AND bete.sex = 'male' "
-          "AND motifEntree = 'NAISSANCE' AND dateEntree  > ?  "
+          "AND motifEntree = 'NAISSANCE' AND dateEntree_json  > ?  "
           "AND dateSortie IS NULL",
           [AuthService().cheptel!, df.format(jourRef)]),)!;
     return DashBoardEffectif(nbBrebis, nbBrebisAdulte, nbBrebisAntenais, nbBelier, nbBeliersAdulte, _nbBeliersAntenais);
