@@ -211,7 +211,8 @@ class LocalRepository {
         "`numMarquage` TEXT,"
         "`nom` TEXT,"
         "`observations` TEXT,"
-        "`sex` INTEGER)");
+        "`sex` INTEGER,"
+        "'dateEntree_json' TEXT)");
   }
   void _createTableNec(Database db) {
     db.execute("CREATE TABLE `NEC` ( "

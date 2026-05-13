@@ -349,7 +349,7 @@ class LocalLambRepository extends LocalRepository implements LambRepository {
         'update traitement set beteId=? where lambId=?', [idBete, lamb.idBd]);
     db.rawUpdate(
         "UPDATE pesee set bete_id=? where lamb_id=?", [idBete, lamb.idBd]);
-    return "Bouclage enregistré";
+    return S.current.record_saved;
   }
 
   @override

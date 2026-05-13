@@ -101,6 +101,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
         ]),
           bottomNavigationBar: BottomNavigationBar(
             selectedItemColor: sheepyGreenSheme.colorScheme.onPrimaryContainer,
+            unselectedItemColor: sheepyGreenSheme.colorScheme.onPrimaryContainer,
             // backgroundColor: sheepyGreenSheme.colorScheme.onPrimaryContainer, NO RESULT
             type: BottomNavigationBarType.fixed,
           onTap: (index) {

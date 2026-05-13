@@ -60,7 +60,8 @@ class WebBeteRepository extends WebRepository implements BeteRepository {
     } on GismoException catch(e) {
       throw e;
     } catch ( e) {
-      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+      //throw GismoException(e.toString());
+      throw GismoException( e.runtimeType.toString());
     }
   }
 
