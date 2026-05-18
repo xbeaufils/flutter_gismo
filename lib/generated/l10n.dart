@@ -74,6 +74,91 @@ class S {
     return Intl.message('Others', name: 'other', desc: '', args: []);
   }
 
+  /// `Number of tagged animals`
+  String get effectif_sheep {
+    return Intl.message(
+      'Number of tagged animals',
+      name: 'effectif_sheep',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Number of animals without tags`
+  String get effectif_lamb {
+    return Intl.message(
+      'Number of animals without tags',
+      name: 'effectif_lamb',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Females`
+  String get effectif_femelles {
+    return Intl.message(
+      'Females',
+      name: 'effectif_femelles',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Males`
+  String get effectif_males {
+    return Intl.message('Males', name: 'effectif_males', desc: '', args: []);
+  }
+
+  /// `Rams`
+  String get effectif_ram {
+    return Intl.message('Rams', name: 'effectif_ram', desc: '', args: []);
+  }
+
+  /// `Ewes`
+  String get effectif_ewe {
+    return Intl.message('Ewes', name: 'effectif_ewe', desc: '', args: []);
+  }
+
+  /// `Ewe lambs`
+  String get effectif_ewe_lamb {
+    return Intl.message(
+      'Ewe lambs',
+      name: 'effectif_ewe_lamb',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ram lambs`
+  String get effectif_ram_lamb {
+    return Intl.message(
+      'Ram lambs',
+      name: 'effectif_ram_lamb',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Whose date of birth is more than 1 year old or is unknown`
+  String get effectif_adult {
+    return Intl.message(
+      'Whose date of birth is more than 1 year old or is unknown',
+      name: 'effectif_adult',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Whose date of birth is less than 1 year old `
+  String get effectif_youth {
+    return Intl.message(
+      'Whose date of birth is less than 1 year old ',
+      name: 'effectif_youth',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Batch`
   String get batch {
     return Intl.message('Batch', name: 'batch', desc: '', args: []);

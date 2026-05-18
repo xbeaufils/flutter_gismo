@@ -143,6 +143,24 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "edit_lamb": MessageLookupByLibrary.simpleMessage("modification"),
     "effectif": MessageLookupByLibrary.simpleMessage("Troupeau"),
+    "effectif_adult": MessageLookupByLibrary.simpleMessage(
+      "Dont la date de naissance est supérieure à 1 an ou est inconnue",
+    ),
+    "effectif_ewe": MessageLookupByLibrary.simpleMessage("Brebis"),
+    "effectif_ewe_lamb": MessageLookupByLibrary.simpleMessage("Agnelles"),
+    "effectif_femelles": MessageLookupByLibrary.simpleMessage("Femelles"),
+    "effectif_lamb": MessageLookupByLibrary.simpleMessage(
+      "Effectif des animaux sans boucle",
+    ),
+    "effectif_males": MessageLookupByLibrary.simpleMessage("Males"),
+    "effectif_ram": MessageLookupByLibrary.simpleMessage("Béliers"),
+    "effectif_ram_lamb": MessageLookupByLibrary.simpleMessage("Agneaux"),
+    "effectif_sheep": MessageLookupByLibrary.simpleMessage(
+      "Effectif des animaux bouclés",
+    ),
+    "effectif_youth": MessageLookupByLibrary.simpleMessage(
+      "Dont la date de naissance est inférieure à 1 an",
+    ),
     "email": MessageLookupByLibrary.simpleMessage("Email"),
     "empty": MessageLookupByLibrary.simpleMessage("Vide"),
     "empty_folder": MessageLookupByLibrary.simpleMessage("Répertoire vide"),

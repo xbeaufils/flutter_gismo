@@ -140,6 +140,25 @@ class MessageLookup extends MessageLookupByLibrary {
       "Ermöglicht die Bewertung der mütterlichen Qualitäten nach den Kriterien von Stéphanie Maubé",
     ),
     "edit_lamb": MessageLookupByLibrary.simpleMessage("Bearbeiten"),
+    "effectif": MessageLookupByLibrary.simpleMessage("Herde"),
+    "effectif_adult": MessageLookupByLibrary.simpleMessage(
+      "Wessen Geburtsdatum weniger als 1 Jahr alt ist oder unbekannt ist",
+    ),
+    "effectif_ewe": MessageLookupByLibrary.simpleMessage("Schaf"),
+    "effectif_ewe_lamb": MessageLookupByLibrary.simpleMessage("Lämmchen"),
+    "effectif_femelles": MessageLookupByLibrary.simpleMessage("Weibchen"),
+    "effectif_lamb": MessageLookupByLibrary.simpleMessage(
+      "Anzahl der Tiere ohne Kennzeichnung",
+    ),
+    "effectif_males": MessageLookupByLibrary.simpleMessage("Männer"),
+    "effectif_ram": MessageLookupByLibrary.simpleMessage("Widder"),
+    "effectif_ram_lamb": MessageLookupByLibrary.simpleMessage("Lämmer"),
+    "effectif_sheep": MessageLookupByLibrary.simpleMessage(
+      "Anzahl der markierten Tiere",
+    ),
+    "effectif_youth": MessageLookupByLibrary.simpleMessage(
+      "Wessen Geburtsdatum weniger als 1 Jahr alt ist",
+    ),
     "email": MessageLookupByLibrary.simpleMessage("E-Mail"),
     "empty": MessageLookupByLibrary.simpleMessage("Leer"),
     "empty_folder": MessageLookupByLibrary.simpleMessage("Leerer Ordner"),
@@ -334,6 +353,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Die Anzahl der Föten ist leer",
     ),
     "observations": MessageLookupByLibrary.simpleMessage("Beobachtungen"),
+    "other": MessageLookupByLibrary.simpleMessage("Andere"),
     "output": MessageLookupByLibrary.simpleMessage("Ausgabe"),
     "output_auto": MessageLookupByLibrary.simpleMessage(
       "Automatischer Ausgang",
@@ -368,6 +388,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "record_saved": MessageLookupByLibrary.simpleMessage(
       "Aufnahme abgeschlossen",
     ),
+    "reproduction": MessageLookupByLibrary.simpleMessage("Fortpflanzung"),
     "restore_bd": MessageLookupByLibrary.simpleMessage(
       "Datenbank wiederherstellen",
     ),
@@ -377,6 +398,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "result": MessageLookupByLibrary.simpleMessage("Ergebnis"),
     "route": MessageLookupByLibrary.simpleMessage("Verabreichungsweg"),
     "rythme": MessageLookupByLibrary.simpleMessage("Rhythmus"),
+    "sante": MessageLookupByLibrary.simpleMessage("Gesundheit"),
     "save_config": MessageLookupByLibrary.simpleMessage(
       "Konfiguration speichern",
     ),

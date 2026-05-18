@@ -92,6 +92,25 @@ class MessageLookup extends MessageLookupByLibrary {
       "Permite evaluar las cualidades maternales según los criterios de Stéphanie Maubé",
     ),
     "edit_lamb": MessageLookupByLibrary.simpleMessage("editar"),
+    "effectif": MessageLookupByLibrary.simpleMessage("Rebaño"),
+    "effectif_adult": MessageLookupByLibrary.simpleMessage(
+      "Cuya fecha de nacimiento es mayor de 1 año o es desconocida",
+    ),
+    "effectif_ewe": MessageLookupByLibrary.simpleMessage("Oveja"),
+    "effectif_ewe_lamb": MessageLookupByLibrary.simpleMessage("Agnelles"),
+    "effectif_femelles": MessageLookupByLibrary.simpleMessage("Hembras"),
+    "effectif_lamb": MessageLookupByLibrary.simpleMessage(
+      "Número de animales sin etiquetas",
+    ),
+    "effectif_males": MessageLookupByLibrary.simpleMessage("Machos"),
+    "effectif_ram": MessageLookupByLibrary.simpleMessage("carneros"),
+    "effectif_ram_lamb": MessageLookupByLibrary.simpleMessage("Corderos"),
+    "effectif_sheep": MessageLookupByLibrary.simpleMessage(
+      "Número de animales marcados",
+    ),
+    "effectif_youth": MessageLookupByLibrary.simpleMessage(
+      "Cuya fecha de nacimiento es menor de 1 año",
+    ),
     "empty_list": MessageLookupByLibrary.simpleMessage(
       "Lista vacía de animales",
     ),
@@ -187,6 +206,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "not_connected": MessageLookupByLibrary.simpleMessage("No conectado"),
     "observations": MessageLookupByLibrary.simpleMessage("Observaciones"),
+    "other": MessageLookupByLibrary.simpleMessage("Otros"),
     "output": MessageLookupByLibrary.simpleMessage("Salida"),
     "output_auto": MessageLookupByLibrary.simpleMessage("Salida automática"),
     "output_boucherie": MessageLookupByLibrary.simpleMessage(
@@ -211,6 +231,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "race": MessageLookupByLibrary.simpleMessage("Raza"),
     "race_indet": MessageLookupByLibrary.simpleMessage("indet"),
     "race_select": MessageLookupByLibrary.simpleMessage("Buscando una raza"),
+    "reproduction": MessageLookupByLibrary.simpleMessage("Reproducción"),
+    "sante": MessageLookupByLibrary.simpleMessage("Salud"),
     "search": MessageLookupByLibrary.simpleMessage("Buscar"),
     "search_ram": MessageLookupByLibrary.simpleMessage("Buscar al semental"),
     "sex_warn": MessageLookupByLibrary.simpleMessage("Falta el sexo"),

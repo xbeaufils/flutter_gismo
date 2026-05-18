@@ -1,5 +1,21 @@
 {
   "@@locale": "es",
+
+  "effectif": "Rebaño",
+  "reproduction": "Reproducción",
+  "sante" : "Salud",
+  "other" : "Otros",
+  "effectif_sheep": "Número de animales marcados",
+  "effectif_lamb": "Número de animales sin etiquetas",
+  "effectif_femelles": "Hembras",
+  "effectif_males": "Machos",
+  "effectif_ram": "carneros",
+  "effectif_ewe": "Oveja",
+  "effectif_ewe_lamb": "Agnelles",
+  "effectif_ram_lamb": "Corderos",
+  "effectif_adult": "Cuya fecha de nacimiento es mayor de 1 año o es desconocida",
+  "effectif_youth" : "Cuya fecha de nacimiento es menor de 1 año",
+
   "batch": "Lote",
   "sheep": "Individuo",
   "lambing": "Parto",

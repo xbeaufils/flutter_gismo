@@ -1,6 +1,22 @@
 {
   "@@locale": "de",
-   "batch": "Teilherde",
+
+  "effectif": "Herde",
+  "reproduction": "Fortpflanzung",
+  "sante" : "Gesundheit",
+  "other" : "Andere",
+  "effectif_sheep": "Anzahl der markierten Tiere",
+  "effectif_lamb": "Anzahl der Tiere ohne Kennzeichnung",
+  "effectif_femelles": "Weibchen",
+  "effectif_males": "Männer",
+  "effectif_ram": "Widder",
+  "effectif_ewe": "Schaf",
+  "effectif_ewe_lamb": "Lämmchen",
+  "effectif_ram_lamb": "Lämmer",
+  "effectif_adult": "Wessen Geburtsdatum weniger als 1 Jahr alt ist oder unbekannt ist",
+  "effectif_youth" : "Wessen Geburtsdatum weniger als 1 Jahr alt ist",
+
+  "batch": "Teilherde",
    "sheep": "Schaf",
    "lambing": "Lammen",
    "lambs": "Lämmer",

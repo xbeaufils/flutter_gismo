@@ -109,54 +109,64 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
   Widget _buidCardEffectif() {
     return Card( child:
       Column(children: [
-        Text("Effectif des animaux bouclés"),
-          FutureBuilder(
-            future: _presenter.getDashBoardEffectif(),
-            builder : (BuildContext context, AsyncSnapshot<DashBoardEffectif> snapshot) {
-              if (snapshot.data == null)
-                return SizedBox(child: CircularProgressIndicator(), width: 60, height: 60,);
-              return SizedBox(height: 400,
-                child:
-                  GridView.count(
-                  scrollDirection: Axis.vertical,padding: EdgeInsets.all(10),
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  crossAxisCount: 3,
-                  children: <Widget>[
-                    _buildTileEffectif( "Femelles", snapshot.data!.nbBrebis),
-                    _buildTileEffectif( "Brebis (*)", snapshot.data!.nbBrebisAdulte),
-                    _buildTileEffectif( "Agnelles (**)", snapshot.data!.nbBrebisAntenais),
-                    _buildTileEffectif( "Males", snapshot.data!.nbBeliers),
-                    _buildTileEffectif( "Beliers (*) ", snapshot.data!.nbBeliersAdulte),
-                    _buildTileEffectif( "Agneaux (**)", snapshot.data!.nbBeliersAntenais),
-                  ]));
-          }),
-        Text("* Dont la date de naissance est supérieure à 1 an ou est inconnue",style: TextStyle(fontStyle: FontStyle.italic),),
-        Text("** Dont la date de naissance est inférieure à 1 an", style: TextStyle(fontStyle: FontStyle.italic))
+        Text(S.of(context).effectif_sheep, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+        FutureBuilder(
+          future: _presenter.getDashBoardEffectif(),
+          builder : (BuildContext context, AsyncSnapshot<DashBoardEffectif> snapshot) {
+            if (snapshot.data == null)
+              return SizedBox(child: CircularProgressIndicator(), width: 60, height: 60,);
+            return SizedBox(height: 350,
+              child:
+                GridView.count(
+                scrollDirection: Axis.vertical,padding: EdgeInsets.all(10),
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                crossAxisCount: 3,
+                children: <Widget>[
+                  _buildTileEffectif( S.current.effectif_femelles, snapshot.data!.nbBrebis),
+                  _buildTileEffectif( S.current.effectif_ewe + "(*)", snapshot.data!.nbBrebisAdulte),
+                  _buildTileEffectif( S.current.effectif_ewe_lamb + "(**)", snapshot.data!.nbBrebisAntenais),
+                  _buildTileEffectif( S.current.effectif_males, snapshot.data!.nbBeliers),
+                  _buildTileEffectif( S.current.effectif_ram + "(*) ", snapshot.data!.nbBeliersAdulte),
+                  _buildTileEffectif( S.current.effectif_ram_lamb + "(**)", snapshot.data!.nbBeliersAntenais),
+                ]));
+        }),
+        Padding(padding: EdgeInsetsGeometry.only(left: 20, right: 20),
+          child:
+            Align( child:
+              Text("* " + S.current.effectif_adult, style: TextStyle(fontStyle: FontStyle.italic),),
+              alignment: Alignment.topLeft),),
+        Padding(padding: EdgeInsetsGeometry.only(left: 20, right: 20),
+          child:
+          Align(child:
+            Text("** " + S.current.effectif_youth, style: TextStyle(fontStyle: FontStyle.italic)),
+            alignment: Alignment.topLeft)),
       ])
     ,);
   }
 
   Widget _buildCardLamb() {
     return Card(child:
-      FutureBuilder(
-        future: this._presenter.getDashBoardLamb(),
-        builder:  (BuildContext context, AsyncSnapshot<DashBoardLamb> snapshot) {
-          if (snapshot.data == null)
-            return SizedBox(child: CircularProgressIndicator(), width: 20, height: 20, );
-          return SizedBox( height: 200,
-            child:
-              GridView.count(
-              scrollDirection: Axis.vertical,padding: EdgeInsets.all(10),
-              crossAxisSpacing: 2,
-              mainAxisSpacing: 10,
-              crossAxisCount: 3,
-              children: <Widget>[
-                _buildTileEffectif( "Femelles", snapshot.data!.nbFemelle),
-                _buildTileEffectif( "Males", snapshot.data!.nbMale),
-              ]));
-        })
-    );
+      Column(children: [
+        Text(S.of(context).effectif_lamb, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+        FutureBuilder(
+          future: this._presenter.getDashBoardLamb(),
+          builder:  (BuildContext context, AsyncSnapshot<DashBoardLamb> snapshot) {
+            if (snapshot.data == null)
+              return SizedBox(child: CircularProgressIndicator(), width: 20, height: 20, );
+            return SizedBox( height: 200,
+              child:
+                GridView.count(
+                scrollDirection: Axis.vertical,padding: EdgeInsets.all(10),
+                crossAxisSpacing: 2,
+                mainAxisSpacing: 10,
+                crossAxisCount: 3,
+                children: <Widget>[
+                  _buildTileEffectif( S.current.effectif_femelles, snapshot.data!.nbFemelle),
+                  _buildTileEffectif( S.current.effectif_males, snapshot.data!.nbMale),
+                ]));
+          })
+        ],));
   }
 
   Widget _getAdmobAdvice() {
