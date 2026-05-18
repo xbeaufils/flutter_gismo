@@ -51,7 +51,7 @@ class AuthService {
         AuthService().cheptel = "00000000";
         AuthService().subscribe = false;
         AuthService().token ="Nothing";
-        debug.log("Mode autonome", name: "GismoBloc::init");
+        debug.log("Mode autonome", name: "AuthService::init");
         // Ajout des pubs
         //Admob.initialize();
         /*FacebookAudienceNetwork.init(
@@ -79,7 +79,7 @@ class AuthService {
           this._currentUser!);*/
       debug.log(
           'Mode connecté email : $email - cheptel: currentUser.cheptel',
-          name: "GismoBloc::init");
+          name: "AuthService::init");
       return "mode connecte";
     }
     on PlatformException catch(e, stackTrace) {

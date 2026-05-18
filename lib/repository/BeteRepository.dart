@@ -198,7 +198,7 @@ class WebBeteRepository extends WebRepository implements BeteRepository {
 
   Future<DashBoardEffectif> getDashBoardEffectif() async {
     final response = await super.doGet(
-        '/home/' + AuthService().cheptel!);
+        '/home/sheep/' + AuthService().cheptel!);
     return DashBoardEffectif.fromResult(response);
 
   }

@@ -1,6 +1,7 @@
 import 'package:flutter_gismo/Exception/EventException.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/Dashboard.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
@@ -94,6 +95,9 @@ class LambingService {
   }
   int _compareDate(Event a, Event b) {
     return b.date.compareTo( a.date);
+  }
+  Future<DashBoardLamb> getDashBoardEffectif() async {
+    return this._lambRepository.getDashBoardLamb();
   }
 
 }

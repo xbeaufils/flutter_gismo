@@ -1,13 +1,16 @@
 import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/Dashboard.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/core/repository/LocalRepository.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:intl/intl.dart';
 import 'package:sentry/sentry.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite/utils/utils.dart';
 
 abstract class LambRepository {
   Future<String> saveLambing(LambingModel lambing );
@@ -20,6 +23,7 @@ abstract class LambRepository {
   Future<void> mort(LambModel lamb, String motif, String date);
   Future<List<Bete>> getSaillieBeliers(LambingModel lambing);
   Future<List<Bete>> getLotBeliers(LambingModel lambing);
+  Future<DashBoardLamb> getDashBoardLamb();
 }
 
 class WebLambRepository extends WebRepository implements LambRepository {
@@ -178,6 +182,15 @@ class WebLambRepository extends WebRepository implements LambRepository {
       throw ("Erreur $e");
     }
   }
+
+  @override
+  Future<DashBoardLamb> getDashBoardLamb() async {
+    final response = await super.doGet(
+        '/home/lamb/' + AuthService().cheptel!);
+    return new DashBoardLamb.fromResult(response);
+
+  }
+
 }
 
 class LocalLambRepository extends LocalRepository implements LambRepository {
@@ -279,17 +292,13 @@ class LocalLambRepository extends LocalRepository implements LambRepository {
     try {
       Database db = await this.database;
       List<Map<String, dynamic>> agneaux  = await db.rawQuery(
-          'select lambentity0_.*, lambingent1_.dateAgnelage, beteentity2_.numBoucle as numBoucleMere, beteentity2_.numMarquage as numMarquageMere '
-              'from agneaux lambentity0_ '
-          //'left outer join mort_agneaux mortentity3_ on lambentity0_.id=mortentity3_.lamb_id '
-              'cross join agnelage lambingent1_ '
-              'cross join bete beteentity2_ '
-              'where lambentity0_.agnelage_id=lambingent1_.id '
-              'and lambingent1_.mere_id=beteentity2_.id '
-              'and beteentity2_.cheptel= ? '
-              'and (lambentity0_.sante="VIVANT"'
-              'and (lambentity0_.dateDeces is NULL)'
-              'and (lambentity0_.devenir_id is null))',
+          "select agneaux.*, agnelage.dateAgnelage, bete.numBoucle as numBoucleMere, bete.numMarquage as numMarquageMere  from agneaux "
+          "inner join agnelage  on agneaux.agnelage_id=agnelage.id "
+          "inner join bete on agnelage.mere_id=bete.id "
+          "where bete.cheptel = ? "
+          "and agneaux.sante='VIVANT' "
+          "and agneaux.dateDeces is NULL "
+          "and agneaux.devenir_id is null",
           [cheptel]);
       for (int j = 0; j < agneaux.length; j++) {
         CompleteLambModel lamb = CompleteLambModel.fromResult(agneaux[j]);
@@ -380,4 +389,18 @@ class LocalLambRepository extends LocalRepository implements LambRepository {
     return Bete.fromResult(futureMaps[0]);
   }
 
+  Future<DashBoardLamb> getDashBoardLamb() async {
+    Database db = await this.database;
+    int ? nbFemelle = firstIntValue(
+      await db.rawQuery(
+          "SELECT COUNT(*) FROM agneaux WHERE sex = 'femelle' AND dateDeces IS NULL AND devenir_id IS NULL AND sante='VIVANT'"));
+    if (nbFemelle == null)
+      nbFemelle = -1;
+    int? nbMale = firstIntValue(
+        await db.rawQuery(
+            "SELECT COUNT(*) FROM agneaux WHERE sex = 'male' AND dateDeces IS NULL AND devenir_id IS NULL AND sante='VIVANT'"));
+    if (nbMale == null)
+      nbMale = -1;
+    return DashBoardLamb(nbFemelle, nbMale);
+  }
 }

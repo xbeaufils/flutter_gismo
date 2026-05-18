@@ -4,6 +4,7 @@ import 'package:flutter_gismo/infra/ui/welcome.dart';
 import 'package:flutter_gismo/model/Dashboard.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/services/BeteService.dart';
+import 'package:flutter_gismo/services/LambingService.dart';
 import 'package:flutter_gismo/services/MemoService.dart';
 
 class WelcomePresenter {
@@ -11,6 +12,7 @@ class WelcomePresenter {
   final WelcomeContract _view;
   final MemoService _service = MemoService();
   final BeteService _beteService = BeteService();
+  final LambingService _lambingService = LambingService();
 
   WelcomePresenter(this._view);
 
@@ -90,6 +92,10 @@ class WelcomePresenter {
 
   Future<DashBoardEffectif> getDashBoardEffectif() {
     return  this._beteService.getDashBoardEffectif();
+  }
+
+  Future<DashBoardLamb> getDashBoardLamb() {
+    return  this._lambingService.getDashBoardEffectif();
   }
 
 }

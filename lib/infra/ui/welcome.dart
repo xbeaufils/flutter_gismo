@@ -69,41 +69,17 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
              ),
 //        bottomNavigationBar: this._navigationBar(),
         body:
-        Column(children: [
-          Flexible(child:
-            FutureBuilder(
-              future: _presenter.getDashBoardEffectif(),
-              builder : (BuildContext context, AsyncSnapshot<DashBoardEffectif> snapshot) {
-                if (snapshot.data == null)
-                  return SizedBox(child: CircularProgressIndicator(), width: 60, height: 60,);
-                return GridView.count(
-                  scrollDirection: Axis.vertical,padding: EdgeInsets.all(10),
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  crossAxisCount: 3,
-                  children: <Widget>[
-                    _buildTileEffectif( "Femelles", snapshot.data!.nbBrebis),
-                    _buildTileEffectif( "Brebis (*)", snapshot.data!.nbBrebisAdulte),
-                    _buildTileEffectif( "Agnelles (**)", snapshot.data!.nbBrebisAntenais),
-                    _buildTileEffectif( "Males", snapshot.data!.nbBeliers),
-                    _buildTileEffectif( "Beliers (*) ", snapshot.data!.nbBeliersAdulte),
-                    _buildTileEffectif( "Agneaux (**)", snapshot.data!.nbBeliersAntenais),
-                  ]);
-              })),
-          Expanded(child:
-            Column(crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-              Text("* Dont la date de naissance est supérieure à 1 an ou est inconnue",style: TextStyle(fontStyle: FontStyle.italic),),
-              Text("** Dont la date de naissance est inférieure à 1 an", style: TextStyle(fontStyle: FontStyle.italic))
-            ],)),
-          this._getAdmobAdvice(),
-          this._getFacebookAdvice(),
-        ]),
-          bottomNavigationBar: BottomNavigationBar(
-            selectedItemColor: sheepyGreenSheme.colorScheme.onPrimaryContainer,
-            unselectedItemColor: sheepyGreenSheme.colorScheme.onPrimaryContainer,
-            // backgroundColor: sheepyGreenSheme.colorScheme.onPrimaryContainer, NO RESULT
-            type: BottomNavigationBarType.fixed,
+          Column(children: [
+            this._buidCardEffectif(),
+            this._buildCardLamb(),
+            this._getAdmobAdvice(),
+            this._getFacebookAdvice(),
+          ]),
+        bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: sheepyGreenSheme.colorScheme.onPrimaryContainer,
+          unselectedItemColor: sheepyGreenSheme.colorScheme.onPrimaryContainer,
+          // backgroundColor: sheepyGreenSheme.colorScheme.onPrimaryContainer, NO RESULT
+          type: BottomNavigationBarType.fixed,
           onTap: (index) {
               switch (index) {
                  case 0:
@@ -126,9 +102,61 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
             BottomNavigationBarItem(icon: ImageIcon(AssetImage("assets/sheep_lamb.png")), label: S.of(context).reproduction, key: Key("btBreeding")),
             BottomNavigationBarItem(icon: Icon(Icons.health_and_safety), label: S.of(context).sante, key: Key("btSante")),
             BottomNavigationBarItem(icon: Icon(Icons.more_vert), label: S.of(context).other, key: Key("btAutre")),
-          ],)
-      ,
+          ],),
         drawer: GismoDrawer(),);
+  }
+
+  Widget _buidCardEffectif() {
+    return Card( child:
+      Column(children: [
+        Text("Effectif des animaux bouclés"),
+          FutureBuilder(
+            future: _presenter.getDashBoardEffectif(),
+            builder : (BuildContext context, AsyncSnapshot<DashBoardEffectif> snapshot) {
+              if (snapshot.data == null)
+                return SizedBox(child: CircularProgressIndicator(), width: 60, height: 60,);
+              return SizedBox(height: 400,
+                child:
+                  GridView.count(
+                  scrollDirection: Axis.vertical,padding: EdgeInsets.all(10),
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  crossAxisCount: 3,
+                  children: <Widget>[
+                    _buildTileEffectif( "Femelles", snapshot.data!.nbBrebis),
+                    _buildTileEffectif( "Brebis (*)", snapshot.data!.nbBrebisAdulte),
+                    _buildTileEffectif( "Agnelles (**)", snapshot.data!.nbBrebisAntenais),
+                    _buildTileEffectif( "Males", snapshot.data!.nbBeliers),
+                    _buildTileEffectif( "Beliers (*) ", snapshot.data!.nbBeliersAdulte),
+                    _buildTileEffectif( "Agneaux (**)", snapshot.data!.nbBeliersAntenais),
+                  ]));
+          }),
+        Text("* Dont la date de naissance est supérieure à 1 an ou est inconnue",style: TextStyle(fontStyle: FontStyle.italic),),
+        Text("** Dont la date de naissance est inférieure à 1 an", style: TextStyle(fontStyle: FontStyle.italic))
+      ])
+    ,);
+  }
+
+  Widget _buildCardLamb() {
+    return Card(child:
+      FutureBuilder(
+        future: this._presenter.getDashBoardLamb(),
+        builder:  (BuildContext context, AsyncSnapshot<DashBoardLamb> snapshot) {
+          if (snapshot.data == null)
+            return SizedBox(child: CircularProgressIndicator(), width: 20, height: 20, );
+          return SizedBox( height: 200,
+            child:
+              GridView.count(
+              scrollDirection: Axis.vertical,padding: EdgeInsets.all(10),
+              crossAxisSpacing: 2,
+              mainAxisSpacing: 10,
+              crossAxisCount: 3,
+              children: <Widget>[
+                _buildTileEffectif( "Femelles", snapshot.data!.nbFemelle),
+                _buildTileEffectif( "Males", snapshot.data!.nbMale),
+              ]));
+        })
+    );
   }
 
   Widget _getAdmobAdvice() {
@@ -165,30 +193,9 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
             color: sheepyGreenSheme.colorScheme.primaryContainer ,),
-          padding: const EdgeInsets.symmetric(vertical: 60.0, horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
           child: Text(nb.toString(), )),
     );
-  }
-
-  Widget _buildGriTile(String imageName, String title, bool needSubscribe, Function() press ) {
-    bool afficheBtn = false;
-    if (! needSubscribe)
-      afficheBtn = true;
-    else if (AuthService().subscribe)
-      afficheBtn = true;
-    if ( afficheBtn)
-      return GridTile(child:
-        Column(children: [
-          FilledButton(
-            style: ElevatedButton.styleFrom(
-              // The width will be 100% of the parent widget
-              // The height will be 60
-                minimumSize: const Size.fromHeight(60)),
-            child: Image.asset(imageName),
-            onPressed : press,),
-          Text(title) ]),
-        );
-    return Container();
   }
 
   Widget _getFacebookAdvice() {
@@ -311,6 +318,10 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
         builder: (BuildContext context) {
           return Column(children: [
             ListTile(
+              leading: Image.asset("assets/adn.png"),
+              title: Text(S.of(context).genetic),
+              onTap: _presenter.geneticPressed ),
+            ListTile(
               leading: Image.asset("assets/saillie.png"),
               title: Text(S.of(context).mating),
               onTap: _presenter.sailliePressed,),
@@ -357,7 +368,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
               title: Text("Parcelles"),
               onTap: _presenter.parcellePressed,),
             ListTile(
-              leading: Image.asset("assets/memo.png"),
+              leading: SizedBox( child: Image.asset("assets/memo.png"), width: 50),
               title: Text(S.of(context).memo),
               onTap: _presenter.notePressed,),
 

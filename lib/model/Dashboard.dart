@@ -28,3 +28,19 @@ class DashBoardEffectif {
   int get nbBeliers => _nbBeliers;
   int get nbBrebisAntenais => _nbBrebisAntenais;
 }
+
+class DashBoardLamb {
+  late int _nbFemelle;
+  late int _nbMale;
+
+  DashBoardLamb(this._nbFemelle, this._nbMale);
+
+  int get nbMale => _nbMale;
+  int get nbFemelle => _nbFemelle;
+
+  DashBoardLamb.fromResult(result) {
+    _nbMale = result["nbMale"];
+    _nbFemelle = result["nbFemelle"];
+  }
+
+}
