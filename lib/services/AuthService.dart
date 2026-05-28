@@ -2,12 +2,14 @@ import 'dart:io';
 
 // import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gismo/core/repository/LocalRepository.dart';
 import 'package:flutter_gismo/model/User.dart';
 import 'package:flutter_gismo/services/UserService.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:developer' as debug;
 
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:sqflite/sqflite.dart';
 
 class AuthService {
 
@@ -51,6 +53,10 @@ class AuthService {
         AuthService().cheptel = "00000000";
         AuthService().subscribe = false;
         AuthService().token ="Nothing";
+        // Ce qui suit sert à initialiser la base de données qui envoie le sendReport
+        LocalRepository dummyRepo = LocalRepository();
+        await dummyRepo.database;
+
         debug.log("Mode autonome", name: "AuthService::init");
         // Ajout des pubs
         //Admob.initialize();

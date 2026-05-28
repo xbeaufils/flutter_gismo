@@ -28,6 +28,7 @@ class LocalRepository {
   }
 
   Future<Database> _init() async{
+    debug.log("LocalRepository::_init", name: "LocalRepository::_init");
     // Open the database and store the reference.
     Sqflite.setDebugModeOn(true);
 //    Directory documentsDirectory = await getApplicationDocumentsDirectory();
