@@ -27,6 +27,7 @@
    "body_cond": "Körperzustand",
    "body_cond_full": "Körperkonditionsnote",
    "treatment": "Behandlung",
+   "result_copro": "Koproskopiergebnis",
    "input": "Eingabe",
    "output": "Ausgabe",
    "localuser": "Lokaler Benutzer",
@@ -260,5 +261,17 @@
   "with_subscription": "Mit Abonnement",
   "save_config": "Konfiguration speichern",
 
-  "bluetooth_autorisation": "Bluetooth-Autorisierung"
+  "bluetooth_autorisation": "Bluetooth-Autorisierung",
+  "date_prelevement" : "Datum der Sammlung",
+  "strongles_gastro_intestinaux" : "Gastrointestinal strongyles",
+  "strongle_pulm" : "Lungenstarke",
+  "strongyloide" : "Strongyloid",
+  "nemanotode" : "Nemanotodes",
+  "trichure" : "Betrügt",
+  "petite_douve" : "Kleine Wassergräben",
+  "grande_douve" : "Große Wassergräben",
+  "paramphistome" : "Paramphistomen",
+  "tenia" : "Bandwurm",
+  "coccidie" : "Kokzidien"
+
 }

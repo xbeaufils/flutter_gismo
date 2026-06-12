@@ -69,12 +69,13 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
              ),
 //        bottomNavigationBar: this._navigationBar(),
         body:
+            SingleChildScrollView(child:
           Column(children: [
             this._buidCardEffectif(),
             this._buildCardLamb(),
             this._getAdmobAdvice(),
             this._getFacebookAdvice(),
-          ]),
+          ])),
         bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: sheepyGreenSheme.colorScheme.onPrimaryContainer,
           unselectedItemColor: sheepyGreenSheme.colorScheme.onPrimaryContainer,
@@ -115,7 +116,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
           builder : (BuildContext context, AsyncSnapshot<DashBoardEffectif> snapshot) {
             if (snapshot.data == null)
               return SizedBox(child: CircularProgressIndicator(), width: 60, height: 60,);
-            return SizedBox(height: 350,
+            return SizedBox(height: 300,
               child:
                 GridView.count(
                 scrollDirection: Axis.vertical,padding: EdgeInsets.all(10),
@@ -157,7 +158,8 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
             return SizedBox( height: 200,
               child:
                 GridView.count(
-                scrollDirection: Axis.vertical,padding: EdgeInsets.all(10),
+                  scrollDirection: Axis.vertical,
+                  padding: EdgeInsets.all(10),
                 crossAxisSpacing: 2,
                 mainAxisSpacing: 10,
                 crossAxisCount: 3,
@@ -193,17 +195,14 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
         child:
           Text(label, style: TextStyle(color: Colors.white),),
-        /*GridTileBar(
-          backgroundColor: sheepyGreenSheme.primaryColor,
-          title: Text(label,),
-        )*/
       ),
       child:
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
             color: sheepyGreenSheme.colorScheme.primaryContainer ,),
-          padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
+//          padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
+          padding: const EdgeInsets.only(top: 40, left: 20, right: 20), // symmetric(vertical: 30.0, horizontal: 20.0),
           child: Text(nb.toString(), )),
     );
   }
@@ -364,6 +363,10 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
               leading: SizedBox(child: Image.asset("assets/etat_corporel.png"), width: 55,),
               title: Text(S.of(context).body_cond),
               onTap: _presenter.necPressed,),
+            ListTile(
+              leading: SizedBox(child: Image.asset("assets/copro.png"), width: 55,),
+              title: Text(S.of(context).result_copro),
+              onTap: _presenter.coproPressed,),
           ]);}
     );
   }

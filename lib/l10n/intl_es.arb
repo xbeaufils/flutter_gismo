@@ -27,6 +27,7 @@
   "body_cond": "Puntuación de condición corporal",
   "body_cond_full": "Puntuación de condición corporal",
   "treatment": "Tratamiento",
+  "result_copro": "Resultado coproscopia",
   "input": "Entrada",
   "output": "Salida",
   "localuser": "Usuario local",
@@ -152,5 +153,18 @@
   "mating_date" : "fecha de apareamiento",
   "no_mating_date" : "Sin fecha de apareamiento",
   "mating_male_text" : "Si vide, la saillie ne sera pas enregistrée ou sera supprimée",
-  "mating_no_father" : "Pas de père saisi"
+  "mating_no_father" : "Pas de père saisi",
+
+  "date_prelevement" : "fecha de recogida",
+  "strongles_gastro_intestinaux" : "Gastrointestinal strongyles",
+  "strongle_pulm" : "Fortalezas pulmonares",
+  "strongyloide" : "Estrongiloide",
+  "nemanotode" : "Nemanotodes",
+  "trichure" : "Trampas",
+  "petite_douve" : "Pequeños fosos",
+  "grande_douve" : "Fosos profundos",
+  "paramphitome" : "Paramfistomas",
+  "tenia" : "Tenia",
+  "coccidie" : "Coccidios"
+
 }

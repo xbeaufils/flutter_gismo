@@ -27,6 +27,7 @@
   "body_cond" : "Body cond.",
   "body_cond_full" : "Body condition note",
   "treatment" : "Treatment",
+  "result_copro" : "Coproscopy result",
   "input": "Entry",
   "output": "Departure",
   "welcome" : "Home",
@@ -265,5 +266,17 @@
   "with_subscription" : "With subscription",
   "save_config" : "save configuration",
 
-  "bluetooth_autorisation": "Bluetooth authorization"
+  "bluetooth_autorisation": "Bluetooth authorization",
+  "date_prelevement" : "Date of collection",
+  "strongles_gastro_intestinaux" : "Gastrointestinal strongyles",
+  "strongle_pulm" : "Lung strongles",
+  "strongyloide" : "Strongyloid",
+  "nemanotode" : "Nemanotodes",
+  "trichure" : "Cheats",
+  "petite_douve" : "Small moats",
+  "grande_douve" : "Large moats",
+  "paramphistome" : "Paramphistomes",
+  "tenia" : "Tapeworm",
+  "coccidie" : "Coccidia"
+
 }

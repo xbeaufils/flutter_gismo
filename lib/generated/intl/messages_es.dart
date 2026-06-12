@@ -76,6 +76,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "breastfeeding_not_specified": MessageLookupByLibrary.simpleMessage(
       "Lactancia materna no especificada",
     ),
+    "coccidie": MessageLookupByLibrary.simpleMessage("Coccidios"),
     "collective_genetic": MessageLookupByLibrary.simpleMessage(
       "Agregue a todas las personas que tendrán la genética antes de continuar.\n\n",
     ),
@@ -83,6 +84,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "data_available": MessageLookupByLibrary.simpleMessage("Datos recibidos"),
     "dateDeparture": MessageLookupByLibrary.simpleMessage("Fecha de salida"),
     "dateEntry": MessageLookupByLibrary.simpleMessage("Fecha de entrada"),
+    "date_prelevement": MessageLookupByLibrary.simpleMessage(
+      "fecha de recogida",
+    ),
     "earring": MessageLookupByLibrary.simpleMessage("Aro"),
     "earring_search": MessageLookupByLibrary.simpleMessage("Búsqueda de aro"),
     "echelle_connasse": MessageLookupByLibrary.simpleMessage(
@@ -146,6 +150,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "generation": MessageLookupByLibrary.simpleMessage("Generación"),
     "genetic": MessageLookupByLibrary.simpleMessage("Genético"),
+    "grande_douve": MessageLookupByLibrary.simpleMessage("Fosos profundos"),
     "health": MessageLookupByLibrary.simpleMessage("Estado de salud"),
     "herd_size": MessageLookupByLibrary.simpleMessage("Recuento de cabezas"),
     "identity_number": MessageLookupByLibrary.simpleMessage("Número de bucle"),
@@ -180,6 +185,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "mort": MessageLookupByLibrary.simpleMessage("Muerte"),
     "name": MessageLookupByLibrary.simpleMessage("Nombre pequeño"),
     "name_hint": MessageLookupByLibrary.simpleMessage("Apellido"),
+    "nemanotode": MessageLookupByLibrary.simpleMessage("Nemanotodes"),
     "new_lamb": MessageLookupByLibrary.simpleMessage("Nuevo cordero"),
     "noDateDeparture": MessageLookupByLibrary.simpleMessage(
       "Sin fecha de salida",
@@ -224,6 +230,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Seleccione un motivo de salida",
     ),
     "output_unknown": MessageLookupByLibrary.simpleMessage("Desconocido"),
+    "petite_douve": MessageLookupByLibrary.simpleMessage("Pequeños fosos"),
     "place_earring": MessageLookupByLibrary.simpleMessage("Colocar arete"),
     "provisional_number": MessageLookupByLibrary.simpleMessage(
       "Número provisional",
@@ -232,12 +239,23 @@ class MessageLookup extends MessageLookupByLibrary {
     "race_indet": MessageLookupByLibrary.simpleMessage("indet"),
     "race_select": MessageLookupByLibrary.simpleMessage("Buscando una raza"),
     "reproduction": MessageLookupByLibrary.simpleMessage("Reproducción"),
+    "result_copro": MessageLookupByLibrary.simpleMessage(
+      "Resultado coproscopia",
+    ),
     "sante": MessageLookupByLibrary.simpleMessage("Salud"),
     "search": MessageLookupByLibrary.simpleMessage("Buscar"),
     "search_ram": MessageLookupByLibrary.simpleMessage("Buscar al semental"),
     "sex_warn": MessageLookupByLibrary.simpleMessage("Falta el sexo"),
     "sheep": MessageLookupByLibrary.simpleMessage("Individuo"),
     "stillborn": MessageLookupByLibrary.simpleMessage("Nacido muerto"),
+    "strongle_pulm": MessageLookupByLibrary.simpleMessage(
+      "Fortalezas pulmonares",
+    ),
+    "strongles_gastro_intestinaux": MessageLookupByLibrary.simpleMessage(
+      "Gastrointestinal strongyles",
+    ),
+    "strongyloide": MessageLookupByLibrary.simpleMessage("Estrongiloide"),
+    "tenia": MessageLookupByLibrary.simpleMessage("Tenia"),
     "text_empty_list": MessageLookupByLibrary.simpleMessage(
       "Para ingresar el recuento de cabezas, introdúzcalo desde la pantalla principal.",
     ),
@@ -253,6 +271,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tooltip_search": MessageLookupByLibrary.simpleMessage("Buscar"),
     "treatment": MessageLookupByLibrary.simpleMessage("Tratamiento"),
+    "trichure": MessageLookupByLibrary.simpleMessage("Trampas"),
     "ultrasound": MessageLookupByLibrary.simpleMessage("Ecografía"),
     "user_error": MessageLookupByLibrary.simpleMessage("Error de usuario"),
     "validate_lambing": MessageLookupByLibrary.simpleMessage("Validar parto"),

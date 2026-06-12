@@ -86,6 +86,11 @@ class WelcomePresenter {
     _view.viewPage('/genetic');
   }
 
+  void coproPressed() {
+    Navigator.pop(this._view.context);
+    _view.viewPage('/copro');
+  }
+
   Future<List<MemoModel>> getNbNotes() {
     return  this._service.getCheptelMemos();
   }

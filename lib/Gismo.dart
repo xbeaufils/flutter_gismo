@@ -13,6 +13,8 @@ import 'package:flutter_gismo/infra/ui/loginPage.dart';
 import 'package:flutter_gismo/memo/ui/MemoListPage.dart';
 import 'package:flutter_gismo/parcelle/ui/ParcellePage.dart';
 import 'package:flutter_gismo/sheepyGreenScheme.dart';
+import 'package:flutter_gismo/traitement/ui/Copro.dart';
+import 'package:flutter_gismo/traitement/ui/CoproList.dart';
 import 'package:flutter_gismo/traitement/ui/selectionTraitement.dart';
 import 'package:flutter_gismo/infra/ui/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -66,6 +68,7 @@ class GismoApp extends StatelessWidget {
         '/bluetooth' : (context) =>BluetoothPermissionPage(),
         '/saillie' : (context) => SearchPage(GismoPage.saillie),
         '/genetic' : (context) => SelectionHybridePage([],S.of(context).collective_genetic, S.of(context).genetic),
+        '/copro' : (context) => CoproListPage(),
       },
     );
   }

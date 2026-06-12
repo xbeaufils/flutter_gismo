@@ -219,6 +219,16 @@ class S {
     return Intl.message('Treatment', name: 'treatment', desc: '', args: []);
   }
 
+  /// `Coproscopy result`
+  String get result_copro {
+    return Intl.message(
+      'Coproscopy result',
+      name: 'result_copro',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Entry`
   String get input {
     return Intl.message('Entry', name: 'input', desc: '', args: []);
@@ -1962,6 +1972,96 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Date of collection`
+  String get date_prelevement {
+    return Intl.message(
+      'Date of collection',
+      name: 'date_prelevement',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gastrointestinal strongyles`
+  String get strongles_gastro_intestinaux {
+    return Intl.message(
+      'Gastrointestinal strongyles',
+      name: 'strongles_gastro_intestinaux',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lung strongles`
+  String get strongle_pulm {
+    return Intl.message(
+      'Lung strongles',
+      name: 'strongle_pulm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Strongyloid`
+  String get strongyloide {
+    return Intl.message(
+      'Strongyloid',
+      name: 'strongyloide',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nemanotodes`
+  String get nemanotode {
+    return Intl.message('Nemanotodes', name: 'nemanotode', desc: '', args: []);
+  }
+
+  /// `Cheats`
+  String get trichure {
+    return Intl.message('Cheats', name: 'trichure', desc: '', args: []);
+  }
+
+  /// `Small moats`
+  String get petite_douve {
+    return Intl.message(
+      'Small moats',
+      name: 'petite_douve',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Large moats`
+  String get grande_douve {
+    return Intl.message(
+      'Large moats',
+      name: 'grande_douve',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Paramphistomes`
+  String get paramphistome {
+    return Intl.message(
+      'Paramphistomes',
+      name: 'paramphistome',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tapeworm`
+  String get tenia {
+    return Intl.message('Tapeworm', name: 'tenia', desc: '', args: []);
+  }
+
+  /// `Coccidia`
+  String get coccidie {
+    return Intl.message('Coccidia', name: 'coccidie', desc: '', args: []);
   }
 }
 

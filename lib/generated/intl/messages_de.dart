@@ -99,6 +99,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "bt_validate": MessageLookupByLibrary.simpleMessage(
       "Bestätigen Sie die Auswahl",
     ),
+    "coccidie": MessageLookupByLibrary.simpleMessage("Kokzidien"),
     "collective_genetic": MessageLookupByLibrary.simpleMessage(
       "Fügen Sie alle Personen hinzu, die die entsprechende genetische Veranlagung besitzen, bevor Sie fortfahren.",
     ),
@@ -122,6 +123,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "dateEntry": MessageLookupByLibrary.simpleMessage("Eintrittsdatum"),
     "date_debut": MessageLookupByLibrary.simpleMessage("Startdatum"),
     "date_fin": MessageLookupByLibrary.simpleMessage("Enddatum"),
+    "date_prelevement": MessageLookupByLibrary.simpleMessage(
+      "Datum der Sammlung",
+    ),
     "date_ultrasound": MessageLookupByLibrary.simpleMessage(
       "Ultraschall-Datum",
     ),
@@ -207,6 +211,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "generation": MessageLookupByLibrary.simpleMessage("Generation"),
     "genetic": MessageLookupByLibrary.simpleMessage("Genetisch"),
+    "grande_douve": MessageLookupByLibrary.simpleMessage("Große Wassergräben"),
     "health": MessageLookupByLibrary.simpleMessage("Gesundheitszustand"),
     "herd_size": MessageLookupByLibrary.simpleMessage("Herdengröße"),
     "identity_number": MessageLookupByLibrary.simpleMessage("Ohrmarkennummer"),
@@ -316,6 +321,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "mort_trop_gros": MessageLookupByLibrary.simpleMessage("Zu groß"),
     "name": MessageLookupByLibrary.simpleMessage("Rufname"),
     "name_hint": MessageLookupByLibrary.simpleMessage("Name"),
+    "nemanotode": MessageLookupByLibrary.simpleMessage("Nemanotodes"),
     "new_lamb": MessageLookupByLibrary.simpleMessage("Neues Lamm"),
     "noDateDeparture": MessageLookupByLibrary.simpleMessage(
       "Kein Austrittsdatum",
@@ -372,7 +378,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Wählen Sie einen Grund für den Ausgang",
     ),
     "output_unknown": MessageLookupByLibrary.simpleMessage("Unbekannt"),
+    "paramphistome": MessageLookupByLibrary.simpleMessage("Paramphistomen"),
     "password": MessageLookupByLibrary.simpleMessage("Passwort"),
+    "petite_douve": MessageLookupByLibrary.simpleMessage("Kleine Wassergräben"),
     "place_earring": MessageLookupByLibrary.simpleMessage("Ohrmarke anbringen"),
     "prescription": MessageLookupByLibrary.simpleMessage("Rezept"),
     "provisional_number": MessageLookupByLibrary.simpleMessage(
@@ -396,6 +404,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Die aktuellen Daten werden ersetzt.",
     ),
     "result": MessageLookupByLibrary.simpleMessage("Ergebnis"),
+    "result_copro": MessageLookupByLibrary.simpleMessage("Koproskopiergebnis"),
     "route": MessageLookupByLibrary.simpleMessage("Verabreichungsweg"),
     "rythme": MessageLookupByLibrary.simpleMessage("Rhythmus"),
     "sante": MessageLookupByLibrary.simpleMessage("Gesundheit"),
@@ -411,6 +420,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "sheep": MessageLookupByLibrary.simpleMessage("Schaf"),
     "simple": MessageLookupByLibrary.simpleMessage("Einzeln"),
     "stillborn": MessageLookupByLibrary.simpleMessage("Totgeboren"),
+    "strongle_pulm": MessageLookupByLibrary.simpleMessage("Lungenstarke"),
+    "strongles_gastro_intestinaux": MessageLookupByLibrary.simpleMessage(
+      "Gastrointestinal strongyles",
+    ),
+    "strongyloide": MessageLookupByLibrary.simpleMessage("Strongyloid"),
+    "tenia": MessageLookupByLibrary.simpleMessage("Bandwurm"),
     "text_delete": MessageLookupByLibrary.simpleMessage(
       "Möchten Sie diesen Eintrag löschen?",
     ),
@@ -433,6 +448,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "treatment_explanation": MessageLookupByLibrary.simpleMessage(
       "Fügen Sie alle Schafe hinzu, die behandelt werden sollen, bevor Sie fortfahren",
     ),
+    "trichure": MessageLookupByLibrary.simpleMessage("Betrügt"),
     "triplet": MessageLookupByLibrary.simpleMessage("Drillinge und mehr"),
     "ultrasound": MessageLookupByLibrary.simpleMessage("Ultraschall"),
     "user_error": MessageLookupByLibrary.simpleMessage("Benutzerfehler"),

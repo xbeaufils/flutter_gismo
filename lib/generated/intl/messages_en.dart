@@ -97,6 +97,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "bt_validate": MessageLookupByLibrary.simpleMessage(
       "Validate the selection",
     ),
+    "coccidie": MessageLookupByLibrary.simpleMessage("Coccidia"),
     "collective_genetic": MessageLookupByLibrary.simpleMessage(
       "Add all the individuals who will have the genetics before continuing",
     ),
@@ -118,6 +119,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "dateEntry": MessageLookupByLibrary.simpleMessage("Date of entry"),
     "date_debut": MessageLookupByLibrary.simpleMessage("Begin date"),
     "date_fin": MessageLookupByLibrary.simpleMessage("End date"),
+    "date_prelevement": MessageLookupByLibrary.simpleMessage(
+      "Date of collection",
+    ),
     "date_ultrasound": MessageLookupByLibrary.simpleMessage(
       "Date of ultrasound",
     ),
@@ -199,6 +203,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "generation": MessageLookupByLibrary.simpleMessage("Generation"),
     "genetic": MessageLookupByLibrary.simpleMessage("Genetic"),
+    "grande_douve": MessageLookupByLibrary.simpleMessage("Large moats"),
     "health": MessageLookupByLibrary.simpleMessage("Health"),
     "herd_size": MessageLookupByLibrary.simpleMessage("Herd size"),
     "identity_number": MessageLookupByLibrary.simpleMessage("Identity number"),
@@ -294,6 +299,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "mort_trop_gros": MessageLookupByLibrary.simpleMessage("Too fat"),
     "name": MessageLookupByLibrary.simpleMessage("Name"),
     "name_hint": MessageLookupByLibrary.simpleMessage("Name"),
+    "nemanotode": MessageLookupByLibrary.simpleMessage("Nemanotodes"),
     "new_lamb": MessageLookupByLibrary.simpleMessage("New lamb"),
     "noDateDeparture": MessageLookupByLibrary.simpleMessage(
       "No date of departure",
@@ -350,7 +356,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Select a departure reason",
     ),
     "output_unknown": MessageLookupByLibrary.simpleMessage("Unknown"),
+    "paramphistome": MessageLookupByLibrary.simpleMessage("Paramphistomes"),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
+    "petite_douve": MessageLookupByLibrary.simpleMessage("Small moats"),
     "place_earring": MessageLookupByLibrary.simpleMessage("Place the ear tag"),
     "prescription": MessageLookupByLibrary.simpleMessage("Prescription"),
     "provisional_number": MessageLookupByLibrary.simpleMessage(
@@ -368,6 +376,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Current data will be overwritten.",
     ),
     "result": MessageLookupByLibrary.simpleMessage("Result"),
+    "result_copro": MessageLookupByLibrary.simpleMessage("Coproscopy result"),
     "route": MessageLookupByLibrary.simpleMessage("Route"),
     "rythme": MessageLookupByLibrary.simpleMessage("Rhythm"),
     "sante": MessageLookupByLibrary.simpleMessage("Health"),
@@ -381,6 +390,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "sheep": MessageLookupByLibrary.simpleMessage("Sheep"),
     "simple": MessageLookupByLibrary.simpleMessage("Simple"),
     "stillborn": MessageLookupByLibrary.simpleMessage("Stillborn"),
+    "strongle_pulm": MessageLookupByLibrary.simpleMessage("Lung strongles"),
+    "strongles_gastro_intestinaux": MessageLookupByLibrary.simpleMessage(
+      "Gastrointestinal strongyles",
+    ),
+    "strongyloide": MessageLookupByLibrary.simpleMessage("Strongyloid"),
+    "tenia": MessageLookupByLibrary.simpleMessage("Tapeworm"),
     "text_delete": MessageLookupByLibrary.simpleMessage(
       "Do you want to delete this record ?",
     ),
@@ -401,6 +416,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "treatment_explanation": MessageLookupByLibrary.simpleMessage(
       "Add all individuals who will receive treatment before continuing",
     ),
+    "trichure": MessageLookupByLibrary.simpleMessage("Cheats"),
     "triplet": MessageLookupByLibrary.simpleMessage("Triplet and +"),
     "ultrasound": MessageLookupByLibrary.simpleMessage("Ultrasound"),
     "user_error": MessageLookupByLibrary.simpleMessage("User error"),

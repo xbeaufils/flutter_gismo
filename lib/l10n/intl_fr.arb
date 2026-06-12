@@ -27,6 +27,7 @@
   "body_cond" : "Etat corp.",
   "body_cond_full" : "Note d'état corporel",
   "treatment" : "Traitement",
+  "result_copro" : "Résultat coproscopie",
   "input": "Entrée",
   "output": "Sortie",
   "localuser": "Utilisateur local",
@@ -267,5 +268,17 @@
   "with_subscription" : "Avec abonnement",
   "save_config" : "Enregistrer la configuration",
 
-  "bluetooth_autorisation": "Autorisation bluetooth"
+  "bluetooth_autorisation": "Autorisation bluetooth",
+
+  "date_prelevement" : "Date de prélèvement",
+  "strongles_gastro_intestinaux" : "Strongles gastro-intestinaux",
+  "strongle_pulm" : "Strongles pulmoniaires",
+  "strongyloide" : "Strongyloïdes",
+  "nemanotode" : "Nemanotodes",
+  "trichure" : "Trichures",
+  "petite_douve" : "Petites douves",
+  "grande_douve" : "Grandes douves",
+  "paramphistome" : "Paramphistomes",
+  "tenia" : "Tenia",
+  "coccidie" : "Coccidies"
 }

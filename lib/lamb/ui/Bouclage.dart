@@ -29,7 +29,6 @@ abstract class BouclageContract  extends GismoContract {
 }
 
 class _BouclagePageState extends GismoStatePage<BouclagePage> implements BouclageContract {
-  final df = new DateFormat('dd/MM/yyyy');
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   late BouclagePresenter _presenter = BouclagePresenter(this);
