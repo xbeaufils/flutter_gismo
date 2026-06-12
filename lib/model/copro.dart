@@ -1,6 +1,8 @@
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:intl/intl.dart';
 
 class Prelevement {
+  final _df = new DateFormat('dd/MM/yyyy');
 
   int ? _id;
 
@@ -14,8 +16,8 @@ class Prelevement {
 
   List<Bete>  _betes = [];
   List<Resultat> _resultats=[];
+  String ? _cheptel;
 
-  Prelevement.fromResult(element);
   Prelevement();
 
   List<Bete> get betes => _betes;
@@ -35,6 +37,23 @@ class Prelevement {
   set resultats(List<Resultat> value) {
     _resultats = value;
   }
+  String ? get cheptel => _cheptel;
+
+  Prelevement.fromResult(Map<String, dynamic> result) {
+    this._id = result["id"];
+    this._datePrelevement = DateTime.parse(result["date_prelevement"]);
+    this._cheptel = result["cheptel"];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (_id != null)
+      data["idBd"] = _id ;
+    data["datePrelevement"] = _df.format(_datePrelevement);
+    data["cheptel"] = _cheptel ;
+    return data;
+  }
+
 }
 
 class Resultat {

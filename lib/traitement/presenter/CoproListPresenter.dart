@@ -29,7 +29,7 @@ class Coprolistpresenter {
   }
 
   Future<List<Prelevement>> getPrelevements()  {
-    return this._service.getPrelevements();
+    return this._service.getPrelevementsForCheptel();
   }
 
 }

@@ -51,9 +51,11 @@ class CoproListPageState extends GismoStatePage<CoproListPage> with SingleTicker
   Widget _listCoproWidget() {
     return FutureBuilder(
       builder: (context, AsyncSnapshot prelevementSnap) {
-        if (prelevementSnap.connectionState == ConnectionState.none && prelevementSnap.hasData == null) {
+        if (prelevementSnap.connectionState == ConnectionState.none && ! prelevementSnap.hasData) {
           return Container();
         }
+        if ( ! prelevementSnap.hasData)
+          return Container();
         if (prelevementSnap.connectionState == ConnectionState.waiting)
           return CircularProgressIndicator();
         return ListView.builder(
