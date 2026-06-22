@@ -43,7 +43,7 @@ class CoproListPageState extends GismoStatePage<CoproListPage> with SingleTicker
       ),
       floatingActionButton:
       FloatingActionButton(
-        onPressed: this._presenter.createLot,
+        onPressed: this._presenter.createCopro,
         child: Icon(Icons.add),),
     );
   }

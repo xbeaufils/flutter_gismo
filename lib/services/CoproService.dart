@@ -8,6 +8,7 @@ class CoproService {
   late CoproRepository _repository;
 
   Future<void> save(Prelevement copro) async {
+    copro.cheptel = AuthService().cheptel!;
     _repository.save(copro);
   }
 

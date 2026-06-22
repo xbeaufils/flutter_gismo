@@ -9,7 +9,7 @@ class Coprolistpresenter {
 
   Coprolistpresenter(this._view);
 
-  void createLot(){
+  void createCopro(){
     _view.goNextPage(CoproPage(new Prelevement()));
   }
 

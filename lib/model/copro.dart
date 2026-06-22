@@ -2,7 +2,7 @@ import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:intl/intl.dart';
 
 class Prelevement {
-  final _df = new DateFormat('dd/MM/yyyy');
+  final _df = new DateFormat('yyyy-MM-dd');
 
   int ? _id;
 
@@ -39,25 +39,128 @@ class Prelevement {
   }
   String ? get cheptel => _cheptel;
 
+  set cheptel(String ? value) {
+    _cheptel = value;
+  }
+
   Prelevement.fromResult(Map<String, dynamic> result) {
     this._id = result["id"];
-    this._datePrelevement = DateTime.parse(result["date_prelevement"]);
+    this._datePrelevement = DateTime.parse(result["datePrelevement"]);
     this._cheptel = result["cheptel"];
+    this._betes = result["betes"].map<Bete>((b) => Bete.fromResult(b)).toList();
+    this._resultats = result["resultats"].map<Resultat>((r) => Resultat.fromResult(r)).toList();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (_id != null)
-      data["idBd"] = _id ;
+      data["id"] = _id ;
     data["datePrelevement"] = _df.format(_datePrelevement);
     data["cheptel"] = _cheptel ;
+    data['betes'] = _betes.map((bete) => bete.toJson()).toList();
+    data['resultats'] = _resultats.map((resultat) => resultat.toJson()).toList();
     return data;
   }
 
 }
 
+enum Parasite {
+  STRONGLES_GASTRO_INTESTINAUX,
+  STRONGLES_PULMONAIRES,
+  STRONGYLOIDES,
+  NEMATODIRUS,
+  TRICHURES,
+  PETITES_DOUVES,
+  GRANDES_DOUVES,
+  PARAMPHISTOMES,
+  TAENIA,
+  COCCIDIES;
+}
+
 class Resultat {
   int ? _id;
-  int ? _parasite;
+  Parasite ? _parasite;
   int ? _quantite;
+
+  Resultat.STRONGLES_GASTRO_INTESTINAUX(int qte) {
+    _parasite = Parasite.STRONGLES_GASTRO_INTESTINAUX;
+    _quantite = qte;
+  }
+
+  Resultat.STRONGLES_PULMONAIRES(int qte) {
+    _parasite = Parasite.STRONGLES_PULMONAIRES;
+    _quantite = qte;
+  }
+
+  Resultat.STRONGYLOIDES(int qte) {
+    _parasite = Parasite.STRONGYLOIDES;
+    _quantite = qte;
+  }
+
+  Resultat.NEMATODIRUS(int qte) {
+    _parasite = Parasite.NEMATODIRUS;
+    _quantite = qte;
+  }
+
+  Resultat.TRICHURES(int qte) {
+    _parasite = Parasite.TRICHURES;
+    _quantite = qte;
+  }
+
+  Resultat.PETITES_DOUVES(int qte) {
+    _parasite = Parasite.PETITES_DOUVES;
+    _quantite = qte;
+  }
+
+  Resultat.GRANDES_DOUVES(int qte) {
+    _parasite = Parasite.GRANDES_DOUVES;
+    _quantite = qte;
+  }
+
+  Resultat.PARAMPHISTOMES(int qte) {
+    _parasite = Parasite.PARAMPHISTOMES;
+    _quantite = qte;
+  }
+
+  Resultat.TAENIA(int qte) {
+    _parasite = Parasite.TAENIA;
+    _quantite = qte;
+  }
+
+  Resultat.COCCIDIES(int qte) {
+    _parasite = Parasite.COCCIDIES;
+    _quantite = qte;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data["id"] = _id;
+    data["parasite"] = _parasite!.name;
+    data["quantite"] = _quantite;
+    return data;
+  }
+
+  Resultat.fromResult(Map<String, dynamic> result) {
+    this._id = result["id"];
+    this._parasite = Parasite.values.firstWhere((e) => e.toString() == 'Parasite.' + result["parasite"]);
+    this._quantite = result["quantite"];
+  }
+
+  int ? get id => _id;
+
+  set id(int ? value) {
+    _id = value;
+  }
+
+  int ? get quantite => _quantite;
+
+  set quantite(int ? value) {
+    _quantite = value;
+  }
+
+  Parasite ? get parasite => _parasite;
+
+  set parasite(Parasite ? value) {
+    _parasite = value;
+  }
 }

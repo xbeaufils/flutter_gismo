@@ -5,6 +5,7 @@ import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:flutter_gismo/search/ui/SelectMultiplePage.dart';
 import 'package:flutter_gismo/services/CoproService.dart';
 import 'package:flutter_gismo/traitement/ui/Copro.dart';
+import 'package:intl/intl.dart';
 
 class CoproPresenter {
   CoproContract _view;
@@ -14,8 +15,54 @@ class CoproPresenter {
 
   CoproPresenter(this._view);
 
-  void save() {
+  void save( String dateCopro, String strongleGI, String strongleP, String strongy, String nematode, String trichures, String pDouve, String gDouve, String paramph, String tenia, String coccidie) {
+    this._view.showSaving();
+    this._view.copro.datePrelevement = DateFormat.yMd().parse(dateCopro);
+    if ( ! this._updateResultat(strongleGI, Parasite.STRONGLES_GASTRO_INTESTINAUX)) {
+      this._view.copro.resultats.add(Resultat.STRONGLES_GASTRO_INTESTINAUX(int.parse(strongleGI)));
+    }
+    if ( ! this._updateResultat(strongleP, Parasite.STRONGLES_PULMONAIRES)) {
+      this._view.copro.resultats.add(Resultat.STRONGLES_PULMONAIRES(int.parse(strongleP)));
+    }
+    if (! this._updateResultat(strongy, Parasite.STRONGYLOIDES)) {
+      this._view.copro.resultats.add(Resultat.STRONGYLOIDES(int.parse(strongy)));
+    }
+    if (! this._updateResultat(nematode, Parasite.NEMATODIRUS)) {
+      this._view.copro.resultats.add(Resultat.NEMATODIRUS(int.parse(nematode)));
+    }
+    if (! this._updateResultat(trichures, Parasite.TRICHURES)) {
+      this._view.copro.resultats.add(Resultat.TRICHURES(int.parse(trichures)));
+    }
+    if (! this._updateResultat(pDouve, Parasite.PETITES_DOUVES)) {
+      this._view.copro.resultats.add(Resultat.PETITES_DOUVES(int.parse(pDouve)));
+    }
+    if (! this._updateResultat(gDouve, Parasite.GRANDES_DOUVES)) {
+      this._view.copro.resultats.add(Resultat.GRANDES_DOUVES(int.parse(gDouve)));
+    }
+    if (! this._updateResultat(paramph, Parasite.PARAMPHISTOMES)) {
+      this._view.copro.resultats.add(Resultat.PARAMPHISTOMES(int.parse(paramph)));
+    }
+    if (! this._updateResultat(tenia, Parasite.TAENIA)) {
+      this._view.copro.resultats.add(Resultat.TAENIA(int.parse(tenia)));
+    }
+    if (! this._updateResultat(coccidie, Parasite.COCCIDIES)) {
+      this._view.copro.resultats.add(Resultat.COCCIDIES(int.parse(coccidie)));
+    }
     _service.save(this._view.copro);
+    this._view.hideSaving();
+  }
+
+  bool _updateResultat( String value, Parasite parasite) {
+    Resultat ? resultat;
+    this._view.copro.resultats.forEach( (result) {
+      if (result.parasite == parasite)
+        resultat = result;
+    });
+    if (resultat != null) {
+      resultat!.quantite = int.tryParse(value);
+      return true;
+    }
+    return false;
   }
 
   void addBete() async {

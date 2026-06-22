@@ -157,7 +157,11 @@ class CoproPageState extends GismoStatePage<CoproPage> with SingleTickerProvider
                     ],)
                     ,))),
   */
-          FilledButton(onPressed: this._presenter.save, child: Text(S.of(context).bt_save),)
+          FilledButton(
+            onPressed: () {this._presenter.save( _dateCoproCtl.text, _strongleGICtl.text, _stronglePCtl.text,
+                _strongyCtl.text, _nematodeCtl.text, _trichuresCtl.text, _pDouveCtl.text, _gDouveCtl.text,
+                _paramphCtrl.text, _teniaCtrl.text, _coccidiCtrl.text);},
+            child: Text(S.of(context).bt_save),)
             ],));
   }
 
@@ -167,6 +171,44 @@ class CoproPageState extends GismoStatePage<CoproPage> with SingleTickerProvider
     this._presenter = CoproPresenter(this);
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() => this._presenter.changeTab(_tabController.index));
+    _dateCoproCtl.text = DateFormat.yMd().format(this.widget._copro.datePrelevement);
+    this.widget._copro.resultats.forEach((result) {
+      switch (result.parasite) {
+        case Parasite.STRONGLES_GASTRO_INTESTINAUX:
+          _strongleGICtl.text = result.quantite.toString();
+          break;
+        case Parasite.STRONGLES_PULMONAIRES:
+          _stronglePCtl.text = result.quantite.toString();
+          break;
+        case Parasite.STRONGYLOIDES:
+          _strongyCtl.text = result.quantite.toString();
+          break;
+        case Parasite.NEMATODIRUS:
+          _nematodeCtl.text = result.quantite.toString();
+          break;
+        case Parasite.TRICHURES:
+          _trichuresCtl.text = result.quantite.toString();
+          break;
+        case Parasite.PETITES_DOUVES:
+          _pDouveCtl.text = result.quantite.toString();
+          break;
+        case Parasite.GRANDES_DOUVES:
+          _gDouveCtl.text = result.quantite.toString();
+          break;
+        case Parasite.PARAMPHISTOMES:
+          _paramphCtrl.text = result.quantite.toString();
+          break ;
+        case Parasite.TAENIA:
+          _teniaCtrl.text = result.quantite.toString();
+          break;
+        case Parasite.COCCIDIES:
+          _coccidiCtrl.text = result.quantite.toString();
+          break;
+        case null:
+          // TODO: Handle this case.
+          break;
+      }
+    });
   }
 
   @override

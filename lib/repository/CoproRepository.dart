@@ -49,8 +49,6 @@ class WebCoproRepository extends WebRepository implements CoproRepository {
     }
   }
   Future<String> save(Prelevement copro) async{
-    return await super.doPostMessage('/copro/save', copro);
-    throw UnimplementedError();
-
+    return await super.doPostMessage('/copro/save', copro.toJson());
   }
 }
