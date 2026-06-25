@@ -8,6 +8,7 @@ abstract class CoproRepository {
   Future<List<Prelevement>> getPrelevementsForCheptel(String cheptel);
   Future<Prelevement> getPrelevement(int idCopro);
   Future<String> save(Prelevement copro);
+  Future<void> delete(Prelevement copro);
 }
 
 class WebCoproRepository extends WebRepository implements CoproRepository {
@@ -50,5 +51,9 @@ class WebCoproRepository extends WebRepository implements CoproRepository {
   }
   Future<String> save(Prelevement copro) async{
     return await super.doPostMessage('/copro/save', copro.toJson());
+  }
+
+  Future<void> delete(Prelevement copro) {
+    return super.doDeleteMessage('/copro/delete', copro.toJson());
   }
 }

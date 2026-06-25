@@ -19,12 +19,13 @@ class CoproService {
   Future<List<Prelevement>> getPrelevementsForBete(Bete bete)  async {
     return _repository.getPrelevementsForBete(bete);
   }
+
   Future<Prelevement> getPrelevement(int idCopro) {
     return _repository.getPrelevement(idCopro);
   }
 
-  Future<String> delete(Prelevement prelevement) async {
-    return "";
+  Future<void> delete(Prelevement prelevement) async {
+    return _repository.delete(prelevement);
   }
 
   CoproService() {

@@ -20,7 +20,7 @@ abstract class CoproListContract extends GismoContract {
 }
 
 class CoproListPageState extends GismoStatePage<CoproListPage> with SingleTickerProviderStateMixin implements CoproListContract {
-  late Coprolistpresenter _presenter;
+  late CoproListPresenter _presenter;
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +82,6 @@ class CoproListPageState extends GismoStatePage<CoproListPage> with SingleTicker
   @override
   void initState() {
     super.initState();
-    this._presenter = Coprolistpresenter(this);
+    this._presenter = CoproListPresenter(this);
   }
 }

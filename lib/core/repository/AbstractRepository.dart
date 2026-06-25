@@ -67,6 +67,8 @@ class WebRepository {
           Uri.parse(Environnement.getUrlTarget() + url),
           headers: await _getHeaders(),
           body: jsonEncode(body)).timeout(Duration(seconds: 5) ).timeout(Duration(seconds: 10));
+      if (response.bodyBytes.lengthInBytes == 0)
+        return "";
       Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
       if (msg.error) {
         throw GismoException(msg.message);

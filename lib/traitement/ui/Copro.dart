@@ -222,38 +222,7 @@ class CoproPageState extends GismoStatePage<CoproPage> with SingleTickerProvider
 
   Widget _getFicheCopro() {
     return Column(children: [
- /*     Padding(
-        padding: const EdgeInsets.all(8.0),
-        child:
-          TextField(
-            key: Key("date_prelevement"),
-            keyboardType: TextInputType.datetime,
-            controller: _dateCoproCtl,
-            decoration: InputDecoration(
-            filled: true,
-            labelText: S.of(context).date_prelevement,
-            hintText: 'jj/mm/aaaa'),
-            onChanged: (value) {
-              setState(() {
-              _dateCoproCtl.text = value;
-              });
-            },
-            onTap: () async{
-              FocusScope.of(context).requestFocus(new FocusNode());
-              DateTime ? date = await showDatePicker(
-                //locale: const Locale("fr","FR"),
-                context: context,
-                initialDate:DateTime.now(),
-                firstDate:DateTime(1900),
-                lastDate: DateTime(2100));
-              if (date != null) {
-                setState(() {
-                  _dateCoproCtl.text = DateFormat.yMd().format(date);
-                });
-              }
-            }),
-            ),
-   */   Expanded(child:
+      Expanded(child:
         SingleChildScrollView(child:
           Card(child:
             Column(children: [
@@ -316,7 +285,9 @@ class CoproPageState extends GismoStatePage<CoproPage> with SingleTickerProvider
                   AssetImage("assets/male.png")) : ImageIcon(
                   AssetImage("assets/female.png")),
               title: Text(bete.numBoucle),
-              subtitle: Text(bete.numMarquage),);
+              subtitle: Text(bete.numMarquage),
+              trailing: IconButton(icon: Icon(Icons.delete), onPressed: () => { this._presenter.removeBete(bete) } ),
+          );
         }
     );
   }

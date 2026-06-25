@@ -19,34 +19,44 @@ class CoproPresenter {
     this._view.showSaving();
     this._view.copro.datePrelevement = DateFormat.yMd().parse(dateCopro);
     if ( ! this._updateResultat(strongleGI, Parasite.STRONGLES_GASTRO_INTESTINAUX)) {
-      this._view.copro.resultats.add(Resultat.STRONGLES_GASTRO_INTESTINAUX(int.parse(strongleGI)));
+      if (! strongleGI.isEmpty)
+        this._view.copro.resultats.add(Resultat.STRONGLES_GASTRO_INTESTINAUX(int.parse(strongleGI)));
     }
     if ( ! this._updateResultat(strongleP, Parasite.STRONGLES_PULMONAIRES)) {
-      this._view.copro.resultats.add(Resultat.STRONGLES_PULMONAIRES(int.parse(strongleP)));
+      if (! strongleP.isEmpty)
+        this._view.copro.resultats.add(Resultat.STRONGLES_PULMONAIRES(int.parse(strongleP)));
     }
     if (! this._updateResultat(strongy, Parasite.STRONGYLOIDES)) {
-      this._view.copro.resultats.add(Resultat.STRONGYLOIDES(int.parse(strongy)));
+      if (! strongy.isEmpty)
+        this._view.copro.resultats.add(Resultat.STRONGYLOIDES(int.parse(strongy)));
     }
     if (! this._updateResultat(nematode, Parasite.NEMATODIRUS)) {
-      this._view.copro.resultats.add(Resultat.NEMATODIRUS(int.parse(nematode)));
+      if (! nematode.isEmpty)
+        this._view.copro.resultats.add(Resultat.NEMATODIRUS(int.parse(nematode)));
     }
     if (! this._updateResultat(trichures, Parasite.TRICHURES)) {
-      this._view.copro.resultats.add(Resultat.TRICHURES(int.parse(trichures)));
+      if (! trichures.isEmpty)
+        this._view.copro.resultats.add(Resultat.TRICHURES(int.parse(trichures)));
     }
     if (! this._updateResultat(pDouve, Parasite.PETITES_DOUVES)) {
-      this._view.copro.resultats.add(Resultat.PETITES_DOUVES(int.parse(pDouve)));
+      if (! pDouve.isEmpty)
+        this._view.copro.resultats.add(Resultat.PETITES_DOUVES(int.parse(pDouve)));
     }
     if (! this._updateResultat(gDouve, Parasite.GRANDES_DOUVES)) {
-      this._view.copro.resultats.add(Resultat.GRANDES_DOUVES(int.parse(gDouve)));
+      if (! gDouve.isEmpty)
+        this._view.copro.resultats.add(Resultat.GRANDES_DOUVES(int.parse(gDouve)));
     }
     if (! this._updateResultat(paramph, Parasite.PARAMPHISTOMES)) {
-      this._view.copro.resultats.add(Resultat.PARAMPHISTOMES(int.parse(paramph)));
+      if (! paramph.isEmpty)
+        this._view.copro.resultats.add(Resultat.PARAMPHISTOMES(int.parse(paramph)));
     }
     if (! this._updateResultat(tenia, Parasite.TAENIA)) {
-      this._view.copro.resultats.add(Resultat.TAENIA(int.parse(tenia)));
+      if (! tenia.isEmpty)
+        this._view.copro.resultats.add(Resultat.TAENIA(int.parse(tenia)));
     }
     if (! this._updateResultat(coccidie, Parasite.COCCIDIES)) {
-      this._view.copro.resultats.add(Resultat.COCCIDIES(int.parse(coccidie)));
+      if (! coccidie.isEmpty)
+        this._view.copro.resultats.add(Resultat.COCCIDIES(int.parse(coccidie)));
     }
     _service.save(this._view.copro);
     this._view.hideSaving();
@@ -82,6 +92,11 @@ class CoproPresenter {
 
   Future<Prelevement> getCopro(int idCopro) async {
     return this._service.getPrelevement(idCopro);
+  }
+
+  void removeBete(Bete bete) async {
+    bool Ok = await this._view.showDialogOkCancel();
+    if ( ! Ok) return;
   }
 
   void changeTab(int index) {

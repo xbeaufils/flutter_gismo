@@ -18,8 +18,7 @@ class Prelevement {
   List<Resultat> _resultats=[];
   String ? _cheptel;
 
-  Prelevement();
-
+  Prelevement(this._datePrelevement);
   List<Bete> get betes => _betes;
 
   set betes(List<Bete> value) {
