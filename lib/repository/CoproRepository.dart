@@ -1,4 +1,5 @@
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
+import 'package:flutter_gismo/core/repository/LocalRepository.dart';
 import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/copro.dart';
@@ -49,6 +50,7 @@ class WebCoproRepository extends WebRepository implements CoproRepository {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }
   }
+
   Future<String> save(Prelevement copro) async{
     return await super.doPostMessage('/copro/save', copro.toJson());
   }
@@ -56,4 +58,24 @@ class WebCoproRepository extends WebRepository implements CoproRepository {
   Future<void> delete(Prelevement copro) {
     return super.doDeleteMessage('/copro/delete', copro.toJson());
   }
+}
+
+
+class LocalCoproRepository extends LocalRepository implements CoproRepository {
+  Future<List<Prelevement>> getPrelevementsForBete(Bete bete)  async {
+    return [];
+  }
+  Future<List<Prelevement>> getPrelevementsForCheptel(String cheptel)  async {
+    return [];
+  }
+  Future<Prelevement> getPrelevement(int idCopro)  async {
+    throw UnimplementedError();
+  }
+  Future<String> save(Prelevement copro) async{
+    return "";
+  }
+  Future<void> delete(Prelevement copro) {
+    throw UnimplementedError();
+  }
+
 }

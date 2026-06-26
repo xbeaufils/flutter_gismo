@@ -61,6 +61,35 @@ class Prelevement {
     return data;
   }
 
+  String toEventString() {
+    String event = "";
+    for (Resultat resultat in _resultats) {
+      if (resultat.parasite != null)
+      switch (resultat.parasite!) {
+        case Parasite.STRONGLES_GASTRO_INTESTINAUX:
+          event += "S.G.I. : ${resultat.quantite} ";
+        case Parasite.STRONGLES_PULMONAIRES:
+          event += "S.P. : ${resultat.quantite} ";
+        case Parasite.STRONGYLOIDES:
+          event += "STR. : ${resultat.quantite} ";
+        case Parasite.NEMATODIRUS:
+          event += "N. : ${resultat.quantite} ";
+        case Parasite.TRICHURES:
+          event += "Tr. : ${resultat.quantite} ";
+        case Parasite.PETITES_DOUVES:
+          event += "P.D. : ${resultat.quantite} ";
+        case Parasite.GRANDES_DOUVES:
+          event += "G.D. : ${resultat.quantite} ";
+        case Parasite.PARAMPHISTOMES:
+          event += "Pa : ${resultat.quantite} ";
+        case Parasite.TAENIA:
+          event += "T : ${resultat.quantite} ";
+        case Parasite.COCCIDIES:
+          event += "co : ${resultat.quantite} ";
+      }
+    }
+    return event;
+  }
 }
 
 enum Parasite {

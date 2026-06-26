@@ -47,6 +47,7 @@ abstract class EventPage extends StatelessWidget {
       case EventType.traitement:
       case EventType.echo:
       case EventType.memo:
+      case EventType.copro:
         return IconButton(icon: Icon(Icons.chevron_right), onPressed: () => presenter.searchEvent(event), );
         break;
       case EventType.saillie:
@@ -78,6 +79,8 @@ abstract class EventPage extends StatelessWidget {
         return new Image.asset("assets/saillie.png");
       case EventType.memo:
         return new Image.asset("assets/memo.png");
+      case EventType.copro:
+        return new Image.asset("assets/copro.png");
       case EventType.entree:
       case EventType.sortie:
     }

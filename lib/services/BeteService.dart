@@ -3,7 +3,9 @@ import 'package:flutter_gismo/Exception/EventException.dart';
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/individu/presenter/BetePresenter.dart';
 import 'package:flutter_gismo/model/Dashboard.dart';
+import 'package:flutter_gismo/model/copro.dart';
 import 'package:flutter_gismo/repository/BeteRepository.dart';
+import 'package:flutter_gismo/repository/CoproRepository.dart';
 import 'package:flutter_gismo/repository/EchoRepository.dart';
 import 'package:flutter_gismo/repository/LambRepository.dart';
 import 'package:flutter_gismo/repository/LotRepository.dart';
@@ -38,6 +40,7 @@ class BeteService {
   late Echorepository _echoRepository;
   late Memorepository _memorepository;
   late LotRepository _lotRepository;
+  late CoproRepository _coproRepository;
 
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -52,6 +55,7 @@ class BeteService {
       _echoRepository = WebEchoRepository(AuthService().token);
       _memorepository = WebMemoRepository(AuthService().token);
       _lotRepository = WebLotRepository(AuthService().token);
+      _coproRepository = WebCoproRepository(AuthService().token);
     }
     else {
       _repository = LocalBeteRepository();
@@ -63,6 +67,7 @@ class BeteService {
       _echoRepository = LocalEchoRepository();
       _memorepository = LocalMemoRepository();
       _lotRepository = LocalLotRepository();
+      _coproRepository = LocalCoproRepository();
     }
   }
 
@@ -102,25 +107,13 @@ class BeteService {
         message = await this._saillieRepository.deleteSaillie(event.idBd);
         break;
       case EventType.entree:
-        // TODO: Handle this case.
-        throw UnimplementedError();
       case EventType.agnelage:
-        // TODO: Handle this case.
-        throw UnimplementedError();
       case EventType.sortie:
-        // TODO: Handle this case.
-        throw UnimplementedError();
       case EventType.entreeLot:
-        // TODO: Handle this case.
-        throw UnimplementedError();
       case EventType.sortieLot:
-        // TODO: Handle this case.
-        throw UnimplementedError();
       case EventType.echo:
-        // TODO: Handle this case.
-        throw UnimplementedError();
       case EventType.memo:
-        // TODO: Handle this case.
+      case EventType.copro:
         throw UnimplementedError();
     }
     return message;
@@ -141,6 +134,7 @@ class BeteService {
       List<EchographieModel> lstEcho = await this._echoRepository.getEcho(bete);
       List<SaillieModel> lstSaillie = await this._saillieRepository.getSaillies(bete);
       List<MemoModel> lstMemos = await this._memorepository.getMemos(bete);
+      List<Prelevement> lstCopro = await this._coproRepository.getPrelevementsForBete(bete);
       lstLambs.forEach((lambing)  { lstEvents.add( new Event(lambing.idBd!, EventType.agnelage, lambing.dateAgnelage!, lambing.lambs.length.toString()));});
       lstTraitement.forEach( (traitement)  {lstEvents.add(new Event(traitement.idBd!, EventType.traitement, traitement.debut, traitement.medic!.medicament));});
       lstNotes.forEach( (note)  {lstEvents.add(new Event(note.idBd!, EventType.NEC, note.date, note.note.toString()));});
@@ -157,6 +151,7 @@ class BeteService {
 
       });
       lstMemos.forEach((note) {lstEvents.add(new Event(note.id!, EventType.memo, note.debut!, note.note!)); });
+      lstCopro.forEach((copro) {lstEvents.add(new Event(copro.id!, EventType.copro, copro.datePrelevement, copro.toEventString())); });
       lstEvents.sort((a, b) =>  _compareDate(a, b));
       return lstEvents;
     }
