@@ -81,6 +81,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Agregue a todas las personas que tendrán la genética antes de continuar.\n\n",
     ),
     "configuration": MessageLookupByLibrary.simpleMessage("Configuración"),
+    "copro_effectif": MessageLookupByLibrary.simpleMessage(
+      "Bestias analizadas",
+    ),
+    "copro_result": MessageLookupByLibrary.simpleMessage("Resultados"),
     "data_available": MessageLookupByLibrary.simpleMessage("Datos recibidos"),
     "dateDeparture": MessageLookupByLibrary.simpleMessage("Fecha de salida"),
     "dateEntry": MessageLookupByLibrary.simpleMessage("Fecha de entrada"),

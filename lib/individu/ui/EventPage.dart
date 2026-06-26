@@ -80,7 +80,7 @@ abstract class EventPage extends StatelessWidget {
       case EventType.memo:
         return new Image.asset("assets/memo.png");
       case EventType.copro:
-        return new Image.asset("assets/copro.png");
+        return new Image.asset("assets/copro.png", width: 50,);
       case EventType.entree:
       case EventType.sortie:
     }

@@ -263,6 +263,8 @@
 
   "bluetooth_autorisation": "Bluetooth-Autorisierung",
   "date_prelevement" : "Datum der Sammlung",
+  "copro_result" : "Ergebnisse",
+  "copro_effectif": "Tiere analysiert",
   "strongles_gastro_intestinaux" : "Gastrointestinal strongyles",
   "strongle_pulm" : "Lungenstarke",
   "strongyloide" : "Strongyloid",

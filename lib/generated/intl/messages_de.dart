@@ -113,6 +113,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "connection": MessageLookupByLibrary.simpleMessage("Verbindung"),
     "contributor": MessageLookupByLibrary.simpleMessage("Behandelnder"),
+    "copro_effectif": MessageLookupByLibrary.simpleMessage("Tiere analysiert"),
+    "copro_result": MessageLookupByLibrary.simpleMessage("Ergebnisse"),
     "copy_base": MessageLookupByLibrary.simpleMessage("Datenbank kopieren"),
     "data_available": MessageLookupByLibrary.simpleMessage("Daten verfügbar"),
     "data_null": MessageLookupByLibrary.simpleMessage("Daten null"),

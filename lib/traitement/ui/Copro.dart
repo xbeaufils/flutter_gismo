@@ -97,8 +97,8 @@ class CoproPageState extends GismoStatePage<CoproPage> with SingleTickerProvider
           TabBar(
             controller: _tabController,
             tabs: [
-              Tab(text: "Resultat"),
-              Tab(text: "Effectif"),
+              Tab(text: S.of(context).copro_result),
+              Tab(text: S.of(context).copro_effectif),
             ]
           ),
           Expanded(child:

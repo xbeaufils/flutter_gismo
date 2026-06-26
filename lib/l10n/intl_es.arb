@@ -156,6 +156,8 @@
   "mating_no_father" : "Pas de père saisi",
 
   "date_prelevement" : "fecha de recogida",
+  "copro_result" : "Resultados",
+  "copro_effectif": "Bestias analizadas",
   "strongles_gastro_intestinaux" : "Gastrointestinal strongyles",
   "strongle_pulm" : "Fortalezas pulmonares",
   "strongyloide" : "Estrongiloide",

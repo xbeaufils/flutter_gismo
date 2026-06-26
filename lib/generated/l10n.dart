@@ -1984,6 +1984,21 @@ class S {
     );
   }
 
+  /// `Results`
+  String get copro_result {
+    return Intl.message('Results', name: 'copro_result', desc: '', args: []);
+  }
+
+  /// `Beasts analyzed`
+  String get copro_effectif {
+    return Intl.message(
+      'Beasts analyzed',
+      name: 'copro_effectif',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Gastrointestinal strongyles`
   String get strongles_gastro_intestinaux {
     return Intl.message(
