@@ -115,6 +115,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "connection": MessageLookupByLibrary.simpleMessage("Connexion"),
     "contributor": MessageLookupByLibrary.simpleMessage("Intervenant"),
+    "copro_effectif": MessageLookupByLibrary.simpleMessage("Bêtes analysées"),
+    "copro_result": MessageLookupByLibrary.simpleMessage("Résultats"),
     "copy_base": MessageLookupByLibrary.simpleMessage(
       "Copier la base de données",
     ),
