@@ -1,4 +1,5 @@
 import 'package:flutter_gismo/Gismo.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/copro.dart';
 import 'package:flutter_gismo/search/ui/SearchPage.dart';
@@ -60,6 +61,7 @@ class CoproPresenter {
     }
     _service.save(this._view.copro);
     this._view.hideSaving();
+    this._view.backWithMessage(S.current.record_saved);
   }
 
   bool _updateResultat( String value, Parasite parasite) {
@@ -81,13 +83,15 @@ class CoproPresenter {
     if (selectedBete == null)
       return null;
     this._view.copro.betes.add(selectedBete);
+    this._view.hideSaving();
   }
 
   void addMultipleBete() async {
     List<Bete>? betes = await this._view.goNextPage(SelectMultiplePage( GismoPage.sanitaire, this._view.copro.betes));
-    if (betes != null)
+    if (betes != null) {
       this._view.copro.betes = (betes);
-
+      this._view.hideSaving();
+    }
   }
 
   Future<Prelevement> getCopro(int idCopro) async {
@@ -97,6 +101,14 @@ class CoproPresenter {
   void removeBete(Bete bete) async {
     bool Ok = await this._view.showDialogOkCancel();
     if ( ! Ok) return;
+    this._view.showSaving();
+    for (int i = 0; i < this._view.copro.betes.length; i++) {
+      if (this._view.copro.betes[i].idBd == bete.idBd) {
+        this._view.copro.betes.removeAt(i);
+        break;
+      }
+      this._view.hideSaving();
+    }
   }
 
   void changeTab(int index) {

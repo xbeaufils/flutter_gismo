@@ -18,6 +18,7 @@ class CoproListPresenter {
     String? message = await this._view.goNextPage(CoproPage(prelevement ));
     if (message != null)
       this._view.showMessage(message);
+    this._view.back();
   }
 
   void delete(Prelevement prelevement) async {

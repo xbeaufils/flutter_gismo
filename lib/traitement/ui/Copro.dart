@@ -286,7 +286,7 @@ class CoproPageState extends GismoStatePage<CoproPage> with SingleTickerProvider
                   AssetImage("assets/female.png")),
               title: Text(bete.numBoucle),
               subtitle: Text(bete.numMarquage),
-              trailing: IconButton(icon: Icon(Icons.delete), onPressed: () => { this._presenter.removeBete(bete) } ),
+              trailing: IconButton(icon: Icon(Icons.clear), onPressed: () => { this._presenter.removeBete(bete) } ),
           );
         }
     );
