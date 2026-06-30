@@ -75,6 +75,19 @@ class RobotTest {
     return btView;
   }
 
+  Finder findByDelete(String text) {
+    Finder tile = find.ancestor(
+        of: find.text(text), matching: find.byType(ListTile));
+    Finder btView = find.descendant(of: tile, matching: find.byIcon(Icons.delete));
+    return btView;
+  }
+  Finder findByClear(String text) {
+    Finder tile = find.ancestor(
+        of: find.text(text), matching: find.byType(ListTile));
+    Finder btView = find.descendant(of: tile, matching: find.byIcon(Icons.clear));
+    return btView;
+  }
+
   Finder findByCalendar(String text) {
     Finder tile = find.ancestor(
         of: find.text(text), matching: find.byType(ListTile));

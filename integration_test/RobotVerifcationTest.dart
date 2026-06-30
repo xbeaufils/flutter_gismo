@@ -4,9 +4,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
 import 'RobotTest.dart';
+import 'app_test.dart';
 
 class RobotVerificationTest extends RobotTest {
-  RobotVerificationTest(super.tester);
+  version _currentVersion;
+  RobotVerificationTest(this._currentVersion, super.tester);
 
   Future<void> verify (List<dynamic> verifs) async {
     await startAppli();
@@ -31,6 +33,9 @@ class RobotVerificationTest extends RobotTest {
       if (verif["echo"] != null) {
         this._echo(verif["echo"]);
       }
+      if (verif["copro"] != null && this._currentVersion== version.remote) {
+        this._copro(verif["copro"]);
+      }
       await tester.tap(find.backButton());
       await tester.pumpAndSettle(Duration(seconds: 5));
     }
@@ -54,6 +59,10 @@ class RobotVerificationTest extends RobotTest {
 
   Future<void> _echo(Map<String, dynamic> echo) async {
     this._verify("assets/ultrasound.png", echo["nombre"],echo["date"]);
+  }
+
+  Future<void> _copro(Map<String, dynamic> copro) async {
+    this._verify("assets/copro.png", copro["SGI"],copro["date"]);
   }
 
   Future<void> _verify(String image, String searchText, String searchDate) async {

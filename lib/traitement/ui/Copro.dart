@@ -109,55 +109,8 @@ class CoproPageState extends GismoStatePage<CoproPage> with SingleTickerProvider
                 this._getListBete(),
               ],
             )),
-/*
-          Expanded(child:
-            SingleChildScrollView(child:
-              Card(child:
-                    Column(children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child:
-                      TextField(  decoration: InputDecoration(labelText: S.current.strongles_gastro_intestinaux) ,controller: _strongleGICtl,)),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child:
-                      TextField(decoration: InputDecoration(labelText: S.current.strongle_pulm), controller: _stronglePCtl,)),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child:
-                      TextField(decoration: InputDecoration(labelText: S.current.strongyloide), controller: _strongyCtl,)),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child:
-                      TextField(decoration: InputDecoration(labelText: S.current.nemanotode), controller: _nematodeCtl,)),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child:
-                      TextField(decoration: InputDecoration(labelText: S.current.trichure), controller: _trichuresCtl,)),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child:
-                      TextField(decoration: InputDecoration(labelText: S.current.petite_douve), controller: _pDouveCtl,)),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child:
-                      TextField(decoration: InputDecoration(labelText: S.current.grande_douve), controller: _gDouveCtl,)),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child:
-                      TextField(decoration: InputDecoration(labelText: S.current.paramphistome), controller: _paramphCtrl,)),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child:
-                      TextField(decoration: InputDecoration(labelText: S.current.tenia), controller: _teniaCtrl,)),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child:
-                      TextField(decoration: InputDecoration(labelText: S.current.coccidie), controller: _coccidiCtrl,)),
-                    ],)
-                    ,))),
-  */
           FilledButton(
+            key: Key("bt_save"),
             onPressed: () {this._presenter.save( _dateCoproCtl.text, _strongleGICtl.text, _stronglePCtl.text,
                 _strongyCtl.text, _nematodeCtl.text, _trichuresCtl.text, _pDouveCtl.text, _gDouveCtl.text,
                 _paramphCtrl.text, _teniaCtrl.text, _coccidiCtrl.text);},

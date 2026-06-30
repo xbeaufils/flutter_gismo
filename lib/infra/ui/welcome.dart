@@ -363,10 +363,11 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
               leading: SizedBox(child: Image.asset("assets/etat_corporel.png"), width: 55,),
               title: Text(S.of(context).body_cond),
               onTap: _presenter.necPressed,),
+            AuthService().subscribe ?
             ListTile(
               leading: SizedBox(child: Image.asset("assets/copro.png"), width: 55,),
               title: Text(S.of(context).result_copro),
-              onTap: _presenter.coproPressed,),
+              onTap: _presenter.coproPressed,): Container(),
           ]);}
     );
   }
@@ -376,10 +377,11 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
         context: context,
         builder: (BuildContext context) {
           return Column(children: [
+            AuthService().subscribe ?
             ListTile(
               leading: Image.asset("assets/parcelles.png"),
               title: Text("Parcelles"),
-              onTap: _presenter.parcellePressed,),
+              onTap: _presenter.parcellePressed,): Container(),
             ListTile(
               leading: SizedBox( child: Image.asset("assets/memo.png"), width: 50),
               title: Text(S.of(context).memo),

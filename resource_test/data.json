@@ -94,7 +94,22 @@
       }
     ]
   },
-
+  "copro": {
+    "datePrelevement" : "22/06/",
+    "betes": [
+      {"numero" : "456"},
+      {"numero" : "789"}
+    ],
+    "bete_ajout" : [
+      {"numero" :  "123"}],
+    "bete_supp" : [
+      {"numero" :  "789"}],
+    "bete_verif" : [
+      {"numero" :  "456"}],
+    "SGI" : "250",
+    "Coc" : "560",
+    "SP" : "350"
+  },
   "pesees": {
     "agneau":
       {
@@ -214,6 +229,11 @@
       "pesee": {
         "date": "24/10/" ,
         "poids": "69.2"
+      },
+      "copro": {
+        "date": "22/06/",
+        "SGI": "S.G.I. : 250; Co : 560; S.P. : 350; ",
+        "Coc": "560"
       }
     }],
   "sortie" : {

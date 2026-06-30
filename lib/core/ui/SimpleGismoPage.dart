@@ -91,8 +91,8 @@ abstract class GismoStatePage<T extends StatefulWidget> extends  State<T> {
     });
   }
 
-  Future<bool> showDialogOkCancel() async {
-    return await showDialog(
+  Future<bool ? > showDialogOkCancel() async {
+    bool ? answer = await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -105,6 +105,9 @@ abstract class GismoStatePage<T extends StatefulWidget> extends  State<T> {
         );
       },
     );
+    if (answer != null)
+      return answer;
+    return false;
   }
 
   // set up the buttons
