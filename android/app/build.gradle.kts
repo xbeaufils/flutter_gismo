@@ -3,7 +3,7 @@ import java.io.FileInputStream
 
 plugins {
     id("com.android.application")
-    id("kotlin-android")
+    //id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -20,17 +20,13 @@ if (mapBoxPropertiesFile.exists()) {
 
 android {
     namespace = "nemesys.fr.flutter_gismo"
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion =  "29.0.14206865" // flutter.ndkVersion 29.0.14206865
     // For Map_access_token
     android.buildFeatures.buildConfig = true
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
     defaultConfig {
@@ -80,7 +76,11 @@ android {
         }
     }
 }
-
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
+}
 flutter {
     source = "../.."
 }
