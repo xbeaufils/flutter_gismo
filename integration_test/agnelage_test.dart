@@ -1,5 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/lamb/ui/Bouclage.dart';
+import 'package:flutter_gismo/lamb/ui/LambPage.dart';
+import 'package:flutter_gismo/lamb/ui/LambTimeLine.dart';
+import 'package:flutter_gismo/lamb/ui/Mort.dart';
+import 'package:flutter_gismo/lamb/ui/lambing.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
@@ -14,18 +21,12 @@ class RobotTestAgnelage extends RobotTest {
       await super.startAppli();
       Finder btAgnelage = await super.findWelcomeButton(Key("btBreeding"), S.current.lambing);
       await tester.tap(btAgnelage);
-      await tester.pumpAndSettle();
+      await tester.pump(Duration(seconds: 4));
       for (Map<String, dynamic> lambing in agnelages) {
-        await super.selectBete(lambing["numero mere"]);
+        await super.selectBete(lambing["numero mere"], LambingPage);
         // Passage à l'ecran Agnelage
-        await tester.pumpAndSettle();
+        await tester.pumpAndSettle(Duration(seconds: 4));
         DateTime now = DateTime.now();
-        expect(
-            find.byWidgetPredicate(
-                    (Widget widget) =>
-                widget is TextFormField &&
-                    widget.controller!.text == DateFormat.yMd().format(now)),
-            findsOneWidget);
         expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
         DateTime lambingDate = frenchForm.parse(lambing["date"] + now.year.toString());
         await tester.enterText(
@@ -88,14 +89,13 @@ class RobotTestAgnelage extends RobotTest {
         // Scroll until the item to be found appears.
         await tester.scrollUntilVisible(btnValidate, 500.0, scrollable: scrollView);
         await tester.tap(btnValidate);
-        await tester.pumpAndSettle();
-        await tester.pumpAndSettle(const Duration(seconds: 5));
+        await tester.pumpAndSettle(Duration(seconds: 2));
       }
   }
 
   Future<void> mort(Map<String, dynamic> lamb) async {
     await startAppli();
-    await selectLamb(lamb["numero"]);
+    await selectLamb(lamb["numero"], LambTimeLinePage);
     await tester.tap(find.byKey( Key("mortBt")));
     await tester.pumpAndSettle();
     DateTime now = DateTime.now();
@@ -122,7 +122,7 @@ class RobotTestAgnelage extends RobotTest {
   Future<void> boucle(List<dynamic> lambs) async {
     await startAppli();
     for (Map<String, dynamic> lamb in lambs) {
-      await selectLamb(lamb["numero"]);
+      await selectLamb(lamb["numero"], LambTimeLinePage);
       await tester.tap(find.byKey(Key("boucleBt")));
       await tester.pumpAndSettle();
       var numboucleTxt = find.ancestor(

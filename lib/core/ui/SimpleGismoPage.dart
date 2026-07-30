@@ -48,11 +48,18 @@ abstract class GismoStatePage<T extends StatefulWidget> extends  State<T> {
       Navigator.of(context).pop( object);
   }
 
-  void backWithMessage(String message, [bool error = false,]) {
-    if (mounted && context.mounted )
+  Future<void> backWithMessage(String message, [bool error = false,]) async {
+    if (mounted && context.mounted ) {
+      await ScaffoldMessenger.of(context).showSnackBar(
+          this._buildSnackBar(message, error));
+      Navigator.of(context).pop(message);
+      /*
       ScaffoldMessenger.of(context).showSnackBar(this._buildSnackBar(message, error))
           .closed
           .then((e) => {Navigator.of(context).pop()});
+
+       */
+    }
     else
       debug.log("Not mounted", name: "GismoStatePage::backWithMessage");
   }
@@ -65,11 +72,11 @@ abstract class GismoStatePage<T extends StatefulWidget> extends  State<T> {
     Widget ? content = null;
     Color ? backgroundColor = null;
     if (error) {
-      content = Row(children: [Text(message,), Icon(Icons.error, color: sheepyGreenSheme.colorScheme.onError,)],mainAxisAlignment: MainAxisAlignment.spaceEvenly, );
+      content = Row(children: [Expanded(child:Text(message,)), Icon(Icons.error, color: sheepyGreenSheme.colorScheme.onError,)],mainAxisAlignment: MainAxisAlignment.spaceEvenly, );
       backgroundColor = sheepyGreenSheme.colorScheme.error;
     }
     else {
-      content = Text(message);
+      content =  Text(message);
       backgroundColor = sheepyGreenSheme.colorScheme.primary;
     }
     return SnackBar(

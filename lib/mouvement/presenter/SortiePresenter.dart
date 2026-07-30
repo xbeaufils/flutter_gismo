@@ -13,7 +13,7 @@ class SortiePresenter {
 
   SortiePresenter(this._view);
 
-  void save(String ? dateSortie, String ? motif) async {
+  Future<void> save(String ? dateSortie, String ? motif) async {
     try {
       String message  = await this._service.saveSortie(dateSortie, motif, this._view.sheeps);
       this._view.backWithMessage(message);
@@ -26,7 +26,7 @@ class SortiePresenter {
     }
   }
 
-  Future add() async {
+  Future<void> add() async {
     Bete ? selectedBete = await this._view.goNextPage( SearchPage(GismoPage.sortie));
     if (selectedBete != null) {
       List<Bete> lstBete = this._view.sheeps;

@@ -27,7 +27,7 @@ class LambTimeLinePresenter {
     this._view.goNextPage(LambPage.edit(lamb));
   }
 
-  void boucle(LambModel lamb) async {
+  Future<void> boucle(LambModel lamb) async {
     Bete ? bete = await this._view.goNextPage( BouclagePage(lamb));
     if (bete == null)
       return;
@@ -42,7 +42,7 @@ class LambTimeLinePresenter {
     }
   }
 
-  void mort(LambModel lamb) async {
+  Future<void> mort(LambModel lamb) async {
     try {
       String ? message = await this._view.goNextPage( MortPage(lamb));
       if (message != null) {
@@ -54,12 +54,12 @@ class LambTimeLinePresenter {
     }
   }
 
-  void peser(LambModel lamb) async {
+  Future<void> peser(LambModel lamb) async {
     await this._view.goNextPage(  PeseePage( null, lamb ));
     this._view.hideSaving();
   }
 
-  void traitement(LambModel lamb) async {
+  Future<void> traitement(LambModel lamb) async {
     await this._view.goNextPage( LambSanitairePage(lamb));
     this._view.hideSaving();
   }
@@ -75,13 +75,13 @@ class LambPresenter {
     this._view.backWithObject(LambModel(marquage, sex, allaitement, sante));
   }
 
-  void saveLamb(LambModel lamb, String marquage, Sex sex, MethodeAllaitement allaitement, Sante sante ) {
+  Future<void> saveLamb(LambModel lamb, String marquage, Sex sex, MethodeAllaitement allaitement, Sante sante ) async {
     try {
       lamb.marquageProvisoire = marquage;
       lamb.sex = sex;
       lamb.allaitement = allaitement;
       lamb.sante = sante;
-      this.service.saveLamb(lamb);
+      await this.service.saveLamb(lamb);
       this._view.backWithObject(lamb);
     } on GismoException catch(e) {
       this._view.showMessage(e.message, true);
@@ -96,7 +96,7 @@ class BouclagePresenter {
   final _blService = BluetoothService();
   BouclagePresenter(this._view);
 
-  void createBete(LambModel lamb, String numBoucle, String numMarquage) async {
+  Future<void> createBete(LambModel lamb, String numBoucle, String numMarquage) async {
     lamb.numMarquage = numMarquage;
     lamb.numBoucle = numBoucle;
     Bete bete = new Bete(null, numBoucle, numMarquage, null, null, null, lamb.sex, 'NAISSANCE');

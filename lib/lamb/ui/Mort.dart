@@ -147,4 +147,10 @@ class _MortPageState extends  GismoStatePage<MortPage> implements MortContract {
     _dateMortCtl.text =  DateFormat.yMd().format(DateTime.now());
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _dateMortCtl.dispose();
+  }
+
 }

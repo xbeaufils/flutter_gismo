@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/individu/ui/PeseePage.dart';
+import 'package:flutter_gismo/lamb/ui/LambPage.dart';
+import 'package:flutter_gismo/lamb/ui/LambTimeLine.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
@@ -13,8 +16,8 @@ class RobotPeseeTest extends RobotTest {
     await startAppli();
     final Finder weight = await findWelcomeButton(Key("btSante"), S.current.weighing);
     await tester.tap(weight);
-    await tester.pumpAndSettle();
-    await selectBete( pesee["numero"]);
+    await tester.pumpAndSettle(Duration(seconds: 2));
+    await selectBete( pesee["numero"], PeseePage);
     // Passage à l'ecran Echo Graphie
     await tester.pumpAndSettle();
     await this._inputPesee(pesee);
@@ -22,7 +25,7 @@ class RobotPeseeTest extends RobotTest {
 
   Future<void> createPesee(Map<String, dynamic> pesee) async {
     await startAppli();
-    await selectLamb(pesee["numero"]);
+    await selectLamb(pesee["numero"], LambTimeLinePage);
     await tester.tap(find.byKey( Key("peseeBt")));
     await tester.pumpAndSettle();
     await this._inputPesee(pesee);

@@ -48,6 +48,7 @@ void main() async {
         await robot.create(jsonData["entree"]);
       });
     });
+
     if (ver == version.remote) {
       group("Test des copros", () {
         testWidgets("Saisir un resultat de copro", (tester) async {

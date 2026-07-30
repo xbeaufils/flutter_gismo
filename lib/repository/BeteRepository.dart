@@ -69,9 +69,11 @@ class WebBeteRepository extends WebRepository implements BeteRepository {
   Future<bool> checkBete(Bete bete) async {
     try {
       final response = await super.doPostResult(
-          '/bete/check' ,
+          '/bete/check',
           bete.toJson());
       return response["value"];
+    } on GismoException catch (e) {
+      throw e;
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }

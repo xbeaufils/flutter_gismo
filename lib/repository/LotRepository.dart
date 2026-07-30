@@ -134,6 +134,8 @@ class WebLotRepository extends WebRepository implements LotRepository {
       final response = await super.doPostResult(
           '/lot/create', lot.toJson());
       return LotModel.fromResult(response);
+    } on GismoException catch(e) {
+      throw e;
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }

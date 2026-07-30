@@ -197,7 +197,8 @@ class _LambingPageState extends GismoStatePage<LambingPage> implements LambingCo
   @override
   void dispose() {
     super.dispose();
-    //this._adBanner!.dispose();
+    _dateAgnelageCtl.dispose();
+    _obsCtl.dispose();
   }
 
   @override

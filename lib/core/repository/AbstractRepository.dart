@@ -36,8 +36,13 @@ class WebRepository {
 
   Future<String> doPostParcelle(String url, Object body) async {
     try {
-      var response = await http.post(Uri.parse(Environnement.getUrlTarget() + url), headers: await _getHeaders() ,body: body).timeout(Duration(seconds: 10));
-      return response.body;
+      http.Response response = await http.post(Uri.parse(Environnement.getUrlTarget() + url), headers: await _getHeaders() ,body: body).timeout(Duration(seconds: 10));
+      if (response.statusCode == HttpStatus.ok) {
+        return response.body;
+      } else {
+        Map<String,dynamic> responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+        throw new GismoException(responseJson["message"]);
+      }
     } on TimeoutException catch (e) {
       throw (e);
     } on Error catch (e, stackTrace) {
@@ -48,7 +53,7 @@ class WebRepository {
 
   Future<String> doPostWeb(String url, Object body) async {
     try {
-      var response = await http.post(Uri.parse(Environnement.getUrlWebTarget() + url),
+      http.Response response = await http.post(Uri.parse(Environnement.getUrlWebTarget() + url),
           headers: await _getHeaders() ,
           body: jsonEncode(body)).timeout(Duration(seconds: 10));
       return response.body;
@@ -63,18 +68,23 @@ class WebRepository {
   Future<String> doDeleteMessage(String url, Object body) async {
     //Message msg = Message();
     try {
-      var response = await http.delete(
+      http.Response response = await http.delete(
           Uri.parse(Environnement.getUrlTarget() + url),
           headers: await _getHeaders(),
           body: jsonEncode(body)).timeout(Duration(seconds: 5) ).timeout(Duration(seconds: 10));
-      if (response.bodyBytes.lengthInBytes == 0)
-        return "";
-      Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
-      if (msg.error) {
-        throw GismoException(msg.message);
-      }
-      else {
-        return msg.message;
+      if (response.statusCode == HttpStatus.ok) {
+        if (response.bodyBytes.lengthInBytes == 0)
+              return "";
+            Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
+            if (msg.error) {
+              throw GismoException(msg.message);
+            }
+            else {
+              return msg.message;
+            }
+      } else {
+        Map<String,dynamic> responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+        throw new GismoException(responseJson["message"]);
       }
     } on TimeoutException catch (e) {
       throw (e);
@@ -87,16 +97,21 @@ class WebRepository {
   Future<String> doPostMessage(String url, Object body) async {
     //Message msg = Message();
     try {
-      var response = await http.post(
+      http.Response response = await http.post(
           Uri.parse(Environnement.getUrlTarget() + url),
           headers: await _getHeaders(),
           body: jsonEncode(body)).timeout(Duration(seconds: 5) ).timeout(Duration(seconds: 10));
-      Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
-      if (msg.error) {
-        throw GismoException(msg.message);
-      }
-      else {
-        return msg.message;
+      if (response.statusCode == HttpStatus.ok) {
+        Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
+        if (msg.error) {
+          throw GismoException(msg.message);
+        }
+        else {
+          return msg.message;
+        }
+      } else {
+        Map<String,dynamic> responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+        throw new GismoException(responseJson["message"]);
       }
     } on TimeoutException catch (e) {
       throw (e);
@@ -110,16 +125,21 @@ class WebRepository {
   Future<Map> doPostResult(String url, Object body) async {
     String errorMessage ="";
     try {
-      var response = await http.post(
+      http.Response response = await http.post(
           Uri.parse(Environnement.getUrlTarget() + url),
           headers: await _getHeaders(),
           body: jsonEncode(body)).timeout(Duration(seconds: 10));
-      Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
-      if (msg.error) {
-        errorMessage = msg.message;
-      }
-      else {
-        return msg.result;
+      if (response.statusCode == HttpStatus.ok) {
+        Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
+        if (msg.error) {
+          errorMessage = msg.message;
+        }
+        else {
+          return msg.result;
+        }
+      } else {
+        Map<String,dynamic> responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+        throw new GismoException(responseJson["message"]);
       }
     } on TimeoutException catch (e) {
       throw (e);
@@ -132,10 +152,18 @@ class WebRepository {
 
   Future<Map<String, dynamic> > doGet(String url) async {
     try {
-      var response = await http.get(Uri.parse(Environnement.getUrlTarget() + url), headers: await _getHeaders() ).timeout(Duration(seconds: 10));
-      if (response.bodyBytes.lengthInBytes == 0)
-        return jsonDecode("{}");
-      return jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      http.Response response = await http.get(Uri.parse(Environnement.getUrlTarget() + url), headers: await _getHeaders() ).timeout(Duration(seconds: 10));
+      if (response.statusCode == HttpStatus.ok) {
+        if (response.bodyBytes.lengthInBytes == 0)
+          return jsonDecode("{}");
+        return jsonDecode(utf8.decode(response.bodyBytes)) as Map<
+            String,
+            dynamic>;
+      }
+      else {
+        Map<String,dynamic> responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+        throw new GismoException(responseJson["message"]);
+      }
     } on TimeoutException catch (e) {
       throw (e);
     } on Error catch (e, stackTrace) {
@@ -146,8 +174,14 @@ class WebRepository {
 
   Future<List > doGetList(String url) async {
     try {
-      var response = await http.get(Uri.parse(Environnement.getUrlTarget() + url), headers: await _getHeaders() );
-      return jsonDecode(utf8.decode(response.bodyBytes)) as List;
+      http.Response response = await http.get(Uri.parse(Environnement.getUrlTarget() + url), headers: await _getHeaders() );
+      if (response.statusCode == HttpStatus.ok) {
+        return jsonDecode(utf8.decode(response.bodyBytes)) as List;
+      }
+      else {
+        Map<String,dynamic> responseJson = jsonDecode(utf8.decode(response.bodyBytes));
+        throw new GismoException(responseJson["message"]);
+      }
     } on TimeoutException catch (e) {
       throw (e);
     } on Error catch (e, stackTrace) {

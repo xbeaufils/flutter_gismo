@@ -150,6 +150,12 @@ class LambPageState extends GismoStatePage<LambPage> implements LambContract {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _marquageCtrl.dispose();
+    super.dispose();
+  }
+
   Widget _mainTitle() {
     if (this.widget._lamb == null)
       return Text( S.current.new_lamb);

@@ -48,7 +48,7 @@ class ConfigPresenter {
       this._view.showMessage(e.message);
     }
       catch(e) {
-      this._view.showMessage(e.toString());
+      this._view.showMessage(e.toString(), true);
     }
 
   }

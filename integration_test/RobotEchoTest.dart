@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/individu/ui/EchoPage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
@@ -12,8 +13,8 @@ class RobotEchoTest extends RobotTest {
     await startAppli();
     Finder btEcho = await findWelcomeButton(Key("btBreeding"),S.current.ultrasound);
     await tester.tap(btEcho);
-    await tester.pumpAndSettle();
-    await selectBete( echoData["numero"] );
+    await tester.pumpAndSettle(Duration(seconds: 2));
+    await selectBete( echoData["numero"], EchoPage );
     // Passage à l'ecran Echo Graphie
     await tester.pumpAndSettle();
     DateTime now = DateTime.now();

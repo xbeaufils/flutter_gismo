@@ -24,7 +24,7 @@ class LambingPresenter {
 
   LambingModel get currentLambing => this._view.currentLambing;
 
-  void addPere() async {
+  Future<void> addPere() async {
     Bete ? pere;
     if (AuthService().subscribe) {
       pere = await this._view.goNextPage(SearchPerePage( currentLambing));
@@ -53,7 +53,7 @@ class LambingPresenter {
       this._view.refreshLambing(currentLambing);
   }
 
-  void saveLambing(String dateAgnelage, String obs, int adoption, int qualite ) async {
+  Future<void> saveLambing(String dateAgnelage, String obs, int adoption, int qualite ) async {
     currentLambing.setDateAgnelage(DateFormat.yMd().parse(dateAgnelage));
     currentLambing.observations = obs;
     currentLambing.adoption = adoption;
@@ -67,7 +67,7 @@ class LambingPresenter {
     }
   }
 
-  void addLamb() async {
+  Future<void> addLamb() async {
     LambModel? newLamb = await this._view.goNextPage(LambPage());
     if (newLamb != null) {
       currentLambing.lambs.add(newLamb);

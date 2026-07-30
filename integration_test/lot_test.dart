@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/Lot/ui/LotAffectationViewPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
@@ -32,14 +33,16 @@ class RobotLotTest extends RobotTest {
     await tester.pumpAndSettle();
     await tester.tap(find.text(S.current.bt_save));
     await tester.pumpAndSettle();
+    await tester.pump(Duration(seconds: 2));
     await tester.tap(find.byKey(Key('ewe')));
     await tester.pumpAndSettle();
     final btSearch = find.byIcon(Icons.settings_remote);
     for (Map<String, dynamic> bete in lot["brebis"]) {
       await tester.tap(btSearch);
       await tester.pumpAndSettle();
-      await selectBete(bete["numero"]);
+      await selectBete(bete["numero"], LotAffectationViewPage);
       await tester.pumpAndSettle();
+      await tester.pump(Duration(seconds: 2));
     }
   }
 

@@ -69,7 +69,8 @@ class SearchPresenter {
     this._view.filteredBetes = _betes;
   }
 
-  void selectBete(Bete bete) async {
+  Future<void> selectBete(Bete bete) async {
+    print("Select ${bete.numBoucle}");
     StatefulWidget ? page;
     switch (this._view.nextPage) {
       case GismoPage.lamb:

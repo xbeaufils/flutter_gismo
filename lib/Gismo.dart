@@ -19,14 +19,11 @@ import 'package:flutter_gismo/traitement/ui/selectionTraitement.dart';
 import 'package:flutter_gismo/infra/ui/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-enum RunningMode {test, run}
-
 enum GismoPage {lamb, sanitaire, etat_corporel, individu, sortie, lot, pesee, echo, saillie, sailliePere, note  }
 
 class GismoApp extends StatelessWidget {
   final String initialRoute;
-  final RunningMode mode;
-  GismoApp( this.mode, {required this.initialRoute}) {
+  GismoApp( {required this.initialRoute}) {
 
   }
 

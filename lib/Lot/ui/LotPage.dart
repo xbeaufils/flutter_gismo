@@ -58,7 +58,7 @@ class _LotPageState extends GismoStatePage<LotPage> implements LotContract {
   Widget _listLotWidget() {
     return FutureBuilder(
       builder: (context, AsyncSnapshot lotSnap) {
-        if (lotSnap.connectionState == ConnectionState.none && lotSnap.hasData == null) {
+        if (lotSnap.connectionState == ConnectionState.none && lotSnap.data == null) {
           return Container();
         }
         if (lotSnap.connectionState == ConnectionState.waiting)
@@ -71,7 +71,7 @@ class _LotPageState extends GismoStatePage<LotPage> implements LotContract {
             LotModel lot = lotSnap.data[index];
             return Card(child:
               ListTile(
-                leading:  IconButton(icon: Icon(Icons.delete), onPressed: () =>  _showDialog(context, lot), ),
+                leading:  IconButton(icon: Icon(Icons.delete), onPressed: () =>  this._presenter.delete(lot), ),
                 title: Text(lot.codeLotLutte!),
                 subtitle: Text(DateFormat.yMd().format( lot.dateDebutLutte!)),
                 trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: () => this._presenter.viewDetails(lot), )
@@ -81,40 +81,6 @@ class _LotPageState extends GismoStatePage<LotPage> implements LotContract {
         );
       },
       future: this._presenter.getLots(),
-    );
-  }
-
-  Future _showDialog(BuildContext context, LotModel lot) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(S.of(context).title_delete),
-          content: Text( S.of(context).text_delete),
-          actions: [
-            _cancelButton(),
-            _continueButton(lot),
-          ],
-        );
-      },
-    );
-  }
-  Widget _cancelButton() {
-    return TextButton(
-      child: Text(S.of(context).bt_cancel),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-  }
-
-  Widget _continueButton(LotModel lot) {
-    return TextButton(
-      child: Text(S.of(context).bt_continue),
-      onPressed: () {
-        this._presenter.delete(lot);
-        Navigator.of(context).pop();
-      },
     );
   }
 

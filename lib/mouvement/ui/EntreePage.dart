@@ -174,6 +174,7 @@ class _EntreePageState extends GismoStatePage<EntreePage> implements EntreeContr
   @override
   void dispose() {
     super.dispose();
+    this._dateEntreeCtl.dispose();
     //this._adBanner!.dispose();
   }
 

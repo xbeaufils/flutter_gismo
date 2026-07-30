@@ -59,22 +59,19 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
           Card (
             child: Column(children: [
               Padding(
-              padding: const EdgeInsets.all(8.0),
-                child:
-                  TextField(
-              key: Key("dateEcho"),
-
-              keyboardType: TextInputType.datetime,
-              controller: _dateEchoCtl,
-              decoration: InputDecoration(
-                  filled: true,
-                  labelText: S.of(context).date_ultrasound,
-                  hintText: 'jj/mm/aaaa'),
-              onChanged: (value) {
-                setState(() {
-                  _dateEchoCtl.text = value;
-                });
-              },
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(key: Key("dateEcho"),
+                  keyboardType: TextInputType.datetime,
+                  controller: _dateEchoCtl,
+                  decoration: InputDecoration(
+                      filled: true,
+                      labelText: S.of(context).date_ultrasound,
+                      hintText: 'jj/mm/aaaa'),
+                  onChanged: (value) {
+                    setState(() {
+                      _dateEchoCtl.text = value;
+                    });
+                  },
               onTap: () async{
                 FocusScope.of(context).requestFocus(new FocusNode());
                 DateTime ? date = await showDatePicker(
@@ -241,43 +238,19 @@ class EchoPageState extends GismoStatePage<EchoPage>  implements EchoContract {
    // _nec = this.widget._currentLevel;
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _dateEchoCtl.dispose();
+    _dateSaillieCtl.dispose();
+    _dateAgnelageCtl.dispose();
+  }
+
   void _handleRdNombreChange(int ? value) {
     setState(() {
       _nombre = value!;
     });
   }
-/*
-  void _saveEcho() async {
-    String message;
-    if (_nombre == null) {
-      message = S.of(context).number_fetuses_empty;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-      return;
-    }
-    setState(() {
-      _isSaving = true;
-    });
-    if (this.widget._currentEcho == null)
-      this.widget._currentEcho = new EchographieModel();
-    this.widget._currentEcho!.bete_id = this.widget._bete!.idBd!;
-    this.widget._currentEcho!.dateEcho = DateFormat.yMd().parse(_dateEchoCtl.text);
-    this.widget._currentEcho!.nombre = _nombre;
-    if (_dateSaillieCtl.text.isNotEmpty)
-      this.widget._currentEcho!.dateSaillie = DateFormat.yMd().parse(_dateSaillieCtl.text);
-    else
-      this.widget._currentEcho!.dateSaillie = null;
-    if (_dateAgnelageCtl.text.isNotEmpty )
-      this.widget._currentEcho!.dateAgnelage = DateFormat.yMd().parse(_dateAgnelageCtl.text);
-    else
-      this.widget._currentEcho!.dateAgnelage = null;
-    message =
-      await this._bloc!.saveEcho(this.widget._currentEcho!);
-    ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(message)))
-          .closed
-          .then((e) => {Navigator.of(context).pop()});
-  }
-*/
 
   @override
   EchographieModel ? get currentEcho {

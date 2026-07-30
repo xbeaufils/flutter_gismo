@@ -2,6 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/individu/ui/Bete.dart';
+import 'package:flutter_gismo/individu/ui/TimeLine.dart';
+import 'package:flutter_gismo/lamb/ui/LambPage.dart';
+import 'package:flutter_gismo/lamb/ui/LambTimeLine.dart';
+import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
+import 'package:flutter_gismo/traitement/ui/selectionTraitement.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
@@ -19,8 +25,8 @@ class RobotTestTraitement extends RobotTest {
       final btSearch = find.byIcon(Icons.settings_remote);
       for (Map<String, dynamic> bete in traitement["betes"]) {
         await tester.tap(btSearch);
-        await tester.pumpAndSettle();
-        await selectBete(bete["numero"]);
+        await tester.pumpAndSettle(Duration(seconds: 2));
+        await selectBete(bete["numero"], SelectionPage);
         await tester.pumpAndSettle();
       }
       await tester.tap(find.text(S.current.bt_continue));
@@ -70,8 +76,8 @@ class RobotTestTraitement extends RobotTest {
       await startAppli();
       Finder btIndividu = await findWelcomeButton(Key("btTroupeau"),S.current.sheep);
       await tester.tap(btIndividu);
-      await tester.pumpAndSettle();
-      await selectBete(traitement["bete"]);
+      await tester.pumpAndSettle(Duration(seconds: 2));
+      await selectBete(traitement["bete"], TimeLinePage);
       await tester.pumpAndSettle();
       Finder tile = find.ancestor(
           of: find.text(traitement["medicament"]["ancien"]), matching: find.byType(ListTile));
@@ -96,7 +102,7 @@ class RobotTestTraitement extends RobotTest {
 
   Future<void> createForLamb(Map<String, dynamic> traitement) async {
     await startAppli();
-    await super.selectLamb(traitement["numero"]);
+    await super.selectLamb(traitement["numero"], LambTimeLinePage);
     await tester.tap(find.byKey(Key("traitementBt")));
     await tester.pumpAndSettle();
     await this._tapeFiche(traitement);

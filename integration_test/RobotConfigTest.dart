@@ -24,7 +24,6 @@ class RobotConfigTest extends RobotTest {
     await tester.pumpAndSettle(Duration(seconds: 4));
     await tester.tap(find.byIcon(Icons.save));
     await tester.pumpAndSettle();
-    print("Totorial");
-
+    await tester.pump( Duration(seconds: 4));
   }
 }

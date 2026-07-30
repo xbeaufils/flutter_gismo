@@ -1,4 +1,5 @@
 import 'package:flutter_gismo/Exception/EventException.dart';
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/Dashboard.dart';
@@ -53,6 +54,11 @@ class LambingService {
       await this._lambRepository.mort(lamb, motif, date);
       return S.current.record_saved;
     }
+    on GismoException catch(e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
+      throw e;
+    }
     catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
       //this.reportError(e, stackTrace);
@@ -87,6 +93,11 @@ class LambingService {
       lstPoids.forEach( (poids)  {lstEvents.add(new Event(poids.id!, EventType.pesee, poids.datePesee, poids.poids.toString()));});
       lstEvents.sort((a, b) =>  _compareDate(a, b));
       return lstEvents;
+    }
+    on GismoException catch(e, stackTrace) {
+      Sentry.captureException(e, stackTrace : stackTrace);
+      //this.reportError(e, stackTrace);
+      throw e;
     }
     catch(e, stackTrace) {
       Sentry.captureException(e,stackTrace: stackTrace);

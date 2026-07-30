@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/traitement/ui/Copro.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
@@ -36,8 +37,8 @@ class RobotCoproTest extends RobotTest {
     final btSearch = find.byIcon(Icons.settings_remote);
     for (Map<String, dynamic> bete in copro["betes"]) {
       await tester.tap(btSearch);
-      await tester.pumpAndSettle();
-      await selectBete(bete["numero"]);
+      await tester.pumpAndSettle(Duration(seconds: 2));
+      await selectBete(bete["numero"], CoproPage);
       await tester.pumpAndSettle();
     }
     Finder btSave = find.byKey(Key("bt_save"));
@@ -54,6 +55,7 @@ class RobotCoproTest extends RobotTest {
         Key("btSante"), S.current.result_copro);
     await tester.tap(btCopro);
     await tester.pumpAndSettle();
+    await tester.pump(Duration(seconds: 2));
     // Tap sur 1er chevron
     Finder btView = find.byIcon(Icons.chevron_right);
     await tester.tap(btView);
@@ -67,8 +69,8 @@ class RobotCoproTest extends RobotTest {
     final btSearch = find.byIcon(Icons.settings_remote);
     for (Map<String, dynamic> bete in copro["bete_ajout"]) {
       await tester.tap(btSearch);
-      await tester.pumpAndSettle();
-      await selectBete(bete["numero"]);
+      await tester.pumpAndSettle(Duration(seconds: 2));
+      await selectBete(bete["numero"], CoproPage);
       await tester.pumpAndSettle();
     }
     for (Map<String, dynamic> bete in copro["bete_supp"]) {

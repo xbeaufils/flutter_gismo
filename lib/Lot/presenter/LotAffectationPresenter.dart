@@ -19,7 +19,6 @@ enum view {Lot, male, femelle}
 
 class LotAffectionPresenter {
 
-  final _df = new DateFormat('dd/MM/yyyy');
   final LotAffectationContract _view;
   List<Affectation?> ? _presentBeliers;
   List<Affectation?> ? _presentBrebis;
@@ -38,6 +37,8 @@ class LotAffectionPresenter {
   final BeteService _beteService = BeteService();
 
   Future<void> deleteAffectation(Affectation event) async {
+    bool Ok = await this._view.showDialogOkCancel();
+    if ( ! Ok) return;
     this._view.showSaving();
     String message = await this._service.deleteAffectation(event);
     if (_currentViewIndex == view.male)
@@ -197,25 +198,25 @@ class LotAffectionPresenter {
 
   Future<void> changePage(view index) async {
     if (this._view.currentLot.idb == null ) {
-      this._view.showMessage(S.current.batch_warning);
+      this._view.showMessage(S.current.batch_warning, true);
       return;
     }
-      _currentViewIndex = index;
-      switch (_currentViewIndex) {
-        case view.Lot:
-          this._view.currentView = view.Lot;
-          break;
-        case view.male:
-          if (this._presentBeliers == null)
-            this._presentBeliers = await this._service.getBeliersForLot(this._currentLot.idb!);
-          this._view.currentView = view.male;
-          break;
-        case view.femelle:
-          if (this._presentBrebis == null)
-            this._presentBrebis = await this._service.getBrebisForLot(this._currentLot.idb!);
-          this._view.currentView = view.femelle;
-          break;
-      }
+    _currentViewIndex = index;
+    switch (_currentViewIndex) {
+      case view.Lot:
+        this._view.currentView = view.Lot;
+        break;
+      case view.male:
+        if (this._presentBeliers == null)
+          this._presentBeliers = await this._service.getBeliersForLot(this._currentLot.idb!);
+        this._view.currentView = view.male;
+        break;
+      case view.femelle:
+        if (this._presentBrebis == null)
+          this._presentBrebis = await this._service.getBrebisForLot(this._currentLot.idb!);
+        this._view.currentView = view.femelle;
+        break;
+    }
   }
 
 }

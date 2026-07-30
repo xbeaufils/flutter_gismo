@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/env/Environnement.dart';
@@ -19,11 +21,15 @@ class RobotTest {
 
   @protected
   Future<void> startAppli() async {
+    // Propose par chatGPT
+    await _tester.pumpWidget(const SizedBox.shrink());
+    await _tester.pumpAndSettle();
+
     // Load app widget.
     Environnement.init(
         "https://www.neme-sys.fr/bd", "http://10.0.2.2:8080/gismoApp/api",
         new FlavorOvin());
-    await this._tester.pumpWidget(GismoApp(RunningMode.test, initialRoute: '/splash'));
+    await this._tester.pumpWidget(GismoApp( initialRoute: '/splash'));
     await this._pumpUntilFound(find.byType(WelcomePage));
     final splash = find.byKey(ValueKey('splashScreen'));
     await this._tester.pumpAndSettle();
@@ -43,21 +49,47 @@ class RobotTest {
     throw Exception('Widget $finder non trouvé après timeout');
   }
 
+  Future<void> pumpUntilGone(
+      Finder finder, {
+        Duration timeout = const Duration(seconds: 5),
+        Duration step = const Duration(milliseconds: 100),
+      }) async {
+    final end = DateTime.now().add(timeout);
+
+    while (finder.evaluate().isNotEmpty) {
+      if (DateTime.now().isAfter(end)) {
+        throw TimeoutException(
+          'Le widget est toujours présent après $timeout.',
+        );
+      }
+      await this._tester.pump(step);
+    }
+  }
   @protected
-  Future<void> selectBete(String numboucle) async {
-    final btSearch = find.byKey(ValueKey("searchBar"));
-    await this._tester.tap(btSearch);
-    final rowBete = find.text(numboucle);
-    await this._tester.tap(rowBete);
+  Future<void> selectBete(String numboucle, Type type) async {
+   // final btSearch = find.byKey(ValueKey("searchBar"));
+   // await this._tester.tap(btSearch);
+    //final rowBete = find.text(numboucle);
+    await this._tester.pumpAndSettle();
+    final tile = find.ancestor(
+      of: find.text(numboucle),
+      matching: find.byType(ListTile),
+    );
+    await tester.ensureVisible(tile);
+    await tester.tap(tile);
+//    await this._tester.tap(rowBete);
+    await this._tester.pumpAndSettle();
+    await this._pumpUntilFound(find.byType(type));
   }
 
-  Future<void> selectLamb(String numBoucle) async {
+  Future<void> selectLamb(String numBoucle, Type type) async {
     Finder btLambs = await this.findWelcomeButton(Key("btTroupeau"), S.current.lambs);
     await tester.tap(btLambs);
     await tester.pumpAndSettle();
+    await tester.pump(Duration(seconds: 2));
     await tester.tap(this.findByChevron(numBoucle));
     await tester.pumpAndSettle();
-
+    await this._pumpUntilFound(find.byType(type));
   }
 
   @protected

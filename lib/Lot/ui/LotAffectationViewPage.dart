@@ -26,7 +26,7 @@ abstract class LotAffectationContract extends GismoContract {
   set currentView(view value);
   void hideSaving();
   bool get isSaving;
-  Future<String?> showDateDialog(String title, String helpMessage, String label);
+  //Future<String?> showDateDialog(String title, String helpMessage, String label);
 }
 
 class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage> implements LotAffectationContract {
@@ -293,7 +293,7 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
             Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  IconButton(icon: Icon(Icons.delete), onPressed: () => { _showDialog(context, bete) } ),
+                  IconButton(icon: Icon(Icons.delete), onPressed: () => { this._presenter.deleteAffectation(bete) } ),
                   IconButton(icon: Icon(Icons.calendar_month), onPressed: () => { _presenter.edit(bete) }, ),
                   //IconButton(icon: Icon(Icons.launch), onPressed: () => { this._presenter.removeBete(bete)},)
         ])
@@ -302,45 +302,7 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
     );
   }
 
-  Future _showDialog(BuildContext context, Affectation affect) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(S.of(context).title_delete),
-          content: Text(S.of(context).text_delete),
-          actions: [
-            _cancelButton(),
-            _deleteButton(affect),
-          ],
-        );
-      },
-    );
-  }
-  // set up the buttons
-
-  Widget _cancelButton() {
-    return TextButton(
-      child: Text(S.of(context).bt_cancel),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-  }
-
-  Widget _deleteButton(Affectation affectation) {
-    return TextButton(
-      child: Text(S.of(context).bt_delete),
-      onPressed: () {
-        setState(() {
-          this._presenter.deleteAffectation(affectation);
-          Navigator.of(context).pop();
-        });
-      },
-    );
-  }
-
-  Future<String?> showDateDialog(String title, String helpMessage, String label) async {
+ /* Future<String?> showDateDialog(String title, String helpMessage, String label) async {
     return showDialog<String>(
         context: context,
         barrierDismissible: false,
@@ -400,7 +362,7 @@ class _LotAffectationViewPageState extends GismoStatePage<LotAffectationViewPage
           );
         });
   }
-
+*/
   @override
   void dispose() {
     _campagneCtrl.dispose();

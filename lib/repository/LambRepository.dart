@@ -176,6 +176,9 @@ class WebLambRepository extends WebRepository implements LambRepository {
       }
       return tempList;
     }
+    on GismoException catch(e) {
+      throw e;
+    }
     on Exception catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace: stackTrace);
       debug.log(e.toString());

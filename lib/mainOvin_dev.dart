@@ -25,9 +25,7 @@ void main() async {
   String nextPage = '/splash';
   if (kIsWeb)
     nextPage='/login';
-  final GismoApp gismoApp = new GismoApp(RunningMode.run,
-     initialRoute: nextPage,
-  );
+  final GismoApp gismoApp = new GismoApp(initialRoute: nextPage );
   // Run app!
   await Sentry.init(
         (options) => options.dsn = 'https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553',

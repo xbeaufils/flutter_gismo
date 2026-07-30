@@ -142,6 +142,12 @@ class _SortiePageState extends GismoStatePage<SortiePage> implements SortieContr
     _dateSortieCtl.text =  DateFormat.yMd().format(DateTime.now());
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _dateSortieCtl.dispose();
+  }
+
   void removeBete(int index) {
     setState(() {
       _sheeps.removeAt(index);

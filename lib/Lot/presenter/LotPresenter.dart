@@ -13,13 +13,13 @@ class LotPresenter {
     _view.goNextPage(LotAffectationViewPage(new LotModel()));
   }
 
-  void viewDetails(LotModel lot ) async {
+  Future<void> viewDetails(LotModel lot ) async {
     String? message = await this._view.goNextPage(LotAffectationViewPage(lot ));
     if (message != null)
       this._view.showMessage(message);
   }
 
-  void delete(LotModel lot) async {
+  Future<void> delete(LotModel lot) async {
     bool Ok = await this._view.showDialogOkCancel();
     if (Ok) {
       var message = await _service.deleteLot(lot);

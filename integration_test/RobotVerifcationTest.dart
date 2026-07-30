@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/individu/ui/Bete.dart';
+import 'package:flutter_gismo/individu/ui/TimeLine.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
@@ -15,8 +17,8 @@ class RobotVerificationTest extends RobotTest {
     Finder btIndividu = await findWelcomeButton(Key("btTroupeau"),S.current.sheep);
     await tester.tap(btIndividu);
     for (Map<String, dynamic> verif in verifs) {
-      await tester.pumpAndSettle();
-      await selectBete( verif["bete"] );
+      await tester.pumpAndSettle(Duration(seconds: 2));
+      await selectBete( verif["bete"], TimeLinePage );
       await tester.pumpAndSettle();
       if (verif["agnelage"] != null) {
         this._agnelage(verif["agnelage"]);

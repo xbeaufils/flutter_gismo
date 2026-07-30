@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/mouvement/ui/SortiePage.dart';
+import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
@@ -57,6 +59,7 @@ class RobotTestMouvement extends RobotTest {
     var addBt = find.text(S.current.bt_add);
     await tester.tap(addBt);
     await tester.pumpAndSettle();
+    await tester.pump(Duration(seconds: 2));
   }
 
   Future<void> sortie(Map<String, dynamic> sortie) async {
@@ -69,17 +72,32 @@ class RobotTestMouvement extends RobotTest {
     DateTime sortieDate = frenchForm.parse(sortie["dateSortie"] + now.year.toString());
     await tester.enterText(
         find.text(DateFormat.yMd().format(now)), DateFormat.yMd().format(sortieDate));
+
     final dropDown = find.byKey(Key("motifSortie"));
     await tester.tap(dropDown);
     await tester.pump();
-    final btCreation = find.text(S.current.output_boucherie);
+    final Finder btCreation = find.text(S.current.output_boucherie);
     await tester.tap(btCreation);
     await tester.pump();
     for (Map<String, dynamic> bete in sortie["betes"]) {
+
+      final fab = tester.widget<FloatingActionButton>(
+        find.byType(FloatingActionButton),
+      );
+      expect(fab.onPressed, isNotNull);
+      final focus = FocusManager.instance.primaryFocus;
+      debugPrint('Primary focus : $focus');
+      debugPrint('Context : ${focus?.context}');
+      debugPrint('Widget : ${focus?.context?.widget}');
+
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pump();
+      await tester.pumpAndSettle();
+
       await tester.tap(find.byIcon(Icons.add));
-      await tester.pumpAndSettle();
-      await selectBete(bete["numero"]);
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(Duration(seconds: 2));
+      await selectBete(bete["numero"], SortiePage);
+      await tester.pump(const Duration(seconds: 2));
     }
     final btSave = find.text(S.current.bt_save);
     await tester.tap(btSave);
