@@ -67,17 +67,17 @@ class RobotTest {
   }
   @protected
   Future<void> selectBete(String numboucle, Type type) async {
-   // final btSearch = find.byKey(ValueKey("searchBar"));
-   // await this._tester.tap(btSearch);
-    //final rowBete = find.text(numboucle);
     await this._tester.pumpAndSettle();
+    await this._pumpUntilFound(find.ancestor(
+      of: find.text(numboucle),
+      matching: find.byType(ListTile),
+    ));
     final tile = find.ancestor(
       of: find.text(numboucle),
       matching: find.byType(ListTile),
     );
-    await tester.ensureVisible(tile);
+    //await tester.ensureVisible(tile);
     await tester.tap(tile);
-//    await this._tester.tap(rowBete);
     await this._tester.pumpAndSettle();
     await this._pumpUntilFound(find.byType(type));
   }

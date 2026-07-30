@@ -105,6 +105,7 @@ void main() async {
         await robot.modifyEnd(jsonData["Lot"]["modification"]);
       }, skip: false);
     });
+
     group("Test des pesées", () {
       testWidgets(
           'Saisir une pesée de brebis', (tester,) async {
