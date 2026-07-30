@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
@@ -37,9 +36,9 @@ void startApp()
 
 
     Environnement.init(
-    //    "https://www.neme-sys.fr/bd", "http://10.0.2.2:8080/gismoApp/api",
+        "https://www.neme-sys.fr/bd", "http://10.0.2.2:8080/gismoApp/api",
     //    "https://www.neme-sys.fr/bd", "http://192.168.1.86:8080/gismoApp/api",
-        "https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api",
+    //    "https://www.neme-sys.fr/bd", "https://gismo.neme-sys.fr/api",
         new FlavorOvin());
     String nextPage = '/splash';
     if (kIsWeb)
@@ -47,9 +46,7 @@ void startApp()
       nextPage = '/login';
 
     initializeDateFormatting();
-    final GismoApp gismoApp = new GismoApp( RunningMode.run,
-      initialRoute: nextPage, //isLogged ? '/welcome' : '/config',
-    );
+    final GismoApp gismoApp = new GismoApp(initialRoute: nextPage);
     runApp(gismoApp);
 }
   /*
