@@ -1,3 +1,4 @@
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -23,6 +24,8 @@ class SortiePresenter {
       this._view.showMessage (S.current.empty_list, true);
     } on MissingDate {
       this._view.showMessage (S.current.noEntryDate, true);
+    } on GismoException catch(e) {
+      this._view.showMessage(e.message, true);
     }
   }
 

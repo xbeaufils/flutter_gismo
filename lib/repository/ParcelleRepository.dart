@@ -96,6 +96,8 @@ class WebParcelleRepository  extends WebRepository implements ParcelleRepository
       final response = await super.doPostMessage(
           '/paturage/save', pature.toJson());
       return response;
+    } on GismoException catch(e) {
+      throw e;
     } catch ( e) {
       throw ("Erreur de connection à " +  Environnement.getUrlTarget());
     }

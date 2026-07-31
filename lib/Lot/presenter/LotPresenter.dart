@@ -1,5 +1,6 @@
 import 'package:flutter_gismo/Lot/ui/LotAffectationViewPage.dart';
 import 'package:flutter_gismo/Lot/ui/LotPage.dart';
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/model/LotModel.dart';
 import 'package:flutter_gismo/services/LotService.dart';
 
@@ -22,9 +23,13 @@ class LotPresenter {
   Future<void> delete(LotModel lot) async {
     bool Ok = await this._view.showDialogOkCancel();
     if (Ok) {
+      try {
       var message = await _service.deleteLot(lot);
       if (message != null)
         this._view.showMessage(message);
+      } on GismoException catch(e) {
+        this._view.showMessage(e.message, true);
+      }
     }
   }
 

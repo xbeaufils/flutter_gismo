@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/services/TraitementService.dart';
@@ -51,18 +52,28 @@ class TraitementPresenter {
     traitement.idBete = modifyView.currentTraitement?.idBete;
     traitement.idLamb = modifyView.currentTraitement?.idLamb;
     traitement.idBd = modifyView.currentTraitement?.idBd;
-    await this._service.saveTraitement(traitement);
-    this._view.backWithMessage(S.current.record_saved);
+    try {
+      await this._service.saveTraitement(traitement);
+      this._view.backWithMessage(S.current.record_saved);
+    } on GismoException catch(e) {
+      this._view.showMessage(e.message, true);
+    }
   }
 
   void saveMultiple(String debut, String fin, String intervenant, String observation, String motif, String ordonnance) async {
     MultipleSanitaireContract multipleView = this._view as MultipleSanitaireContract;
-    TraitementModel traitement = this._save(debut, fin, intervenant, observation, motif, ordonnance);
-    String message = "";
-    if (multipleView.betes != null && multipleView.medics != null)
-      message = await _service.saveTraitementCollectif(traitement, multipleView.medics!, multipleView.betes!);
-    this._view.backWithMessage(S.current.record_saved);
-  }
+    try {
+      TraitementModel traitement = this._save(
+          debut, fin, intervenant, observation, motif, ordonnance);
+      String message = "";
+      if (multipleView.betes != null && multipleView.medics != null)
+        message = await _service.saveTraitementCollectif(
+            traitement, multipleView.medics!, multipleView.betes!);
+      this._view.backWithMessage(S.current.record_saved);
+    } on GismoException catch(e) {
+      this._view.showMessage(e.message, true);
+    }
+}
 
   void saveLamb(String debut, String fin, String dose, String intervenant, String observation, String motif, String medicament, String ordonnance, String rythme, String voie) async {
     LambSanitaireContract lambView = this._view as LambSanitaireContract;
@@ -72,9 +83,13 @@ class TraitementPresenter {
     traitement.medic!.voie = voie;
     traitement.medic!.rythme = rythme;
     traitement.idLamb = lambView.bebeMalade!.idBd;
-    String message = "";
-    message = await _service.saveTraitement(traitement);
-    this._view.backWithMessage(S.current.record_saved);
+    try {
+      String message = "";
+      message = await _service.saveTraitement(traitement);
+      this._view.backWithMessage(S.current.record_saved);
+    } on GismoException catch(e) {
+      this._view.showMessage(e.message, true);
+    }
   }
 
   TraitementModel _save(String debut, String fin, String intervenant, String observation, String motif, String ordonnance)  {
