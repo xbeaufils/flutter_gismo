@@ -168,7 +168,7 @@ class WebRepository {
       throw (e);
     } on Error catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
-      throw(e);
+      throw GismoException(e.toString());
     }
   }
 

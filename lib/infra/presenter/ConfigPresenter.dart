@@ -45,7 +45,7 @@ class ConfigPresenter {
       User testedUser = await this._userUservice.auth(testUser);
       _view.configTeste = TestConfig.DONE;
     } on GismoException  catch(e) {
-      this._view.showMessage(e.message);
+      this._view.showMessage(e.message, true);
     }
       catch(e) {
       this._view.showMessage(e.toString(), true);
