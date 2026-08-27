@@ -11,11 +11,12 @@ import 'package:sentry/sentry.dart';
 
 void main() async {
   await Sentry.init(
-    (options) =>
-        options.dsn =
-        'https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553'
-        /*options.release = ''*/
-      ,
+    (options) {
+      options.dsn =
+        'https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553';
+      options.enableLogs = true;
+      /*options.release = ''*/
+      },
       appRunner: () => {
       startApp()
     });
