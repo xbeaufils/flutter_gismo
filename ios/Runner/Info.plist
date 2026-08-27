@@ -45,5 +45,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>Localisation pour récupérer le cadastre </string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Localisation pour récupérer le cadastre</string>
+    <key>MGLMapboxAccessToken</key>
+    <string>pk.eyJ1IjoieGJlYXUiLCJhIjoiY2s4anVjamdwMGVsdDNucDlwZ2I0bGJwNSJ9.lc21my1ozaQZ2-EriDSY5w</string>
+  </dict>
 </plist>
