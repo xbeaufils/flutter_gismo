@@ -21,6 +21,9 @@ version: 3.6.0+47
 environment:
   sdk: ^3.8.1
 
+config:
+  enable-swift-package-manager: true
+
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
@@ -30,6 +33,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+
   flutter_localizations:
     sdk: flutter
   flutter_test:
@@ -50,12 +55,9 @@ dependencies:
   provider: ^6.1.1
   path_provider: ^2.0.9
   flutter_secure_storage: ^11.0.0
-  #mapbox_gl_flutterflow: ^1.0.7
   mapbox_maps_flutter: ^2.26.0
-  #mapbox_gl: ^0.16.0
   sentry_flutter: ^9.24.0
   google_mobile_ads: ^9.0.0
-  # facebook_audience_network: ^1.0.1
   package_info_plus: ^10.2.1
 
 
