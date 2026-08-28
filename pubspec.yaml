@@ -55,7 +55,7 @@ dependencies:
   provider: ^6.1.1
   path_provider: ^2.0.9
   flutter_secure_storage: ^11.0.0
-  mapbox_maps_flutter: ^2.26.0
+  # mapbox_maps_flutter: ^2.26.0
   sentry_flutter: ^9.24.0
   google_mobile_ads: ^9.0.0
   package_info_plus: ^10.2.1

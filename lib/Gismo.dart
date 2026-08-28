@@ -11,9 +11,7 @@ import 'package:flutter_gismo/infra/ui/bluetooth.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/infra/ui/loginPage.dart';
 import 'package:flutter_gismo/memo/ui/MemoListPage.dart';
-import 'package:flutter_gismo/parcelle/ui/ParcellePage.dart';
 import 'package:flutter_gismo/sheepyGreenScheme.dart';
-import 'package:flutter_gismo/traitement/ui/Copro.dart';
 import 'package:flutter_gismo/traitement/ui/CoproList.dart';
 import 'package:flutter_gismo/traitement/ui/selectionTraitement.dart';
 import 'package:flutter_gismo/infra/ui/welcome.dart';
@@ -63,7 +61,7 @@ class GismoApp extends StatelessWidget {
         '/entree': (context) => EntreePage(),
         '/splash' : (context) => SplashScreen(),
         '/lot' : (context) => LotPage(),
-        '/parcelle' : (context) =>ParcellePage(),
+        // '/parcelle' : (context) =>ParcellePage(),
         '/config' : (context) =>ConfigPage(),
         '/bluetooth' : (context) =>BluetoothPermissionPage(),
         '/saillie' : (context) => SearchPage(GismoPage.saillie),
