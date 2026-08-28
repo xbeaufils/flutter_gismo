@@ -49,7 +49,9 @@
     <string>Localisation pour récupérer le cadastre </string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>Localisation pour récupérer le cadastre</string>
-    <key>MGLMapboxAccessToken</key>
+    <key>MBXAccessToken</key>
     <string>pk.eyJ1IjoieGJlYXUiLCJhIjoiY2s4anVjamdwMGVsdDNucDlwZ2I0bGJwNSJ9.lc21my1ozaQZ2-EriDSY5w</string>
+    <key>GADApplicationIdentifier</key>
+    <string>ca-app-pub-9699928438497749/2969884909</string>
   </dict>
 </plist>
