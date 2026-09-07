@@ -5,8 +5,12 @@ import 'package:flutter_gismo/flavor/FlavorOvin.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/infra/ui/welcome.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 
 class RobotTest {
+
+  DateFormat frenchForm = DateFormat("dd/MM/yyyy");
+
   WidgetTester _tester;
 
   WidgetTester get tester => _tester;
@@ -48,7 +52,8 @@ class RobotTest {
   }
 
   Future<void> selectLamb(String numBoucle) async {
-    await tester.tap(this.findWelcomeButton(S.current.lambs));
+    Finder btLambs = await this.findWelcomeButton(Key("btTroupeau"), S.current.lambs);
+    await tester.tap(btLambs);
     await tester.pumpAndSettle();
     await tester.tap(this.findByChevron(numBoucle));
     await tester.pumpAndSettle();
@@ -56,18 +61,30 @@ class RobotTest {
   }
 
   @protected
-  Finder findWelcomeButton(String text) {
-    final Finder entreeGrid = find.ancestor(
-        of: find.text(text), matching: find.byType(GridTile));
-    final Finder entree = find.descendant(
-        of: entreeGrid, matching: find.byType(FilledButton));
-    return entree;
+  Future<Finder> findWelcomeButton(Key key, String text) async {
+    await tester.tap(find.byKey(key));
+    await tester.pumpAndSettle();
+    final Finder button = find.text(text);
+    return button;
   }
 
   Finder findByChevron(String text) {
     Finder tile = find.ancestor(
         of: find.text(text), matching: find.byType(ListTile));
     Finder btView = find.descendant(of: tile, matching: find.byIcon(Icons.chevron_right));
+    return btView;
+  }
+
+  Finder findByDelete(String text) {
+    Finder tile = find.ancestor(
+        of: find.text(text), matching: find.byType(ListTile));
+    Finder btView = find.descendant(of: tile, matching: find.byIcon(Icons.delete));
+    return btView;
+  }
+  Finder findByClear(String text) {
+    Finder tile = find.ancestor(
+        of: find.text(text), matching: find.byType(ListTile));
+    Finder btView = find.descendant(of: tile, matching: find.byIcon(Icons.clear));
     return btView;
   }
 

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Exception/EventException.dart';
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/individu/presenter/BetePresenter.dart';
+import 'package:flutter_gismo/model/Dashboard.dart';
+import 'package:flutter_gismo/model/copro.dart';
 import 'package:flutter_gismo/repository/BeteRepository.dart';
+import 'package:flutter_gismo/repository/CoproRepository.dart';
 import 'package:flutter_gismo/repository/EchoRepository.dart';
 import 'package:flutter_gismo/repository/LambRepository.dart';
 import 'package:flutter_gismo/repository/LotRepository.dart';
@@ -36,6 +40,7 @@ class BeteService {
   late Echorepository _echoRepository;
   late Memorepository _memorepository;
   late LotRepository _lotRepository;
+  late CoproRepository _coproRepository;
 
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -50,6 +55,7 @@ class BeteService {
       _echoRepository = WebEchoRepository(AuthService().token);
       _memorepository = WebMemoRepository(AuthService().token);
       _lotRepository = WebLotRepository(AuthService().token);
+      _coproRepository = WebCoproRepository(AuthService().token);
     }
     else {
       _repository = LocalBeteRepository();
@@ -61,6 +67,7 @@ class BeteService {
       _echoRepository = LocalEchoRepository();
       _memorepository = LocalMemoRepository();
       _lotRepository = LocalLotRepository();
+      _coproRepository = LocalCoproRepository();
     }
   }
 
@@ -100,25 +107,13 @@ class BeteService {
         message = await this._saillieRepository.deleteSaillie(event.idBd);
         break;
       case EventType.entree:
-        // TODO: Handle this case.
-        throw UnimplementedError();
       case EventType.agnelage:
-        // TODO: Handle this case.
-        throw UnimplementedError();
       case EventType.sortie:
-        // TODO: Handle this case.
-        throw UnimplementedError();
       case EventType.entreeLot:
-        // TODO: Handle this case.
-        throw UnimplementedError();
       case EventType.sortieLot:
-        // TODO: Handle this case.
-        throw UnimplementedError();
       case EventType.echo:
-        // TODO: Handle this case.
-        throw UnimplementedError();
       case EventType.memo:
-        // TODO: Handle this case.
+      case EventType.copro:
         throw UnimplementedError();
     }
     return message;
@@ -128,7 +123,7 @@ class BeteService {
     try {
       List<Event> lstEvents = [];
       debug.log("get lambs", name: "BeteService::getEvents");
-      List<LambingModel> lstLambs = await this._lambRepository.getLambs(bete.idBd!);
+      List<LambingModel> lstLambs = await this._lambRepository.getLambings(bete.idBd!);
       debug.log("get traitements", name: "BeteService::getEvents");
       List<TraitementModel> lstTraitement = await this._traitementrepository.getTraitements(bete);
       debug.log("get lots", name: "BeteService::getEvents");
@@ -139,6 +134,7 @@ class BeteService {
       List<EchographieModel> lstEcho = await this._echoRepository.getEcho(bete);
       List<SaillieModel> lstSaillie = await this._saillieRepository.getSaillies(bete);
       List<MemoModel> lstMemos = await this._memorepository.getMemos(bete);
+      List<Prelevement> lstCopro = await this._coproRepository.getPrelevementsForBete(bete);
       lstLambs.forEach((lambing)  { lstEvents.add( new Event(lambing.idBd!, EventType.agnelage, lambing.dateAgnelage!, lambing.lambs.length.toString()));});
       lstTraitement.forEach( (traitement)  {lstEvents.add(new Event(traitement.idBd!, EventType.traitement, traitement.debut, traitement.medic!.medicament));});
       lstNotes.forEach( (note)  {lstEvents.add(new Event(note.idBd!, EventType.NEC, note.date, note.note.toString()));});
@@ -155,6 +151,7 @@ class BeteService {
 
       });
       lstMemos.forEach((note) {lstEvents.add(new Event(note.id!, EventType.memo, note.debut!, note.note!)); });
+      lstCopro.forEach((copro) {lstEvents.add(new Event(copro.id!, EventType.copro, copro.datePrelevement, copro.toEventString())); });
       lstEvents.sort((a, b) =>  _compareDate(a, b));
       return lstEvents;
     }
@@ -212,12 +209,40 @@ class BeteService {
       throw MissingSex();
     }
     bool _existant = false;
-    _existant = await this.check(bete);
-    bete.cheptel = AuthService().cheptel!;
-    if (! _existant)
-      return this._repository.saveBete(bete);
-    else
-      throw ExistingBete();
+    try {
+      _existant = await this.check(bete);
+      bete.cheptel = AuthService().cheptel!;
+      if (!_existant)
+        return this._repository.saveBete(bete);
+      else
+        throw ExistingBete();
+    }on GismoException catch(e)  {
+      throw e;
+    }
   }
 
+  Future<List<Race>> getAllRaces() {
+    return this._repository.getAllRaces();
+  }
+
+  void delete(List<Race> races,Race race) {
+    int index = races.indexOf(race);
+    if (index != -1)
+      this.remove(races, index);
+  }
+
+  void remove(List<Race> races, int index) {
+    races.removeAt(index);
+    for (int i =0; i < races.length; i++) {
+      races[i].ordre = i + 1;
+    }
+  }
+
+  Future<void> saveMultiHybridation(List<Bete> betes, Hybridation hybdrid) async {
+    String message = await _repository.saveMultiHybridation(betes, hybdrid);
+  }
+
+  Future<DashBoardEffectif> getDashBoardEffectif() async {
+    return this._repository.getDashBoardEffectif();
+  }
 }

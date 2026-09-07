@@ -113,16 +113,6 @@ class NECPageState extends GismoStatePage<NECPage> implements NECContract {
    // _nec = this.widget._currentLevel;
   }
 
-/*  void _saveNote() async {
-    setState(() {
-      _isSaving = true;
-    });
-    String message = await this._bloc.saveNec(this.widget._bete,  NEC.getNEC(_nec), DateFormat.yMd().parse(_dateNoteCtl.text));
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(key: Key("SaveNoteMessage"), content: Text(message)))
-        .closed
-        .then((e) => {Navigator.of(context).pop()});
-  }
- */
   Bete get bete => this.widget._bete;
 }
 

@@ -1,5 +1,21 @@
 {
   "@@locale": "es",
+
+  "effectif": "Rebaño",
+  "reproduction": "Reproducción",
+  "sante" : "Salud",
+  "other" : "Otros",
+  "effectif_sheep": "Número de animales marcados",
+  "effectif_lamb": "Número de animales sin etiquetas",
+  "effectif_femelles": "Hembras",
+  "effectif_males": "Machos",
+  "effectif_ram": "carneros",
+  "effectif_ewe": "Oveja",
+  "effectif_ewe_lamb": "Agnelles",
+  "effectif_ram_lamb": "Corderos",
+  "effectif_adult": "Cuya fecha de nacimiento es mayor de 1 año o es desconocida",
+  "effectif_youth" : "Cuya fecha de nacimiento es menor de 1 año",
+
   "batch": "Lote",
   "sheep": "Individuo",
   "lambing": "Parto",
@@ -11,6 +27,7 @@
   "body_cond": "Puntuación de condición corporal",
   "body_cond_full": "Puntuación de condición corporal",
   "treatment": "Tratamiento",
+  "result_copro": "Resultado coproscopia",
   "input": "Entrada",
   "output": "Salida",
   "localuser": "Usuario local",
@@ -42,6 +59,13 @@
   "name": "Nombre pequeño",
   "name_hint": "Apellido",
   "identity_number_error": "El número de bucle ya está presente",
+  "race": "Raza",
+  "race_select": "Buscando una raza",
+  "generation": "Generación",
+  "genetic": "Genético",
+  "race_indet": "indet",
+  "collective_genetic": "Agregue a todas las personas que tendrán la genética antes de continuar.\n\n",
+  "no_bete_selected" : "Ninguna oveja seleccionada",
 
   "entree_select": "Seleccione un motivo de entrada",
   "entree_reason_required": "Motivo de entrada obligatorio",
@@ -124,5 +148,25 @@
   "lamb_deliverance": "Buscar la liberación",
   "lamb_fouille": "Buscar al cordero",
 
-  "mort": "Muerte"
+  "mort": "Muerte",
+
+  "mating_date" : "fecha de apareamiento",
+  "no_mating_date" : "Sin fecha de apareamiento",
+  "mating_male_text" : "Si vide, la saillie ne sera pas enregistrée ou sera supprimée",
+  "mating_no_father" : "Pas de père saisi",
+
+  "date_prelevement" : "fecha de recogida",
+  "copro_result" : "Resultados",
+  "copro_effectif": "Bestias analizadas",
+  "strongles_gastro_intestinaux" : "Gastrointestinal strongyles",
+  "strongle_pulm" : "Fortalezas pulmonares",
+  "strongyloide" : "Estrongiloide",
+  "nemanotode" : "Nemanotodes",
+  "trichure" : "Trampas",
+  "petite_douve" : "Pequeños fosos",
+  "grande_douve" : "Fosos profundos",
+  "paramphitome" : "Paramfistomas",
+  "tenia" : "Tenia",
+  "coccidie" : "Coccidios"
+
 }

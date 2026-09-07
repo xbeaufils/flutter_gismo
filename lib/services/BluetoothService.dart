@@ -146,12 +146,53 @@ class BluetoothGismoService {
     return false;
   }
 
+  Stream<StatusBlueTooth> _streamStatusBluetooth() async* {
+    StatusBlueTooth  state;
+    if ( ! _streamStatus)
+      return;
+    while (_streamStatus) {
+      await Future.delayed(Duration(milliseconds: 500));
+      yield state = await _mgr.getStatus();
+    }
+  }
+
+  void handleStatus(Function f) {
+    _bluetoothStatusSubscription = this._streamStatusBluetooth().listen((StatusBlueTooth event) => f(event));
+  }
+
+  Future<StatusBlueTooth> startReadBluetooth() async {
+    if (kIsWeb)
+      return StatusBlueTooth.none();
+    this._streamStatus = true;
+    return await this._mgr.startReadBluetooth();
+ }
+
   Future<bool> disconnect() async {
     bool status = await _bluetooth.disconnect();
     this._connectedDevice = null;
     return status;
   }
 
+  Future<StatusBlueTooth> readBluetooth() async {
+    if (kIsWeb)
+      return StatusBlueTooth.none();
+    return await this._mgr.readBluetooth();
+  }
+
+  void handleData(Function f) {
+    _bluetoothReadSubscription = this._streamReadBluetooth().listen((StatusBlueTooth event) => f(event));
+  }
+
+  void stopBluetooth() {
+    this._mgr.stopBluetooth();
+  }
+
+  void stopReadBluetooth() {
+    if (this._bluetoothReadSubscription != null)
+      this._bluetoothReadSubscription!.cancel();
+    this._streamStatus = false;
+    this._mgr.stopReadBluetooth();
+  }
 
   void stopStream() {
     if (_bluetoothStatusSubscription != null)

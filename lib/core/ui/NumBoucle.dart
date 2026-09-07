@@ -15,7 +15,7 @@ class NumBoucleView extends StatelessWidget {
       elevation: 5,
       child: ListTile(
         title: Text(_bete.numBoucle + " " + _bete.numMarquage),
-        subtitle: (_bete.dateEntree!= null) ? Text( DateFormat.yMd().format(_bete.dateEntree)): null,
+        subtitle: (_bete.dateEntree != null) ? Text( DateFormat.yMd().format(_bete.dateEntree!)): null,
         leading: Image.asset("assets/brebis.png")),);
     }
 

@@ -15,16 +15,10 @@ abstract class GismoContract {
   Future<dynamic> showDialogOkCancel();
 }
 
-class GismoStatePage<T extends StatefulWidget> extends  State<T> {
+abstract class GismoStatePage<T extends StatefulWidget> extends  State<T> {
   bool _isSaving = false;
 
   bool get isSaving => _isSaving;
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
 
   Future<dynamic> goNextPage(StatefulWidget page) {
     return Navigator.push(
@@ -34,12 +28,24 @@ class GismoStatePage<T extends StatefulWidget> extends  State<T> {
     );
   }
 
+  Future goDialog(StatefulWidget page) async {
+    int ? answer = await Navigator.of(context).push(new MaterialPageRoute<int>(
+        builder: (BuildContext context) {
+          return page;
+        },
+        fullscreenDialog: true
+    ));
+    return answer;
+   }
+
   void showMessage(String message, [bool error = false]) {
-    ScaffoldMessenger.of(context).showSnackBar(this._buildSnackBar(message, error));
+    if (mounted && context.mounted)
+      ScaffoldMessenger.of(context).showSnackBar(this._buildSnackBar(message, error));
   }
 
   void backWithObject(Object object) {
-    Navigator.of(context).pop( object);
+    if (mounted && context.mounted )
+      Navigator.of(context).pop( object);
   }
 
   void backWithMessage(String message, [bool error = false,]) {
@@ -85,13 +91,13 @@ class GismoStatePage<T extends StatefulWidget> extends  State<T> {
     });
   }
 
-  Future<dynamic> showDialogOkCancel() {
-    return showDialog(
+  Future<bool ? > showDialogOkCancel() async {
+    bool ? answer = await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(S.current.title_delete),
-          content: Text(S.current.text_delete),
+          title: Text(S.of(context).title_delete),
+          content: Text(S.of(context).text_delete),
           actions: [
             _cancelButton(),
             _continueButton(),
@@ -99,6 +105,9 @@ class GismoStatePage<T extends StatefulWidget> extends  State<T> {
         );
       },
     );
+    if (answer != null)
+      return answer;
+    return false;
   }
 
   // set up the buttons

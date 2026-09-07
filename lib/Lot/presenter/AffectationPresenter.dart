@@ -11,11 +11,13 @@ class AffectationPresenter {
   AffectationPresenter(this._view);
 
   void save(String dateEntree, String dateSortie) {
+    this._view.showSaving();
     if (! dateEntree.isEmpty)
       this._view.currentAffectation.dateEntree = DateFormat.yMd().parse(dateEntree);
     if (! dateSortie.isEmpty)
       this._view.currentAffectation.dateSortie = DateFormat.yMd().parse(dateSortie);
     service.updateAffectation(this._view.currentAffectation);
+    this._view.hideSaving();
     this._view.backWithObject(this._view.currentAffectation);
   }
 }

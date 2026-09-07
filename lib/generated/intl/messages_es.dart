@@ -76,10 +76,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "breastfeeding_not_specified": MessageLookupByLibrary.simpleMessage(
       "Lactancia materna no especificada",
     ),
+    "coccidie": MessageLookupByLibrary.simpleMessage("Coccidios"),
+    "collective_genetic": MessageLookupByLibrary.simpleMessage(
+      "Agregue a todas las personas que tendrán la genética antes de continuar.\n\n",
+    ),
     "configuration": MessageLookupByLibrary.simpleMessage("Configuración"),
+    "copro_effectif": MessageLookupByLibrary.simpleMessage(
+      "Bestias analizadas",
+    ),
+    "copro_result": MessageLookupByLibrary.simpleMessage("Resultados"),
     "data_available": MessageLookupByLibrary.simpleMessage("Datos recibidos"),
     "dateDeparture": MessageLookupByLibrary.simpleMessage("Fecha de salida"),
     "dateEntry": MessageLookupByLibrary.simpleMessage("Fecha de entrada"),
+    "date_prelevement": MessageLookupByLibrary.simpleMessage(
+      "fecha de recogida",
+    ),
     "earring": MessageLookupByLibrary.simpleMessage("Aro"),
     "earring_search": MessageLookupByLibrary.simpleMessage("Búsqueda de aro"),
     "echelle_connasse": MessageLookupByLibrary.simpleMessage(
@@ -89,6 +100,25 @@ class MessageLookup extends MessageLookupByLibrary {
       "Permite evaluar las cualidades maternales según los criterios de Stéphanie Maubé",
     ),
     "edit_lamb": MessageLookupByLibrary.simpleMessage("editar"),
+    "effectif": MessageLookupByLibrary.simpleMessage("Rebaño"),
+    "effectif_adult": MessageLookupByLibrary.simpleMessage(
+      "Cuya fecha de nacimiento es mayor de 1 año o es desconocida",
+    ),
+    "effectif_ewe": MessageLookupByLibrary.simpleMessage("Oveja"),
+    "effectif_ewe_lamb": MessageLookupByLibrary.simpleMessage("Agnelles"),
+    "effectif_femelles": MessageLookupByLibrary.simpleMessage("Hembras"),
+    "effectif_lamb": MessageLookupByLibrary.simpleMessage(
+      "Número de animales sin etiquetas",
+    ),
+    "effectif_males": MessageLookupByLibrary.simpleMessage("Machos"),
+    "effectif_ram": MessageLookupByLibrary.simpleMessage("carneros"),
+    "effectif_ram_lamb": MessageLookupByLibrary.simpleMessage("Corderos"),
+    "effectif_sheep": MessageLookupByLibrary.simpleMessage(
+      "Número de animales marcados",
+    ),
+    "effectif_youth": MessageLookupByLibrary.simpleMessage(
+      "Cuya fecha de nacimiento es menor de 1 año",
+    ),
     "empty_list": MessageLookupByLibrary.simpleMessage(
       "Lista vacía de animales",
     ),
@@ -122,6 +152,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "flock_number_warn": MessageLookupByLibrary.simpleMessage(
       "Falta el número de rebaño",
     ),
+    "generation": MessageLookupByLibrary.simpleMessage("Generación"),
+    "genetic": MessageLookupByLibrary.simpleMessage("Genético"),
+    "grande_douve": MessageLookupByLibrary.simpleMessage("Fosos profundos"),
     "health": MessageLookupByLibrary.simpleMessage("Estado de salud"),
     "herd_size": MessageLookupByLibrary.simpleMessage("Recuento de cabezas"),
     "identity_number": MessageLookupByLibrary.simpleMessage("Número de bucle"),
@@ -143,19 +176,35 @@ class MessageLookup extends MessageLookupByLibrary {
     "lambs": MessageLookupByLibrary.simpleMessage("Corderos"),
     "localuser": MessageLookupByLibrary.simpleMessage("Usuario local"),
     "mating": MessageLookupByLibrary.simpleMessage("Apareamiento"),
+    "mating_date": MessageLookupByLibrary.simpleMessage(
+      "fecha de apareamiento",
+    ),
+    "mating_male_text": MessageLookupByLibrary.simpleMessage(
+      "Si vide, la saillie ne sera pas enregistrée ou sera supprimée",
+    ),
+    "mating_no_father": MessageLookupByLibrary.simpleMessage(
+      "Pas de père saisi",
+    ),
     "memo": MessageLookupByLibrary.simpleMessage("Nota"),
     "mort": MessageLookupByLibrary.simpleMessage("Muerte"),
     "name": MessageLookupByLibrary.simpleMessage("Nombre pequeño"),
     "name_hint": MessageLookupByLibrary.simpleMessage("Apellido"),
+    "nemanotode": MessageLookupByLibrary.simpleMessage("Nemanotodes"),
     "new_lamb": MessageLookupByLibrary.simpleMessage("Nuevo cordero"),
     "noDateDeparture": MessageLookupByLibrary.simpleMessage(
       "Sin fecha de salida",
     ),
     "noEntryDate": MessageLookupByLibrary.simpleMessage("Sin fecha de entrada"),
+    "no_bete_selected": MessageLookupByLibrary.simpleMessage(
+      "Ninguna oveja seleccionada",
+    ),
     "no_earring_read": MessageLookupByLibrary.simpleMessage(
       "No se leyó el pendiente",
     ),
     "no_lamb": MessageLookupByLibrary.simpleMessage("¿Parto sin cordero?"),
+    "no_mating_date": MessageLookupByLibrary.simpleMessage(
+      "Sin fecha de apareamiento",
+    ),
     "no_ram_found": MessageLookupByLibrary.simpleMessage(
       "No se encontró ninguna memoria RAM con los criterios seleccionados",
     ),
@@ -167,6 +216,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "not_connected": MessageLookupByLibrary.simpleMessage("No conectado"),
     "observations": MessageLookupByLibrary.simpleMessage("Observaciones"),
+    "other": MessageLookupByLibrary.simpleMessage("Otros"),
     "output": MessageLookupByLibrary.simpleMessage("Salida"),
     "output_auto": MessageLookupByLibrary.simpleMessage("Salida automática"),
     "output_boucherie": MessageLookupByLibrary.simpleMessage(
@@ -184,15 +234,32 @@ class MessageLookup extends MessageLookupByLibrary {
       "Seleccione un motivo de salida",
     ),
     "output_unknown": MessageLookupByLibrary.simpleMessage("Desconocido"),
+    "petite_douve": MessageLookupByLibrary.simpleMessage("Pequeños fosos"),
     "place_earring": MessageLookupByLibrary.simpleMessage("Colocar arete"),
     "provisional_number": MessageLookupByLibrary.simpleMessage(
       "Número provisional",
     ),
+    "race": MessageLookupByLibrary.simpleMessage("Raza"),
+    "race_indet": MessageLookupByLibrary.simpleMessage("indet"),
+    "race_select": MessageLookupByLibrary.simpleMessage("Buscando una raza"),
+    "reproduction": MessageLookupByLibrary.simpleMessage("Reproducción"),
+    "result_copro": MessageLookupByLibrary.simpleMessage(
+      "Resultado coproscopia",
+    ),
+    "sante": MessageLookupByLibrary.simpleMessage("Salud"),
     "search": MessageLookupByLibrary.simpleMessage("Buscar"),
     "search_ram": MessageLookupByLibrary.simpleMessage("Buscar al semental"),
     "sex_warn": MessageLookupByLibrary.simpleMessage("Falta el sexo"),
     "sheep": MessageLookupByLibrary.simpleMessage("Individuo"),
     "stillborn": MessageLookupByLibrary.simpleMessage("Nacido muerto"),
+    "strongle_pulm": MessageLookupByLibrary.simpleMessage(
+      "Fortalezas pulmonares",
+    ),
+    "strongles_gastro_intestinaux": MessageLookupByLibrary.simpleMessage(
+      "Gastrointestinal strongyles",
+    ),
+    "strongyloide": MessageLookupByLibrary.simpleMessage("Estrongiloide"),
+    "tenia": MessageLookupByLibrary.simpleMessage("Tenia"),
     "text_empty_list": MessageLookupByLibrary.simpleMessage(
       "Para ingresar el recuento de cabezas, introdúzcalo desde la pantalla principal.",
     ),
@@ -208,6 +275,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tooltip_search": MessageLookupByLibrary.simpleMessage("Buscar"),
     "treatment": MessageLookupByLibrary.simpleMessage("Tratamiento"),
+    "trichure": MessageLookupByLibrary.simpleMessage("Trampas"),
     "ultrasound": MessageLookupByLibrary.simpleMessage("Ecografía"),
     "user_error": MessageLookupByLibrary.simpleMessage("Error de usuario"),
     "validate_lambing": MessageLookupByLibrary.simpleMessage("Validar parto"),

@@ -10,16 +10,20 @@ import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
+import 'package:flutter_gismo/model/copro.dart';
 import 'package:flutter_gismo/services/BeteService.dart';
+import 'package:flutter_gismo/services/CoproService.dart';
 import 'package:flutter_gismo/services/LambingService.dart';
 import 'package:flutter_gismo/services/TraitementService.dart';
+import 'package:flutter_gismo/traitement/ui/Copro.dart';
 import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
 
 
 abstract class EventPresenter {
-  final _beteService = BeteService();
+  final BeteService _beteService = BeteService();
   final LambingService _lambingService = LambingService();
   final TraitementService _traitementService = TraitementService();
+  final CoproService _coproService = CoproService();
 
   TimelineContract get view ;
 
@@ -39,6 +43,9 @@ abstract class EventPresenter {
       case EventType.memo:
         this._beteService.searchMemo(event.idBd).then( (memo) => { _editMemo(memo!) });
         break;
+      case EventType.copro:
+        this._coproService.getPrelevement(event.idBd).then( (copro) => { _editCopro(copro)});
+        break;
       case EventType.saillie:
       case EventType.NEC:
       case EventType.pesee:
@@ -49,6 +56,7 @@ abstract class EventPresenter {
   void delete(Event event) async {
     bool ok = await this.view.showDialogOkCancel();
     if (ok) {
+      this.view.showSaving();
       await _beteService.deleteEvent(event);
       this.view.hideSaving();
     }
@@ -80,6 +88,14 @@ abstract class EventPresenter {
     if (message != null)
       this.view.showMessage(message);
     this.view.hideSaving();
+  }
+
+  void _editCopro(Prelevement copro) async {
+    String ? message = await this.view.editPage(CoproPage(copro));
+    if (message != null)
+      this.view.showMessage(message);
+    this.view.hideSaving();
+
   }
 }
 

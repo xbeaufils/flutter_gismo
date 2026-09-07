@@ -34,7 +34,7 @@ class EntreeService {
     if (betes.length == 0) {
       throw MissingSheeps();
     }
-    debug.log("Motif " + motif + " date " + dateEntree + " nb Betes " + betes.length.toString(), name: "GismoBloc::saveEntree");
+    debug.log("Motif " + motif + " date " + dateEntree + " nb Betes " + betes.length.toString(), name: "EntreeService::saveEntree");
     DateTime date = DateFormat.yMd().parse(dateEntree);
     return this._repository.save(AuthService().cheptel!, date, motif, betes);
   }
@@ -69,7 +69,7 @@ class SortieService {
       throw MissingSheeps();
     }
     DateTime date = DateFormat.yMd().parse(dateSortie);
-    debug.log("Motif " + motif + " date " + date.toString() + " nb Betes " + betes.length.toString(), name: "GismoBloc::saveSortie");
+    debug.log("Motif " + motif + " date " + date.toString() + " nb Betes " + betes.length.toString(), name: "SortieService::saveSortie");
     return await this._repository.save(date, motif, betes);
   }
 

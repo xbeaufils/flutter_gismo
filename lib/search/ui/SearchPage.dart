@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer' as debug;
 import 'dart:io';
 
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+// import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_classic_serial/flutter_bluetooth_classic.dart';
@@ -76,6 +76,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
      if ( ! AuthService().subscribe ) {
       this._adBanner = BannerAd(
@@ -87,10 +88,10 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
       // See in https://dev-yakuza.posstree.com/en/flutter/admob/#configure-app-id-on-android
       debug.log("Load Ad Banner");
       //this._adBanner!.load();
-      FacebookAudienceNetwork.init(
+     /* FacebookAudienceNetwork.init(
         testingId: "a77955ee-3304-4635-be65-81029b0f5201",
         iOSAdvertiserTrackingEnabled: true,
-      );
+      );*/
     }
     return Scaffold(
       appBar: AppBar(
@@ -119,14 +120,16 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
       hintText: S.of(context).search,
       onChanged: (text) {this._presenter.filtre(text);},
       controller: _filter,
-  );
-}
+    );
+  }
+
   Widget _statusBluetooth() {
     if ( ! AuthService().subscribe )
       return Container();
     List<Widget> status = <Widget>[]; //new List();
     if (_bluetoothState.status == "CONNECTED")
           return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:Chip(label: Icon(Icons.bluetooth_connected), backgroundColor: Colors.lightBlueAccent,));
+      }
     else {
       return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:  Chip(label: Icon(Icons.bluetooth_disabled_sharp)));
     }
@@ -147,7 +150,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   }
 
   Widget _getFacebookAdvice() {
-    if ( AuthService().subscribe ) {
+ /*   if ( AuthService().subscribe ) {
       return SizedBox(height: 0,width: 0,);
     }
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
@@ -160,7 +163,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
             listener: (result, value) {}
           //  ),
         );
-    }
+    }*/
     return Container();
   }
 
@@ -186,6 +189,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
       itemCount: _filteredBetes.length,
       itemBuilder: (BuildContext context, int index) {
         return ListTile(
+          tileColor: (index%2==0)?sheepyGreenSheme.colorScheme.primaryContainer:sheepyGreenSheme.colorScheme.surface,
           leading: (_filteredBetes[index].sex == Sex.male) ? ImageIcon(  AssetImage("assets/male.png")): ImageIcon(  AssetImage("assets/female.png")),
           title: Text( _filteredBetes[index].numBoucle),
           subtitle: Text(_filteredBetes[index].numMarquage ),

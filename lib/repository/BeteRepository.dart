@@ -3,6 +3,7 @@ import 'dart:developer' as debug;
 import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/Dashboard.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/core/repository/LocalRepository.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:intl/intl.dart';
 import 'package:sentry/sentry.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite/utils/utils.dart';
 
 abstract class BeteRepository {
   Future<List<Bete>> getBetes(String cheptel);
@@ -21,6 +23,9 @@ abstract class BeteRepository {
   Future<Bete?> getPere(Bete bete);
   Future<List<Bete>>getBrebis();
   Future<List<Bete>>getBeliers();
+  Future<List<Race>> getAllRaces();
+  Future<String> saveMultiHybridation(List<Bete> betes, Hybridation hybdrid);
+  Future<DashBoardEffectif> getDashBoardEffectif();
 }
 
 class WebBeteRepository extends WebRepository implements BeteRepository {
@@ -29,6 +34,7 @@ class WebBeteRepository extends WebRepository implements BeteRepository {
 
   final DateFormat _df = new DateFormat('dd/MM/yyyy');
 
+  @override
   Future<List<Bete>> getBetes(String cheptel) async {
     final response = await super.doGetList(
         '/bete/cheptel/' + cheptel);
@@ -39,6 +45,7 @@ class WebBeteRepository extends WebRepository implements BeteRepository {
     return tempList;
   }
 
+  @override
   Future<String> saveBete(Bete bete) async {
     String action;
     if (bete.idBd == null)
@@ -53,10 +60,10 @@ class WebBeteRepository extends WebRepository implements BeteRepository {
     } on GismoException catch(e) {
       throw e;
     } catch ( e) {
-      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+      //throw GismoException(e.toString());
+      throw GismoException( e.runtimeType.toString());
     }
   }
-
 
   @override
   Future<bool> checkBete(Bete bete) async {
@@ -161,6 +168,40 @@ class WebBeteRepository extends WebRepository implements BeteRepository {
     return tempList;
   }
 
+  @override
+  Future<List<Race>> getAllRaces() async {
+    final response = await super.doGetList(
+        '/bete/races/');
+    List<Race> tempList = [];
+    for (int i = 0; i < response.length; i++) {
+      tempList.add(new Race.fromResult(response[i]));
+    }
+    return tempList;
+  }
+
+  @override
+  Future<String> saveMultiHybridation(List<Bete> betes, Hybridation hybdrid) async {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['betes'] = betes.map((bete) => bete.toJson()).toList();
+    data['hybridation'] = hybdrid.toJson();
+    try {
+      final response = await super.doPostMessage(
+          '/bete/genetic', data);
+      return response;
+    } on GismoException catch(e) {
+      throw e;
+    } catch ( e) {
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+
+  }
+
+  Future<DashBoardEffectif> getDashBoardEffectif() async {
+    final response = await super.doGet(
+        '/home/sheep/' + AuthService().cheptel!);
+    return DashBoardEffectif.fromResult(response);
+
+  }
 }
 
 class LocalBeteRepository extends LocalRepository implements BeteRepository {
@@ -317,8 +358,9 @@ class LocalBeteRepository extends LocalRepository implements BeteRepository {
     Database db = await this.database;
     List<Map<String, dynamic>> maps = await db.rawQuery(
         'Select * from bete '
-            + "WHERE bete.sex = 'femelle' "
-            "AND cheptel = '" + AuthService().cheptel! + "'");
+          "WHERE bete.sex = 'femelle' "
+          "AND dateSortie IS NULL "
+          "AND cheptel = '" + AuthService().cheptel! + "'");
     List<Bete> tempList = [];
     for (int i = 0; i < maps.length; i++) {
       tempList.add(new Bete.fromResult(maps[i]));
@@ -326,4 +368,56 @@ class LocalBeteRepository extends LocalRepository implements BeteRepository {
     return tempList;
   }
 
+  @override
+  Future<List<Race>> getAllRaces() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> saveMultiHybridation(List<Bete> betes, Hybridation hybdrid) {
+    throw UnimplementedError();
+  }
+
+  Future<DashBoardEffectif> getDashBoardEffectif() async {
+    Database db = await this.database;
+    DateFormat df = new DateFormat('yyyy-MM-dd');
+    DateTime now = DateTime.now();
+    DateTime jourRef = now.subtract(const Duration(days: 365));
+    final nbBrebis = firstIntValue(
+      await db.rawQuery("SELECT COUNT(*) FROM bete WHERE cheptel = ? AND bete.sex = 'femelle' AND dateSortie IS NULL", [AuthService().cheptel!]),)!;
+    final nbBrebisAdulte = firstIntValue(
+      await db.rawQuery("SELECT COUNT(*) FROM bete "
+          "WHERE cheptel = ? "
+          "AND bete.sex = 'femelle' "
+          "AND ( ( motifEntree != 'NAISSANCE' ) OR ( motifEntree = 'NAISSANCE' AND dateEntree_json < ?) ) "
+          "AND dateSortie IS NULL",
+          [AuthService().cheptel!, df.format(jourRef)]),)!;
+    final nbBrebisAntenais = firstIntValue(
+      await db.rawQuery("SELECT COUNT(*) FROM bete "
+          "WHERE cheptel = ? "
+          "AND bete.sex = 'femelle' "
+          "AND  motifEntree = 'NAISSANCE' AND dateEntree_json  > ? "
+          "AND dateSortie IS NULL",
+          [AuthService().cheptel!, df.format(jourRef)]),)!;
+    final nbBelier = firstIntValue(
+      await db.rawQuery("SELECT COUNT(*) FROM bete "
+          "WHERE cheptel = ? "
+          "AND bete.sex = 'male' "
+          "AND dateSortie IS NULL", [AuthService().cheptel!]),)!;
+    final nbBeliersAdulte = firstIntValue(
+      await db.rawQuery("SELECT COUNT(*) FROM bete "
+          "WHERE cheptel = ? "
+          "AND bete.sex = 'male' "
+          "AND ( ( motifEntree != 'NAISSANCE' ) OR ( motifEntree = 'NAISSANCE' AND dateEntree_json < ?) ) "
+          "AND dateSortie IS NULL",
+          [AuthService().cheptel!, df.format(jourRef)]),)!;
+    final _nbBeliersAntenais = firstIntValue(
+      await db.rawQuery("SELECT COUNT(*) FROM bete "
+          "WHERE cheptel = ? "
+          "AND bete.sex = 'male' "
+          "AND motifEntree = 'NAISSANCE' AND dateEntree_json  > ?  "
+          "AND dateSortie IS NULL",
+          [AuthService().cheptel!, df.format(jourRef)]),)!;
+    return DashBoardEffectif(nbBrebis, nbBrebisAdulte, nbBrebisAntenais, nbBelier, nbBeliersAdulte, _nbBeliersAntenais);
+  }
 }

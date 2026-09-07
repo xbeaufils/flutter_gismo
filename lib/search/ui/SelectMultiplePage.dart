@@ -1,7 +1,7 @@
 import 'dart:developer' as debug;
 import 'dart:io';
 
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+// import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/Gismo.dart';
@@ -61,10 +61,10 @@ class _SelectMultiplePageState extends GismoStatePage<SelectMultiplePage> with T
       // See in https://dev-yakuza.posstree.com/en/flutter/admob/#configure-app-id-on-android
       debug.log("Load Ad Banner");
       //this._adBanner!.load();
-      FacebookAudienceNetwork.init(
+      /*FacebookAudienceNetwork.init(
         testingId: "a77955ee-3304-4635-be65-81029b0f5201",
         iOSAdvertiserTrackingEnabled: true,
-      );
+      );*/
     }
   }
 
@@ -93,7 +93,7 @@ class _SelectMultiplePageState extends GismoStatePage<SelectMultiplePage> with T
             Expanded(child:  _buildList(context) ),
             Center(
                 child :  FilledButton(key:null,
-                    onPressed: ()=> _sendSelecttion(_selectedBete.values.toList()),
+                    onPressed: ()=> this._presenter.sendSelecttion(_selectedBete.values.toList()),
                     child: Text(S.of(context).bt_validate)
                 )
             ),
@@ -123,7 +123,7 @@ class _SelectMultiplePageState extends GismoStatePage<SelectMultiplePage> with T
   Widget _getFacebookAdvice() {
     if ( AuthService().subscribe ) {
       return SizedBox(height: 0,width: 0,);
-    }
+    }/*
     if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
       return
         //Card(child:
@@ -134,7 +134,7 @@ class _SelectMultiplePageState extends GismoStatePage<SelectMultiplePage> with T
             listener: (result, value) {}
           //  ),
         );
-    }
+    }*/
     return Container();
   }
 
@@ -186,42 +186,6 @@ class _SelectMultiplePageState extends GismoStatePage<SelectMultiplePage> with T
               subtitle: Text(_betes[index].numMarquage),
             );
       });
-  }
-
-  void _sendSelecttion(List<Bete> betes) {
-    var page;
-    switch (this.widget.nextPage) {
-      case GismoPage.sanitaire:
-        page = null; //SelectionPage(this._bloc, betes);
-        break;
-      case GismoPage.sortie:
-      case GismoPage.lot:
-      case GismoPage.sailliePere:
-        page = null;
-        break;
-    }
-
-    if (page  == null) {
-      Navigator.of(context).pop(betes);
-    }
-    else {
-      var navigationResult = Navigator
-        .of(context)
-        .pushReplacement(MaterialPageRoute(builder: (BuildContext context) => page));
-
-      navigationResult.then((message) {
-        if (message != null)
-          _showMessage(message);
-      });
-    }
-  }
-
-  void _showMessage(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    //_scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
   void _searchPressed(BuildContext context) {

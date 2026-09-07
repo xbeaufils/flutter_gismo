@@ -1,5 +1,21 @@
 {
   "@@locale": "fr",
+
+  "effectif": "Troupeau",
+  "reproduction": "Reproduction",
+  "sante" : "Santé",
+  "other" : "Autres",
+  "effectif_sheep": "Effectif des animaux bouclés",
+  "effectif_lamb": "Effectif des animaux sans boucle",
+  "effectif_femelles": "Femelles",
+  "effectif_males": "Males",
+  "effectif_ram": "Béliers",
+  "effectif_ewe": "Brebis",
+  "effectif_ewe_lamb": "Agnelles",
+  "effectif_ram_lamb": "Agneaux",
+  "effectif_adult": "Dont la date de naissance est supérieure à 1 an ou est inconnue",
+  "effectif_youth" : "Dont la date de naissance est inférieure à 1 an",
+
   "batch" : "Lot",
   "sheep" : "Individu",
   "lambing" : "Agnelage",
@@ -11,6 +27,7 @@
   "body_cond" : "Etat corp.",
   "body_cond_full" : "Note d'état corporel",
   "treatment" : "Traitement",
+  "result_copro" : "Résultat coproscopie",
   "input": "Entrée",
   "output": "Sortie",
   "localuser": "Utilisateur local",
@@ -42,6 +59,14 @@
   "name" : "Petit nom",
   "name_hint" : "Nom",
   "identity_number_error" : "Numero de boucle déja présent",
+  "race": "Race",
+  "race_select": "Recherche d'une race",
+  "generation": "Generation",
+  "genetic": "Génétique",
+  "croisement": "Croisement",
+  "race_indet": "Indet",
+  "collective_genetic": "Ajoutez tous les individus qui vont avoir la génétique avant de continuer",
+  "no_bete_selected" : "Pas de bête sélectionnée",
 
   "entree_select" : "Sélectionnez une cause d'entree",
   "entree_reason_required" : "Cause d'entrée obligatoire",
@@ -199,6 +224,7 @@
   "mating_date" : "Date de saillie",
   "no_mating_date" : "Pas de date saisie",
   "mating_male_text" : "Si vide, la saillie ne sera pas enregistrée ou sera supprimée",
+  "mating_no_father" : "Pas de père saisi",
 
 
   "bt_cancel" : "Annuler",
@@ -207,6 +233,7 @@
   "bt_add" : "Ajouter",
   "bt_delete" : "Supprimer",
   "bt_edition" : "Edition",
+  "bt_update" : "Modifier",
   "bt_validate" : "Valider la sélection",
   "record_saved": "Enregistrement effectué",
 
@@ -241,5 +268,19 @@
   "with_subscription" : "Avec abonnement",
   "save_config" : "Enregistrer la configuration",
 
-  "bluetooth_autorisation": "Autorisation bluetooth"
+  "bluetooth_autorisation": "Autorisation bluetooth",
+
+  "date_prelevement" : "Date de prélèvement",
+  "copro_result" : "Résultats",
+  "copro_effectif": "Bêtes analysées",
+  "strongles_gastro_intestinaux" : "Strongles gastro-intestinaux",
+  "strongle_pulm" : "Strongles pulmoniaires",
+  "strongyloide" : "Strongyloïdes",
+  "nemanotode" : "Nemanotodes",
+  "trichure" : "Trichures",
+  "petite_douve" : "Petites douves",
+  "grande_douve" : "Grandes douves",
+  "paramphistome" : "Paramphistomes",
+  "tenia" : "Tenia",
+  "coccidie" : "Coccidies"
 }

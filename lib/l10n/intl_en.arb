@@ -1,5 +1,21 @@
 {
   "@@locale": "en",
+
+  "effectif": "Livestock",
+  "reproduction": "Breeding",
+  "sante" : "Health",
+  "other" : "Others",
+  "effectif_sheep": "Number of tagged animals",
+  "effectif_lamb": "Number of animals without tags",
+  "effectif_femelles": "Females",
+  "effectif_males": "Males",
+  "effectif_ram": "Rams",
+  "effectif_ewe": "Ewes",
+  "effectif_ewe_lamb": "Ewe lambs",
+  "effectif_ram_lamb": "Ram lambs",
+  "effectif_adult": "Whose date of birth is more than 1 year old or is unknown",
+  "effectif_youth" : "Whose date of birth is less than 1 year old ",
+
   "batch" : "Batch",
   "sheep" : "Sheep",
   "lambing" : "Lambing",
@@ -11,9 +27,10 @@
   "body_cond" : "Body cond.",
   "body_cond_full" : "Body condition note",
   "treatment" : "Treatment",
+  "result_copro" : "Coproscopy result",
   "input": "Entry",
   "output": "Departure",
-  "welcome" : "Welcome",
+  "welcome" : "Home",
   "memo" : "Memo",
   "configuration" : "Configuration",
   "localuser" : "Local user",
@@ -42,6 +59,13 @@
   "name" : "Name",
   "name_hint" : "Name",
   "identity_number_error" : "Identity number is already present",
+  "race": "Breed",
+  "race_select": "Search a breed",
+  "generation": "Generation",
+  "genetic": "Genetic",
+  "race_indet": "Indet",
+  "collective_genetic": "Add all the individuals who will have the genetics before continuing",
+  "no_bete_selected" : "No sheep selected",
 
   "entree_select" : "Select an entry reason",
   "entree_reason_required" : "Entry reason is required",
@@ -183,6 +207,7 @@
   "mating_date" : "Mating date",
   "no_mating_date" : "No mating date",
   "mating_male_text" : "If empty, the mating won't be saved or will be deleted",
+  "mating_no_father" : "No ram seized",
 
   "male" : "Male",
   "female" : "Female",
@@ -206,6 +231,7 @@
   "bt_add" : "Add",
   "bt_delete" : "Delete",
   "bt_edition" : "Edit",
+  "bt_update" : "Update",
   "bt_validate" : "Validate the selection",
   "record_saved": "Record completed",
 
@@ -240,5 +266,19 @@
   "with_subscription" : "With subscription",
   "save_config" : "save configuration",
 
-  "bluetooth_autorisation": "Bluetooth authorization"
+  "bluetooth_autorisation": "Bluetooth authorization",
+  "date_prelevement" : "Date of collection",
+  "copro_result" : "Results",
+  "copro_effectif": "Beasts analyzed",
+  "strongles_gastro_intestinaux" : "Gastrointestinal strongyles",
+  "strongle_pulm" : "Lung strongles",
+  "strongyloide" : "Strongyloid",
+  "nemanotode" : "Nemanotodes",
+  "trichure" : "Cheats",
+  "petite_douve" : "Small moats",
+  "grande_douve" : "Large moats",
+  "paramphistome" : "Paramphistomes",
+  "tenia" : "Tapeworm",
+  "coccidie" : "Coccidia"
+
 }

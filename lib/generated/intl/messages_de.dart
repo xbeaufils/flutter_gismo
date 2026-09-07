@@ -95,8 +95,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "bt_delete": MessageLookupByLibrary.simpleMessage("Löschen"),
     "bt_edition": MessageLookupByLibrary.simpleMessage("Bearbeiten"),
     "bt_save": MessageLookupByLibrary.simpleMessage("Speichern"),
+    "bt_update": MessageLookupByLibrary.simpleMessage("Aktualisieren"),
     "bt_validate": MessageLookupByLibrary.simpleMessage(
       "Bestätigen Sie die Auswahl",
+    ),
+    "coccidie": MessageLookupByLibrary.simpleMessage("Kokzidien"),
+    "collective_genetic": MessageLookupByLibrary.simpleMessage(
+      "Fügen Sie alle Personen hinzu, die die entsprechende genetische Veranlagung besitzen, bevor Sie fortfahren.",
     ),
     "collective_treatment": MessageLookupByLibrary.simpleMessage(
       "Kollektive Behandlung",
@@ -108,6 +113,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "connection": MessageLookupByLibrary.simpleMessage("Verbindung"),
     "contributor": MessageLookupByLibrary.simpleMessage("Behandelnder"),
+    "copro_effectif": MessageLookupByLibrary.simpleMessage("Tiere analysiert"),
+    "copro_result": MessageLookupByLibrary.simpleMessage("Ergebnisse"),
     "copy_base": MessageLookupByLibrary.simpleMessage("Datenbank kopieren"),
     "data_available": MessageLookupByLibrary.simpleMessage("Daten verfügbar"),
     "data_null": MessageLookupByLibrary.simpleMessage("Daten null"),
@@ -118,6 +125,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "dateEntry": MessageLookupByLibrary.simpleMessage("Eintrittsdatum"),
     "date_debut": MessageLookupByLibrary.simpleMessage("Startdatum"),
     "date_fin": MessageLookupByLibrary.simpleMessage("Enddatum"),
+    "date_prelevement": MessageLookupByLibrary.simpleMessage(
+      "Datum der Sammlung",
+    ),
     "date_ultrasound": MessageLookupByLibrary.simpleMessage(
       "Ultraschall-Datum",
     ),
@@ -136,6 +146,25 @@ class MessageLookup extends MessageLookupByLibrary {
       "Ermöglicht die Bewertung der mütterlichen Qualitäten nach den Kriterien von Stéphanie Maubé",
     ),
     "edit_lamb": MessageLookupByLibrary.simpleMessage("Bearbeiten"),
+    "effectif": MessageLookupByLibrary.simpleMessage("Herde"),
+    "effectif_adult": MessageLookupByLibrary.simpleMessage(
+      "Wessen Geburtsdatum weniger als 1 Jahr alt ist oder unbekannt ist",
+    ),
+    "effectif_ewe": MessageLookupByLibrary.simpleMessage("Schaf"),
+    "effectif_ewe_lamb": MessageLookupByLibrary.simpleMessage("Lämmchen"),
+    "effectif_femelles": MessageLookupByLibrary.simpleMessage("Weibchen"),
+    "effectif_lamb": MessageLookupByLibrary.simpleMessage(
+      "Anzahl der Tiere ohne Kennzeichnung",
+    ),
+    "effectif_males": MessageLookupByLibrary.simpleMessage("Männer"),
+    "effectif_ram": MessageLookupByLibrary.simpleMessage("Widder"),
+    "effectif_ram_lamb": MessageLookupByLibrary.simpleMessage("Lämmer"),
+    "effectif_sheep": MessageLookupByLibrary.simpleMessage(
+      "Anzahl der markierten Tiere",
+    ),
+    "effectif_youth": MessageLookupByLibrary.simpleMessage(
+      "Wessen Geburtsdatum weniger als 1 Jahr alt ist",
+    ),
     "email": MessageLookupByLibrary.simpleMessage("E-Mail"),
     "empty": MessageLookupByLibrary.simpleMessage("Leer"),
     "empty_folder": MessageLookupByLibrary.simpleMessage("Leerer Ordner"),
@@ -182,6 +211,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "flock_number_warn": MessageLookupByLibrary.simpleMessage(
       "Herdennummer fehlt",
     ),
+    "generation": MessageLookupByLibrary.simpleMessage("Generation"),
+    "genetic": MessageLookupByLibrary.simpleMessage("Genetisch"),
+    "grande_douve": MessageLookupByLibrary.simpleMessage("Große Wassergräben"),
     "health": MessageLookupByLibrary.simpleMessage("Gesundheitszustand"),
     "herd_size": MessageLookupByLibrary.simpleMessage("Herdengröße"),
     "identity_number": MessageLookupByLibrary.simpleMessage("Ohrmarkennummer"),
@@ -212,6 +244,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "mating_date": MessageLookupByLibrary.simpleMessage("Deckdatum"),
     "mating_male_text": MessageLookupByLibrary.simpleMessage(
       "Wenn leer, wird die Deckung nicht registriert oder gelöscht",
+    ),
+    "mating_no_father": MessageLookupByLibrary.simpleMessage(
+      "Kein Widder beschlagnahmt",
     ),
     "medication": MessageLookupByLibrary.simpleMessage("Medikament"),
     "memo": MessageLookupByLibrary.simpleMessage("Notiz"),
@@ -288,11 +323,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "mort_trop_gros": MessageLookupByLibrary.simpleMessage("Zu groß"),
     "name": MessageLookupByLibrary.simpleMessage("Rufname"),
     "name_hint": MessageLookupByLibrary.simpleMessage("Name"),
+    "nemanotode": MessageLookupByLibrary.simpleMessage("Nemanotodes"),
     "new_lamb": MessageLookupByLibrary.simpleMessage("Neues Lamm"),
     "noDateDeparture": MessageLookupByLibrary.simpleMessage(
       "Kein Austrittsdatum",
     ),
     "noEntryDate": MessageLookupByLibrary.simpleMessage("Kein Eintrittsdatum"),
+    "no_bete_selected": MessageLookupByLibrary.simpleMessage(
+      "Keine Schafe ausgewählt",
+    ),
     "no_date_debut": MessageLookupByLibrary.simpleMessage("Kein Startdatum"),
     "no_death_date": MessageLookupByLibrary.simpleMessage("Kein Todesdatum"),
     "no_earring_read": MessageLookupByLibrary.simpleMessage(
@@ -322,6 +361,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Die Anzahl der Föten ist leer",
     ),
     "observations": MessageLookupByLibrary.simpleMessage("Beobachtungen"),
+    "other": MessageLookupByLibrary.simpleMessage("Andere"),
     "output": MessageLookupByLibrary.simpleMessage("Ausgabe"),
     "output_auto": MessageLookupByLibrary.simpleMessage(
       "Automatischer Ausgang",
@@ -340,17 +380,25 @@ class MessageLookup extends MessageLookupByLibrary {
       "Wählen Sie einen Grund für den Ausgang",
     ),
     "output_unknown": MessageLookupByLibrary.simpleMessage("Unbekannt"),
+    "paramphistome": MessageLookupByLibrary.simpleMessage("Paramphistomen"),
     "password": MessageLookupByLibrary.simpleMessage("Passwort"),
+    "petite_douve": MessageLookupByLibrary.simpleMessage("Kleine Wassergräben"),
     "place_earring": MessageLookupByLibrary.simpleMessage("Ohrmarke anbringen"),
     "prescription": MessageLookupByLibrary.simpleMessage("Rezept"),
     "provisional_number": MessageLookupByLibrary.simpleMessage(
       "Vorläufige Nummer",
+    ),
+    "race": MessageLookupByLibrary.simpleMessage("Schafrasse"),
+    "race_indet": MessageLookupByLibrary.simpleMessage("unbest"),
+    "race_select": MessageLookupByLibrary.simpleMessage(
+      "Suche nach einer Schafrasse",
     ),
     "ram": MessageLookupByLibrary.simpleMessage("Widder"),
     "reason": MessageLookupByLibrary.simpleMessage("Grund"),
     "record_saved": MessageLookupByLibrary.simpleMessage(
       "Aufnahme abgeschlossen",
     ),
+    "reproduction": MessageLookupByLibrary.simpleMessage("Fortpflanzung"),
     "restore_bd": MessageLookupByLibrary.simpleMessage(
       "Datenbank wiederherstellen",
     ),
@@ -358,8 +406,10 @@ class MessageLookup extends MessageLookupByLibrary {
       "Die aktuellen Daten werden ersetzt.",
     ),
     "result": MessageLookupByLibrary.simpleMessage("Ergebnis"),
+    "result_copro": MessageLookupByLibrary.simpleMessage("Koproskopiergebnis"),
     "route": MessageLookupByLibrary.simpleMessage("Verabreichungsweg"),
     "rythme": MessageLookupByLibrary.simpleMessage("Rhythmus"),
+    "sante": MessageLookupByLibrary.simpleMessage("Gesundheit"),
     "save_config": MessageLookupByLibrary.simpleMessage(
       "Konfiguration speichern",
     ),
@@ -372,6 +422,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "sheep": MessageLookupByLibrary.simpleMessage("Schaf"),
     "simple": MessageLookupByLibrary.simpleMessage("Einzeln"),
     "stillborn": MessageLookupByLibrary.simpleMessage("Totgeboren"),
+    "strongle_pulm": MessageLookupByLibrary.simpleMessage("Lungenstarke"),
+    "strongles_gastro_intestinaux": MessageLookupByLibrary.simpleMessage(
+      "Gastrointestinal strongyles",
+    ),
+    "strongyloide": MessageLookupByLibrary.simpleMessage("Strongyloid"),
+    "tenia": MessageLookupByLibrary.simpleMessage("Bandwurm"),
     "text_delete": MessageLookupByLibrary.simpleMessage(
       "Möchten Sie diesen Eintrag löschen?",
     ),
@@ -394,6 +450,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "treatment_explanation": MessageLookupByLibrary.simpleMessage(
       "Fügen Sie alle Schafe hinzu, die behandelt werden sollen, bevor Sie fortfahren",
     ),
+    "trichure": MessageLookupByLibrary.simpleMessage("Betrügt"),
     "triplet": MessageLookupByLibrary.simpleMessage("Drillinge und mehr"),
     "ultrasound": MessageLookupByLibrary.simpleMessage("Ultraschall"),
     "user_error": MessageLookupByLibrary.simpleMessage("Benutzerfehler"),

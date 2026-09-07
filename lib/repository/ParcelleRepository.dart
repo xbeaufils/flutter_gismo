@@ -10,6 +10,7 @@ abstract class ParcelleRepository {
   Future<Pature> getPature(String idu);
   Future<String> getParcelle(Position touchPosition);
   Future<List<Parcelle>> getParcelles();
+  Future<List<Pature>> getPaturages(String cheptel);
   Future<String> getCadastre( Position myPosition);
   Future<String> savePature(Pature pature);
 }
@@ -24,6 +25,24 @@ class WebParcelleRepository  extends WebRepository implements ParcelleRepository
       if( response.length>0) {
         Pature pature = Pature.fromResult(response);
         return pature;
+      }
+      throw ("Pature non trouvée");
+    }  catch ( e) {
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+  }
+
+  Future<List<Pature>> getPaturages(String cheptel) async {
+    try {
+      List response = await super.doGetList(
+          '/paturage/current/' + cheptel);
+      if( response.length>0) {
+        List<Pature> patures = [];
+        for (int i = 0; i < response.length; i++) {
+          Pature pature = Pature.fromResult(response[i]);
+          patures.add(pature);
+        }
+        return patures;
       }
       throw ("Pature non trouvée");
     }  catch ( e) {
@@ -47,7 +66,7 @@ class WebParcelleRepository  extends WebRepository implements ParcelleRepository
 
   Future<List<Parcelle>> getParcelles() async {
     try {
-      final response = await super.doGetList(
+      List response = await super.doGetList(
           '/map/parcelles/');
       List<Parcelle> parcelles = [];
       for (int i = 0; i < response.length; i++) {

@@ -1,0 +1,81 @@
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
+import 'package:flutter_gismo/core/repository/LocalRepository.dart';
+import 'package:flutter_gismo/env/Environnement.dart';
+import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/copro.dart';
+
+abstract class CoproRepository {
+  Future<List<Prelevement>> getPrelevementsForBete(Bete bete);
+  Future<List<Prelevement>> getPrelevementsForCheptel(String cheptel);
+  Future<Prelevement> getPrelevement(int idCopro);
+  Future<String> save(Prelevement copro);
+  Future<void> delete(Prelevement copro);
+}
+
+class WebCoproRepository extends WebRepository implements CoproRepository {
+
+  WebCoproRepository(super.token);
+
+  Future<List<Prelevement>> getPrelevementsForBete(Bete bete)  async {
+    try {
+      final response = await super.doGetList(
+          '/copro/bete/' + bete.idBd.toString());
+      List<Prelevement> tempList = [];
+      response.forEach((element) {
+        tempList.add(new Prelevement.fromResult(element)); });
+      return tempList;
+    }catch (e) {
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+  }
+  Future<List<Prelevement>> getPrelevementsForCheptel(String cheptel)  async {
+    try {
+      final response = await super.doGetList(
+          '/copro/cheptel/' + cheptel);
+      List<Prelevement> tempList = [];
+      response.forEach((element) {
+        tempList.add(new Prelevement.fromResult(element)); });
+      return tempList;
+    }catch (e) {
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+  }
+
+  Future<Prelevement> getPrelevement(int idCopro)  async {
+    try {
+      final response = await super.doGet(
+        '/copro/get/' + idCopro.toString());
+      return new Prelevement.fromResult(response);
+    }catch (e) {
+      throw ("Erreur de connection à " +  Environnement.getUrlTarget());
+    }
+  }
+
+  Future<String> save(Prelevement copro) async{
+    return await super.doPostMessage('/copro/save', copro.toJson());
+  }
+
+  Future<void> delete(Prelevement copro) {
+    return super.doDeleteMessage('/copro/delete', copro.toJson());
+  }
+}
+
+
+class LocalCoproRepository extends LocalRepository implements CoproRepository {
+  Future<List<Prelevement>> getPrelevementsForBete(Bete bete)  async {
+    return [];
+  }
+  Future<List<Prelevement>> getPrelevementsForCheptel(String cheptel)  async {
+    return [];
+  }
+  Future<Prelevement> getPrelevement(int idCopro)  async {
+    throw UnimplementedError();
+  }
+  Future<String> save(Prelevement copro) async{
+    return "";
+  }
+  Future<void> delete(Prelevement copro) {
+    throw UnimplementedError();
+  }
+
+}

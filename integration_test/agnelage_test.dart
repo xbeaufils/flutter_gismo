@@ -12,7 +12,8 @@ class RobotTestAgnelage extends RobotTest {
 
   Future<void> create( List<dynamic> agnelages) async {
       await super.startAppli();
-      await tester.tap(super.findWelcomeButton(S.current.lambing));
+      Finder btAgnelage = await super.findWelcomeButton(Key("btBreeding"), S.current.lambing);
+      await tester.tap(btAgnelage);
       await tester.pumpAndSettle();
       for (Map<String, dynamic> lambing in agnelages) {
         await super.selectBete(lambing["numero mere"]);
@@ -26,8 +27,9 @@ class RobotTestAgnelage extends RobotTest {
                     widget.controller!.text == DateFormat.yMd().format(now)),
             findsOneWidget);
         expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
+        DateTime lambingDate = frenchForm.parse(lambing["date"] + now.year.toString());
         await tester.enterText(
-            find.text(DateFormat.yMd().format(now)), lambing["date"]);
+            find.text(DateFormat.yMd().format(now)), DateFormat.yMd().format(lambingDate));
 
         await tester.tap(find.byKey(Key("btQualite")));
         await tester.pumpAndSettle();
@@ -78,7 +80,14 @@ class RobotTestAgnelage extends RobotTest {
           await tester.tap( find.text(S.current.bt_add));
           await tester.pumpAndSettle(const Duration(seconds: 1));
         }
-        await tester.tap(find.text(S.current.validate_lambing));
+        final Finder scrollView = find.descendant(
+          of: find.byType(SingleChildScrollView),
+          matching: find.byType(Scrollable).at(0),
+        );
+        final Finder btnValidate = find.text(S.current.validate_lambing);
+        // Scroll until the item to be found appears.
+        await tester.scrollUntilVisible(btnValidate, 500.0, scrollable: scrollView);
+        await tester.tap(btnValidate);
         await tester.pumpAndSettle();
         await tester.pumpAndSettle(const Duration(seconds: 5));
       }
@@ -96,8 +105,9 @@ class RobotTestAgnelage extends RobotTest {
             widget is TextFormField &&
                 widget.controller!.text == DateFormat.yMd().format(now)),
         findsOneWidget);
+    DateTime mortDate = frenchForm.parse(lamb["date"] + now.year.toString());
     await tester.enterText(
-        find.text(DateFormat.yMd().format(now)), lamb["date"]);
+        find.text(DateFormat.yMd().format(now)), DateFormat.yMd().format(mortDate));
     final dropDown = find.byKey(Key("Motif_Key"));
     await tester.tap(dropDown);
     await tester.pump(
@@ -127,8 +137,6 @@ class RobotTestAgnelage extends RobotTest {
       await tester.tap(find.text(S.current.place_earring));
       await tester.pumpAndSettle();
       await tester.tap(find.backButton()); // Retour à la liste des agneaux
-      await tester.pumpAndSettle();
-      await tester.tap(find.backButton()); // Retour à la pacge d'accueil
       await tester.pumpAndSettle();
     }
   }

@@ -1,9 +1,16 @@
 
+import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
+import 'package:flutter_gismo/lamb/ui/Adoption.dart';
+import 'package:flutter_gismo/lamb/ui/AgnelageQualityPage.dart';
+import 'package:flutter_gismo/lamb/ui/LambPage.dart';
 import 'package:flutter_gismo/lamb/ui/SearchPerePage.dart';
 import 'package:flutter_gismo/lamb/ui/lambing.dart';
+import 'package:flutter_gismo/model/AdoptionQualite.dart';
+import 'package:flutter_gismo/model/AgnelageQualite.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
+import 'package:flutter_gismo/search/ui/SearchPage.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:flutter_gismo/services/BeteService.dart';
 import 'package:flutter_gismo/services/LambingService.dart';
@@ -20,10 +27,13 @@ class LambingPresenter {
   void addPere() async {
     Bete ? pere;
     if (AuthService().subscribe) {
-        pere = await this._view.showPerePage();
-      }
-      else
-        pere = await this._view.searchPere();
+      pere = await this._view.goNextPage(SearchPerePage( currentLambing));
+    }
+    else {
+      SearchPage search = new SearchPage( GismoPage.sailliePere);
+      search.searchSex = Sex.male;
+      pere = await this._view.goNextPage(search);
+    }
     if (pere != null) {
       currentLambing.numBouclePere = pere.numBoucle;
       currentLambing.numMarquagePere = pere.numMarquage;
@@ -57,32 +67,36 @@ class LambingPresenter {
     }
   }
 
-  Future addLamb() async {
-    LambModel? newLamb = await this._view.addLamb();
+  void addLamb() async {
+    LambModel? newLamb = await this._view.goNextPage(LambPage());
     if (newLamb != null) {
       currentLambing.lambs.add(newLamb);
     }
+    this._view.hideSaving();
   }
 
-  void editLamb(LambModel lamb, String dateNaissance) async {
-    LambModel? newLamb = await this._view.editLamb(lamb, dateNaissance);
+  void editLamb(LambModel lamb) async {
+    LambModel? newLamb =  await  this._view.goNextPage(LambPage.edit(lamb));
     if (newLamb == null)
       return;
-    this._service.saveLamb(newLamb);
-    currentLambing.lambs.forEach((aLamb) {
-      if (aLamb.idBd == newLamb.idBd) {
-        aLamb.sex = newLamb.sex;
-        aLamb.allaitement = newLamb.allaitement;
-        aLamb.marquageProvisoire = newLamb.marquageProvisoire;
-        aLamb.dateDeces = newLamb.dateDeces;
-        aLamb.motifDeces = newLamb.motifDeces;
-        aLamb.numBoucle = newLamb.numBoucle;
-        aLamb.numMarquage = newLamb.numMarquage;
-      }
-    });
-    this._view.refreshLambing(currentLambing);
+    String message = await this._service.saveLamb(newLamb);
+    this._view.hideSaving();
+    this._view.showMessage(message);
   }
 
+  void selectAdoption() async {
+    int ? qualiteAdoption = await  this._view.goNextPage(AdoptionDialog(this._view.adoption.key));
+    if (qualiteAdoption != null) {
+        this._view.adoption = AdoptionHelper.getAdoption(qualiteAdoption);
+    }
+  }
+
+  void selectQualite() async {
+    int ? qualiteAgnelage = await  this._view.goNextPage(AgnelageDialog(this._view.agnelage.key));
+    if (qualiteAgnelage != null) {
+      this._view.agnelage = AgnelageHelper.getAgnelage(qualiteAgnelage);
+    }
+  }
 
 
 }

@@ -4,9 +4,11 @@ import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 
 class MedicPage extends StatefulWidget {
+  MedicModel ? _medic;
   @override
   MedicPageState createState() => MedicPageState();
-
+  MedicPage.edit(this._medic);
+  MedicPage();
 }
 abstract class MedicContract {
 
@@ -72,7 +74,7 @@ class MedicPageState extends GismoStatePage<MedicPage>  implements MedicContract
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           FilledButton(
-              child: Text(S.of(context).bt_add),
+              child: Text(this._getCaptionButton()),
               key: Key("Enregistrer"), onPressed: () => {_addMedicament()})
 
             ],)
@@ -80,9 +82,26 @@ class MedicPageState extends GismoStatePage<MedicPage>  implements MedicContract
     );
   }
 
+  String _getCaptionButton() {
+    if (this.widget._medic == null) return S.of(context).bt_add;
+    return S.of(context).bt_update;
+  }
   void _addMedicament() {
     Navigator
         .of(context)
         .pop(MedicModel.build(_medicamentCtl.text, _voieCtl.text, _doseCtl.text, _rythmeCtl.text));
   }
+
+  @override
+  void initState() {
+    super.initState();
+    if (this.widget._medic != null){
+      _medicamentCtl.text = this.widget._medic!.medicament;
+      if (this.widget._medic!.voie != null) _voieCtl.text = this.widget._medic!.voie!;
+      if (this.widget._medic!.rythme != null) _rythmeCtl.text = this.widget._medic!.rythme!;
+      if (this.widget._medic!.dose != null)_doseCtl.text = this.widget._medic!.dose!;
+    }
+
+  }
+
 }

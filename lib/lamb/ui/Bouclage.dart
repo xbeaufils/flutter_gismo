@@ -2,8 +2,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/BoucleModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/lamb/presenter/LambPresenter.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
@@ -19,15 +21,14 @@ class BouclagePage extends StatefulWidget {
   _BouclagePageState createState() => new _BouclagePageState();
 }
 
-abstract class BouclageContract {
+abstract class BouclageContract  extends GismoContract {
   void returnBete(Bete bete);
   StatusBlueTooth get  bluetoothState;
   set bluetoothState(StatusBlueTooth value);
-  updateBoucle (String numBoucle, String numMarquage);
+  updateBoucle (BoucleModel numBoucle);
 }
 
-class _BouclagePageState extends State<BouclagePage> implements BouclageContract {
-  final df = new DateFormat('dd/MM/yyyy');
+class _BouclagePageState extends GismoStatePage<BouclagePage> implements BouclageContract {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   late BouclagePresenter _presenter = BouclagePresenter(this);
@@ -139,10 +140,10 @@ class _BouclagePageState extends State<BouclagePage> implements BouclageContract
     return Row(children: status,);
   }
 
-  updateBoucle (String numBoucle, String numMarquage) {
+  updateBoucle (BoucleModel numBoucle) {
     setState(() {
-      _numBoucleCtrl.text = numBoucle;
-      _numMarquageCtrl.text = numMarquage;
+      _numBoucleCtrl.text = numBoucle.ordre;
+      _numMarquageCtrl.text = numBoucle.marquage;
     });
   }
 

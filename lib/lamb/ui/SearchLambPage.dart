@@ -30,9 +30,10 @@ class _SearchLambPageState extends GismoStatePage<SearchLambPage> implements Sea
   List<CompleteLambModel> get filteredLambs => _filteredLambs;
 
   set filteredLambs(List<CompleteLambModel> value) {
-    setState(() {
-      _filteredLambs = value;
-    });
+    if (mounted)
+      setState(() {
+        _filteredLambs = value;
+      });
   }
 
   _SearchLambPageState() {
@@ -76,6 +77,7 @@ class _SearchLambPageState extends GismoStatePage<SearchLambPage> implements Sea
       itemCount: _filteredLambs.length,
       itemBuilder: (BuildContext context, int index) {
         return new ListTile(
+          tileColor: (index%2==0)?sheepyGreenSheme.colorScheme.primaryContainer:sheepyGreenSheme.colorScheme.surface,
           leading: (_filteredLambs[index].sex == Sex.male) ? ImageIcon(  AssetImage("assets/male.png")): ImageIcon(  AssetImage("assets/female.png")),
           title: Row(
             children: <Widget>[

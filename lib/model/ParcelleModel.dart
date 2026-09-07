@@ -27,6 +27,7 @@ class Pature {
   DateTime ? debut;
   DateTime ? fin;
   late int parcelleId;
+  String ? centroid;
   final _df = new DateFormat('dd/MM/yyyy');
 
   Pature.fromResult(result) {
@@ -38,6 +39,7 @@ class Pature {
     if (result['fin'] != null)
       fin = _df.parse(result['fin']);
     parcelleId = result['parcelleId'];
+    centroid = result['centroid'];
   }
 
   Map<String, dynamic> toJson() {

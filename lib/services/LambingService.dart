@@ -1,6 +1,7 @@
 import 'package:flutter_gismo/Exception/EventException.dart';
-import 'package:flutter_gismo/model/AffectationLot.dart';
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/Dashboard.dart';
 import 'package:flutter_gismo/model/Event.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/PeseeModel.dart';
@@ -50,7 +51,7 @@ class LambingService {
   Future<String> mort(LambModel lamb, String motif, String date) async{
     try {
       await this._lambRepository.mort(lamb, motif, date);
-      return "Enregistrement effectué";
+      return S.current.record_saved;
     }
     catch (e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
@@ -94,6 +95,9 @@ class LambingService {
   }
   int _compareDate(Event a, Event b) {
     return b.date.compareTo( a.date);
+  }
+  Future<DashBoardLamb> getDashBoardEffectif() async {
+    return this._lambRepository.getDashBoardLamb();
   }
 
 }

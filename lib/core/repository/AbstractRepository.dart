@@ -27,6 +27,7 @@ class WebRepository {
   Future<Map<String, String>> _getHeaders() async{
     Map<String, String> _headers = new Map();
     _headers[HttpHeaders.contentTypeHeader] = ContentType.json.value;
+    //_headers[HttpHeaders.userAgentHeader] = 'Gismo' + packageInfo.version;
     if (this._token != null)
       _headers['token'] = this._token!;
     _headers[HttpHeaders.acceptLanguageHeader] =  Intl.shortLocale(await findSystemLocale());
@@ -66,6 +67,8 @@ class WebRepository {
           Uri.parse(Environnement.getUrlTarget() + url),
           headers: await _getHeaders(),
           body: jsonEncode(body)).timeout(Duration(seconds: 5) ).timeout(Duration(seconds: 10));
+      if (response.bodyBytes.lengthInBytes == 0)
+        return "";
       Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
       if (msg.error) {
         throw GismoException(msg.message);

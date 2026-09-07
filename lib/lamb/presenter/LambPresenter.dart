@@ -8,6 +8,7 @@ import 'package:flutter_gismo/lamb/ui/LambPage.dart';
 import 'package:flutter_gismo/lamb/ui/LambTimeLine.dart';
 import 'package:flutter_gismo/lamb/ui/Mort.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/BoucleModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/services/BluetoothService.dart';
@@ -31,18 +32,26 @@ class LambTimeLinePresenter {
     if (bete == null)
       return;
     try {
-      this.service.boucler(lamb, bete);
-      if (bete.idBd != null)
-        lamb.idDevenir = bete.idBd;
-      lamb.numBoucle = bete.numBoucle;
-      lamb.numMarquage = bete.numMarquage;
+      String ? message = await this.service.boucler(lamb, bete);
+      if (message != null) {
+        this._view.showMessage(message);
+        this._view.backWithObject(lamb);
+      }
     } on GismoException catch (e) {
       this._view.showMessage(e.message, true);
     }
   }
 
-  void mort(LambModel lamb) {
-    this._view.goNextPage( MortPage(lamb));
+  void mort(LambModel lamb) async {
+    try {
+      String ? message = await this._view.goNextPage( MortPage(lamb));
+      if (message != null) {
+        this._view.showMessage(message);
+        this._view.backWithObject(lamb);
+      }
+    } on GismoException catch (e) {
+      this._view.showMessage(e.message, true);
+    }
   }
 
   void peser(LambModel lamb) async {
@@ -91,8 +100,9 @@ class BouclagePresenter {
     lamb.numMarquage = numMarquage;
     lamb.numBoucle = numBoucle;
     Bete bete = new Bete(null, numBoucle, numMarquage, null, null, null, lamb.sex, 'NAISSANCE');
-    this._view.returnBete(bete);
+    this._view.backWithObject(bete);
   }
+
   Future<void> startReadBluetooth() async {
     /*
     try {
@@ -116,13 +126,8 @@ class BouclagePresenter {
       if(event.connectionStatus == 'NONE')
         return;
       if (event.dataStatus == 'AVAILABLE') {
-        String _foundBoucle = event.data!;
-        if (_foundBoucle.length > 15)
-          _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
-        String numBoucle = _foundBoucle.substring(_foundBoucle.length - 5);
-        String numMarquage = _foundBoucle.substring(0, _foundBoucle.length - 5);
-
-        this._view.updateBoucle(numBoucle, numMarquage);
+        BoucleModel _foundBoucle = BoucleModel(event.data!);
+        this._view.updateBoucle(_foundBoucle);
       }
       this._view.bluetoothState = event;
     }
@@ -141,9 +146,11 @@ class DeathPresenter {
 
   DeathPresenter(this._view);
 
-  Future<String> saveDeath(LambModel lamb, String dateMort, String? motif) async {
+  Future<void> saveDeath(LambModel lamb, String dateMort, String? motif) async {
     try {
-      return this._save(lamb, dateMort, motif);
+      _view.showSaving();
+      String ? message =  await this._save(lamb, dateMort, motif);
+      _view.backWithObject(message);
     } on GismoException catch(e) {
       this._view.showMessage(e.message, true);
     }  on MissingDeathDateException {
@@ -151,7 +158,6 @@ class DeathPresenter {
     } on MissingMotifException {
       this._view.showMessage(S.current.death_cause_mandatory, true);
     }
-    throw Exception();
   }
 
   Future<String> _save(LambModel lamb, String dateMort, String? motif) async {

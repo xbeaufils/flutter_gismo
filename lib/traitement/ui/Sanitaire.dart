@@ -147,6 +147,7 @@ abstract class MultipleSanitaireContract extends SanitaireContract {
   List<MedicModel> ? get medics;
 
   void add(MedicModel medic);
+  void update(MedicModel medic, int index);
 }
 
 class MultipleSanitairePageState extends SanitairePageState<MultipleSanitairePage> implements MultipleSanitaireContract {
@@ -174,7 +175,7 @@ class MultipleSanitairePageState extends SanitairePageState<MultipleSanitairePag
                       title: Text(medic.medicament),
                       subtitle: Text((medic.dose == null) ? medic.dose! : ""),
                       trailing: IconButton(icon: Icon(Icons.edit),
-                          onPressed: () => _presenter.edit(medic)),
+                          onPressed: () => _presenter.edit(medic, index)),
                     );
                   })
               ),
@@ -210,6 +211,12 @@ class MultipleSanitairePageState extends SanitairePageState<MultipleSanitairePag
   void add(MedicModel medic) {
     setState(() {
       _medics.add(medic);
+    });
+  }
+
+  void update(MedicModel medic, int index) {
+    setState(() {
+      _medics[index] = medic;
     });
   }
 

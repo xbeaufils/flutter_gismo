@@ -20,9 +20,12 @@ class LotPresenter {
   }
 
   void delete(LotModel lot) async {
-    var message  = await _service.deleteLot(lot);
-    if (message != null)
-      this._view.showMessage(message);
+    bool Ok = await this._view.showDialogOkCancel();
+    if (Ok) {
+      var message = await _service.deleteLot(lot);
+      if (message != null)
+        this._view.showMessage(message);
+    }
   }
 
   Future<List<LotModel>> getLots()  {

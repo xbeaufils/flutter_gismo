@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 
 import 'RobotTest.dart';
 
 class RobotTestTraitement extends RobotTest {
-
   RobotTestTraitement(super.tester);
+  final DateTime _now = DateTime.now();
 
   Future<void> create(Map<String, dynamic> traitement) async {
       await startAppli();
-      final trt = findWelcomeButton(S.current.treatment);
+      final Finder trt = await findWelcomeButton(Key("btSante"), S.current.treatment);
       await tester.tap(trt);
       await tester.pumpAndSettle();
       final btSearch = find.byIcon(Icons.settings_remote);
@@ -32,14 +33,21 @@ class RobotTestTraitement extends RobotTest {
         await tester.pumpAndSettle();
       }
       await this._tapeFiche(traitement);
-      await tester.tap(find.text(S.current.bt_save));
+      final Finder scrollView = find.descendant(
+        of: find.byType(SingleChildScrollView),
+        matching: find.byType(Scrollable).at(0),
+      );
+      final Finder btnValidate = find.text(S.current.bt_save);
+      await tester.scrollUntilVisible(btnValidate, 500.0, scrollable: scrollView);
+      await tester.tap(btnValidate);
       await tester.pumpAndSettle();
   }
 
   Future<void> _tapeFiche(Map<String, dynamic> traitement) async {
-    await tester.enterText(find.byKey(Key("dateDebut")), traitement["debut"]);
-    await tester.enterText(find.byKey(Key("dateFin")), traitement["fin"]);
-
+    DateTime debut = frenchForm.parse(traitement["debut"] + _now.year.toString());
+    await tester.enterText(find.byKey(Key("dateDebut")), DateFormat.yMd().format(debut));
+    DateTime fin = frenchForm.parse(traitement["fin"] + _now.year.toString());
+    await tester.enterText(find.byKey(Key("dateFin")), DateFormat.yMd().format(fin));
     Finder ordonnanceTxt = find.ancestor(
       of: find.text(S.current.prescription), matching: find.byType(TextFormField),);
     await tester.enterText(ordonnanceTxt, traitement["ordonnance"]);
@@ -60,7 +68,8 @@ class RobotTestTraitement extends RobotTest {
 
   Future<void> modify(Map<String, dynamic> traitement) async {
       await startAppli();
-      await tester.tap(findWelcomeButton(S.current.sheep));
+      Finder btIndividu = await findWelcomeButton(Key("btTroupeau"),S.current.sheep);
+      await tester.tap(btIndividu);
       await tester.pumpAndSettle();
       await selectBete(traitement["bete"]);
       await tester.pumpAndSettle();
@@ -71,9 +80,17 @@ class RobotTestTraitement extends RobotTest {
       await tester.pumpAndSettle();
       await tester.enterText(find.text(traitement["medicament"]["ancien"]), traitement["medicament"]["nouveau"]);
       await tester.pumpAndSettle();
-      await tester.enterText(find.text(traitement["debut"]["ancien"]), traitement["debut"]["nouveau"]);
+      DateTime ancien = frenchForm.parse(traitement["debut"]["ancien"] + _now.year.toString());
+      DateTime nouveau = frenchForm.parse(traitement["debut"]["nouveau"] + _now.year.toString());
+      await tester.enterText(find.text(DateFormat.yMd().format(ancien)), DateFormat.yMd().format(nouveau));
       await tester.pumpAndSettle();
-      await tester.tap(find.text(S.current.bt_save));
+      final Finder scrollView = find.descendant(
+        of: find.byType(SingleChildScrollView),
+        matching: find.byType(Scrollable).at(0),
+      );
+      final Finder btnValidate = find.text(S.current.bt_save);
+      await tester.scrollUntilVisible(btnValidate, 500.0, scrollable: scrollView);
+      await tester.tap(btnValidate);
       await tester.pumpAndSettle();
   }
 

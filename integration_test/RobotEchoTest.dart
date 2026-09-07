@@ -10,9 +10,8 @@ class RobotEchoTest extends RobotTest {
 
   Future<void> create(Map<String, dynamic> echoData) async {
     await startAppli();
-    final echo = findWelcomeButton(S.current.ultrasound);
-    print(echo);
-    await tester.tap(echo);
+    Finder btEcho = await findWelcomeButton(Key("btBreeding"),S.current.ultrasound);
+    await tester.tap(btEcho);
     await tester.pumpAndSettle();
     await selectBete( echoData["numero"] );
     // Passage à l'ecran Echo Graphie
@@ -30,9 +29,11 @@ class RobotEchoTest extends RobotTest {
         break;
     }
     await tester.pumpAndSettle();
-    await tester.enterText(find.byKey(Key("dateEcho")), echoData["dateEcho"]);
+    DateTime echoDate = frenchForm.parse(echoData["dateEcho"] + now.year.toString());
+    await tester.enterText(find.byKey(Key("dateEcho")), DateFormat.yMd().format(echoDate));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byKey(Key("dateSaillie")), echoData["dateSaillie"]);
+    DateTime saillieDate = frenchForm.parse(echoData["dateSaillie"] + now.year.toString());
+    await tester.enterText(find.byKey(Key("dateSaillie")),  DateFormat.yMd().format(saillieDate) );
     await tester.pumpAndSettle();
     await tester.tap(find.text(S.current.bt_save));
     await tester.pumpAndSettle();

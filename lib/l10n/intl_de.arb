@@ -1,6 +1,22 @@
 {
   "@@locale": "de",
-   "batch": "Teilherde",
+
+  "effectif": "Herde",
+  "reproduction": "Fortpflanzung",
+  "sante" : "Gesundheit",
+  "other" : "Andere",
+  "effectif_sheep": "Anzahl der markierten Tiere",
+  "effectif_lamb": "Anzahl der Tiere ohne Kennzeichnung",
+  "effectif_femelles": "Weibchen",
+  "effectif_males": "Männer",
+  "effectif_ram": "Widder",
+  "effectif_ewe": "Schaf",
+  "effectif_ewe_lamb": "Lämmchen",
+  "effectif_ram_lamb": "Lämmer",
+  "effectif_adult": "Wessen Geburtsdatum weniger als 1 Jahr alt ist oder unbekannt ist",
+  "effectif_youth" : "Wessen Geburtsdatum weniger als 1 Jahr alt ist",
+
+  "batch": "Teilherde",
    "sheep": "Schaf",
    "lambing": "Lammen",
    "lambs": "Lämmer",
@@ -11,6 +27,7 @@
    "body_cond": "Körperzustand",
    "body_cond_full": "Körperkonditionsnote",
    "treatment": "Behandlung",
+   "result_copro": "Koproskopiergebnis",
    "input": "Eingabe",
    "output": "Ausgabe",
    "localuser": "Lokaler Benutzer",
@@ -36,7 +53,15 @@
    "identity_number_hint": "Ohrmarke",
    "enter_identity_number": "Geben Sie eine Ohrmarkennummer ein",
    "identity_number_warn": "Ohrmarkennummer fehlt",
-   "sex_warn": "Geschlecht fehlt",
+   "race": "Schafrasse",
+  "race_select": "Suche nach einer Schafrasse",
+  "generation": "Generation",
+  "genetic": "Genetisch",
+  "race_indet": "unbest",
+  "collective_genetic": "Fügen Sie alle Personen hinzu, die die entsprechende genetische Veranlagung besitzen, bevor Sie fortfahren.",
+  "no_bete_selected" : "Keine Schafe ausgewählt",
+
+  "sex_warn": "Geschlecht fehlt",
    "name": "Rufname",
    "name_hint": "Name",
    "identity_number_error": "Ohrmarkennummer bereits vorhanden",
@@ -193,6 +218,7 @@
   "mating_date": "Deckdatum",
   "no_mating_date": "Kein Datum eingegeben",
   "mating_male_text": "Wenn leer, wird die Deckung nicht registriert oder gelöscht",
+  "mating_no_father" : "Kein Widder beschlagnahmt",
 
   "bt_cancel": "Abbrechen",
   "bt_continue": "Weiter",
@@ -200,6 +226,7 @@
   "bt_add": "Hinzufügen",
   "bt_delete": "Löschen",
   "bt_edition": "Bearbeiten",
+  "bt_update":  "Aktualisieren",
   "bt_validate" : "Bestätigen Sie die Auswahl",
   "record_saved": "Aufnahme abgeschlossen",
 
@@ -234,5 +261,19 @@
   "with_subscription": "Mit Abonnement",
   "save_config": "Konfiguration speichern",
 
-  "bluetooth_autorisation": "Bluetooth-Autorisierung"
+  "bluetooth_autorisation": "Bluetooth-Autorisierung",
+  "date_prelevement" : "Datum der Sammlung",
+  "copro_result" : "Ergebnisse",
+  "copro_effectif": "Tiere analysiert",
+  "strongles_gastro_intestinaux" : "Gastrointestinal strongyles",
+  "strongle_pulm" : "Lungenstarke",
+  "strongyloide" : "Strongyloid",
+  "nemanotode" : "Nemanotodes",
+  "trichure" : "Betrügt",
+  "petite_douve" : "Kleine Wassergräben",
+  "grande_douve" : "Große Wassergräben",
+  "paramphistome" : "Paramphistomen",
+  "tenia" : "Bandwurm",
+  "coccidie" : "Kokzidien"
+
 }

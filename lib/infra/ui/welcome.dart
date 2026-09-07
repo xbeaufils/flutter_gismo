@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+//import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
@@ -10,8 +10,11 @@ import 'dart:developer' as debug;
 
 import 'package:flutter_gismo/infra/ui/MenuPage.dart';
 import 'package:flutter_gismo/infra/presenter/WelcomePresenter.dart';
+import 'package:flutter_gismo/model/Dashboard.dart';
+import 'package:flutter_gismo/model/MemoModel.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
-import 'package:flutter_gismo/theme.dart';
+import 'package:flutter_gismo/sheepyGreenScheme.dart';
+
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -28,12 +31,12 @@ class WelcomePage extends StatefulWidget {
 abstract class WelcomeContract extends GismoContract {
   void viewPage(String path);
   void viewPageMessage(String path);
+  BuildContext get context;
 }
 
 class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeContract {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late WelcomePresenter _presenter;
-
   _WelcomePageState();
   BannerAd ? _adBanner;
 
@@ -41,41 +44,131 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
   @override
   Widget build(BuildContext context) {
     debug.log("Build", name: "Welcome:::build");
-    return new Scaffold(
+    return Scaffold(
         key: _scaffoldKey,
 //        backgroundColor: Colors.lightGreen,
         appBar: new AppBar(
             title: Text('Gismo ' + AuthService().cheptel!),
+            actions: [
+              FutureBuilder(
+                future: _presenter.getNbNotes(),
+                builder : (BuildContext context, AsyncSnapshot<List<MemoModel>> snapshot) {
+                  int nbNotes = 0;
+                  if (snapshot.hasData) {
+                    nbNotes = snapshot.data!.length;
+                  }
+                  return IconButton(
+                      onPressed: _presenter.notePressed,
+                      icon: (nbNotes == 0) ? Icon(Icons.sticky_note_2): Badge(
+                          child: Icon(Icons.sticky_note_2),
+                          label: Text(nbNotes.toString()),
+                      ));
+                })],
             // N'affiche pas la touche back (qui revient à la SplashScreen
             automaticallyImplyLeading: true,
              ),
 //        bottomNavigationBar: this._navigationBar(),
         body:
-        Column(children: [
-          Expanded(child:
-            GridView.count(
-              scrollDirection: Axis.vertical,padding: EdgeInsets.all(10),
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              crossAxisCount: 3,
-              children: <Widget>[
-                _buildGriTile("assets/Lot.png", S.of(context).batch, _presenter.lotPressed) ,
-                _buildGriTile("assets/brebis.png", S.of(context).sheep, _presenter.individuPressed),
-                _buildGriTile("assets/jumping_lambs.png", S.of(context).lambs, _presenter.lambPressed ),
-                _buildGriTile("assets/saillie.png", S.of(context).mating, _presenter.sailliePressed, ),
-                _buildGriTile("assets/ultrasound.png", S.of(context).ultrasound, _presenter.echoPressed,) ,
-                _buildGriTile("assets/lamb.png", S.of(context).lambing, _presenter.lambingPressed,) ,
-                _buildGriTile("assets/syringe.png", S.of(context).treatment, _presenter.traitementPressed,) ,
-                _buildGriTile("assets/peseur.png", S.of(context).weighing, _presenter.peseePressed,) ,
-                _buildGriTile("assets/etat_corporel.png", S.of(context).body_cond, _presenter.necPressed,),
-                _buildGriTile("assets/home.png", S.of(context).input,  _presenter.entreePressed,) ,
-                _buildGriTile("assets/Truck.png", S.of(context).output, _presenter.sortiePressed, ),
-                _buildGriTile("assets/parcelles.png", "Parcelles", _presenter.parcellePressed ),
-              ]),),
-                 this._getAdmobAdvice(),
-                this._getFacebookAdvice(),
-        ]),
+            SingleChildScrollView(child:
+          Column(children: [
+            this._buidCardEffectif(),
+            this._buildCardLamb(),
+            this._getAdmobAdvice(),
+            this._getFacebookAdvice(),
+          ])),
+        bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: sheepyGreenSheme.colorScheme.onPrimaryContainer,
+          unselectedItemColor: sheepyGreenSheme.colorScheme.onPrimaryContainer,
+          // backgroundColor: sheepyGreenSheme.colorScheme.onPrimaryContainer, NO RESULT
+          type: BottomNavigationBarType.fixed,
+          onTap: (index) {
+              switch (index) {
+                 case 0:
+                  this._openMenuEffectif(context);
+                  break;
+                case 1:
+                  this._openMenuBreeding(context);
+                  break;
+                case 2:
+                  this._openMenuHealth();
+                  break;
+                case 3:
+                  this._openMenuOthers();
+                  break;
+                default:
+              }
+          } ,
+          items: [
+            BottomNavigationBarItem(icon: ImageIcon(AssetImage("assets/brebis.png")), label: S.of(context).effectif, key: Key("btTroupeau")),
+            BottomNavigationBarItem(icon: ImageIcon(AssetImage("assets/sheep_lamb.png")), label: S.of(context).reproduction, key: Key("btBreeding")),
+            BottomNavigationBarItem(icon: Icon(Icons.health_and_safety), label: S.of(context).sante, key: Key("btSante")),
+            BottomNavigationBarItem(icon: Icon(Icons.more_vert), label: S.of(context).other, key: Key("btAutre")),
+          ],),
         drawer: GismoDrawer(),);
+  }
+
+  Widget _buidCardEffectif() {
+    return Card( child:
+      Column(children: [
+        Text(S.of(context).effectif_sheep, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+        FutureBuilder(
+          future: _presenter.getDashBoardEffectif(),
+          builder : (BuildContext context, AsyncSnapshot<DashBoardEffectif> snapshot) {
+            if (snapshot.data == null)
+              return SizedBox(child: CircularProgressIndicator(), width: 60, height: 60,);
+            return SizedBox(height: 300,
+              child:
+                GridView.count(
+                scrollDirection: Axis.vertical,padding: EdgeInsets.all(10),
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                crossAxisCount: 3,
+                children: <Widget>[
+                  _buildTileEffectif( S.current.effectif_femelles, snapshot.data!.nbBrebis),
+                  _buildTileEffectif( S.current.effectif_ewe + "(*)", snapshot.data!.nbBrebisAdulte),
+                  _buildTileEffectif( S.current.effectif_ewe_lamb + "(**)", snapshot.data!.nbBrebisAntenais),
+                  _buildTileEffectif( S.current.effectif_males, snapshot.data!.nbBeliers),
+                  _buildTileEffectif( S.current.effectif_ram + "(*) ", snapshot.data!.nbBeliersAdulte),
+                  _buildTileEffectif( S.current.effectif_ram_lamb + "(**)", snapshot.data!.nbBeliersAntenais),
+                ]));
+        }),
+        Padding(padding: EdgeInsetsGeometry.only(left: 20, right: 20),
+          child:
+            Align( child:
+              Text("* " + S.current.effectif_adult, style: TextStyle(fontStyle: FontStyle.italic),),
+              alignment: Alignment.topLeft),),
+        Padding(padding: EdgeInsetsGeometry.only(left: 20, right: 20),
+          child:
+          Align(child:
+            Text("** " + S.current.effectif_youth, style: TextStyle(fontStyle: FontStyle.italic)),
+            alignment: Alignment.topLeft)),
+      ])
+    ,);
+  }
+
+  Widget _buildCardLamb() {
+    return Card(child:
+      Column(children: [
+        Text(S.of(context).effectif_lamb, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+        FutureBuilder(
+          future: this._presenter.getDashBoardLamb(),
+          builder:  (BuildContext context, AsyncSnapshot<DashBoardLamb> snapshot) {
+            if (snapshot.data == null)
+              return SizedBox(child: CircularProgressIndicator(), width: 20, height: 20, );
+            return SizedBox( height: 200,
+              child:
+                GridView.count(
+                  scrollDirection: Axis.vertical,
+                  padding: EdgeInsets.all(10),
+                crossAxisSpacing: 2,
+                mainAxisSpacing: 10,
+                crossAxisCount: 3,
+                children: <Widget>[
+                  _buildTileEffectif( S.current.effectif_femelles, snapshot.data!.nbFemelle),
+                  _buildTileEffectif( S.current.effectif_males, snapshot.data!.nbMale),
+                ]));
+          })
+        ],));
   }
 
   Widget _getAdmobAdvice() {
@@ -92,36 +185,43 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
     return Container();
   }
 
-  Widget _buildGriTile(String imageName, String title, Function() press ) {
-    //return GridTile(child: _buildButton(title, imageName, press));
-    return GridTile(child:
-      Column(children: [
-        FilledButton(
-          style: ElevatedButton.styleFrom(
-            // The width will be 100% of the parent widget
-            // The height will be 60
-              minimumSize: const Size.fromHeight(60)),
-          child: Image.asset(imageName),
-          onPressed : press,),
-        Text(title) ]),
-      );
+  Widget _buildTileEffectif(String label, int nb) {
+    return GridTile(
+      header: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+            color: sheepyGreenSheme.colorScheme.primary,
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+        child:
+          Text(label, style: TextStyle(color: Colors.white),),
+      ),
+      child:
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            color: sheepyGreenSheme.colorScheme.primaryContainer ,),
+//          padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
+          padding: const EdgeInsets.only(top: 40, left: 20, right: 20), // symmetric(vertical: 30.0, horizontal: 20.0),
+          child: Text(nb.toString(), )),
+    );
   }
 
   Widget _getFacebookAdvice() {
     if ( AuthService().subscribe   ) {
       return SizedBox(height: 0,width: 0,);
     }
-    if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
+    /*if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
       return
         //Card(child:
-          FacebookBannerAd(
+         FacebookBannerAd(
             placementId: '212596486937356_212596826937322',
             bannerSize: BannerSize.STANDARD,
             keepAlive: true,
             listener: (result, value) {}
         //  ),
         );
-    }
+    }*/
     return Container();
   }
 
@@ -133,19 +233,6 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
     }
     debug.log("Unable to find plateform");
     return "";
-  }
-
-  Widget _buildButton(String title, String imageName, Function() press) {
-    return new TextButton(
-        key: Key(title),
-        style: textButtonStyle,
-        onPressed: press,
-        child: new Column(
-          children: <Widget>[
-            new Image.asset(imageName),
-            new Text(title)
-          ],
-      ));
   }
 
   final ButtonStyle textButtonStyle = TextButton.styleFrom(
@@ -175,10 +262,10 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
       // See in https://dev-yakuza.posstree.com/en/flutter/admob/#configure-app-id-on-android
       debug.log("Load Ad Banner");
       //this._adBanner!.load();
-      FacebookAudienceNetwork.init(
+      /*FacebookAudienceNetwork.init(
         testingId: "a77955ee-3304-4635-be65-81029b0f5201",
         iOSAdvertiserTrackingEnabled: true,
-      );
+      );*/
     }
   }
 
@@ -203,7 +290,105 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
     });
 
   }
+  // AnimationStyle? _animationStyle = ;
 
+  void _openMenuEffectif(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Column(children: [
+            ListTile(
+              leading: Image.asset("assets/Lot.png"),
+              title: Text(S.of(context).batch),
+              onTap: _presenter.lotPressed,),
+            ListTile(
+              leading: Image.asset("assets/brebis.png"),
+              title: Text(S.of(context).sheep),
+              onTap: _presenter.individuPressed,),
+            ListTile(
+              leading: Image.asset("assets/jumping_lambs.png"),
+              title: Text(S.of(context).lambs),
+              onTap: _presenter.lambPressed,),
+            ListTile(
+              leading: Image.asset("assets/home.png"),
+              title: Text(S.of(context).input),
+             onTap: _presenter.entreePressed,),
+            ListTile(
+              leading: Image.asset("assets/Truck.png"),
+              title: Text(S.of(context).output),
+              onTap: _presenter.sortiePressed,),
+          ],);
+        });
+  }
 
+  void _openMenuBreeding(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Column(children: [
+            ListTile(
+              leading: Image.asset("assets/adn.png"),
+              title: Text(S.of(context).genetic),
+              onTap: _presenter.geneticPressed ),
+            ListTile(
+              leading: Image.asset("assets/saillie.png"),
+              title: Text(S.of(context).mating),
+              onTap: _presenter.sailliePressed,),
+            ListTile(
+              leading: Image.asset("assets/ultrasound.png"),
+              title: Text(S.of(context).ultrasound),
+              onTap: _presenter.echoPressed,),
+            ListTile(
+              leading: Image.asset("assets/lamb.png"),
+              title: Text(S.of(context).lambing),
+              onTap: _presenter.lambingPressed,),
+          ],);
+        });
+  }
 
+  void _openMenuHealth() {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Column(children: [
+            ListTile(
+              leading: SizedBox(child: Image.asset("assets/syringe.png"), width: 55,),
+              title: Text(S.of(context).treatment),
+              onTap: _presenter.traitementPressed,),
+            ListTile(
+              leading: SizedBox(child: Image.asset("assets/peseur.png"), width: 55,),
+              title: Text(S.of(context).weighing),
+              onTap: _presenter.peseePressed,),
+            ListTile(
+              leading: SizedBox(child: Image.asset("assets/etat_corporel.png"), width: 55,),
+              title: Text(S.of(context).body_cond),
+              onTap: _presenter.necPressed,),
+            AuthService().subscribe ?
+            ListTile(
+              leading: SizedBox(child: Image.asset("assets/copro.png"), width: 55,),
+              title: Text(S.of(context).result_copro),
+              onTap: _presenter.coproPressed,): Container(),
+          ]);}
+    );
+  }
+
+  void _openMenuOthers() {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Column(children: [
+            AuthService().subscribe ?
+            ListTile(
+              leading: Image.asset("assets/parcelles.png"),
+              title: Text("Parcelles"),
+              onTap: _presenter.parcellePressed,): Container(),
+            ListTile(
+              leading: SizedBox( child: Image.asset("assets/memo.png"), width: 50),
+              title: Text(S.of(context).memo),
+              onTap: _presenter.notePressed,),
+
+          ]);
+        }
+    );
+  }
 }

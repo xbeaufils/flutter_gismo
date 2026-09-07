@@ -54,6 +54,111 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Livestock`
+  String get effectif {
+    return Intl.message('Livestock', name: 'effectif', desc: '', args: []);
+  }
+
+  /// `Breeding`
+  String get reproduction {
+    return Intl.message('Breeding', name: 'reproduction', desc: '', args: []);
+  }
+
+  /// `Health`
+  String get sante {
+    return Intl.message('Health', name: 'sante', desc: '', args: []);
+  }
+
+  /// `Others`
+  String get other {
+    return Intl.message('Others', name: 'other', desc: '', args: []);
+  }
+
+  /// `Number of tagged animals`
+  String get effectif_sheep {
+    return Intl.message(
+      'Number of tagged animals',
+      name: 'effectif_sheep',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Number of animals without tags`
+  String get effectif_lamb {
+    return Intl.message(
+      'Number of animals without tags',
+      name: 'effectif_lamb',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Females`
+  String get effectif_femelles {
+    return Intl.message(
+      'Females',
+      name: 'effectif_femelles',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Males`
+  String get effectif_males {
+    return Intl.message('Males', name: 'effectif_males', desc: '', args: []);
+  }
+
+  /// `Rams`
+  String get effectif_ram {
+    return Intl.message('Rams', name: 'effectif_ram', desc: '', args: []);
+  }
+
+  /// `Ewes`
+  String get effectif_ewe {
+    return Intl.message('Ewes', name: 'effectif_ewe', desc: '', args: []);
+  }
+
+  /// `Ewe lambs`
+  String get effectif_ewe_lamb {
+    return Intl.message(
+      'Ewe lambs',
+      name: 'effectif_ewe_lamb',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ram lambs`
+  String get effectif_ram_lamb {
+    return Intl.message(
+      'Ram lambs',
+      name: 'effectif_ram_lamb',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Whose date of birth is more than 1 year old or is unknown`
+  String get effectif_adult {
+    return Intl.message(
+      'Whose date of birth is more than 1 year old or is unknown',
+      name: 'effectif_adult',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Whose date of birth is less than 1 year old `
+  String get effectif_youth {
+    return Intl.message(
+      'Whose date of birth is less than 1 year old ',
+      name: 'effectif_youth',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Batch`
   String get batch {
     return Intl.message('Batch', name: 'batch', desc: '', args: []);
@@ -114,6 +219,16 @@ class S {
     return Intl.message('Treatment', name: 'treatment', desc: '', args: []);
   }
 
+  /// `Coproscopy result`
+  String get result_copro {
+    return Intl.message(
+      'Coproscopy result',
+      name: 'result_copro',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Entry`
   String get input {
     return Intl.message('Entry', name: 'input', desc: '', args: []);
@@ -124,9 +239,9 @@ class S {
     return Intl.message('Departure', name: 'output', desc: '', args: []);
   }
 
-  /// `Welcome`
+  /// `Home`
   String get welcome {
-    return Intl.message('Welcome', name: 'welcome', desc: '', args: []);
+    return Intl.message('Home', name: 'welcome', desc: '', args: []);
   }
 
   /// `Memo`
@@ -334,6 +449,56 @@ class S {
     return Intl.message(
       'Identity number is already present',
       name: 'identity_number_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Breed`
+  String get race {
+    return Intl.message('Breed', name: 'race', desc: '', args: []);
+  }
+
+  /// `Search a breed`
+  String get race_select {
+    return Intl.message(
+      'Search a breed',
+      name: 'race_select',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Generation`
+  String get generation {
+    return Intl.message('Generation', name: 'generation', desc: '', args: []);
+  }
+
+  /// `Genetic`
+  String get genetic {
+    return Intl.message('Genetic', name: 'genetic', desc: '', args: []);
+  }
+
+  /// `Indet`
+  String get race_indet {
+    return Intl.message('Indet', name: 'race_indet', desc: '', args: []);
+  }
+
+  /// `Add all the individuals who will have the genetics before continuing`
+  String get collective_genetic {
+    return Intl.message(
+      'Add all the individuals who will have the genetics before continuing',
+      name: 'collective_genetic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No sheep selected`
+  String get no_bete_selected {
+    return Intl.message(
+      'No sheep selected',
+      name: 'no_bete_selected',
       desc: '',
       args: [],
     );
@@ -1444,6 +1609,16 @@ class S {
     );
   }
 
+  /// `No ram seized`
+  String get mating_no_father {
+    return Intl.message(
+      'No ram seized',
+      name: 'mating_no_father',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Male`
   String get male {
     return Intl.message('Male', name: 'male', desc: '', args: []);
@@ -1562,6 +1737,11 @@ class S {
   /// `Edit`
   String get bt_edition {
     return Intl.message('Edit', name: 'bt_edition', desc: '', args: []);
+  }
+
+  /// `Update`
+  String get bt_update {
+    return Intl.message('Update', name: 'bt_update', desc: '', args: []);
   }
 
   /// `Validate the selection`
@@ -1792,6 +1972,111 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Date of collection`
+  String get date_prelevement {
+    return Intl.message(
+      'Date of collection',
+      name: 'date_prelevement',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Results`
+  String get copro_result {
+    return Intl.message('Results', name: 'copro_result', desc: '', args: []);
+  }
+
+  /// `Beasts analyzed`
+  String get copro_effectif {
+    return Intl.message(
+      'Beasts analyzed',
+      name: 'copro_effectif',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gastrointestinal strongyles`
+  String get strongles_gastro_intestinaux {
+    return Intl.message(
+      'Gastrointestinal strongyles',
+      name: 'strongles_gastro_intestinaux',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lung strongles`
+  String get strongle_pulm {
+    return Intl.message(
+      'Lung strongles',
+      name: 'strongle_pulm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Strongyloid`
+  String get strongyloide {
+    return Intl.message(
+      'Strongyloid',
+      name: 'strongyloide',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nemanotodes`
+  String get nemanotode {
+    return Intl.message('Nemanotodes', name: 'nemanotode', desc: '', args: []);
+  }
+
+  /// `Cheats`
+  String get trichure {
+    return Intl.message('Cheats', name: 'trichure', desc: '', args: []);
+  }
+
+  /// `Small moats`
+  String get petite_douve {
+    return Intl.message(
+      'Small moats',
+      name: 'petite_douve',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Large moats`
+  String get grande_douve {
+    return Intl.message(
+      'Large moats',
+      name: 'grande_douve',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Paramphistomes`
+  String get paramphistome {
+    return Intl.message(
+      'Paramphistomes',
+      name: 'paramphistome',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tapeworm`
+  String get tenia {
+    return Intl.message('Tapeworm', name: 'tenia', desc: '', args: []);
+  }
+
+  /// `Coccidia`
+  String get coccidie {
+    return Intl.message('Coccidia', name: 'coccidie', desc: '', args: []);
   }
 }
 

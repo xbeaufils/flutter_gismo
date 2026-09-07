@@ -1,13 +1,15 @@
 import 'dart:io';
 
-import 'package:facebook_audience_network/facebook_audience_network.dart';
+// import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gismo/core/repository/LocalRepository.dart';
 import 'package:flutter_gismo/model/User.dart';
 import 'package:flutter_gismo/services/UserService.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:developer' as debug;
 
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:sqflite/sqflite.dart';
 
 class AuthService {
 
@@ -46,22 +48,29 @@ class AuthService {
     // Read value
     FlutterSecureStorage storage = new FlutterSecureStorage();
     try {
+      Sentry.addBreadcrumb(
+        Breadcrumb(message: 'AUTH 1 - avant secure storage read'),
+      );
+
       String? email = await storage.read(key: "email");
+      Sentry.addBreadcrumb(
+        Breadcrumb(message: 'AUTH 2 - après secure storage read'),
+      );
       if (email == null) {
         AuthService().cheptel = "00000000";
         AuthService().subscribe = false;
         AuthService().token ="Nothing";
-        debug.log("Mode autonome", name: "GismoBloc::init");
-        // Ajout des pubs
-        //Admob.initialize();
-        FacebookAudienceNetwork.init(
-          testingId: "a77955ee-3304-4635-be65-81029b0f5201",
-          iOSAdvertiserTrackingEnabled: true,
+        // Ce qui suit sert à initialiser la base de données qui envoie le sendReport
+        Sentry.addBreadcrumb(
+          Breadcrumb(message: 'AUTH 3 - avant init database'),
         );
-        if (Platform.isIOS) {
-          //await Admob.requestTrackingAuthorization();
-        }
-        debug.log("Mode autonome");
+        LocalRepository dummyRepo = LocalRepository();
+        await dummyRepo.database;
+        Sentry.addBreadcrumb(
+          Breadcrumb(message: 'AUTH 4 - après init database'),
+        );
+
+        debug.log("Mode autonome", name: "AuthService::init");
         return "mode autonome";
       }
       String? password = await storage.read(key: "password");
@@ -79,7 +88,7 @@ class AuthService {
           this._currentUser!);*/
       debug.log(
           'Mode connecté email : $email - cheptel: currentUser.cheptel',
-          name: "GismoBloc::init");
+          name: "AuthService::init");
       return "mode connecte";
     }
     on PlatformException catch(e, stackTrace) {

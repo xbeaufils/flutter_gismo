@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gismo/individu/ui/SelectionHybridePage.dart';
 import 'package:flutter_gismo/infra/ui/ConfigPage.dart';
 import 'package:flutter_gismo/Lot/ui/LotPage.dart';
 import 'package:flutter_gismo/mouvement/ui/EntreePage.dart';
@@ -12,6 +13,8 @@ import 'package:flutter_gismo/infra/ui/loginPage.dart';
 import 'package:flutter_gismo/memo/ui/MemoListPage.dart';
 import 'package:flutter_gismo/parcelle/ui/ParcellePage.dart';
 import 'package:flutter_gismo/sheepyGreenScheme.dart';
+import 'package:flutter_gismo/traitement/ui/Copro.dart';
+import 'package:flutter_gismo/traitement/ui/CoproList.dart';
 import 'package:flutter_gismo/traitement/ui/selectionTraitement.dart';
 import 'package:flutter_gismo/infra/ui/welcome.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -52,7 +55,7 @@ class GismoApp extends StatelessWidget {
         '/nec': (context) => SearchPage( GismoPage.etat_corporel),
         '/pesee': (context) => SearchPage( GismoPage.pesee),
         '/search': (context) => SearchPage( GismoPage.individu),
-        '/sanitaire' : (context) => SelectionPage([]),
+        '/sanitaire' : (context) => SelectionPage([], S.of(context).treatment_explanation, S.of(context).collective_treatment),
         '/echo' : (context) => SearchPage( GismoPage.echo),
         '/lambing' : (context) => SearchPage( GismoPage.lamb),
         '/lamb' : (context) => SearchLambPage(),
@@ -64,6 +67,8 @@ class GismoApp extends StatelessWidget {
         '/config' : (context) =>ConfigPage(),
         '/bluetooth' : (context) =>BluetoothPermissionPage(),
         '/saillie' : (context) => SearchPage(GismoPage.saillie),
+        '/genetic' : (context) => SelectionHybridePage([],S.of(context).collective_genetic, S.of(context).genetic),
+        '/copro' : (context) => CoproListPage(),
       },
     );
   }

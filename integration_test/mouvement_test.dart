@@ -7,18 +7,20 @@ import 'RobotTest.dart';
 
 class RobotTestMouvement extends RobotTest {
 
+
   RobotTestMouvement(WidgetTester tester) : super(tester);
 
 
   Future<void> create(Map<String, dynamic> entree) async {
     await super.startAppli();
-    final Finder btEntree = super.findWelcomeButton(S.current.input);
+    final Finder btEntree = await super.findWelcomeButton(Key("btTroupeau"), S.current.input);
     await tester.tap(btEntree);
     await tester.pumpAndSettle();
     DateTime now = DateTime.now();
     expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
+    DateTime entreeDate = frenchForm.parse(entree["date"] + now.year.toString());
     await tester.enterText(
-        find.text(DateFormat.yMd().format(now)), entree["date"]);
+        find.text(DateFormat.yMd().format(now)), DateFormat.yMd().format(entreeDate));
     final dropDown = find.byKey(Key("Motif_Key"));
     await tester.tap(dropDown);
     await tester.pump();
@@ -59,13 +61,14 @@ class RobotTestMouvement extends RobotTest {
 
   Future<void> sortie(Map<String, dynamic> sortie) async {
     await super.startAppli();
-    final Finder btSortie = super.findWelcomeButton(S.current.output);
+    final Finder btSortie = await super.findWelcomeButton(Key("btTroupeau"), S.current.output);
     await tester.tap(btSortie);
     await tester.pumpAndSettle();
     DateTime now = DateTime.now();
     expect(find.text(DateFormat.yMd().format(now)), findsOneWidget);
+    DateTime sortieDate = frenchForm.parse(sortie["dateSortie"] + now.year.toString());
     await tester.enterText(
-        find.text(DateFormat.yMd().format(now)), sortie["dateSortie"]);
+        find.text(DateFormat.yMd().format(now)), DateFormat.yMd().format(sortieDate));
     final dropDown = find.byKey(Key("motifSortie"));
     await tester.tap(dropDown);
     await tester.pump();

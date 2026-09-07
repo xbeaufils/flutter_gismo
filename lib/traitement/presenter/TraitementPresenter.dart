@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/TraitementModel.dart';
 import 'package:flutter_gismo/services/TraitementService.dart';
-import 'package:flutter_gismo/traitement/Medic.dart';
+import 'package:flutter_gismo/traitement/ui/Medic.dart';
 import 'package:flutter_gismo/traitement/ui/Sanitaire.dart';
 import 'package:intl/intl.dart';
 
@@ -26,8 +26,11 @@ class TraitementPresenter {
     }
   }
 
-  void edit(MedicModel medic) {
-
+  void edit(MedicModel medic, int index) async {
+    MedicModel ? newMedic = await  this._view.goNextPage(MedicPage.edit(medic));
+    if (newMedic == null) return;
+    MultipleSanitaireContract multipleView = this._view as MultipleSanitaireContract;
+    multipleView.update(newMedic, index);
   }
 
   void add(BuildContext context) async {

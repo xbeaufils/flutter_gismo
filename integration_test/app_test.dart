@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
+import 'CoproTest.dart';
 import 'RobotConfigTest.dart';
 import 'RobotEchoTest.dart';
 import 'RobotPeseeTest.dart';
@@ -47,6 +48,18 @@ void main() async {
         await robot.create(jsonData["entree"]);
       });
     });
+    if (ver == version.remote) {
+      group("Test des copros", () {
+        testWidgets("Saisir un resultat de copro", (tester) async {
+          RobotCoproTest robot = RobotCoproTest(tester);
+          await robot.create(jsonData["copro"]);
+        });
+        testWidgets("Modifier un resultat de copro", (tester) async {
+            RobotCoproTest robot = RobotCoproTest(tester);
+            await robot.modify(jsonData["copro"]);
+        }, skip: false);
+      });
+    }
 
     group("Test des echos", () {
       testWidgets("Saisir une echo", (tester) async {
@@ -119,7 +132,7 @@ void main() async {
 
     group("Vérification des saisies", () {
       testWidgets("Vérification des saisies", (tester) async {
-        RobotVerificationTest robot = RobotVerificationTest(tester);
+        RobotVerificationTest robot = RobotVerificationTest(ver, tester);
         await robot.verify(jsonData["verifications"]);
       }, skip: false);
     });

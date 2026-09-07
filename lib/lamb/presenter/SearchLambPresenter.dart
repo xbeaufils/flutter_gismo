@@ -1,3 +1,4 @@
+import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/lamb/ui/LambPage.dart';
 import 'package:flutter_gismo/lamb/ui/LambTimeLine.dart';
 import 'package:flutter_gismo/lamb/ui/SearchLambPage.dart';
@@ -15,6 +16,9 @@ class SearchLambPresenter {
     if (newLamb == null)
       return;
     //this._service.saveLamb(newLamb);
+    this.getLambs();
+    this._view.hideSaving();
+    /*
     this._lambs.forEach((aLamb) {
       if (aLamb.idBd == newLamb.idBd) {
         aLamb.sex = newLamb.sex;
@@ -26,6 +30,7 @@ class SearchLambPresenter {
         aLamb.numMarquage = newLamb.numMarquage;
       }
     });
+    */
   }
 
   void deleteLamb(CompleteLambModel lamb) async {
