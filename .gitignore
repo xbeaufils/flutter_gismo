@@ -63,3 +63,4 @@ app.*.map.json
 /android/app/src/profile/gen/nemesys/fr/flutter_gismo/Manifest.java
 /android/build/reports/problems/problems-report.html
 /android/app/src/profile/gen/nemesys/fr/flutter_gismo/R.java
+/devtools_options.yaml
