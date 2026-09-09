@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bluetooth_classic_serial/flutter_bluetooth_classic.dart';
+import 'package:flutter_classic_bluetooth/flutter_classic_bluetooth.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/infra/presenter/BluetoothPresenter.dart';
 import 'package:flutter_gismo/model/BuetoothModel.dart';
@@ -65,42 +65,7 @@ class BluetoothPermissionPageState extends State<BluetoothPermissionPage> {
     final hasFilePermission = await _model.requestBlueToothPermission();
   }
 
-  /*
-  Widget viewDeviceList() {
-    return FutureBuilder(
-        builder: (context, AsyncSnapshot deviceSnap) {
-          if (deviceSnap.connectionState == ConnectionState.none &&
-              deviceSnap.hasData == null) {
-            return Container();
-          }
-          if (deviceSnap.data == null)
-            return Container();
-          return ListView.builder(
-            itemCount: deviceSnap.data.length,
-            itemBuilder: (context, index) {
-              DeviceModel device = deviceSnap.data[index];
-              return Card( child:
-              Row(children: [
-                Flexible(child:
-                ListTile(
-                  title: Text(device.name),
-                  subtitle: Text(device.address),
-                  trailing: this._stateButton(device),
-                  onTap: () => this._selectDevice( device ),
-                  selected:  (this._isDeviceSelected(device)),
-                  selectedTileColor: Colors.lightGreen[100],
-                ),
-                ),
-              ],)
-              );
-            },
-          );
-        },
-        future: _getDeviceList()
-    );
-
-  }*/
-}
+ }
 
 class BluetoothPage extends StatefulWidget {
 
@@ -114,14 +79,11 @@ class BluetoothPage extends StatefulWidget {
 abstract class BluetoothContract implements GismoContract {
   DeviceModel ? get selectedDevice;
   set selectedDevice(DeviceModel ? device);
-  BluetoothConnectionState ? get bluetoothState;
-  set bluetoothState(BluetoothConnectionState ? value);
-}
+ }
 
 class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements BluetoothContract {
   late BluetoothPresenter _presenter;
-
-  BluetoothConnectionState ? _bluetoothState = null;
+  final BluetoothGismoService _btService = BluetoothGismoService();
 
   _BluetoothPagePageState() {
     this._presenter = BluetoothPresenter(this);
@@ -129,16 +91,6 @@ class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements B
   }
 
   DeviceModel ? _selectedDevice;
-
-  BluetoothConnectionState ? get bluetoothState => _bluetoothState;
-
-  set bluetoothState(BluetoothConnectionState ? value) {
-    _bluetoothState = value;
-    if (mounted)
-      setState(() {
-        _bluetoothState = value;
-      });
-  }
 
   List<DeviceModel> ? _lstDevice;
 
@@ -186,27 +138,17 @@ class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements B
 
   Widget _stateButton(DeviceModel device) {
     if ( this._isDeviceSelected(device)) {
-      if (this._bluetoothState == null)
+      if (this._btService.connectionState == null)
         return Switch(value: false, onChanged: (value) { this._presenter.connect(value);});
-      debug.log( "BluetoothState " + this._bluetoothState!.status, name: "_BluetoothPagePageState::_stateButton");
-      switch( BluetoothAdapter.fromString(this._bluetoothState!.status)) {
-        case BluetoothAdapter.STATE_OFF:
+      debug.log( "BluetoothState " + this._btService.connectionState.name, name: "_BluetoothPagePageState::_stateButton");
+      switch(this._btService.connectionState) {
+        case BtcConnectionState.disconnected:
           return Switch(value: false, onChanged: (value) { this._presenter.connect(value);});
-        case BluetoothAdapter.STATE_ON:
-        case BluetoothAdapter.CONNECTED:
+        case BtcConnectionState.connected:
           return Switch(value: true, onChanged: (value) { this._presenter.connect(value);});
-        case BluetoothAdapter.STATE_TURNING_ON:
-        case BluetoothAdapter.CONNECTING:
-        case BluetoothAdapter.DISCONNECTING:
+        case BtcConnectionState.connecting:
+        case BtcConnectionState.disconnecting:
           return CircularProgressIndicator();
-        case BluetoothAdapter.STATE_TURNING_OFF:
-          return Container(width: 10,);
-        case BluetoothAdapter.UNKNOWN:
-          return Container(width: 10,);
-        case  BluetoothAdapter.ERROR:
-          return Icon(Icons.error);
-        case BluetoothAdapter.DISCONNECTED:
-          return Switch(value: false, onChanged: (value) { this._presenter.connect(value);});
       }
     }
     return Container(width: 10,);

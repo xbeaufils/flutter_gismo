@@ -5,12 +5,11 @@ import 'dart:io';
 // import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bluetooth_classic_serial/flutter_bluetooth_classic.dart';
+import 'package:flutter_classic_bluetooth/flutter_classic_bluetooth.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
-import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/search/presenter/SearchPresenter.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
 import 'package:flutter_gismo/sheepyGreenScheme.dart';
@@ -29,8 +28,8 @@ class SearchPage extends StatefulWidget {
 abstract class SearchContract extends GismoContract {
   void goPreviousPage(Bete bete);
   void setBoucle(String numBoucle);
-  BluetoothConnectionState get bluetoothState;
-  set bluetoothState(BluetoothConnectionState value);
+  BtcConnectionState get bluetoothState;
+  set bluetoothState(BtcConnectionState value);
   set filteredBetes(List<Bete> value);
   GismoPage get nextPage;
 }
@@ -43,14 +42,14 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
 
   List<Bete> _filteredBetes = <Bete>[]; //new List();
 
-  BluetoothConnectionState _bluetoothState = BluetoothConnectionState(deviceAddress: "",isConnected: false, status: "DISCONNECTED");
+  BtcConnectionState _bluetoothState = BtcConnectionState.disconnected;
 
-  set bluetoothState(BluetoothConnectionState value) {
+  set bluetoothState(BtcConnectionState value) {
     setState(() {
       _bluetoothState = value;
     });
   }
-  BluetoothConnectionState get bluetoothState => _bluetoothState;
+  BtcConnectionState get bluetoothState => _bluetoothState;
 
   @override
   void initState() {
@@ -127,7 +126,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
     if ( ! AuthService().subscribe )
       return Container();
     List<Widget> status = <Widget>[]; //new List();
-    if (_bluetoothState.status == "CONNECTED")
+    if (_bluetoothState ==  BtcConnectionState.connected) {
           return Padding(padding: EdgeInsets.only (left: 16, right: 16), child:Chip(label: Icon(Icons.bluetooth_connected), backgroundColor: Colors.lightBlueAccent,));
       }
     else {

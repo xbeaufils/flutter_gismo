@@ -3,7 +3,7 @@ import 'dart:developer' as debug;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bluetooth_classic_serial/flutter_bluetooth_classic.dart';
+import 'package:flutter_classic_bluetooth/flutter_classic_bluetooth.dart';
 import 'package:flutter_gismo/model/DeviceModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -82,48 +82,44 @@ class BluetoothGismoService {
 
   // Factory constructor returns the same instance every time
   factory BluetoothGismoService() => _instance;
+  StreamSubscription<dynamic>? _dataSub;
+  StreamSubscription<BtcConnectionState>? _stateSub;
 
-  bool _streamStatus = false;
+  final FlutterClassicBluetooth _bluetooth = FlutterClassicBluetooth();
+  BtcConnectionState _connectionState = BtcConnectionState.disconnected;
 
-  final FlutterBluetoothClassic _bluetooth = FlutterBluetoothClassic();
-  BluetoothConnectionState? _connectionState;
-  List<BluetoothDevice> _pairedDevices = [];
+  BtcConnectionState get connectionState => _connectionState;
+
+  set connectionState(BtcConnectionState value) {
+    _connectionState = value;
+  }
+
+  BtcConnection ? _connection;
   DeviceModel? _connectedDevice;
-
   DeviceModel ? get connectedDevice  => _connectedDevice;
 
   set connectedDevice(DeviceModel ? value) {
     _connectedDevice = value;
   }
 
-  StreamSubscription<BluetoothConnectionState>? _connectionSubscription;
-  StreamSubscription<BluetoothData>? _dataSubscription;
-  StreamSubscription<BluetoothState>? _stateSubscription;
-
-  String _receivedData = '';
+   String _receivedData = '';
 
   void init (Function onConnectionStateChanged , Function onConnectionError, Function onDataReceived) {
     // Listen for Bluetooth state changes
-    this._stateSubscription = _bluetooth.onStateChanged.listen(
-      (state) {
-        debug.log("State " + state.isEnabled.toString() + " " + state.status, name: "_bluetooth.onStateChanged");
+    if (_connection == null)
+      return;
+    this._stateSub = _connection!.stateStream.listen(
+      (BtcConnectionState state) {
+        debug.log("State " + state.toString(), name: "BluetoothGismoService.onStateChanged");
       },
       onError: (error) {
         debugPrint('Bluetooth state error: $error');
       },
     );
-    // Listen for connection state changes
-    _connectionSubscription = _bluetooth.onConnectionChanged.listen(
-      (BluetoothConnectionState state) => onConnectionStateChanged(state),
-      onError: (error) {
-        debug.log('Connection state error: $error');
-        return BluetoothConnectionState(deviceAddress: "", isConnected: false, status: "ERROR");
-      },
-    );
 
     // Listen for incoming data
-    _dataSubscription = _bluetooth.onDataReceived.listen(
-      (BluetoothData data) => onDataReceived(data),
+    _dataSub = _connection!.input.listen(
+      (Uint8List data) => onDataReceived(data),
       onError: (error) {
         debug.log('Data received error: $error');
       },
@@ -133,78 +129,60 @@ class BluetoothGismoService {
   StreamSubscription<StatusBlueTooth> ? _bluetoothStatusSubscription;
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
 
-  Future<bool> connect(DeviceModel device) async {
+  Future<bool> connect(DeviceModel device, Function onConnectionStateChanged , Function onDataReceived) async {
     try {
-      bool status = await _bluetooth.connect(device.address);
-      if (status)
+      this._connection = await _bluetooth.connect( address:device.address, timeout: const Duration(seconds: 8),);
+      if (this._connection!.isConnected)
         this._connectedDevice =  device;
-      return status;
-     } on BluetoothException catch (ex)  {
+      this._stateSub = _connection!.stateStream.listen(
+            (BtcConnectionState state) {
+          debug.log("State " + state.toString(), name: "BluetoothGismoService.onStateChanged");
+        },
+        onError: (error) {
+          debugPrint('Bluetooth state error: $error');
+        },
+      );
+
+      // Listen for incoming data
+      _dataSub = _connection!.input.listen(
+            (Uint8List data) => onDataReceived(data),
+        onError: (error) {
+          debug.log('Data received error: $error');
+        },
+      );
+
+      return _connection!.isConnected;
+     } on BtcTimeoutException catch (ex)  {
       debug.log(ex.message, name: "BluetoothGismoService::connect");
       Sentry.captureException(ex);
+    } on BtcConnectionException catch (e) {
+      // Refused, or the service UUID is not offered.
+      Sentry.captureException(e);
+      debug.log(e.message, name: "BluetoothGismoService::connect");
     }
     return false;
   }
 
-  Stream<StatusBlueTooth> _streamStatusBluetooth() async* {
-    StatusBlueTooth  state;
-    if ( ! _streamStatus)
-      return;
-    while (_streamStatus) {
-      await Future.delayed(Duration(milliseconds: 500));
-      yield state = await _mgr.getStatus();
-    }
-  }
-
-  void handleStatus(Function f) {
-    _bluetoothStatusSubscription = this._streamStatusBluetooth().listen((StatusBlueTooth event) => f(event));
-  }
-
-  Future<StatusBlueTooth> startReadBluetooth() async {
-    if (kIsWeb)
-      return StatusBlueTooth.none();
-    this._streamStatus = true;
-    return await this._mgr.startReadBluetooth();
- }
-
   Future<bool> disconnect() async {
-    bool status = await _bluetooth.disconnect();
+    await _connection!.finish();
     this._connectedDevice = null;
-    return status;
-  }
-
-  Future<StatusBlueTooth> readBluetooth() async {
-    if (kIsWeb)
-      return StatusBlueTooth.none();
-    return await this._mgr.readBluetooth();
-  }
-
-  void handleData(Function f) {
-    _bluetoothReadSubscription = this._streamReadBluetooth().listen((StatusBlueTooth event) => f(event));
-  }
-
-  void stopBluetooth() {
-    this._mgr.stopBluetooth();
-  }
-
-  void stopReadBluetooth() {
-    if (this._bluetoothReadSubscription != null)
-      this._bluetoothReadSubscription!.cancel();
-    this._streamStatus = false;
-    this._mgr.stopReadBluetooth();
+    return true;
   }
 
   void stopStream() {
+    if (_stateSub != null)
+      _stateSub!.cancel();
+    if (_dataSub != null)
+      _dataSub!.cancel();
     if (_bluetoothStatusSubscription != null)
       _bluetoothStatusSubscription!.cancel();
-    _streamStatus = false;
   }
 
   Future<List<DeviceModel>> getDeviceList() async {
     List<DeviceModel> lstReturnDevice = [];
     try {
-      List<BluetoothDevice> devices = await _bluetooth.getPairedDevices();
-      for (BluetoothDevice device in devices) {
+      List<BtcDevice> devices = await _bluetooth.getPairedDevices();
+      for (BtcDevice device in devices) {
         lstReturnDevice.add(DeviceModel.fromResult(device.toMap()));
       }
 

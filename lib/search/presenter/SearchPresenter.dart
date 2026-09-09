@@ -3,7 +3,7 @@ import 'dart:developer' as debug;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bluetooth_classic_serial/flutter_bluetooth_classic.dart';
+import 'package:flutter_classic_bluetooth/flutter_classic_bluetooth.dart';
 import 'package:flutter_gismo/Gismo.dart';
 import 'package:flutter_gismo/individu/ui/EchoPage.dart';
 import 'package:flutter_gismo/individu/ui/NECPage.dart';
@@ -35,17 +35,14 @@ class SearchPresenter {
     debug.log("Constructor", name: "SearchPresenter::SearchPresenter");
     if (_blService.connectedDevice != null) {
       this._blService.init(onConnectionStateChanged, onConnectionError, onDataReceived);
-      this._view.bluetoothState = BluetoothConnectionState(isConnected: true,
-          deviceAddress: _blService.connectedDevice!.address,
-          status: "CONNECTED");
+      this._view.bluetoothState = BtcConnectionState.connected;
     }
   }
-  void onConnectionStateChanged(BluetoothConnectionState state) {
-    debug.log("state " + state.status + " " + state.isConnected.toString(), name: "BluetoothPresenter::onConnectionStateChanged");
-    if (state.status.startsWith("ERR")) {
-      state = BluetoothConnectionState(isConnected: false,
-          deviceAddress: state.deviceAddress,
-          status: "ERROR");
+
+  void onConnectionStateChanged(BtcConnectionState state) {
+    debug.log("state " + state.name , name: "BluetoothPresenter::onConnectionStateChanged");
+    state = BtcConnectionState.disconnected;
+    if (state.name.startsWith("ERR")) {
     }
     this._view.bluetoothState = state;
   }
@@ -54,8 +51,8 @@ class SearchPresenter {
     debug.log("error " + error.toString(), name: "SearchPresenter::onConnectionError");
   }
 
-  void onDataReceived(BluetoothData data) {
-    String _foundBoucle = data.asString().trim();
+  void onDataReceived(Uint8List data) {
+    String _foundBoucle = data.toString().trim();
     if (_foundBoucle.length > 15)
       _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
     _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 5);
