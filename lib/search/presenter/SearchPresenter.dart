@@ -157,28 +157,8 @@ class SearchPresenter {
     }*/
   }
 
- /* void handleBlueTooth(StatusBlueTooth event) {
-    if ( event.connectionStatus != null)
-    debug.log("Status " + event.connectionStatus!, name: "SearchPresenter::handleBlueTooth");
-      if (this._view.bluetoothState.dataStatus != event.dataStatus
-        || this._view.bluetoothState.connectionStatus != event.dataStatus ) {
-        if(event.connectionStatus == 'NONE')
-          return;
-        if (event.dataStatus == 'AVAILABLE') {
-          BoucleModel boucle= BoucleModel(event.data!);
-          _filter.text = boucle.ordre;
-          this._view.setBoucle(boucle.ordre);
-        }
-        this._view.bluetoothState = event;
-      }
-
-  }
-  */
   void dispose() {
-    /*
-    if ((defaultTargetPlatform == TargetPlatform.android)) {
-      this._blService.stopReadBluetooth();
-    }*/
+    this._blService.stopStream();
   }
 
 
