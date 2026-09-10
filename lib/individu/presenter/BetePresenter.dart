@@ -1,6 +1,7 @@
 import 'dart:developer' as debug;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_classic_bluetooth/flutter_classic_bluetooth.dart';
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/individu/ui/Bete.dart';
@@ -16,7 +17,7 @@ class BetePresenter {
 
   final BeteContract _view;
   final BeteService _service = BeteService();
-  final BluetoothGismoService _blService = BluetoothGismoService();
+  final BluetoothGismoService _btService = BluetoothGismoService();
   BetePresenter(this._view);
 
   Future<void> add () async {
@@ -66,38 +67,28 @@ class BetePresenter {
   }
 
   Future<void> startReadBluetooth() async {
- /*   try {
-      StatusBlueTooth status =  await _blService.startReadBluetooth();
-      if (status.connectionStatus == 'CONNECTED') {
-        await this._blService.readBluetooth();
-        this._blService.handleData(this.handleBlueTooth);
-      }
-    } on Exception catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace : stackTrace);
-      debug.log(e.toString());
-    }
-*/
+    this._btService.init(onConnectionStateChanged, onConnectionError, onDataReceived);
+    this._view.bluetoothState = this._btService.connectionState;
   }
 
-  void handleBlueTooth(StatusBlueTooth event) {
-    if ( event.connectionStatus != null)
-      debug.log("Status " + event.connectionStatus!, name: "BetePresenter::handleBlueTooth");
-    if (this._view.bluetoothState.dataStatus != event.dataStatus
-        || this._view.bluetoothState.connectionStatus != event.dataStatus ) {
-      if(event.connectionStatus == 'NONE')
-        return;
-      if (event.dataStatus == 'AVAILABLE') {
-        BoucleModel _foundBoucle = BoucleModel(event.data!);
-        this._view.updateBoucle(_foundBoucle);
-      }
-      this._view.bluetoothState = event;
-    }
+  void onConnectionStateChanged(BtcConnectionState state) {
+    debug.log("state " + state.name , name: "BetePresenter::onConnectionStateChanged");
+    this._view.bluetoothState = state;
+  }
+
+  void onConnectionError(error) {
+    debug.log("error " + error.toString(), name: "BetePresenter::onConnectionError");
+  }
+
+  void onDataReceived(Uint8List data) {
+    BoucleModel boucle = this._btService.formatData(data);
+    debug.log("received ${boucle.marquage}-${boucle.ordre}", name: "BetePresenter::onDataReceived");
+    BoucleModel _foundBoucle = BoucleModel.fromBluetooth(data);
+    this._view.updateBoucle(_foundBoucle);
   }
 
   void stopReadBluetooth() {
-  /*  if ((defaultTargetPlatform == TargetPlatform.android)) {
-      _blService.stopReadBluetooth();
-    }*/
+    _btService.stopStream();
   }
 
   void selectRace() async {

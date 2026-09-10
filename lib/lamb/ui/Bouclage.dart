@@ -69,19 +69,19 @@ class _BouclagePageState extends GismoStatePage<BouclagePage> implements Bouclag
                         child:
                           TextFormField(
                             controller: this._numBoucleCtrl,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(labelText: S.of(context).identity_number, hintText: S.of(context).identity_number_hint),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return S.of(context).enter_identity_number;
-                                }
-                                return "";
-                              },
-                              onSaved: (value) {
-                                setState(() {
-                                  _numBoucleCtrl.text = value!;
-                                });
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(labelText: S.of(context).identity_number, hintText: S.of(context).identity_number_hint),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return S.of(context).enter_identity_number;
                               }
+                              return "";
+                            },
+                            onSaved: (value) {
+                              setState(() {
+                                _numBoucleCtrl.text = value!;
+                              });
+                            }
                           )),
                     Padding(padding:  const EdgeInsets.all(8.0),
                         child:

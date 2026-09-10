@@ -13,7 +13,6 @@ import 'package:flutter_gismo/infra/ui/loginPage.dart';
 import 'package:flutter_gismo/memo/ui/MemoListPage.dart';
 import 'package:flutter_gismo/parcelle/ui/ParcellePage.dart';
 import 'package:flutter_gismo/sheepyGreenScheme.dart';
-import 'package:flutter_gismo/traitement/ui/Copro.dart';
 import 'package:flutter_gismo/traitement/ui/CoproList.dart';
 import 'package:flutter_gismo/traitement/ui/selectionTraitement.dart';
 import 'package:flutter_gismo/infra/ui/welcome.dart';

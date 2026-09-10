@@ -4,6 +4,7 @@ import 'dart:developer' as debug;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_classic_bluetooth/flutter_classic_bluetooth.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -35,9 +36,9 @@ abstract class BeteContract extends GismoContract {
 
   void backWithBete();
 
-  StatusBlueTooth get bluetoothState;
+  BtcConnectionState get bluetoothState;
 
-  set bluetoothState(StatusBlueTooth value);
+  set bluetoothState(BtcConnectionState value);
 
   void updateBoucle(BoucleModel _foundBoucle);
 }
@@ -49,7 +50,9 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
 
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
   bool _rfidPresent = false;
-  StatusBlueTooth _bluetoothState = StatusBlueTooth.none();
+  BtcConnectionState _bluetoothState = BtcConnectionState.disconnected;
+  TextEditingController _numBoucleCtrl = new TextEditingController();
+  TextEditingController _numMarquageCtrl = new TextEditingController();
 
   _BetePageState();
 
@@ -57,18 +60,17 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
     if (! AuthService().subscribe)
       return Container();
     List<Widget> status = [];
-    switch (_bluetoothState.dataStatus ) {
-      case "NONE":
+    switch (_bluetoothState ) {
+      case BtcConnectionState.disconnected:
+      case BtcConnectionState.disconnecting:
         status.add(Icon(Icons.bluetooth));
         status.add(Text(S.of(context).not_connected));
         break;
-      case "WAITING":
+      case BtcConnectionState.connected:
+      case BtcConnectionState.connecting:
         status.add(Icon(Icons.bluetooth));
         status.add(Expanded( child: LinearProgressIndicator(),) );
         break;
-      case "AVAILABLE":
-        status.add(Icon(Icons.bluetooth));
-        status.add(Text(S.of(context).data_available));
     }
     return Row(children: status,);
   }
@@ -99,36 +101,38 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child:
-                              TextFormField( /* Numéro boucle */
+                              TextField( /* Numéro boucle */
+                                controller: this._numBoucleCtrl,
                                 keyboardType: TextInputType.number,
-                                initialValue: this.bete.numBoucleOrNull,
                                 decoration: InputDecoration(
                                     filled: true,
                                     fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
                                     labelText: S.of(context).identity_number,
                                     hintText: S.of(context).identity_number_hint),
-                                  onChanged: (value) {
-                                      setState(() {
-                                        this.bete.numBoucle = value;
-                                    });
-                                  }
+                                onChanged: (value) {
+                                    setState(() {
+                                      this.bete.numBoucle = value;
+                                      this._numBoucleCtrl.text = value;
+                                  });
+                                }
                               ),)),
                         Flexible(child:
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child:
-                              TextFormField( // Numéro Marquage
-                                initialValue: this.bete.numMarquageOrNull,
+                              TextField( // Numéro Marquage
+                                controller: this._numMarquageCtrl,
                                 decoration: InputDecoration(
                                     filled: true,
                                     fillColor:  Theme.of(context).colorScheme.surfaceContainerHighest,
                                     labelText: S.of(context).flock_number,
                                     hintText: S.of(context).flock_number_hint),
                                 onChanged: (value) {
-                                    setState(() {
-                                      this.bete.numMarquage = value;
-                                    });
-                                  })))
+                                  setState(() {
+                                    this.bete.numMarquage = value;
+                                    this._numMarquageCtrl.text = value;
+                                  });
+                                })))
                       ],),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -295,6 +299,10 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   void initState() {
     super.initState();
     this._presenter = BetePresenter(this);
+    if (this.widget._bete.numBoucleOrNull != null)
+      this._numBoucleCtrl.text = this.widget._bete.numBoucle ;
+    if (this.widget._bete.numMarquageOrNull != null)
+      this._numMarquageCtrl.text = this.widget._bete.numMarquage;
     if (AuthService().subscribe)
       this._presenter.startReadBluetooth();
     if (this.bete.dateEntree == null )
@@ -305,6 +313,8 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
   void dispose() {
     // other dispose methods
     this._presenter.stopReadBluetooth();
+    this._numBoucleCtrl.dispose();
+    //this._numMarquageCtrl.dispose();
     super.dispose();
   }
 
@@ -319,9 +329,9 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
      this.widget._bete = value;
    }
 
-   StatusBlueTooth get bluetoothState => _bluetoothState;
+  BtcConnectionState get bluetoothState => _bluetoothState;
 
-   set bluetoothState(StatusBlueTooth value) {
+   set bluetoothState(BtcConnectionState value) {
      setState(() {
        _bluetoothState = value;
      });
@@ -329,7 +339,9 @@ class _BetePageState extends GismoStatePage<BetePage> implements BeteContract {
 
   void updateBoucle(BoucleModel _foundBoucle) {
     setState(() {
+      this._numBoucleCtrl.text = _foundBoucle.ordre;
       this.bete.numBoucle = _foundBoucle.ordre;
+      this._numMarquageCtrl.text = _foundBoucle.marquage;
       this.bete.numMarquage = _foundBoucle.marquage;
     });
   }
