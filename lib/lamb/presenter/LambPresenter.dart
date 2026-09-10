@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:developer' as debug;
+import 'dart:typed_data';
 
+import 'package:flutter_classic_bluetooth/flutter_classic_bluetooth.dart';
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/individu/ui/PeseePage.dart';
 import 'package:flutter_gismo/lamb/ui/Bouclage.dart';
@@ -10,7 +12,6 @@ import 'package:flutter_gismo/lamb/ui/Mort.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/BoucleModel.dart';
 import 'package:flutter_gismo/model/LambModel.dart';
-import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:flutter_gismo/services/BluetoothService.dart';
 import 'package:flutter_gismo/services/LambingService.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
@@ -93,7 +94,7 @@ class LambPresenter {
 class BouclagePresenter {
 
   final BouclageContract _view;
-  final _blService = BluetoothGismoService();
+  final _btService = BluetoothGismoService();
   BouclagePresenter(this._view);
 
   void createBete(LambModel lamb, String numBoucle, String numMarquage) async {
@@ -104,39 +105,29 @@ class BouclagePresenter {
   }
 
   Future<void> startReadBluetooth() async {
-    /*
-    try {
-      StatusBlueTooth status =  await _blService.startReadBluetooth();
-      if (status.connectionStatus == 'CONNECTED') {
-        await this._blService.readBluetooth();
-        this._blService.handleData(this.handleBlueTooth);
-      }
-    } on Exception catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace : stackTrace);
-      debug.log(e.toString());
-    }
-     */
+    this._btService.init(onConnectionStateChanged, onConnectionError, onDataReceived);
+    this._view.bluetoothState = this._btService.connectionState;
   }
 
-  void handleBlueTooth(StatusBlueTooth event) {
-    if ( event.connectionStatus != null)
-      debug.log("Status " + event.connectionStatus!, name: "BetePresenter::handleBlueTooth");
-    if (this._view.bluetoothState.dataStatus != event.dataStatus
-        || this._view.bluetoothState.connectionStatus != event.dataStatus ) {
-      if(event.connectionStatus == 'NONE')
-        return;
-      if (event.dataStatus == 'AVAILABLE') {
-        BoucleModel _foundBoucle = BoucleModel(event.data!);
-        this._view.updateBoucle(_foundBoucle);
-      }
-      this._view.bluetoothState = event;
-    }
+  void onConnectionStateChanged(BtcConnectionState state) {
+    debug.log("state " + state.name , name: "BouclagePresenter::onConnectionStateChanged");
+    this._view.bluetoothState = state;
+  }
+
+  void onConnectionError(error) {
+    debug.log("error " + error.toString(), name: "BouclagePresenter::onConnectionError");
+  }
+
+  void onDataReceived(Uint8List data) {
+    BoucleModel boucle = this._btService.formatData(data);
+    debug.log("received ${boucle.marquage}-${boucle.ordre}", name: "BouclagePresenter::onDataReceived");
+    BoucleModel _foundBoucle = BoucleModel.fromBluetooth(data);
+    this._view.updateBoucle(_foundBoucle);
   }
 
   void stopReadBluetooth() {
-    //_blService.stopReadBluetooth();
+    _btService.stopStream();
   }
-
 
 }
 

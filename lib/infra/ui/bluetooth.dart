@@ -79,15 +79,22 @@ class BluetoothPage extends StatefulWidget {
 abstract class BluetoothContract implements GismoContract {
   DeviceModel ? get selectedDevice;
   set selectedDevice(DeviceModel ? device);
+  set state(BtcConnectionState value);
  }
 
 class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements BluetoothContract {
   late BluetoothPresenter _presenter;
   final BluetoothGismoService _btService = BluetoothGismoService();
+  BtcConnectionState _state = BtcConnectionState.disconnected;
+
+  set state(BtcConnectionState value) {
+    setState(() {
+      _state = value;
+    });
+  }
 
   _BluetoothPagePageState() {
     this._presenter = BluetoothPresenter(this);
-    this._presenter.startStatus();
   }
 
   DeviceModel ? _selectedDevice;
@@ -138,10 +145,8 @@ class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements B
 
   Widget _stateButton(DeviceModel device) {
     if ( this._isDeviceSelected(device)) {
-      if (this._btService.connectionState == null)
-        return Switch(value: false, onChanged: (value) { this._presenter.connect(value);});
-      debug.log( "BluetoothState " + this._btService.connectionState.name, name: "_BluetoothPagePageState::_stateButton");
-      switch(this._btService.connectionState) {
+      debug.log( "BluetoothState " + this._state.name, name: "_BluetoothPagePageState::_stateButton");
+      switch(this._state) {
         case BtcConnectionState.disconnected:
           return Switch(value: false, onChanged: (value) { this._presenter.connect(value);});
         case BtcConnectionState.connected:

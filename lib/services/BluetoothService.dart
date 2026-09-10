@@ -4,6 +4,7 @@ import 'dart:developer' as debug;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_classic_bluetooth/flutter_classic_bluetooth.dart';
+import 'package:flutter_gismo/model/BoucleModel.dart';
 import 'package:flutter_gismo/model/DeviceModel.dart';
 import 'package:flutter_gismo/model/StatusBluetooth.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -132,11 +133,13 @@ class BluetoothGismoService {
   Future<bool> connect(DeviceModel device, Function onConnectionStateChanged , Function onDataReceived) async {
     try {
       this._connection = await _bluetooth.connect( address:device.address, timeout: const Duration(seconds: 8),);
-      if (this._connection!.isConnected)
-        this._connectedDevice =  device;
+      if (this._connection!.isConnected) {
+        this._connectedDevice = device;
+        this._connectionState = BtcConnectionState.connected;
+      }
       this._stateSub = _connection!.stateStream.listen(
             (BtcConnectionState state) {
-          debug.log("State " + state.toString(), name: "BluetoothGismoService.onStateChanged");
+              onConnectionStateChanged(state);
         },
         onError: (error) {
           debugPrint('Bluetooth state error: $error');
@@ -145,14 +148,13 @@ class BluetoothGismoService {
 
       // Listen for incoming data
       _dataSub = _connection!.input.listen(
-            (Uint8List data) => onDataReceived(data),
+            (data) => onDataReceived(data),
         onError: (error) {
           debug.log('Data received error: $error');
         },
       );
-
       return _connection!.isConnected;
-     } on BtcTimeoutException catch (ex)  {
+    } on BtcTimeoutException catch (ex)  {
       debug.log(ex.message, name: "BluetoothGismoService::connect");
       Sentry.captureException(ex);
     } on BtcConnectionException catch (e) {
@@ -191,6 +193,11 @@ class BluetoothGismoService {
     }
     return lstReturnDevice;
 
+   }
+
+   BoucleModel formatData(Uint8List data) {
+      BoucleModel boucle = BoucleModel.fromBluetooth(data);
+      return boucle;
    }
 
 }

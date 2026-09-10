@@ -1,3 +1,6 @@
+
+import 'dart:typed_data';
+
 class BoucleModel {
   late String _ordre;
   late String _marquage;
@@ -16,4 +19,8 @@ class BoucleModel {
     }
   }
 
+  BoucleModel.fromBluetooth(Uint8List data) {
+    this._marquage = String.fromCharCodes(data.sublist(8, 18));
+    this._ordre =  String.fromCharCodes(data.sublist(18, 23));
+  }
  }

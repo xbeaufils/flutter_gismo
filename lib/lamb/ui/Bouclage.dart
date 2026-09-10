@@ -2,6 +2,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_classic_bluetooth/flutter_classic_bluetooth.dart';
 import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
@@ -23,8 +24,8 @@ class BouclagePage extends StatefulWidget {
 
 abstract class BouclageContract  extends GismoContract {
   void returnBete(Bete bete);
-  StatusBlueTooth get  bluetoothState;
-  set bluetoothState(StatusBlueTooth value);
+  BtcConnectionState get  bluetoothState;
+  set bluetoothState(BtcConnectionState value);
   updateBoucle (BoucleModel numBoucle);
 }
 
@@ -33,10 +34,10 @@ class _BouclagePageState extends GismoStatePage<BouclagePage> implements Bouclag
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   late BouclagePresenter _presenter = BouclagePresenter(this);
 
-  StatusBlueTooth _bluetoothState = StatusBlueTooth.none();
+  BtcConnectionState _bluetoothState = BtcConnectionState.disconnected;
 
-  StatusBlueTooth get bluetoothState => _bluetoothState;
-  set bluetoothState(StatusBlueTooth value) {
+  BtcConnectionState get bluetoothState => _bluetoothState;
+  set bluetoothState(BtcConnectionState value) {
     setState(() {
       _bluetoothState = value;
     });
@@ -122,16 +123,10 @@ class _BouclagePageState extends GismoStatePage<BouclagePage> implements Bouclag
     if ( ! AuthService().subscribe )
       return Container();
     List<Widget> status = <Widget>[]; //new List();
-    if (_bluetoothState.connectionStatus == "CONNECTED")
-      switch (_bluetoothState.dataStatus) {
-        case "WAITING":
+    if (_bluetoothState == BtcConnectionState.connected) {
           status.add(Icon(Icons.bluetooth));
           status.add(Expanded(child: LinearProgressIndicator(),));
-          break;
-        case "AVAILABLE":
-          status.add(Icon(Icons.bluetooth));
-          status.add(Text(S.of(context).data_available));
-      }
+    }
     else {
       status.add(Icon(Icons.bluetooth));
       status.add(Text(S.of(context).not_connected));

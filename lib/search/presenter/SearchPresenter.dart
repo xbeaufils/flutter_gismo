@@ -52,13 +52,10 @@ class SearchPresenter {
   }
 
   void onDataReceived(Uint8List data) {
-    String _foundBoucle = data.toString().trim();
-    if (_foundBoucle.length > 15)
-      _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 15);
-    _foundBoucle = _foundBoucle.substring(_foundBoucle.length - 5);
-    debug.log("received " + _foundBoucle, name: "SearchPresenter::onDataReceived");
-    _filter.text = _foundBoucle;
-    this._view.setBoucle(_foundBoucle);
+    BoucleModel boucle = this._blService.formatData(data);
+    debug.log("received ${boucle.marquage}-${boucle.ordre}", name: "SearchPresenter::onDataReceived");
+    _filter.text = boucle.ordre;
+    this._view.setBoucle(boucle.ordre);
   }
 
 

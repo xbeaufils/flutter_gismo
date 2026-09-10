@@ -23,10 +23,7 @@ class BluetoothPresenter {
 
    void onConnectionStateChanged(BtcConnectionState state) {
     debug.log("state " + state.name , name: "BluetoothPresenter::onConnectionStateChanged");
-    if (state.name.startsWith("ERR")) {
-      state = BtcConnectionState.disconnected;
-      this._service.connectedDevice = null;
-    }
+    this._view.state = state;
    }
 
    void onConnectionError(error) {
@@ -50,20 +47,20 @@ class BluetoothPresenter {
     return lstReturnDevice;
   }
 
-  void startStatus() async {
-    //this._view.bluetoothState = await _service.startStatus(handlerStatus);
-  }
-
   void connect(value) async {
+    this._view.showSaving();
     if (! value) {
+      this._view.state = BtcConnectionState.disconnecting;
       await _service.disconnect();
       return;
     }
+    this._view.state = BtcConnectionState.connecting;
     bool status = await _service.connect(this._view.selectedDevice!, onConnectionStateChanged, onDataReceived);
     if (status) {
       this._service.connectedDevice = this._view.selectedDevice;
       this._service.connectedDevice!.connected = true;
     }
+    this._view.hideSaving();
   }
 
   void stopBluetoothStream()  {
