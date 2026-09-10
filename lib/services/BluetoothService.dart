@@ -111,7 +111,7 @@ class BluetoothGismoService {
       return;
     this._stateSub = _connection!.stateStream.listen(
       (BtcConnectionState state) {
-        debug.log("State " + state.toString(), name: "BluetoothGismoService.onStateChanged");
+        onConnectionStateChanged(state);
       },
       onError: (error) {
         debugPrint('Bluetooth state error: $error');
@@ -127,7 +127,6 @@ class BluetoothGismoService {
     );
   }
 
-  StreamSubscription<StatusBlueTooth> ? _bluetoothStatusSubscription;
   static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
 
   Future<bool> connect(DeviceModel device, Function onConnectionStateChanged , Function onDataReceived) async {
@@ -176,8 +175,20 @@ class BluetoothGismoService {
       _stateSub!.cancel();
     if (_dataSub != null)
       _dataSub!.cancel();
-    if (_bluetoothStatusSubscription != null)
-      _bluetoothStatusSubscription!.cancel();
+  }
+
+  void pauseStream() {
+    if (_stateSub != null)
+      _stateSub!.pause();
+    if (_dataSub != null)
+      _dataSub!.pause();
+  }
+
+  void resumeStream() {
+    if (_stateSub != null)
+      _stateSub!.resume();
+    if (_dataSub != null)
+      _dataSub!.resume();
   }
 
   Future<List<DeviceModel>> getDeviceList() async {

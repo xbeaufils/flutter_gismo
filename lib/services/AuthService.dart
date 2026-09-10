@@ -9,15 +9,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:developer' as debug;
 
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:sqflite/sqflite.dart';
 
 class AuthService {
 
   static AuthService ? _singleton;
   AuthService._internal();
   factory AuthService() => _singleton ??= AuthService._internal();
-
-  User ? _currentUser;
 
   String ? _cheptel;
   String ? get cheptel => _cheptel;
@@ -87,7 +84,7 @@ class AuthService {
       await (_repository?.dataProvider as WebDataProvider).login(
           this._currentUser!);*/
       debug.log(
-          'Mode connecté email : $email - cheptel: currentUser.cheptel',
+          'Mode connecté email : $email - cheptel: ${_user.cheptel}',
           name: "AuthService::init");
       return "mode connecte";
     }

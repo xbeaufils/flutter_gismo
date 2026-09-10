@@ -32,6 +32,7 @@ abstract class SearchContract extends GismoContract {
   set bluetoothState(BtcConnectionState value);
   set filteredBetes(List<Bete> value);
   GismoPage get nextPage;
+  bool isCurrent();
 }
 
 class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderStateMixin implements SearchContract {
@@ -219,5 +220,12 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
     setState(() {
       _filteredBetes = value;
     });
+  }
+
+  bool isCurrent() {
+    ModalRoute? route = ModalRoute.of(context);
+    if (route == null)
+      return false;
+    return ModalRoute.of(context)!.isCurrent;
   }
 }

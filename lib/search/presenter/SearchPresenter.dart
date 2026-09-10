@@ -40,7 +40,7 @@ class SearchPresenter {
   }
 
   void onConnectionStateChanged(BtcConnectionState state) {
-    debug.log("state " + state.name , name: "BluetoothPresenter::onConnectionStateChanged");
+    debug.log("state " + state.name , name: "SearchPresenter::onConnectionStateChanged");
     state = BtcConnectionState.disconnected;
     if (state.name.startsWith("ERR")) {
     }
@@ -52,6 +52,9 @@ class SearchPresenter {
   }
 
   void onDataReceived(Uint8List data) {
+    debug.log("Current Route ${this._view.isCurrent()}", name: "SearchPresenter::onDataReceived");
+    if (! this._view.isCurrent())
+      return;
     BoucleModel boucle = this._blService.formatData(data);
     debug.log("received ${boucle.marquage}-${boucle.ordre}", name: "SearchPresenter::onDataReceived");
     _filter.text = boucle.ordre;
@@ -134,27 +137,12 @@ class SearchPresenter {
       //Navigator.of(context).pop(bete);
     }
     else {
-      //this._blService.stopReadBluetooth();
+      //this._blService.pauseStream();
       String ? message = await this._view.goNextPage(page);
       if (message != null)
         this._view.showMessage(message);
+      //this._blService.resumeStream();
     }
-  }
-
-  Future<void> startService() async{
-    /*
-    try {
-      debug.log("Start service ", name: "SearchPresenter::startService");
-      StatusBlueTooth status= await this._blService.startReadBluetooth();
-      this._view.bluetoothState = status;
-      if (status.connectionStatus == 'CONNECTED') {
-        await this._blService.readBluetooth();
-        this._blService.handleData(this.handleBlueTooth);
-      }
-    } on Exception catch (e, stackTrace) {
-      Sentry.captureException(e, stackTrace : stackTrace);
-      debug.log(e.toString());
-    }*/
   }
 
   void dispose() {
