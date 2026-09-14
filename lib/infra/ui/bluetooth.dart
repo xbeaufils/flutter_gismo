@@ -45,10 +45,10 @@ class BluetoothPermissionPageState extends State<BluetoothPermissionPage> {
               switch (_model.permission) {
                 case BluetoothPermission.noBluetoothConnectPermission:
                 case BluetoothPermission.noBluetoothScanPermission :
-                  widget = new BluetoothAskPermissions(onPressed: _checkPermissions,);
+                  widget = BluetoothAskPermissions(onPressed: _checkPermissions,);
                   break;
                 case BluetoothPermission.bluetoothOkPermission:
-                  widget = new BluetoothPage();
+                  widget = BluetoothPage();
               }
               return Scaffold(
                 //backgroundColor: Colors.lightGreen,
@@ -62,7 +62,7 @@ class BluetoothPermissionPageState extends State<BluetoothPermissionPage> {
   }
 
   Future<void> _checkPermissions() async {
-    final hasFilePermission = await _model.requestBlueToothPermission();
+    final hasFilePermission = await  _model.requestBlueToothPermission();
   }
 
  }
@@ -103,7 +103,13 @@ class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements B
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return Scaffold(
+      //backgroundColor: Colors.lightGreen,
+      appBar: new AppBar(
+        title: new Text('Connexion BlueTooth'),
+      ),
+      body:
+        FutureBuilder(
         builder: (context, AsyncSnapshot deviceSnap) {
           if (deviceSnap.connectionState == ConnectionState.none &&
               deviceSnap.hasData == null) {
@@ -133,7 +139,7 @@ class _BluetoothPagePageState extends GismoStatePage<BluetoothPage> implements B
           );
         },
         future: this._presenter.getDeviceList()
-    );
+    ));
   }
 
 
@@ -220,19 +226,7 @@ class BluetoothAskPermissions extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-/*          if (isPermanent)
-            Container(
-              padding: const EdgeInsets.only(
-                left: 16.0,
-                top: 24.0,
-                right: 16.0,
-              ),
-              child: const Text(
-                'You need to give this permission from the system settings.',
-                textAlign: TextAlign.center,
-              ),
-            ),
- */        Container(
+          Container(
             padding: const EdgeInsets.only(
                 left: 16.0, top: 24.0, right: 16.0, bottom: 24.0),
             child: ElevatedButton(

@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_classic_bluetooth/flutter_classic_bluetooth.dart';
 import 'package:flutter_gismo/generated/l10n.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
+import 'package:flutter_gismo/services/BluetoothService.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class GismoDrawer extends StatelessWidget {
+  final BluetoothGismoService _blService = BluetoothGismoService();
   GismoDrawer();
 
   @override
@@ -72,8 +75,26 @@ class GismoDrawer extends StatelessWidget {
     return Container();
   }
 
-  void _choixBt(BuildContext context) {
-    Navigator.pushNamed(context, '/bluetooth');
+  void _choixBt(BuildContext context) async {
+    BtcPermissionStatus status = await this._blService.checkPermission();
+    switch (await status) {
+      case BtcPermissionStatus.granted:
+      case BtcPermissionStatus.notRequired:
+        Navigator.pushNamed(context, '/bluetooth');
+        break;
+      case BtcPermissionStatus.denied:
+      // The system will still prompt. Explain why, then ask.
+        if (await _blService.requestPermission() ==
+            BtcPermissionStatus.granted) {
+          Navigator.pushNamed(context, '/bluetooth');
+        }
+        break;
+      case BtcPermissionStatus.permanentlyDenied:
+      // The system has stopped asking. Only settings can change it.
+      //  if (await _blService.openAppSettings())
+          break;
+    }
+    // Navigator.pushNamed(context, '/bluetooth');
   }
 
   void _settingPressed(BuildContext context) {

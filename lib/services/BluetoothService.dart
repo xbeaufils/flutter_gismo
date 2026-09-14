@@ -177,19 +177,6 @@ class BluetoothGismoService {
       _dataSub!.cancel();
   }
 
-  void pauseStream() {
-    if (_stateSub != null)
-      _stateSub!.pause();
-    if (_dataSub != null)
-      _dataSub!.pause();
-  }
-
-  void resumeStream() {
-    if (_stateSub != null)
-      _stateSub!.resume();
-    if (_dataSub != null)
-      _dataSub!.resume();
-  }
 
   Future<List<DeviceModel>> getDeviceList() async {
     List<DeviceModel> lstReturnDevice = [];
@@ -211,4 +198,11 @@ class BluetoothGismoService {
       return boucle;
    }
 
+   Future<BtcPermissionStatus> checkPermission() async {
+     return await _bluetooth.checkPermissions();
+   }
+
+   Future<BtcPermissionStatus> requestPermission() async {
+      return await _bluetooth.requestPermissions();
+   }
 }

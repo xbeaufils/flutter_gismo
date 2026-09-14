@@ -19,14 +19,15 @@ class BluetoothPresenter {
 
   BluetoothPresenter(this._view) {
     // _service.init(onConnectionStateChanged, onConnectionError, onDataReceived);
+    _service.checkPermission();
   }
 
-   void onConnectionStateChanged(BtcConnectionState state) {
+  void onConnectionStateChanged(BtcConnectionState state) {
     debug.log("state " + state.name , name: "BluetoothPresenter::onConnectionStateChanged");
     this._view.state = state;
    }
 
-   void onConnectionError(error) {
+  void onConnectionError(error) {
     debug.log("error " + error.toString(), name: "BluetoothPresenter::onConnectionError");
    }
 
@@ -77,4 +78,24 @@ class BluetoothPresenter {
     _view.selectedDevice = device;
   }
 
+  Future<bool> checkPermission() async {
+    BtcPermissionStatus status = await this._service.checkPermission();
+    switch (await status) {
+      case BtcPermissionStatus.granted:
+      case BtcPermissionStatus.notRequired:
+        return true;
+      case BtcPermissionStatus.denied:
+        // The system will still prompt. Explain why, then ask.
+        if (await _service.requestPermission() == BtcPermissionStatus.granted) {
+          return true;
+        }
+        else
+          return false;
+
+      case BtcPermissionStatus.permanentlyDenied:
+        // The system has stopped asking. Only settings can change it.
+      return false; //await _bluetooth.openAppSettings();
+    }
+
+  }
 }
