@@ -193,10 +193,8 @@ class BluetoothGismoService {
     } catch (e, stackTrace) {
       debugPrint('Error loading paired devices: $e');
       Sentry.captureException(e, stackTrace : stackTrace);
-
     }
     return lstReturnDevice;
-
    }
 
    BoucleModel formatData(Uint8List data) {
