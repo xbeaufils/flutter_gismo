@@ -113,7 +113,8 @@ class BluetoothGismoService {
       (BtcConnectionState state) {
         onConnectionStateChanged(state);
       },
-      onError: (error) {
+      onError: (error, stackTrace) {
+        Sentry.captureException(error, stackTrace : stackTrace);
         debugPrint('Bluetooth state error: $error');
       },
     );
@@ -121,13 +122,12 @@ class BluetoothGismoService {
     // Listen for incoming data
     _dataSub = _connection!.input.listen(
       (Uint8List data) => onDataReceived(data),
-      onError: (error) {
+      onError: (error, stackTrace) {
+        Sentry.captureException(error, stackTrace : stackTrace);
         debug.log('Data received error: $error');
       },
     );
   }
-
-  static const  PLATFORM_CHANNEL = const MethodChannel('nemesys.rfid.RT610');
 
   Future<bool> connect(DeviceModel device, Function onConnectionStateChanged , Function onDataReceived) async {
     try {
@@ -140,25 +140,29 @@ class BluetoothGismoService {
             (BtcConnectionState state) {
               onConnectionStateChanged(state);
         },
-        onError: (error) {
+        onError: (error, stackTrace) {
           debugPrint('Bluetooth state error: $error');
+          Sentry.captureException(error, stackTrace : stackTrace);
+
         },
       );
 
       // Listen for incoming data
       _dataSub = _connection!.input.listen(
             (data) => onDataReceived(data),
-        onError: (error) {
+        onError: (error, stackTrace) {
           debug.log('Data received error: $error');
+          Sentry.captureException(error, stackTrace : stackTrace);
+
         },
       );
       return _connection!.isConnected;
-    } on BtcTimeoutException catch (ex)  {
+    } on BtcTimeoutException catch (ex, stackTrace)  {
       debug.log(ex.message, name: "BluetoothGismoService::connect");
-      Sentry.captureException(ex);
-    } on BtcConnectionException catch (e) {
+      Sentry.captureException(ex, stackTrace: stackTrace);
+    } on BtcConnectionException catch (e, stackTrace) {
       // Refused, or the service UUID is not offered.
-      Sentry.captureException(e);
+      Sentry.captureException(e, stackTrace: stackTrace);
       debug.log(e.message, name: "BluetoothGismoService::connect");
     }
     return false;
@@ -186,8 +190,10 @@ class BluetoothGismoService {
         lstReturnDevice.add(DeviceModel.fromResult(device.toMap()));
       }
 
-    } catch (e) {
+    } catch (e, stackTrace) {
       debugPrint('Error loading paired devices: $e');
+      Sentry.captureException(e, stackTrace : stackTrace);
+
     }
     return lstReturnDevice;
 
