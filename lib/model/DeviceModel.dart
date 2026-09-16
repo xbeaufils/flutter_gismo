@@ -32,7 +32,7 @@ class DeviceModel {
 
 
   DeviceModel.fromResult(result) {
-    _id= result["idBd"] ;
+    _id= result["uuids"] ;
     _address = result["address"];
     _name = result["name"];
     _connected =false; // result["connected"];
@@ -40,7 +40,7 @@ class DeviceModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["id"] = _id ;
+    data["uuids"] = _id ;
     data["address"] = _address;
     data["name"] = _name;
     data["connected"] = _connected;
