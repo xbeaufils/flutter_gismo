@@ -52,6 +52,7 @@ class GismoDrawer extends StatelessWidget {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     return packageInfo;
   }
+
   Widget _showConfig(BuildContext context) {
     if (kIsWeb)
       return Container();
@@ -77,6 +78,7 @@ class GismoDrawer extends StatelessWidget {
 
   void _choixBt(BuildContext context) async {
     BtcPermissionStatus status = await this._blService.checkPermission();
+    status = BtcPermissionStatus.denied;
     switch (await status) {
       case BtcPermissionStatus.granted:
       case BtcPermissionStatus.notRequired:
@@ -88,11 +90,16 @@ class GismoDrawer extends StatelessWidget {
             BtcPermissionStatus.granted) {
           Navigator.pushNamed(context, '/bluetooth');
         }
+        else
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Acces bluetooth refusé")));
         break;
       case BtcPermissionStatus.permanentlyDenied:
       // The system has stopped asking. Only settings can change it.
-      //  if (await _blService.openAppSettings())
-          break;
+        if (! await _blService.openAppSettings())
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Acces bluetooth refusé")));
+        else
+          Navigator.pushNamed(context, '/bluetooth');
+        break;
     }
     // Navigator.pushNamed(context, '/bluetooth');
   }
