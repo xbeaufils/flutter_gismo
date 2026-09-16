@@ -135,6 +135,7 @@ flutter:
     - assets/memo.png
     - resource_test/data.json
     - assets/adn.png
+    - assets/compteur.png
 
 
   # To add custom fonts to your application, add a fonts section here,

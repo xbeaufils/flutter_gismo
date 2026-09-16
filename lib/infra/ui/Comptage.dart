@@ -1,0 +1,100 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_gismo/core/ui/SimpleGismoPage.dart';
+import 'package:flutter_gismo/infra/presenter/ComptagePresenter.dart';
+import 'package:flutter_gismo/model/BeteModel.dart';
+import 'package:flutter_gismo/model/LotModel.dart';
+import 'package:flutter_gismo/sheepyGreenScheme.dart';
+
+class ComptagePage extends StatefulWidget {
+
+  ComptagePage();
+  int ? _currentLotId;
+
+  @override
+  _ComptagePageState createState() => new _ComptagePageState();
+}
+
+abstract class WelcomeContract extends GismoContract {
+  set currentLotId(int ? value);
+  int ? get currentLotId;
+
+}
+
+class _ComptagePageState extends GismoStatePage<ComptagePage> implements WelcomeContract {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late ComptagePresenter _presenter;
+
+  _ComptagePageState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+          title: Text('Comptage'),
+      ),
+      body:
+        Column(children: <Widget>[
+          FutureBuilder<List<LotModel>>(
+              future: this._presenter.getLots(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.hasError) {
+                  return Container();
+                }
+                if (!snapshot.hasData) {
+                  return CircularProgressIndicator();
+                }
+                return DropdownButton(
+                  hint: Text('Lot en paturage'),
+                  items: snapshot.data.map <DropdownMenuItem<int>>((LotModel lot) {
+                    return DropdownMenuItem(
+                      child: Text( ( lot.codeLotLutte==null)?"": lot.codeLotLutte! ),
+                      value: lot.idb,);
+                  }).toList(),
+                  value: currentLotId,
+                  onChanged: (int ? value) {
+                    setState(() {
+                      currentLotId = value;
+                    });
+                  },
+                );
+              }
+          ),
+          Row (children: [
+            FutureBuilder<List<Bete>>(
+              future: this._presenter.getBetes(),
+              builder: (context, AsyncSnapshot lstBetes) {
+                if (lstBetes.data == null)
+                  return Container( child:
+                    Center(
+                      child: CircularProgressIndicator()),);
+                return ListView.builder ( //.separated(
+                  itemCount: lstBetes.data.length,
+                  itemBuilder: (context, index) {
+                    Bete bete = lstBetes.data[index];
+                    return ListTile(
+                      tileColor: (index % 2 == 0) ? sheepyGreenSheme.colorScheme
+                          .primaryContainer : sheepyGreenSheme.colorScheme
+                          .surface,
+                      title: Text(bete.numBoucle),
+                      subtitle: Text(bete.numMarquage),
+                      onTap: () =>
+                          this._presenter.countBete(bete),
+                    );
+                  }
+                );
+            },
+            )
+          ])],)
+    );
+  }
+
+  @override
+  int? get currentLotId => this.widget._currentLotId;
+
+  @override
+  set currentLotId(int ? value) {
+    this.widget._currentLotId = value;
+  }
+
+}
