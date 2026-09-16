@@ -9,6 +9,7 @@ class ComptagePresenter {
   WelcomeContract _view;
 
   ComptagePresenter(this._view);
+
   LotService  _lotService = LotService();
   BeteService _beteService = BeteService();
 

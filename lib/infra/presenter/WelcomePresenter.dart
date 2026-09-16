@@ -91,6 +91,11 @@ class WelcomePresenter {
     _view.viewPage('/copro');
   }
 
+  void compteurPressed() {
+    Navigator.pop(this._view.context);
+    _view.viewPage('/comptage') ;
+  }
+
   Future<List<MemoModel>> getNbNotes() {
     return  this._service.getCheptelMemos();
   }

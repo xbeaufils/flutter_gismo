@@ -108,6 +108,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "collective_treatment": MessageLookupByLibrary.simpleMessage(
       "Traitement collectif",
     ),
+    "compteur": MessageLookupByLibrary.simpleMessage("Compteur"),
     "configuration": MessageLookupByLibrary.simpleMessage("Configuration"),
     "connected_mode": MessageLookupByLibrary.simpleMessage("Mode connecté"),
     "connected_mode_text": MessageLookupByLibrary.simpleMessage(

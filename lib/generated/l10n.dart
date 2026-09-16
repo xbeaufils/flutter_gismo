@@ -2079,6 +2079,11 @@ class S {
   String get coccidie {
     return Intl.message('Coccidia', name: 'coccidie', desc: '', args: []);
   }
+
+  /// `Counter`
+  String get compteur {
+    return Intl.message('Counter', name: 'compteur', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

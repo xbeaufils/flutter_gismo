@@ -80,6 +80,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "collective_genetic": MessageLookupByLibrary.simpleMessage(
       "Agregue a todas las personas que tendrán la genética antes de continuar.\n\n",
     ),
+    "compteur": MessageLookupByLibrary.simpleMessage("Encimera"),
     "configuration": MessageLookupByLibrary.simpleMessage("Configuración"),
     "copro_effectif": MessageLookupByLibrary.simpleMessage(
       "Bestias analizadas",

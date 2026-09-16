@@ -279,6 +279,8 @@
   "grande_douve" : "Large moats",
   "paramphistome" : "Paramphistomes",
   "tenia" : "Tapeworm",
-  "coccidie" : "Coccidia"
+  "coccidie" : "Coccidia",
+
+  "compteur" : "Counter"
 
 }

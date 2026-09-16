@@ -55,6 +55,7 @@ class _ComptagePageState extends GismoStatePage<ComptagePage> implements Welcome
                   onChanged: (int ? value) {
                     setState(() {
                       currentLotId = value;
+                      this._presenter.getBetes();
                     });
                   },
                 );
@@ -68,23 +69,25 @@ class _ComptagePageState extends GismoStatePage<ComptagePage> implements Welcome
                   return Container( child:
                     Center(
                       child: CircularProgressIndicator()),);
-                return ListView.builder ( //.separated(
-                  itemCount: lstBetes.data.length,
-                  itemBuilder: (context, index) {
-                    Bete bete = lstBetes.data[index];
-                    return ListTile(
-                      tileColor: (index % 2 == 0) ? sheepyGreenSheme.colorScheme
-                          .primaryContainer : sheepyGreenSheme.colorScheme
-                          .surface,
-                      title: Text(bete.numBoucle),
-                      subtitle: Text(bete.numMarquage),
-                      onTap: () =>
-                          this._presenter.countBete(bete),
-                    );
-                  }
-                );
-            },
-            )
+                return Expanded(child:
+                  SingleChildScrollView(child:
+                   ListView.builder ( //.separated(
+                    itemCount: lstBetes.data.length,
+                    itemBuilder: (context, index) {
+                      Bete bete = lstBetes.data[index];
+                      return ListTile(
+                        tileColor: (index % 2 == 0) ? sheepyGreenSheme.colorScheme
+                            .primaryContainer : sheepyGreenSheme.colorScheme
+                            .surface,
+                        title: Text(bete.numBoucle),
+                        subtitle: Text(bete.numMarquage),
+                        onTap: () =>
+                            this._presenter.countBete(bete),
+                      );
+                    }
+                  )));
+              },
+              ),
           ])],)
     );
   }
@@ -95,6 +98,13 @@ class _ComptagePageState extends GismoStatePage<ComptagePage> implements Welcome
   @override
   set currentLotId(int ? value) {
     this.widget._currentLotId = value;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this._presenter = ComptagePresenter(this);
+
   }
 
 }

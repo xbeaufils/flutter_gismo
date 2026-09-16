@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gismo/individu/ui/SelectionHybridePage.dart';
+import 'package:flutter_gismo/infra/ui/Comptage.dart';
 import 'package:flutter_gismo/infra/ui/ConfigPage.dart';
 import 'package:flutter_gismo/Lot/ui/LotPage.dart';
 import 'package:flutter_gismo/mouvement/ui/EntreePage.dart';
@@ -69,6 +70,7 @@ class GismoApp extends StatelessWidget {
         '/saillie' : (context) => SearchPage(GismoPage.saillie),
         '/genetic' : (context) => SelectionHybridePage([],S.of(context).collective_genetic, S.of(context).genetic),
         '/copro' : (context) => CoproListPage(),
+        '/comptage' : (context) => ComptagePage(),
       },
     );
   }
