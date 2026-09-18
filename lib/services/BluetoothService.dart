@@ -209,6 +209,7 @@ class BluetoothGismoService {
    Future<BtcPermissionStatus> requestPermission() async {
       return await _bluetooth.requestPermissions();
    }
+
    Future<bool> openAppSettings() async {
       return await _bluetooth.openAppSettings();
   }
