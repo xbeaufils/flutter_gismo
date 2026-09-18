@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/infra/ui/ConfigPage.dart';
 import 'package:flutter_gismo/infra/ui/welcome.dart';
@@ -14,7 +15,11 @@ class ConfigPresenter {
   ConfigPresenter(this._view);
 
   Future<List<FileSystemEntity>?>  getFiles() async {
-    final Directory ? extDir = await getExternalStorageDirectory();
+    Directory ? extDir = null;
+    if (defaultTargetPlatform == TargetPlatform.iOS)
+      extDir = await getApplicationDocumentsDirectory();
+    else
+      extDir  = await getExternalStorageDirectory();
     if (extDir == null)
       return null;
     final Directory backupDir = Directory(extDir.path + '/backup');

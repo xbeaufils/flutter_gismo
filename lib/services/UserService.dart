@@ -1,6 +1,8 @@
 import 'dart:developer' as debug;
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gismo/core/repository/LocalRepository.dart';
 import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/model/User.dart';
@@ -67,7 +69,11 @@ class UserService extends WebRepository{
     DateTime date = DateTime.now();
     String databasePath = await getDatabasesPath();
     String databaseFile = join(databasePath , 'gismo_database.db');
-    final Directory ? extDir = await getExternalStorageDirectory();
+    Directory ? extDir = null;
+    if (defaultTargetPlatform == TargetPlatform.iOS)
+      extDir = await getApplicationDocumentsDirectory();
+    else
+      extDir  = await getExternalStorageDirectory();
     Directory backupdir =  Directory(extDir!.path + '/backup');
     if ( ! backupdir.existsSync() )
       backupdir.createSync();
@@ -80,7 +86,11 @@ class UserService extends WebRepository{
   }
 
   void deleleteBackup(String filename) async {
-    final Directory ? extDir = await getExternalStorageDirectory();
+    Directory ? extDir = null;
+    if (defaultTargetPlatform == TargetPlatform.iOS)
+      extDir = await getApplicationDocumentsDirectory();
+    else
+      extDir  = await getExternalStorageDirectory();
     Directory backupdir =  Directory(extDir!.path + '/backup');
     if ( backupdir.existsSync() ) {
       String backupFile = join(backupdir.path, filename);
@@ -90,7 +100,11 @@ class UserService extends WebRepository{
 
   void restoreBackup(String filename) async {
     LocalRepository repository = LocalRepository();
-    final Directory ? extDir = await getExternalStorageDirectory();
+    Directory ? extDir = null;
+    if (defaultTargetPlatform == TargetPlatform.iOS)
+      extDir = await getApplicationDocumentsDirectory();
+    else
+      extDir  = await getExternalStorageDirectory();
     Directory backupdir =  Directory(extDir!.path + '/backup');
     if ( backupdir.existsSync() ) {
       String backupFile = join(backupdir.path, filename);
