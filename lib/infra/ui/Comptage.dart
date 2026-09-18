@@ -62,33 +62,40 @@ class _ComptagePageState extends GismoStatePage<ComptagePage> implements Welcome
               }
           ),
           Row (children: [
-            FutureBuilder<List<Bete>>(
-              future: this._presenter.getBetes(),
-              builder: (context, AsyncSnapshot lstBetes) {
-                if (lstBetes.data == null)
-                  return Container( child:
-                    Center(
-                      child: CircularProgressIndicator()),);
-                return Expanded(child:
-                  SingleChildScrollView(child:
-                   ListView.builder ( //.separated(
-                    itemCount: lstBetes.data.length,
-                    itemBuilder: (context, index) {
-                      Bete bete = lstBetes.data[index];
-                      return ListTile(
-                        tileColor: (index % 2 == 0) ? sheepyGreenSheme.colorScheme
-                            .primaryContainer : sheepyGreenSheme.colorScheme
-                            .surface,
-                        title: Text(bete.numBoucle),
-                        subtitle: Text(bete.numMarquage),
-                        onTap: () =>
-                            this._presenter.countBete(bete),
-                      );
-                    }
-                  )));
-              },
-              ),
-          ])],)
+            Expanded(child:
+               ListView.builder ( //.separated(
+                itemCount: _presenter.allBetes.length,
+                itemBuilder: (context, index) {
+                  Bete bete = _presenter.allBetes[index];
+                  return ListTile(
+                    tileColor: (index % 2 == 0) ? sheepyGreenSheme.colorScheme
+                        .primaryContainer : sheepyGreenSheme.colorScheme
+                        .surface,
+                    title: Text(bete.numBoucle),
+                    subtitle: Text(bete.numMarquage),
+                    onTap: () =>
+                        this._presenter.countBete(bete),
+                  );
+                })
+            ),
+            const VerticalDivider(width: 1, thickness: 1),
+            Expanded(child:
+              ListView.builder ( //.separated(
+                itemCount: _presenter.countedBetes.length,
+                itemBuilder: (context, index) {
+                  Bete bete = _presenter.countedBetes[index];
+                  return ListTile(
+                    tileColor: (index % 2 == 0) ? sheepyGreenSheme.colorScheme
+                        .primaryContainer : sheepyGreenSheme.colorScheme
+                        .surface,
+                    title: Text(bete.numBoucle),
+                    subtitle: Text(bete.numMarquage),
+                    onTap: () =>
+                        this._presenter.countBete(bete),
+                  );
+                }))
+            ])
+    ],)
     );
   }
 
@@ -104,7 +111,7 @@ class _ComptagePageState extends GismoStatePage<ComptagePage> implements Welcome
   void initState() {
     super.initState();
     this._presenter = ComptagePresenter(this);
-
+    this._presenter.init();
   }
 
 }

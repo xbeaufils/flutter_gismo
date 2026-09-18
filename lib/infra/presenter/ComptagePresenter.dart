@@ -16,6 +16,12 @@ class ComptagePresenter {
   List<Bete> _countedBetes = [];
   List<Bete> _allBetes = [];
 
+  List<Bete> get countedBetes => _countedBetes;
+
+  void init() async {
+    _allBetes = await _beteService.getBetes();
+  }
+
   Future<List<LotModel>> getLots()  {
     return _lotService.getLots();
   }
@@ -40,4 +46,6 @@ class ComptagePresenter {
   void countBete(Bete bete) {
     _countedBetes.add(bete);
   }
+
+  List<Bete> get allBetes => _allBetes;
 }
