@@ -1,3 +1,5 @@
+import 'package:flutter_classic_bluetooth/flutter_classic_bluetooth.dart';
+
 class DeviceModel {
   late String _name;
 
@@ -29,7 +31,12 @@ class DeviceModel {
     _id = value;
   }
 
-
+  DeviceModel.fromPlugin(BtcDevice device) {
+    _id = device.uuids[0];
+    _address = device.address;
+    _name = device.displayName;
+    _connected = false;
+  }
 
   DeviceModel.fromResult(result) {
     _id= result["uuids"] ;

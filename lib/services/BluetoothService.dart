@@ -187,9 +187,8 @@ class BluetoothGismoService {
     try {
       List<BtcDevice> devices = await _bluetooth.getPairedDevices();
       for (BtcDevice device in devices) {
-        lstReturnDevice.add(DeviceModel.fromResult(device.toMap()));
+        lstReturnDevice.add(DeviceModel.fromPlugin(device));
       }
-
     } catch (e, stackTrace) {
       debugPrint('Error loading paired devices: $e');
       Sentry.captureException(e, stackTrace : stackTrace);
