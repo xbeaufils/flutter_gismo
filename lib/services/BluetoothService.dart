@@ -131,7 +131,7 @@ class BluetoothGismoService {
 
   Future<bool> connect(DeviceModel device, Function onConnectionStateChanged , Function onDataReceived) async {
     try {
-      this._connection = await _bluetooth.connect( address:device.address, timeout: const Duration(seconds: 8),);
+      this._connection = await _bluetooth.connect( address:device.address, uuid: device.id!, timeout: const Duration(seconds: 8),);
       if (this._connection!.isConnected) {
         this._connectedDevice = device;
         this._connectionState = BtcConnectionState.connected;
