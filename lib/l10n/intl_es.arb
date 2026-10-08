@@ -102,6 +102,8 @@
   "batch_no_date_debut": "Sin fecha de inicio",
   "batch_no_date_fin": "Sin fecha de finalización",
   "batch_no_code": "Sin nombre del lote",
+  "batch_select": "Seleccione un lote",
+
   "weight": "Peso",
   "weighing_date": "Fecha de pesaje",
   "no_weighing_date": "Sin fecha de pesaje",
@@ -169,6 +171,8 @@
   "tenia" : "Tenia",
   "coccidie" : "Coccidios",
 
-  "compteur" : "Encimera"
+  "count_compteur" : "Encimera",
+  "count_theorique": "Teorético",
+  "count_presents" : "Presente"
 
 }

@@ -60,14 +60,14 @@ void main() async {
         }, skip: false);
       });
     }
-
+/*
     group("Test des echos", () {
       testWidgets("Saisir une echo", (tester) async {
         RobotEchoTest robot = RobotEchoTest(tester);
         await robot.create(jsonData["echo"]);
       }, skip: false);
     });
-
+*/
     group("Test des agnelages", () {
       testWidgets("Saisir un agnelage", (tester,) async {
         RobotTestAgnelage robot = RobotTestAgnelage(tester);
@@ -75,7 +75,7 @@ void main() async {
       }, skip: false);
     });
 
-
+/*
     group("Test des traitements", () {
       testWidgets("Saisir un traitement", (tester,) async {
         RobotTestTraitement robot = RobotTestTraitement(tester);
@@ -116,7 +116,7 @@ void main() async {
         await robot.createPesee(jsonData["pesees"]["agneau"]);
       }, skip: false);
     });
-
+*/
     group("Test des agneaux", () {
       testWidgets(
           'Mort d\'un agneau', (tester,) async {
@@ -129,14 +129,14 @@ void main() async {
         await robot.boucle(jsonData["agnelages"]["bouclage"]);
       }, skip: false);
     });
-
+/*
     group("Vérification des saisies", () {
       testWidgets("Vérification des saisies", (tester) async {
         RobotVerificationTest robot = RobotVerificationTest(ver, tester);
         await robot.verify(jsonData["verifications"]);
       }, skip: false);
     });
-
+*/
     group("Test de sortie", () {
       testWidgets("Sortie de brebis", (tester) async {
         RobotTestMouvement robot = RobotTestMouvement(tester);

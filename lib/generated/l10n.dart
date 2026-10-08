@@ -800,6 +800,16 @@ class S {
     );
   }
 
+  /// `Select a batch`
+  String get batch_select {
+    return Intl.message(
+      'Select a batch',
+      name: 'batch_select',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Weight`
   String get weight {
     return Intl.message('Weight', name: 'weight', desc: '', args: []);
@@ -2081,8 +2091,23 @@ class S {
   }
 
   /// `Counter`
-  String get compteur {
-    return Intl.message('Counter', name: 'compteur', desc: '', args: []);
+  String get count_compteur {
+    return Intl.message('Counter', name: 'count_compteur', desc: '', args: []);
+  }
+
+  /// `Theoretical`
+  String get count_theorique {
+    return Intl.message(
+      'Theoretical',
+      name: 'count_theorique',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Present`
+  String get count_presents {
+    return Intl.message('Present', name: 'count_presents', desc: '', args: []);
   }
 }
 

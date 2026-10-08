@@ -99,6 +99,7 @@
   "batch_no_date_debut": "Kein Startdatum",
   "batch_no_date_fin": "Kein Enddatum",
   "batch_no_code": "Kein Teilherde",
+  "batch_select": "Wählen Sie eine Teilherde aus",
 
   "weight": "Gewicht",
    "weighing_date": "Wiegedatum",
@@ -276,6 +277,8 @@
   "tenia" : "Bandwurm",
   "coccidie" : "Kokzidien",
 
-  "compteur" : "Schalter"
+  "count_compteur" : "Schalter",
+  "count_theorique": "Theoretisch",
+  "count_presents" : "Gegenwärtig"
 
 }

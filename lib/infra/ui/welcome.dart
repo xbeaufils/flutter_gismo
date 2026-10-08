@@ -388,7 +388,7 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
               onTap: _presenter.notePressed,),
             ListTile(
               leading: SizedBox( child: Image.asset("assets/compteur.png"), width: 50),
-              title: Text(S.of(context).compteur),
+              title: Text(S.of(context).count_compteur),
               onTap: _presenter.compteurPressed,),
 
           ]);

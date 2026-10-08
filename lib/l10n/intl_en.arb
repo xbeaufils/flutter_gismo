@@ -102,6 +102,7 @@
   "batch_no_date_debut": "No begin date",
   "batch_no_date_fin": "No end date",
   "batch_no_code": "No batch name",
+  "batch_select": "Select a batch",
 
   "weight" : "Weight",
   "weighing_date": "Weighing date",
@@ -281,6 +282,8 @@
   "tenia" : "Tapeworm",
   "coccidie" : "Coccidia",
 
-  "compteur" : "Counter"
+  "count_compteur" : "Counter",
+  "count_theorique": "Theoretical",
+  "count_presents" : "Present"
 
 }
