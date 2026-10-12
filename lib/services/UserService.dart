@@ -2,7 +2,6 @@ import 'dart:developer' as debug;
 import 'dart:io';
 
 import 'package:flutter_gismo/core/repository/LocalRepository.dart';
-import 'package:flutter_gismo/env/Environnement.dart';
 import 'package:flutter_gismo/model/User.dart';
 import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/services/AuthService.dart';
@@ -67,7 +66,9 @@ class UserService extends WebRepository{
     DateTime date = DateTime.now();
     String databasePath = await getDatabasesPath();
     String databaseFile = join(databasePath , 'gismo_database.db');
-    final Directory ? extDir = await getExternalStorageDirectory();
+    final Directory ? extDir = Platform.isAndroid
+      ? await getExternalStorageDirectory() //FOR ANDROID
+      : await getApplicationSupportDirectory(); //FOR iOS  getExternalStorageDirectory();
     Directory backupdir =  Directory(extDir!.path + '/backup');
     if ( ! backupdir.existsSync() )
       backupdir.createSync();
@@ -80,7 +81,9 @@ class UserService extends WebRepository{
   }
 
   void deleleteBackup(String filename) async {
-    final Directory ? extDir = await getExternalStorageDirectory();
+    final Directory ? extDir = Platform.isAndroid
+        ? await getExternalStorageDirectory() //FOR ANDROID
+        : await getApplicationSupportDirectory(); //FOR iOS = await getExternalStorageDirectory();
     Directory backupdir =  Directory(extDir!.path + '/backup');
     if ( backupdir.existsSync() ) {
       String backupFile = join(backupdir.path, filename);
@@ -90,12 +93,13 @@ class UserService extends WebRepository{
 
   void restoreBackup(String filename) async {
     LocalRepository repository = LocalRepository();
-    final Directory ? extDir = await getExternalStorageDirectory();
+    final Directory ? extDir = Platform.isAndroid
+        ? await getExternalStorageDirectory() //FOR ANDROID
+        : await getApplicationSupportDirectory(); //FOR iOS = await getExternalStorageDirectory();
     Directory backupdir =  Directory(extDir!.path + '/backup');
     if ( backupdir.existsSync() ) {
       String backupFile = join(backupdir.path, filename);
       await repository.restoreBd(backupFile);
-      // File(backupFile).copySync(databaseFile);
     }
   }
 

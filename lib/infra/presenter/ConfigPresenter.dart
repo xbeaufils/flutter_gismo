@@ -14,7 +14,9 @@ class ConfigPresenter {
   ConfigPresenter(this._view);
 
   Future<List<FileSystemEntity>?>  getFiles() async {
-    final Directory ? extDir = await getExternalStorageDirectory();
+    final Directory ? extDir = Platform.isAndroid
+        ? await getExternalStorageDirectory() //FOR ANDROID
+        : await getApplicationSupportDirectory(); //FOR iOS  await getExternalStorageDirectory();
     if (extDir == null)
       return null;
     final Directory backupDir = Directory(extDir.path + '/backup');
