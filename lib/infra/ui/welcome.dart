@@ -202,8 +202,9 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
             borderRadius: BorderRadius.all(Radius.circular(20)),
             color: sheepyGreenSheme.colorScheme.primaryContainer ,),
 //          padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
-          padding: const EdgeInsets.only(top: 40, left: 20, right: 20), // symmetric(vertical: 30.0, horizontal: 20.0),
-          child: Text(nb.toString(), )),
+          padding: const EdgeInsets.only(top: 50), // symmetric(vertical: 30.0, horizontal: 20.0),
+          child:
+            Center(child: Text(nb.toString(), ))),
     );
   }
 
