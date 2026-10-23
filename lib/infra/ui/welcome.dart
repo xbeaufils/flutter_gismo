@@ -327,10 +327,11 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
         context: context,
         builder: (BuildContext context) {
           return Column(children: [
+            AuthService().subscribe ?
             ListTile(
               leading: Image.asset("assets/adn.png"),
               title: Text(S.of(context).genetic),
-              onTap: _presenter.geneticPressed ),
+              onTap: _presenter.geneticPressed ): Container(),
             ListTile(
               leading: Image.asset("assets/saillie.png"),
               title: Text(S.of(context).mating),
