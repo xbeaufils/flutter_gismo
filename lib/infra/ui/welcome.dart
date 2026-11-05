@@ -202,8 +202,9 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
             borderRadius: BorderRadius.all(Radius.circular(20)),
             color: sheepyGreenSheme.colorScheme.primaryContainer ,),
 //          padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
-          padding: const EdgeInsets.only(top: 40, left: 20, right: 20), // symmetric(vertical: 30.0, horizontal: 20.0),
-          child: Text(nb.toString(), )),
+          padding: const EdgeInsets.only(top: 50), // symmetric(vertical: 30.0, horizontal: 20.0),
+          child:
+            Center(child: Text(nb.toString(), ))),
     );
   }
 
@@ -326,10 +327,11 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
         context: context,
         builder: (BuildContext context) {
           return Column(children: [
+            AuthService().subscribe ?
             ListTile(
               leading: Image.asset("assets/adn.png"),
               title: Text(S.of(context).genetic),
-              onTap: _presenter.geneticPressed ),
+              onTap: _presenter.geneticPressed ): Container(),
             ListTile(
               leading: Image.asset("assets/saillie.png"),
               title: Text(S.of(context).mating),
@@ -386,6 +388,10 @@ class _WelcomePageState extends GismoStatePage<WelcomePage> implements WelcomeCo
               leading: SizedBox( child: Image.asset("assets/memo.png"), width: 50),
               title: Text(S.of(context).memo),
               onTap: _presenter.notePressed,),
+            ListTile(
+              leading: SizedBox( child: Image.asset("assets/compteur.png"), width: 50),
+              title: Text(S.of(context).count_compteur),
+              onTap: _presenter.compteurPressed,),
 
           ]);
         }

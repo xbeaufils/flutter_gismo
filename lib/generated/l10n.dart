@@ -1,6 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -794,6 +795,16 @@ class S {
     return Intl.message(
       'No batch name',
       name: 'batch_no_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select a batch`
+  String get batch_select {
+    return Intl.message(
+      'Select a batch',
+      name: 'batch_select',
       desc: '',
       args: [],
     );
@@ -2077,6 +2088,26 @@ class S {
   /// `Coccidia`
   String get coccidie {
     return Intl.message('Coccidia', name: 'coccidie', desc: '', args: []);
+  }
+
+  /// `Counter`
+  String get count_compteur {
+    return Intl.message('Counter', name: 'count_compteur', desc: '', args: []);
+  }
+
+  /// `Theoretical`
+  String get count_theorique {
+    return Intl.message(
+      'Theoretical',
+      name: 'count_theorique',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Present`
+  String get count_presents {
+    return Intl.message('Present', name: 'count_presents', desc: '', args: []);
   }
 }
 

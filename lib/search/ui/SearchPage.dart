@@ -214,6 +214,7 @@ class _SearchPageState extends GismoStatePage<SearchPage>  with TickerProviderSt
   get nextPage => this.widget._nextPage;
 
   set filteredBetes(List<Bete> value) {
+    if (!mounted) return;
     setState(() {
       _filteredBetes = value;
     });

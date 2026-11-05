@@ -1,3 +1,4 @@
+import 'package:flutter_gismo/model/AffectationLot.dart';
 import 'package:intl/intl.dart';
 
 enum Sex { male, femelle }
@@ -36,6 +37,12 @@ class Bete  {
     _cheptel = result["cheptel"];
     if (result["genetique"] != null)
       _genetique = Hybridation.fromResult(result["genetique"]);
+  }
+
+  Bete.fromAffectation(Affectation affect) {
+    _idBd = affect.brebisId;
+    _numBoucle = affect.numBoucle;
+    _numMarquage = affect.numMarquage;
   }
 
   Map<String, dynamic> toJson() {

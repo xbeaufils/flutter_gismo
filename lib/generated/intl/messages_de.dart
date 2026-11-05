@@ -75,6 +75,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Kein Startdatum",
     ),
     "batch_no_date_fin": MessageLookupByLibrary.simpleMessage("Kein Enddatum"),
+    "batch_select": MessageLookupByLibrary.simpleMessage(
+      "Wählen Sie eine Teilherde aus",
+    ),
     "batch_warning": MessageLookupByLibrary.simpleMessage(
       "Sie müssen die Teilherde speichern, bevor Sie sie hinzufügen können",
     ),
@@ -116,6 +119,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "copro_effectif": MessageLookupByLibrary.simpleMessage("Tiere analysiert"),
     "copro_result": MessageLookupByLibrary.simpleMessage("Ergebnisse"),
     "copy_base": MessageLookupByLibrary.simpleMessage("Datenbank kopieren"),
+    "count_compteur": MessageLookupByLibrary.simpleMessage("Schalter"),
+    "count_presents": MessageLookupByLibrary.simpleMessage("Gegenwärtig"),
+    "count_theorique": MessageLookupByLibrary.simpleMessage("Theoretisch"),
     "data_available": MessageLookupByLibrary.simpleMessage("Daten verfügbar"),
     "data_null": MessageLookupByLibrary.simpleMessage("Daten null"),
     "dateDeNotation": MessageLookupByLibrary.simpleMessage(

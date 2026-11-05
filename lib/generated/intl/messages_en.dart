@@ -71,6 +71,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "No begin date",
     ),
     "batch_no_date_fin": MessageLookupByLibrary.simpleMessage("No end date"),
+    "batch_select": MessageLookupByLibrary.simpleMessage("Select a batch"),
     "batch_warning": MessageLookupByLibrary.simpleMessage(
       "You must save the batch before add",
     ),
@@ -114,6 +115,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "copro_effectif": MessageLookupByLibrary.simpleMessage("Beasts analyzed"),
     "copro_result": MessageLookupByLibrary.simpleMessage("Results"),
     "copy_base": MessageLookupByLibrary.simpleMessage("Copy database"),
+    "count_compteur": MessageLookupByLibrary.simpleMessage("Counter"),
+    "count_presents": MessageLookupByLibrary.simpleMessage("Present"),
+    "count_theorique": MessageLookupByLibrary.simpleMessage("Theoretical"),
     "data_available": MessageLookupByLibrary.simpleMessage("Data available"),
     "data_null": MessageLookupByLibrary.simpleMessage("Data null"),
     "dateDeNotation": MessageLookupByLibrary.simpleMessage("Body cond date"),

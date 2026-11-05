@@ -103,6 +103,7 @@
   "batch_no_date_debut": "Pas de date de début",
   "batch_no_date_fin": "Pas de date de fin",
   "batch_no_code": "Pas de nom de lot",
+  "batch_select": "Sélectionnez un lot",
 
   "weight" : "Poids",
   "weighing_date": "Date de pesée",
@@ -282,5 +283,9 @@
   "grande_douve" : "Grandes douves",
   "paramphistome" : "Paramphistomes",
   "tenia" : "Tenia",
-  "coccidie" : "Coccidies"
+  "coccidie" : "Coccidies",
+
+  "count_compteur" : "Compteur",
+  "count_theorique": "Théorique",
+  "count_presents" : "Présents"
 }

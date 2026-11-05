@@ -20,7 +20,7 @@ if (mapBoxPropertiesFile.exists()) {
 
 android {
     namespace = "nemesys.fr.flutter_gismo"
-    compileSdk = 36
+    compileSdk = 37
     ndkVersion =  "29.0.14206865" // flutter.ndkVersion 29.0.14206865
     // For Map_access_token
     android.buildFeatures.buildConfig = true

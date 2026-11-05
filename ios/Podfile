@@ -1,5 +1,9 @@
-# Uncomment the next line to define a global platform for your project
-platform :ios, ’14.0’
+# ios/Podfile
+platform :ios, '14.0'  # Correspond à votre version minimale iOS
+
+# Ignorez les warnings de CocoaPods
+ignore_all_source_changes = true
+
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 

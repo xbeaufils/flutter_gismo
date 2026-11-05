@@ -10,11 +10,12 @@ import 'package:sentry/sentry.dart';
 
 void main() async {
   await Sentry.init(
-    (options) =>
-        options.dsn =
-        'https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553'
-        /*options.release = ''*/
-      ,
+    (options) {
+      options.dsn =
+        'https://61d0a2a76b164bdab7d5c8a60f43dcd6@o406124.ingest.sentry.io/5407553';
+      options.enableLogs = true;
+      /*options.release = ''*/
+      },
       appRunner: () => {
       startApp()
     });
@@ -25,16 +26,7 @@ void startApp()
     if (!kIsWeb) {
       // if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android))
       WidgetsFlutterBinding.ensureInitialized();
-/*
-      MobileAds.instance.initialize();
-      RequestConfiguration configuration = RequestConfiguration(
-          testDeviceIds: ["395AA0EC16134E88603112A34BE6BF57"]);
-      MobileAds.instance.updateRequestConfiguration(configuration);*/
     }
-    // Pass your access token to MapboxOptions so you can load a map
-    String ACCESS_TOKEN = const String.fromEnvironment("map_box_token");
-
-
     Environnement.init(
         "https://www.neme-sys.fr/bd", "http://10.0.2.2:8080/gismoApp/api",
     //    "https://www.neme-sys.fr/bd", "http://192.168.1.86:8080/gismoApp/api",
@@ -49,13 +41,6 @@ void startApp()
     final GismoApp gismoApp = new GismoApp(initialRoute: nextPage);
     runApp(gismoApp);
 }
-  /*
-  runZonedGuarded<Future<void>>(() async {
-    runApp(gismoApp);
-  }, (error, stackTrace) {
-       Sentry.captureException(error,stackTrace: stackTrace);
-  });
-   */
 
 
 

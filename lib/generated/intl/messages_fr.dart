@@ -77,6 +77,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_no_date_fin": MessageLookupByLibrary.simpleMessage(
       "Pas de date de fin",
     ),
+    "batch_select": MessageLookupByLibrary.simpleMessage("Sélectionnez un lot"),
     "batch_warning": MessageLookupByLibrary.simpleMessage(
       "Vous devez enregistrer le lot avant d\'ajouter",
     ),
@@ -120,6 +121,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "copy_base": MessageLookupByLibrary.simpleMessage(
       "Copier la base de données",
     ),
+    "count_compteur": MessageLookupByLibrary.simpleMessage("Compteur"),
+    "count_presents": MessageLookupByLibrary.simpleMessage("Présents"),
+    "count_theorique": MessageLookupByLibrary.simpleMessage("Théorique"),
     "data_available": MessageLookupByLibrary.simpleMessage("Données reçues"),
     "data_null": MessageLookupByLibrary.simpleMessage("Data null"),
     "dateDeNotation": MessageLookupByLibrary.simpleMessage("Date de notation"),

@@ -48,26 +48,29 @@ class AuthService {
     // Read value
     FlutterSecureStorage storage = new FlutterSecureStorage();
     try {
+      Sentry.addBreadcrumb(
+        Breadcrumb(message: 'AUTH 1 - avant secure storage read'),
+      );
+
       String? email = await storage.read(key: "email");
+      Sentry.addBreadcrumb(
+        Breadcrumb(message: 'AUTH 2 - après secure storage read'),
+      );
       if (email == null) {
         AuthService().cheptel = "00000000";
         AuthService().subscribe = false;
         AuthService().token ="Nothing";
         // Ce qui suit sert à initialiser la base de données qui envoie le sendReport
+        Sentry.addBreadcrumb(
+          Breadcrumb(message: 'AUTH 3 - avant init database'),
+        );
         LocalRepository dummyRepo = LocalRepository();
         await dummyRepo.database;
+        Sentry.addBreadcrumb(
+          Breadcrumb(message: 'AUTH 4 - après init database'),
+        );
 
         debug.log("Mode autonome", name: "AuthService::init");
-        // Ajout des pubs
-        //Admob.initialize();
-        /*FacebookAudienceNetwork.init(
-          testingId: "a77955ee-3304-4635-be65-81029b0f5201",
-          iOSAdvertiserTrackingEnabled: true,
-        );*/
-        if (Platform.isIOS) {
-          //await Admob.requestTrackingAuthorization();
-        }
-        debug.log("Mode autonome");
         return "mode autonome";
       }
       String? password = await storage.read(key: "password");

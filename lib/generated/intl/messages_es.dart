@@ -61,6 +61,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "batch_no_date_fin": MessageLookupByLibrary.simpleMessage(
       "Sin fecha de finalización",
     ),
+    "batch_select": MessageLookupByLibrary.simpleMessage("Seleccione un lote"),
     "batch_warning": MessageLookupByLibrary.simpleMessage(
       "Debe guardar el lote antes de añadirlo",
     ),
@@ -85,6 +86,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Bestias analizadas",
     ),
     "copro_result": MessageLookupByLibrary.simpleMessage("Resultados"),
+    "count_compteur": MessageLookupByLibrary.simpleMessage("Encimera"),
+    "count_presents": MessageLookupByLibrary.simpleMessage("Presente"),
+    "count_theorique": MessageLookupByLibrary.simpleMessage("Teorético"),
     "data_available": MessageLookupByLibrary.simpleMessage("Datos recibidos"),
     "dateDeparture": MessageLookupByLibrary.simpleMessage("Fecha de salida"),
     "dateEntry": MessageLookupByLibrary.simpleMessage("Fecha de entrada"),
