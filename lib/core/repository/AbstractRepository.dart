@@ -10,12 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:flutter_gismo/bloc/Message.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-enum RepositoryType {web, local}
-
-abstract class AbstractRepository {
-
-}
-
 class WebRepository {
   final DateFormat _df = new DateFormat('dd/MM/yyyy');
 

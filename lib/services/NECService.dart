@@ -1,3 +1,4 @@
+import 'package:flutter_gismo/core/repository/AbstractRepository.dart';
 import 'package:flutter_gismo/model/BeteModel.dart';
 import 'package:flutter_gismo/model/NECModel.dart';
 import 'package:flutter_gismo/repository/NecRepository.dart';
@@ -24,7 +25,9 @@ class NECService {
       note.date = date;
       note.idBete = bete.idBd!;
       return await this._repository.save(note);
-
+    }
+    on GismoException catch(e) {
+      throw (e);
     }
     catch(e, stackTrace) {
       Sentry.captureException(e, stackTrace : stackTrace);
