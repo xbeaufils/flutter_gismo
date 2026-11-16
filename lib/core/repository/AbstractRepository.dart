@@ -68,14 +68,14 @@ class WebRepository {
           body: jsonEncode(body)).timeout(Duration(seconds: 5) ).timeout(Duration(seconds: 10));
       if (response.statusCode == HttpStatus.ok) {
         if (response.bodyBytes.lengthInBytes == 0)
-              return "";
-            Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
-            if (msg.error) {
-              throw GismoException(msg.message);
-            }
-            else {
-              return msg.message;
-            }
+          return "";
+        Message msg = Message(jsonDecode(utf8.decode(response.bodyBytes)) as Map);
+        if (msg.error) {
+          throw GismoException(msg.message);
+        }
+        else {
+          return msg.message;
+        }
       } else {
         Map<String,dynamic> responseJson = jsonDecode(utf8.decode(response.bodyBytes));
         throw new GismoException(responseJson["message"]);
